@@ -66,7 +66,7 @@ export default function Login() {
             })
         });
         const data = await response.json();
-        console.log('data', data);
+        
         //
           if (data.status === 'success') {
     
@@ -81,11 +81,12 @@ export default function Login() {
             dispatch(userType({ userType: role }));
           
             role ==='Admin'? navigate("/users"):navigate("/users");
+
           } else {
             document.getElementById('passwordError').innerText = data.error;
         }
     } catch (error) {
-        console.error('Login error:', error);
+        console.error('Login error:', error); 
     }
   
      
@@ -111,7 +112,8 @@ export default function Login() {
             <div className="logincircle verticalCenter"></div>
             <div className="verticalCenter">
               <h2 className="h2-style">
-                Discover our portfolio – a showcase of creativity, functionality, and successful collaborations.
+                  Revolutionize Your <br />
+                  360 Feedback Process with AI.
               </h2>
               <p className="p-style">
               See how we bring visions to digital life.

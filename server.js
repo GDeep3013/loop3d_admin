@@ -9,12 +9,6 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const authRoutes = require('./routes/auth.js');
 
-connectDB().catch(err => console.log(err));
-
-async function connectDB() {
-  await mongoose.connect(process.env.DB_URL);
-  console.log('mongodb connection established');
-}
 const app = express();
 
 app.use(express.json());
@@ -28,11 +22,11 @@ const corsOptions = {
   allowedHeaders: 'Content-Type,Authorization', // Specify allowed headers
 };
 
-app.use(cors(corsOptions));
+app.use(cors());
 
 async function connectDB() {
   try {
-      await mongoose.connect('mongodb://127.0.0.1:27017/Portfolio');
+      await mongoose.connect(process.env.MONGODB_URI);
       console.log('MongoDB connection established');
   } catch (error) {
       console.error('Error connecting to MongoDB', error);
@@ -44,7 +38,7 @@ connectDB();
 
 app.use('/', authRoutes);
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 8080;
 app.listen(port, () => {
   console.log(`Server is listening on port ${port}`);
 });
