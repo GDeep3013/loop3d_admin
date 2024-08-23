@@ -1,0 +1,68 @@
+.tabe-outer { background-color: #fff; border: 1px solid #D2D2D2; border-radius: 10px; margin-top: 64px;}
+.tabe-outer .table-heading { padding: 14px  19px; }
+.tabe-outer .table-heading h2 { font-size: 25px; font-weight: 600; color: var(--black-color); display: inline-block; margin-right: 10px;}
+.span-badge{ display: inline-block; min-height: 27px; line-height: 27px; padding: 0 14px; border-radius: 3px; font-size: 15px; font-weight: 500;}
+.primary-tag {  background-color: #E9EFFF; color: #0C48E8; }
+.active-tag{ background-color: #E3F6ED; color: #15B06D; }
+.product-tag{ background-color: #FEF4E5; color: #F09E24; }
+.inactive-tag{ background-color: #FFECDA; color: #B01E15; }
+.count-tag{ background-color: #E9E9EA; color: #616161; }
+.count-tag svg path{ fill: #616161; }
+.table-heading form input.form-control { max-width: 206px; }
+.table-heading form { column-gap: 10px; }
+.table-heading form input[type="search"] { background: url('../images/search-icon.svg') no-repeat; background-size: 17px; background-position: 12px center; padding-left: 36px; }
+.table-heading form .form-control, .table-heading form .default-btn { border-radius: 8px; }
+.table-inner .table th, .table-inner .table td{ padding: 18px 30px; vertical-align: middle}
+.table-inner thead th { background-color: #F4F4F5; border-top: 1px solid #D2D2D2; border-bottom: 1px solid #D2D2D2;  font-size: 16px; color: #2E2E2E; font-weight: 400;}
+.table-inner .table td { font-size: 16px; color: #2E2E2E; font-weight: 500; }
+.status-tags .span-badge { margin-right: 7px; }
+.status-tags .span-badge:last-child{ margin-right: 0; }
+.custom-dropdown .dropdown-toggle { background-color: transparent; padding: 0; border: none; }
+.custom-dropdown .dropdown-toggle::after{ content: none; }
+.custom-dropdown .dropdown-menu { transform: translate(0px, 26px) !important; }
+.table-inner .user-profile .user-name { padding-left: 15px; }
+.table-inner tr:last-child td { border-bottom: none; }
+/* start employee page css */
+.content-outer { margin-top: 57px; }
+.employee-outer .employee-profile, .employee-outer .employee-content{ width: 100%; }
+.employee-outer .employee-profile { max-width: 285px; text-align: center; border-right: 1px solid #DADADA; }
+.employee-outer .employee-profile .profile-inner{ padding: 49px 41px; border-bottom: 1px solid #DADADA;}
+.employee-outer { background-color: #fff; border: 1px solid #D2D2D2; border-radius: 10px; }
+.employee-profile .employee-profile-img { width: 120px; height: 120px; border-radius: 50%; position: relative; margin: 0 auto; }
+.employee-profile .employee-profile-img img{ border-radius: 50%; }
+.employee-profile-img .edit-image { position: absolute; top: 0; right: 0; z-index: 1; width: 30px; height: 30px; background-color: var(--theme-color); border-radius: 50%; line-height: 19px; transition: all .5s ease-in-out; }
+.employee-profile-img .edit-image:hover{ transform: scale(1.1);}
+.employee-profile .employee-profile-name { margin-top: 24px; }
+.employee-profile .employee-profile-name h3 { font-size: 30px; font-weight: 500;  word-wrap: break-word;}
+.employee-outer .employee-content { padding: 55px; }
+.profile-btns .default-btn { min-width: 87px; min-height: 40px; line-height: 40px; }
+.profile-btns .default-btn.cancel-btn { background-color: #F9F9F9; color: #000; margin-left: 8px; }
+.profile-btns .default-btn.cancel-btn:hover{ background-color: var(--theme-color); color: #fff; }
+.employee-content .profile-form { margin-top: 57px; }
+.profile-form .form-label { font-size: 16px; font-weight: 500; color: #2E2E2E; margin-bottom: 12px;}
+.profile-form .form-control, .profile-form .form-select { min-height: 46px; padding: 0 15px;}
+.skills-outer .select__control { min-height: 50px; border-color: #dee2e6; border-radius: 6px;}
+.skills-outer .select__control .select__multi-value { background-color: var(--theme-color); padding: 3px; position: relative; min-width: 43px;}
+.skills-outer .select__control .select__multi-value .select__multi-value__label { color: #fff; font-size: 12px;}
+.skills-outer .select__control .select__multi-value .select__multi-value__remove { border-radius: 50%; position: absolute; right: -5px; top: -4px; background-color: #9E9E9E; padding: 0; width: 15px; height: 15px; display: inline-block; text-align: center; line-height: 15px; }
+.skills-outer .select__control .select__multi-value .select__multi-value__remove svg { fill: #fff; }
+.skills-outer .select__control .select__value-container { column-gap: 6px; }
+.table-inner .table .project-name { max-width: 343px; }
+.project-name h3 { font-size: 16px; font-weight: 500; color: #2E2E2E; }
+.project-name p { font-size: 15px; line-height: 22px; color: #898989; font-weight: 300; margin: 6px 0 0 0; }
+.milestone-outer .milestone {margin-bottom: 10px;}
+.milestone-outer .milestone:last-child {margin-bottom: 0;}
+.milestone { column-gap: 10px; }
+.milestone input[type="text"], .milestone input[type="date"]{ width: 100%; }
+.milestone input[type="date"] { max-width: 160px; }
+.milestone .default-btn { min-width: 52px; }
+.milestone .default-btn svg { width: 15px; height: 15px; }
+.milestone .default-btn svg.close-icon { width: 20px; height: 20px; }
+.milestone button.default-btn.close-icon:hover{ background-color: #C80A0A; color: #fff; }
+.budget-outer{ max-width: 230px; column-gap: 10px;}
+.milestone-outer .upload-btn{ line-height: 0; }
+.milestone-outer .upload-btn .default-btn { min-width: 104px; min-height: 46px; line-height: 46px; cursor: pointer;}
+.milestone-outer .upload-btn { position: relative; }
+.milestone-outer .upload-btn input.form-control { width: 100%; min-height:46px; position: absolute; opacity: 0; }
+table .user-img img { vertical-align: middle; width: 42px; height: 42px; border: 1px solid #e1dede; border-radius: 33px; }
+.employee-profile .employee-profile-img img { border-radius: 50%; width: 110px!important; height: 110px!important; object-fit: cover; object-position: center; }

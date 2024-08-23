@@ -1,0 +1,45 @@
+{
+  "name": "profilo",
+  "private": true,
+  "version": "0.0.0",
+  "type": "commonjs",
+  "scripts": {
+    "dev": "concurrently \"npm run vite\" \"npm run server\"",
+    "build": "vite build",
+    "vite": "vite",
+    "start": "node server.js",
+    "server": "node server.js"
+  },
+  "dependencies": {
+    "@reduxjs/toolkit": "^2.2.1",
+    "axios": "^1.6.7",
+    "bcrypt": "^5.1.1",
+    "bootstrap": "^5.3.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.18.2",
+    "express-fileupload": "^1.4.3",
+    "mongodb": "^6.3.0",
+    "mongoose": "^8.2.0",
+    "multer": "^1.4.5-lts.1",
+    "react": "^18.2.0",
+    "react-bootstrap": "^2.10.1",
+    "react-dom": "^18.2.0",
+    "react-redux": "^9.1.0",
+    "react-router-dom": "^6.22.1",
+    "react-select": "^5.8.0",
+    "sweetalert2": "^11.10.6",
+    "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.55",
+    "@types/react-dom": "^18.2.19",
+    "@vitejs/plugin-react": "^4.2.1",
+    "eslint": "^8.56.0",
+    "eslint-plugin-react": "^7.33.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.5",
+    "nodemon": "^3.1.4",
+    "vite": "^5.1.0"
+  }
+}
