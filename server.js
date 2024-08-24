@@ -7,7 +7,15 @@ require('dotenv').config()
 // const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const cors = require('cors');
+
+/**
+ * Import Middleware
+*/
+const authenticateHeaderKey = require('./app/middlewares/auth');
+
+/**Import Routes */
 const authRoutes = require('./routes/auth.js');
+const organizationRoutes = require('./routes/organization');
 
 const app = express();
 
@@ -36,7 +44,13 @@ async function connectDB() {
 
 connectDB();
 
+
+/**
+ * Ssytem Routes
+*/
 app.use('/', authRoutes);
+app.use('/organizations', authenticateHeaderKey, organizationRoutes);
+
 
 const port = process.env.PORT || 8080;
 app.listen(port, () => {

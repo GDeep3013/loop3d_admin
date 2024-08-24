@@ -12,7 +12,7 @@ const upload = multer({
 });
 
 //user controller Routes
-router.post('/register',upload.array("files", 5), UserController.registerUser);
+router.post('/register', UserController.registerUser);
 //user controller Routes
 router.post('/login', UserController.loginUser);
 router.get('/fetch-user', UserController.fetchUsers);

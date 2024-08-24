@@ -18,6 +18,8 @@ import AddCategory from "../../admin/AddCategory";
 import ForgetPassword from "../../pages/ForgetPassword";
 import ResetPassword from "../../pages/ResetPassword";
 
+import Organization from "../../pages/organizations/Organization";
+
 const AppRouter = () => {
   const navigate = useNavigate();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -46,14 +48,12 @@ const AppRouter = () => {
     }
   }, [isAuthenticated]);
 
-  console.log(isAuthenticated);
-
   return (
     <Routes>
 
       {isAuthenticated ? (
         <>
-          <Route path="/dashboard" exact element={<Dashboard />} />
+          <Route path="/dashboard" exact element={<Organization />} />
           <Route path="/project-overview/:id" exact element={<ProjectOverview />} />
           <Route path="/home" exact element={<Home />} />
           <Route path="/login" exact element={<Login />} />

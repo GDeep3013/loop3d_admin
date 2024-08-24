@@ -1,6 +1,7 @@
 const User = require('../models/User.js');
 const Role = require('../models/Role.js');
 const bcrypt = require('bcrypt');
+const { check, validationResult } = require('express-validator');
 
 const expressFileupload = require('express-fileupload')
 const path = require('path');
@@ -10,71 +11,62 @@ const fs = require('fs');
 
 
 const UserController = {
-    registerUser: async (req, res) => {
-        // console.log(req.files);
-        try {
-            const { name, password, email, phone, designation, skills, userType } = req.body;
-            const hashedPassword = await bcrypt.hash(password, 10);
-            var uniqueFilename = ''
-            if (req.files) {
-                const uploadedFile = req.files;
-                uniqueFilename = uuidv4() + path.extname(uploadedFile[0].originalname);
-                try {
-                    fs.writeFile(path.join(__dirname, '../../public/employee-pics', uniqueFilename), uploadedFile[0].buffer, (err) => {
-                        if (err) {
-                            console.error('Error writing file:', err);
-                            return res.status(500).json({ message: 'Error uploading image' });
-                        }
-                    });
-                } catch (err) {
-                    console.log(err);
-                }
+    registerUser: [
+        // Validation rules
+        check('name').not().isEmpty().withMessage('Name is required'),
+        check('email').isEmail().withMessage('Invalid email'),
+        check('phone').isMobilePhone().withMessage('Invalid phone number'),
+        check('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters long'),
+        check('designation').not().isEmpty().withMessage('Designation is required'),
+        check('userType').not().isEmpty().withMessage('User type is required'),
+
+        // Controller logic
+        async (req, res) => {
+            // Validate incoming request
+            const errors = validationResult(req);
+            if (!errors.isEmpty()) {
+                return res.status(400).json({ errors: errors.array() });
             }
-            console.log('uniqueFilename2', uniqueFilename);
-            const user = new User({
-                username: name,
-                email: email,
-                phone: phone,
-                password: hashedPassword,
-                designation: designation,
-                skills: skills,
-                role: userType,
-                image: req.files ? uniqueFilename : null
-            });
-            await user.save();
-            console.log(user);
-            // const projectData = await project.save();
-            //    res.json({ user });
 
-            res.status(201).json({
-                message: 'User registered successfully'
-            });
+            try {
+                const { name, password, email, phone, designation, userType } = req.body;
 
-        } catch (error) {
+                // Hash the password
+                const hashedPassword = await bcrypt.hash(password, 10);
 
-            if (error.code === 11000) {
-                if (error.keyPattern.email) {
-                    res.status(400).json({
-                        errors: {
-                            email: 'Email is already exist'
-                        }
-                    });
-                } else if (error.keyPattern.phone) {
+                // Create the user object
+                const user = new User({
+                    username: name,
+                    email: email,
+                    phone: phone,
+                    password: hashedPassword,
+                    designation: designation,
+                    role: userType,
+                });
 
-                    res.status(400).json({
-                        errors: {
-                            phone: 'Phone number is already exist'
-                        }
-                    });
-                } else {
-                    res.status(500).json({
-                        error: 'Internal Server Error'
-                    })
+                // Save the user to the database
+                let response = await user.save();
+
+                return res.status(201).json({
+                    user: response,
+                    message: 'User registered successfully',
+                });
+
+            } catch (error) {
+                // Handle duplicate email/phone error
+                if (error.code === 11000) {
+                    if (error.keyPattern && error.keyPattern.email) {
+                        return res.status(400).json({ errors: [{ msg: 'Email already exists' }] });
+                    } else if (error.keyPattern && error.keyPattern.phone) {
+                        return res.status(400).json({ errors: [{ msg: 'Phone number already exists' }] });
+                    }
                 }
+
+                // Handle any other errors
+                return res.status(500).json({ error: 'Internal Server Error', "errors": error });
             }
         }
-    },
-
+    ],
     loginUser: async (req, res) => {
         const {
             email,
