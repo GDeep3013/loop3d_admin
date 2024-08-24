@@ -79,6 +79,7 @@ const UserController = {
                 });
             }
             const user = await User.where('email', email).findOne();
+
             if (!user) {
                 return res.status(401).json({
                     error: 'Invalid credentials'

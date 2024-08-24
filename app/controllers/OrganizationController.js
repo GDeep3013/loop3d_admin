@@ -23,8 +23,30 @@ const OrganizationController = {
     },
     getAllOrganizations: async (req, res) => {
         try {
-            const organizations = await Organization.find();
-            res.status(200).json(organizations);
+            // Get 'page' and 'limit' from query parameters with default values
+            const page = parseInt(req.query.page) || 1; // Default to page 1
+            const limit = parseInt(req.query.limit) || 10; // Default to 10 results per page
+
+            // Calculate the number of documents to skip
+            const skip = (page - 1) * limit;
+
+            // Query the database with pagination
+            const organizations = await Organization.find().skip(skip).limit(limit);
+
+            // Get the total count of documents in the collection
+            const totalOrganizations = await Organization.countDocuments();
+
+            // Calculate total pages
+            const totalPages = Math.ceil(totalOrganizations / limit);
+
+            // Send the response with the organizations and pagination info
+            res.status(200).json({
+                status:"success",
+                data: organizations,
+                currentPage: page,
+                totalPages,
+                totalOrganizations
+            });
         } catch (error) {
             console.error('Error:', error);
             res.status(500).json({ error: 'Internal Server Error' });

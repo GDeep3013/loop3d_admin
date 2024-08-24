@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
-import { Category, MenuIcon, Technology, Job, FixedPrice, Logout, EmployeeIcon, ProjectIcon } from "./svg-icons/icons";
+import { Category, MenuIcon, Technology, Job, FixedPrice, Logout, EmployeeIcon, DocomentIcon, ProjectIcon } from "./svg-icons/icons";
 import "../Nav.css";
 // import { useSelector, useDispatch } from "react-redux";
 import { selectUserType } from "../../store/slices/UserSlice"
@@ -90,8 +90,21 @@ export default function LeftNav() {
       </div>
       <ul className="sideNavList">
         <>
+          <li className={`sideNavItem`}>
+            <NavLink
+              to="/organizations"
+              className={({ isActive }) => (isActive ? 'active' : '')}
+            >
+              <DocomentIcon />
+              Organizations
+            </NavLink>
+          </li>
+
           <li className={`sideNavItem ${isUsersOpen?'active-inner':'' }`}>
-            <NavLink to="/users" activeClassName="active" className={isUsersOpen?'active-user':'' } onClick={()=>{setIsUsersOpen(!isUsersOpen);}}>
+            <NavLink 
+            to="/users"
+            className={({ isActive }) => (isActive ? 'active' : '')} 
+            >
               <EmployeeIcon />
               Users
               <span>
@@ -102,47 +115,39 @@ export default function LeftNav() {
           {isUsersOpen && (
             <div className="sub-outer">
               <li className="subNavItem">
-                <NavLink to="/add-user" activeClassName="active">
+                <NavLink 
+                to="/add-user"
+                className={({ isActive }) => (isActive ? 'active-user' : '')}
+                >
                   Add User
                 </NavLink>
               </li>
               <li className="subNavItem">
-                <NavLink to="/users" activeClassName="active">
+                <NavLink 
+                to="/users" 
+                className={({ isActive }) => (isActive ? 'active-user' : '')}
+                >
                   All Users
                 </NavLink>
               </li>
             </div>
           )}
           <li className="sideNavItem">
-            <NavLink to="/projects" activeClassName="active" className={isSurveyOpen?'active-user':'' }  onClick={()=>{setIsSurveyOpen(!isSurveyOpen);}}>
+            <NavLink 
+            to="/surveys" 
+            className={({ isActive }) => (isActive ? 'active' : '')} 
+            >
               <ProjectIcon />
               Surveys
-              <span>
-                {!isSurveyOpen?<img src='/images/down-arrow.svg'/>:<img src='/images/arrow-up.svg'/>}
-              </span>
             </NavLink>
 
-            {isSurveyOpen && (
-            <div className="sub-outer">
-              <li className="subNavItem">
-                <NavLink to="/add-category" activeClassName="active">
-                  Add category
-                </NavLink>
-              </li>
-              <li className="subNavItem">
-                <NavLink to="/category" activeClassName="active">
-                Categories
-                </NavLink>
-              </li>
-            </div>
-          )}
           </li>
-          {/* <li className="sideNavItem">
-            <NavLink to="/category" activeClassName="active">
+          <li className="sideNavItem">
+            <NavLink to="/categories">
               <ProjectIcon />
               Categories
             </NavLink>
-          </li>        */}
+          </li>       
         </>
         <li className="sideNavItem LogoutMenu">
           <NavLink to="#" className="dropdown-item" onClick={() => {

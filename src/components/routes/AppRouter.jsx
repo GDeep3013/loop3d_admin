@@ -13,12 +13,13 @@ import Employees from "../../admin/Users";
 import AddEmployee from "../../admin/AddUser";
 import Projects from "../../admin/Projects";
 import AddProject from "../../admin/AddSurvey";
-import Category from "../Category";
+import Category from "../../pages/categories/Category";
 import AddCategory from "../../admin/AddCategory";
 import ForgetPassword from "../../pages/ForgetPassword";
 import ResetPassword from "../../pages/ResetPassword";
 
 import Organization from "../../pages/organizations/Organization";
+import CreateOrganizations from "../../pages/organizations/CreateOrganizations";
 
 const AppRouter = () => {
   const navigate = useNavigate();
@@ -44,7 +45,7 @@ const AppRouter = () => {
     if (!isAuthenticated && currentUrl !== '/login') {
       navigate('/login');
     } else if (isAuthenticated && (currentUrl === '/' || currentUrl === '/login')) {
-      userType === "Admin" ? navigate('/users') : navigate('/dashboard');
+      userType === "admin" ? navigate('/organizations') : navigate('/organizations');
     }
   }, [isAuthenticated]);
 
@@ -53,7 +54,10 @@ const AppRouter = () => {
 
       {isAuthenticated ? (
         <>
-          <Route path="/dashboard" exact element={<Organization />} />
+          <Route path="/organizations" exact element={<Organization />} />
+          <Route path="/organizations/create" exact element={<CreateOrganizations />} />
+          <Route path="/organizations/edit/:id" exact element={<CreateOrganizations />} />
+          
           <Route path="/project-overview/:id" exact element={<ProjectOverview />} />
           <Route path="/home" exact element={<Home />} />
           <Route path="/login" exact element={<Login />} />
@@ -64,9 +68,11 @@ const AppRouter = () => {
           <Route path="/projects" exact element={<Projects />} />
           <Route path="/add-surveys" exact element={<AddProject />} />
           <Route path="/add-surveys/:id" exact element={<AddProject />} />
-          <Route path="/category" exact element={<Category />} />
-          <Route path="/add-category" exact element={<AddCategory />} />
-          <Route path="/add-category/:id" exact element={<AddCategory />} />
+
+          <Route path="/categories" exact element={<Category />} />
+          <Route path="/categories/create" exact element={<AddCategory />} />
+          <Route path="/categories/:id" exact element={<AddCategory />} />
+
         </>
 
       ) : (

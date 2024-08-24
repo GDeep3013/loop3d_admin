@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from "react-router-dom";
-import { Col, Container, Row } from 'react-bootstrap'
+import { Col, Container, Row, Dropdown } from 'react-bootstrap'
 import { Link } from "react-router-dom";
+import Swal from 'sweetalert2';
+
 
 import AuthLayout from '../../layout/Auth'
 import { StatusIcon, PLusIcon, MoreIcon } from '../../components/svg-icons/icons'
@@ -29,12 +31,12 @@ export default function Organization() {
         }
 
         let result = await fetch(url, {
-            headers: { 'x-api-key': process.env.X_API_KEY }
+            headers: { 'x-api-key': import.meta.env.VITE_X_API_KEY }
         });
         result = await result.json();
 
         if (result.status === 'success') {
-            setOrganizations(result.organizations);
+            setOrganizations(result.data);
             setTotalPages(result.totalPages); // Set totalPages received from the backend
         }
     }
@@ -64,9 +66,10 @@ export default function Organization() {
             if (confirmResult.isConfirmed) {
 
                 const response = await fetch(`api/organizations/${id}`, {
-                    method: 'DELETE'
+                    method: 'DELETE',
+                    headers: { 'x-api-key': import.meta.env.VITE_X_API_KEY }
                 });
-                console.log(response, 'response');
+           
                 if (response.ok) {
                     await Swal.fire({
                         title: "Deleted!",
@@ -75,7 +78,7 @@ export default function Organization() {
                         confirmButtonColor: "#000",
                     });
                     // alert(response.message);
-                    getEmployee();
+                    getOrganizations();
                 } else {
                     await Swal.fire({
                         title: "Deleted!",
@@ -104,7 +107,7 @@ export default function Organization() {
                                     <Col md={6} className='text-end'>
                                         <form className='d-flex justify-content-end'>
                                             <input type='search' placeholder='Search...' value={searchTerm} onChange={handleSearch} className='form-control' />
-                                            <Link to="/add-user" className='default-btn' >Add Organizations  <PLusIcon /> </Link>
+                                            <Link to="create" className='default-btn' >Add Organizations  <PLusIcon /> </Link>
                                         </form>
                                     </Col>
                                 </Row>
@@ -132,12 +135,13 @@ export default function Organization() {
                         ) : (
                                 Organizations.map(org => (
                                     <tr key={org._id}>
+                                        <td>{org._id}</td>
                                         <td>
                                             <div className="user-profile d-flex align-items-center">
                                                 <div className='user-name'>{org.name}</div>
                                             </div>
                                         </td>
-                                        <td>{org.CreatedAt}</td>
+                                        <td>{org.createdAt}</td>
                                         <td><span className='span-badge active-tag'>Active</span></td>
                                         <td>
                                             <Dropdown className='custom-dropdown'>
@@ -145,7 +149,7 @@ export default function Organization() {
                                                     <MoreIcon />
                                                 </Dropdown.Toggle>
                                                 <Dropdown.Menu>
-                                                    <Dropdown.Item onClick={() => navigate(`/add-user/${org._id}`)}>Edit</Dropdown.Item>
+                                                    <Dropdown.Item onClick={() => navigate(`edit/${org._id}`)}>Edit</Dropdown.Item>
                                                     <Dropdown.Item onClick={() => handleDelete(org._id)}>Delete</Dropdown.Item>
                                                 </Dropdown.Menu>
                                             </Dropdown>

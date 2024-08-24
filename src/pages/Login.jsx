@@ -66,7 +66,6 @@ export default function Login() {
             })
         });
         const data = await response.json();
-        
         //
           if (data.status === 'success') {
     
@@ -76,11 +75,11 @@ export default function Login() {
             localStorage.setItem('userType', role);
             localStorage.setItem('userImage', image);
             localStorage.setItem('userName', name);
-            console.log('imageimage', image);
+            
             dispatch(setTokenValidity({ isTokenValid: true }));
             dispatch(userType({ userType: role }));
           
-            role ==='Admin'? navigate("/users"):navigate("/users");
+            role === 'admin' ? navigate("/dashboard"):navigate("/users");
 
           } else {
             document.getElementById('passwordError').innerText = data.error;

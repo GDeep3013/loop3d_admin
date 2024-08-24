@@ -1,17 +1,17 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+require('dotenv').config()
 
-// https://vitejs.dev/config/
 export default defineConfig({
     plugins: [react()],
     server: {
-        // proxy: {
-        //     '/api': {
-        //         target: 'http://localhost:8080',
-        //         changeOrigin: true,
-        //         rewrite: (path) => path.replace(/^\/api/, '')
-        //     },
-        // },
+        proxy: {
+            '/api': {
+                target: process.env.PROXY_URL,
+                changeOrigin: true,
+                rewrite: (path) => path.replace(/^\/api/, '')
+            },
+        },
     }
 });
 
