@@ -15,6 +15,8 @@ import Projects from "../../admin/Projects";
 import AddProject from "../../admin/AddSurvey";
 import Category from "../Category";
 import AddCategory from "../../admin/AddCategory";
+import ForgetPassword from "../../pages/ForgetPassword";
+import ResetPassword from "../../pages/ResetPassword";
 
 const AppRouter = () => {
   const navigate = useNavigate();
@@ -24,7 +26,6 @@ const AppRouter = () => {
     try {
       const userData = localStorage.getItem("userData");
       const userData1 = JSON.parse(userData);
-      console.log('userData1', userData[0].token, userData1.token);
 
       if (userData && userData1.token) {
         setIsAuthenticated(true);
@@ -45,6 +46,7 @@ const AppRouter = () => {
     }
   }, [isAuthenticated]);
 
+  console.log(isAuthenticated);
 
   return (
     <Routes>
@@ -71,6 +73,8 @@ const AppRouter = () => {
         <>
           <Route path="/" element={<Login />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/forget-password" element={<ForgetPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
         </>
       )}
 
