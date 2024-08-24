@@ -79,7 +79,7 @@ export default function Login() {
             dispatch(setTokenValidity({ isTokenValid: true }));
             dispatch(userType({ userType: role }));
           
-            role === 'admin' ? navigate("/dashboard"):navigate("/users");
+            role === 'admin' ? navigate("/organizations"):navigate("/users");
 
           } else {
             document.getElementById('passwordError').innerText = data.error;
