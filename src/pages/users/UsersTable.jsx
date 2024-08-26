@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate, useParams } from "react-router-dom";
-import { StatusIcon, PLusIcon, MoreIcon } from "./svg-icons/icons";
+import { StatusIcon, PLusIcon, MoreIcon } from "../../components/svg-icons/icons";
 import { Container, Dropdown, Pagination, Row, Col, } from 'react-bootstrap'
 import { Link } from "react-router-dom";
 import Swal from 'sweetalert2'
@@ -52,7 +52,6 @@ export default function EmployeeTable({ }) {
         const response = await fetch(`api/delete-user/${id}`, {
           method: 'DELETE'
         });
-        console.log(response, 'response');
         if (response.ok) {
           await Swal.fire({
             title: "Deleted!",
@@ -78,7 +77,6 @@ export default function EmployeeTable({ }) {
             <Container>
               <Row>
                 <Col md={6}>
-                  
                   {/* <span className='span-badge primary-tag'>12 members</span> */}
                 </Col>
                 <Col md={6} className='text-end'>
@@ -97,6 +95,8 @@ export default function EmployeeTable({ }) {
           <tr>
             <th>User</th>
             <th>Email address</th>
+            <th>Role</th>
+            <th>Orgnization</th>
             <th>Status <StatusIcon /> </th>
             <th>Action</th>
           </tr>
@@ -113,13 +113,15 @@ export default function EmployeeTable({ }) {
               <tr key={user._id}>
                 <td>
                   <div className="user-profile d-flex align-items-center">
-                    <div className='user-img'>
+                    {/* <div className='user-img'>
                       <img src={user.image?'employee-pics/'+user.image:'images/profile-img.png' }alt='profile image' />
-                    </div>
+                    </div> */}
                     <div className='user-name'>{user.username}</div>
                   </div>
                 </td>
                 <td>{user.email}</td>
+                <td>{user.role.type}</td>
+                <td>{user.organization_id?.name}</td>
                <td><span className='span-badge active-tag'>Active</span></td>
                 <td>
                   <Dropdown className='custom-dropdown'>

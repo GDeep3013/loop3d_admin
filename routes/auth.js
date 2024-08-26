@@ -4,8 +4,6 @@ const router = express.Router();
 const UserController = require('../app/controllers/UserController.js');
 const ProjectController = require('../app/controllers/ProjectController.js');
 const RoleController = require('../app/controllers/RoleController.js');
-const CategoryController = require('../app/controllers/CategoryController.js');
-
 
 const upload = multer({
   limits: { fieldSize: 1115 * 1024 * 1024 },
@@ -36,12 +34,6 @@ router.delete('/delete-project/:id', ProjectController.deleteProject);
 router.post("/update-project/:id", upload.array("files", 5), ProjectController.updateProject);
 
 //createCategory Routes
-router.post('/create_category', CategoryController.createCategory);
-router.get('/get-categories', CategoryController.getCategory);
-router.get('/get-category-id/:id', CategoryController.getCategoryWithId);
-
-router.delete('/delete-category/:id', CategoryController.deleteCategory);
-
 
 
 

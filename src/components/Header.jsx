@@ -3,8 +3,12 @@ import { Row, Col, Form, Dropdown, Container, InputGroup, DropdownButton } from 
 import { NavLink } from "react-router-dom";
 import { SearchIcon } from "../components/svg-icons/icons";
 import ProfileImage from '../assets/images/user.png';
+import { useSelector, useDispatch } from "react-redux";
+
+
 
 export default function SideBar() {
+  const user = useSelector((state) => state.auth.user);
   return (
     <div className='top-header'>
       <Container>
@@ -40,8 +44,8 @@ export default function SideBar() {
                       <img src={ProfileImage} alt="User Image" />
                     </div>
                     <div className="profileName">
-                      <h3>Lorem ipsum</h3>
-                      <p>Super Admin</p>
+                      <h3>{user.username}</h3>
+                      <p>{user.role?.type}</p>
                     </div>
                   </div>
                 </Dropdown.Toggle>

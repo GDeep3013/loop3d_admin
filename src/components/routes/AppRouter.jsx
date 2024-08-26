@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Route, Routes, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { selectIsAuthenticated, } from "../../../store/slices/UserSlice";
-import { setTokenValidity, selectUserType } from "../../../store/slices/UserSlice"
+
+import {  createUser } from "../../../store/slices/UserSlice";
+
 
 import Dashboard from "../../pages/Dashboard";
 import Home from "../../pages/Home";
@@ -10,57 +11,74 @@ import ProjectOverview from "../../pages/ProjectOverview";
 import Login from "../../pages/Login";
 import AdminDashboard from "../../admin/AdminDashboard";
 import Employees from "../../admin/Users";
-import AddEmployee from "../../admin/AddUser";
+import AddEmployee from "../../pages/users/AddUser";
 import Projects from "../../admin/Projects";
 import AddProject from "../../admin/AddSurvey";
+
 import Category from "../../pages/categories/Category";
-import AddCategory from "../../admin/AddCategory";
+import AddCategory from "../../pages/categories/AddCategory";
+
+import { getUser } from "../../apis/UserApi";
+
 import ForgetPassword from "../../pages/ForgetPassword";
 import ResetPassword from "../../pages/ResetPassword";
 
 import Organization from "../../pages/organizations/Organization";
 import CreateOrganizations from "../../pages/organizations/CreateOrganizations";
 
+import CommingSoon from "../../pages/CommingSoon";
+
 const AppRouter = () => {
+  const user = useSelector((state) => state.auth.user);
+  const dispatch = useDispatch();
+
   const navigate = useNavigate();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const userType = localStorage.getItem('userType');
-  useEffect(() => {
-    try {
-      const userData = localStorage.getItem("userData");
-      const userData1 = JSON.parse(userData);
 
-      if (userData && userData1.token) {
-        setIsAuthenticated(true);
-      } else {
-        setIsAuthenticated(false);
+  useEffect(() => {
+    // IIFE (Immediately Invoked Function Expression) for async operation
+    (async () => {
+      try {
+        const _token = localStorage.getItem("_token");
+        if (_token && !user) {
+          let fetchedUser = await getUser(_token, true);
+          dispatch(createUser({ user: fetchedUser }));
+        }
+      } catch (error) {
+        console.error("Error validating token:", error);
       }
-    } catch (error) {
-      console.error("Error validating token:", error);
-    }
-  }, [navigate]);
+    })();
+  }, [navigate, user]);
+
 
   useEffect(() => {
+
+
     const currentUrl = window.location.pathname;
-    if (!isAuthenticated && currentUrl !== '/login') {
-      navigate('/login');
-    } else if (isAuthenticated && (currentUrl === '/' || currentUrl === '/login')) {
-      userType === "admin" ? navigate('/organizations') : navigate('/organizations');
+
+    if (!user && currentUrl !== '/login') {
+      navigate('/login'); // Redirect to login if not authenticated
+    } else if (user && (currentUrl === '/' || currentUrl === '/login')) {
+      // Redirect based on userType after login
+      if (user.role === "admin") {
+        navigate('/organizations');
+      } else {
+        navigate('/organizations');
+      }
     }
-  }, [isAuthenticated]);
+
+  }, [navigate, user]);
 
   return (
     <Routes>
-
-      {isAuthenticated ? (
+      {user ? (
         <>
+          {/* Authenticated Routes */}
           <Route path="/organizations" exact element={<Organization />} />
           <Route path="/organizations/create" exact element={<CreateOrganizations />} />
           <Route path="/organizations/edit/:id" exact element={<CreateOrganizations />} />
-          
           <Route path="/project-overview/:id" exact element={<ProjectOverview />} />
           <Route path="/home" exact element={<Home />} />
-          <Route path="/login" exact element={<Login />} />
           <Route path="/admin-dashboard" exact element={<AdminDashboard />} />
           <Route path="/users" exact element={<Employees />} />
           <Route path="/add-user" exact element={<AddEmployee />} />
@@ -68,25 +86,22 @@ const AppRouter = () => {
           <Route path="/projects" exact element={<Projects />} />
           <Route path="/add-surveys" exact element={<AddProject />} />
           <Route path="/add-surveys/:id" exact element={<AddProject />} />
-
-          <Route path="/categories" exact element={<Category />} />
-          <Route path="/categories/create" exact element={<AddCategory />} />
-          <Route path="/categories/:id" exact element={<AddCategory />} />
-
+          <Route path="/competencies" exact element={<Category />} />
+          <Route path="/competencies/create" exact element={<AddCategory />} />
+          <Route path="/competencies/:id" exact element={<AddCategory />} />
+          <Route path="/surveys" exact element={<CommingSoon />} />
         </>
-
       ) : (
         <>
+          {/* Public Routes */}
           <Route path="/" element={<Login />} />
           <Route path="/login" element={<Login />} />
           <Route path="/forget-password" element={<ForgetPassword />} />
           <Route path="/reset-password" element={<ResetPassword />} />
         </>
       )}
-
     </Routes>
-  )
-
+  );
 };
 
 export default AppRouter;

@@ -30,6 +30,7 @@ const OrganizationController = {
             // Calculate the number of documents to skip
             const skip = (page - 1) * limit;
 
+
             // Query the database with pagination
             const organizations = await Organization.find().skip(skip).limit(limit);
 
@@ -47,6 +48,7 @@ const OrganizationController = {
                 totalPages,
                 totalOrganizations
             });
+            
         } catch (error) {
             console.error('Error:', error);
             res.status(500).json({ error: 'Internal Server Error' });

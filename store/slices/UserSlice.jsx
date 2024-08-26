@@ -1,36 +1,3 @@
-// import { createSlice } from "@reduxjs/toolkit";
-
-// import { setCookie } from "../../apis/AppCookies";
-
-// // const initialState = {
-// //   user: null,
-// //   isAuthenticated: false,
-// // };
-
-// // export const UserSlice = createSlice({
-// //   name: "auth",
-// //   initialState,
-// //   reducers: {
-// //     createUser: (state, action) => {},
-// //     saveToken: (state, action) => {
-// //       setCookie("auth-token", action.payload.token, 1);
-// //       state.isAuthenticated = true;
-// //     },
-// //     forgetpassword: (state, action) => {
-// //       state.value += action.payload;
-// //     },
-// //   },
-// // });
-
-
-
-// export const { createUser, saveToken, forgetpassword } = UserSlice.actions;
-// export const selectUser = (state) => state.auth.user;
-// export const selectIsAuthenticated = (state) => state.auth.isAuthenticated;
-
-// export default UserSlice.reducer;
-
-
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
@@ -44,7 +11,9 @@ export const UserSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    createUser: (state, action) => {},
+    createUser: (state, action) => {
+      state.user = action.payload.user;
+    },
     saveToken: (state, action) => {
       state.isAuthenticated = true;
       state.userType = action.payload.userType;

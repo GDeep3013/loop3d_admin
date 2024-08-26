@@ -1,102 +1,113 @@
-const Category = require('../models/Category.js');
-const SubCategory = require('../models/SubCategory.js');
+// controllers/categoryController.js
+const Category = require('../models/categoryModel');
 
+// Create a new category
 const CategoryController = {
-    createCategory: async (req, res) => {
-    
-        const { category_name, sub_category, category_id = null } = req.body;
-        console.log(req.body,category_name, sub_category, category_id);
+
+    createCategory : async (req, res) => {
         try {
-            if (!category_id) {
-            
-                const category = new Category({ category_name: category_name });
-                if (await category.save()) {              
-                    const subCategory = new SubCategory({ category_Id: category._id, sub_category_name: sub_category });
-                    if (await subCategory.save()) {
-                        return res.status(201).json({
-                            message: 'Category and subcategory created successfully'
-                        });
-                    }
-                }
-            } else {
-           const subCategory = new SubCategory({ category_Id: category_id, sub_category_name: sub_category });
-                if (await subCategory.save()) {
-                    return res.status(201).json({
-                        message: 'Subcategory created successfully'
-                    });
-                }
-            }
+            console.log(req.body);
+
+            const { category_name, parent_id, created_by, status } = req.body;
+
+            const newCategory = new Category({
+                category_name,
+                parent_id,
+                created_by,
+                status
+            });
+
+            const savedCategory = await newCategory.save();
+            res.status(201).json(savedCategory);
+
         } catch (error) {
-            if (error.name === 'ValidationError') {
-                const validationErrors = {};
-                for (const key in error.errors) {
-                    validationErrors[key] = error.errors[key].message;
-                }
-                return res.status(400).json({
-                    error: 'Validation failed',
-                    details: validationErrors,
-                });
-            }
-            return res.status(500).json({ error: 'Server error', details: error.message });
+            res.status(400).json({ error: error.message });
         }
     },
-    getCategory: async (req, res) => {
+
+    // Get all categories
+    getCategories: async (req, res) => {
         try {
-            // Find all categories
-            const categories = await Category.find();
+            // Extract query parameters for pagination
+            let { page = 1, limit = 10 } = req.query;
 
-            // For each category, populate the subcategories
-            const categoriesWithSubCategories = await Promise.all(
-                categories.map(async (category) => {
-                    const subCategories = await SubCategory.find({ category_Id: category._id }).select('sub_category_name');
-                    return {
-                        ...category._doc, 
-                        subCategories, 
-                    };
-                })
-            );
+            // Convert query params to integers (since they are initially strings)
+            page = parseInt(page, 10);
+            limit = parseInt(limit, 10);
 
-            res.status(200).json({ status: 'success', data: categoriesWithSubCategories });
-        } catch (error) {
-            console.error('Error fetching categories with subcategories:', error);
-            res.status(500).json({ error: 'Server error', details: error.message });
-        }
-    },
-    deleteCategory: async (req, res) => {
-        try {
-            const { id } = req.params;           
-            await SubCategory.deleteMany({ category_Id: id });
-            const result = await Category.findByIdAndDelete(id);
+            // Calculate the number of documents to skip
+            const skip = (page - 1) * limit;
 
-            if (!result) {
-                return res.status(404).json({ message: 'Category not found' });
-            }
-            res.status(200).json({ message: 'Category and associated subcategories deleted successfully' });
-        } catch (error) {
-            console.error('Error deleting category and subcategories:', error);
-            res.status(500).json({ error: 'Server error', details: error.message });
-        }
-    },
-    getCategoryWithId: async (req, res) => {
-        try {
-            const { id } = req.params;
-            const category = await Category.findById(id);
-            if (!category) {
-                return res.status(404).json({ message: 'Category not found' });
-            }
-            const subCategories = await SubCategory.find({ category_Id: id }).select('sub_category_name');
+            // Fetch categories with pagination
+            const categories = await Category.find().skip(skip).limit(limit).populate('parent_id', 'category_name');
 
+            // Fetch the total number of categories
+            const totalCategories = await Category.countDocuments();
+
+            // Calculate total number of pages
+            const totalPages = Math.ceil(totalCategories / limit);
+
+            // Respond with categories and pagination info
             res.status(200).json({
-                ...category._doc, 
-                subCategories, 
+                categories,
+                meta: {
+                    totalCategories,
+                    currentPage: page,
+                    totalPages,
+                    pageSize: limit,
+                },
             });
         } catch (error) {
-            console.error('Error fetching category and subcategories:', error);
-            res.status(500).json({ error: 'Server error', details: error.message });
+            res.status(400).json({ error: error.message });
         }
     },
 
+    // Get a category by ID
+    getCategoryById : async (req, res) => {
+        try {
+            const category = await Category.findById(req.params.id);
+            if (!category) {
+                return res.status(404).json({ error: "Category not found" });
+            }
+            res.status(200).json(category);
+        } catch (error) {
+            res.status(400).json({ error: error.message });
+        }
+    },
 
-};
+    // Update a category by ID
+    updateCategory : async (req, res) => {
+        try {
+            const { category_name, parent_id, status } = req.body;
+
+            const updatedCategory = await Category.findByIdAndUpdate(
+                req.params.id,
+                { category_name, parent_id, status },
+                { new: true, runValidators: true }
+            );
+
+            if (!updatedCategory) {
+                return res.status(404).json({ error: "Category not found" });
+            }
+
+            res.status(200).json(updatedCategory);
+        } catch (error) {
+            res.status(400).json({ error: error.message });
+        }
+    },
+
+    // Delete a category by ID
+    deleteCategory : async (req, res) => {
+        try {
+            const deletedCategory = await Category.findByIdAndDelete(req.params.id);
+            if (!deletedCategory) {
+                return res.status(404).json({ error: "Category not found" });
+            }
+            res.status(200).json({ message: "Category deleted successfully" });
+        } catch (error) {
+            res.status(400).json({ error: error.message });
+        }
+    }
+}
 
 module.exports = CategoryController;

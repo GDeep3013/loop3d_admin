@@ -12,28 +12,37 @@ export default function Category() {
     const navigate = useNavigate();
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
-    const itemsPerPage = 10;
     const [category, setCategory] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
-    const [previewImage, setPreviewImage] = useState(null);
+    const [loading, setLoading] = useState(true);
+
     useEffect(() => {
         getCategory();
     }, [searchTerm, currentPage]);
 
 
     async function getCategory() {
-        let url = `/api/get-categories?page=${currentPage}`;
-        if (searchTerm) {
-            url += `&searchTerm=${encodeURIComponent(searchTerm)}`;
+        setLoading(true);
+        try {
+            let url = `/api/categories?page=${currentPage}`;
+            if (searchTerm) {
+                url += `&searchTerm=${encodeURIComponent(searchTerm)}`;
+            }
+            let result = await fetch(url,{
+                headers: { 'x-api-key': import.meta.env.VITE_X_API_KEY }
+            });
+            result = await result.json();
+            setCategory(result.categories);
+            setTotalPages(result.meta.totalPages);
+            setLoading(false);
+        } catch (error) {
+            console.error(error);
+            setLoading(false);
         }
-        let result = await fetch(url);
-        result = await result.json();
-        if (result.status === 'success') {
-            console.log(result)
-            setCategory(result.data);
-            setTotalPages(result.totalPages);
-        }
+
     }
+
+
     const handlePaginationClick = (pageNumber) => {
         setCurrentPage(pageNumber);
     };
@@ -53,8 +62,9 @@ export default function Category() {
             });
 
             if (confirmResult.isConfirmed) {
-                const response = await fetch(`api/delete-category/${id}`, {
-                    method: 'DELETE'
+                const response = await fetch(`api/categories/${id}`, {
+                    method: 'DELETE',
+                    headers: { "x-api-key" : import.meta.env.VITE_X_API_KEY }
                 });
                 console.log(response, 'response');
                 if (response.ok) {
@@ -76,7 +86,7 @@ export default function Category() {
     };
 
     return (
-        <AuthLayout title={'Welcome to Category'} subTitle={'Category'}>
+        <AuthLayout title={'Welcome to Competency'} subTitle={'Competency'}>
 
             <div className='table-inner'>
                 <div className='content-outer'>
@@ -89,7 +99,7 @@ export default function Category() {
                                     <Col md={6} className='text-end'>
                                         <form className='d-flex justify-content-end'>
                                             <input type='search' placeholder='Search...' value={searchTerm} onChange={handleSearch} className='form-control' />
-                                            <Link to="create" className='default-btn' >Add Category <PLusIcon /> </Link>
+                                            <Link to="create" className='default-btn' >Add Competency <PLusIcon /> </Link>
                                         </form>
                                     </Col>
                                 </Row>
@@ -100,36 +110,28 @@ export default function Category() {
                 <table className='table'>
                     <thead>
                         <tr>
-                            <th>Category</th>
-                            <th>Sub Category</th>
+                            <th>Competency</th>
+                            <th>Parent Competency</th>
                             <th>Status <StatusIcon /> </th>
                             <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {category.length === 0 ? (
+                        {!loading && category.length === 0 && 
                             <tr>
                                 <td colSpan="6" style={{ textAlign: 'center' }}>
                                     <h4>No Category Found</h4>
                                 </td>
                             </tr>
-                        ) : (
-                            category.map(user => (
-                                <tr key={user._id}>
+                        }
+
+                        {!loading && category.length > 0 && category?.map(cat => (
+                            <tr key={cat._id}>
                                     <td>
-                                        <div className="user-profile d-flex align-items-center">
-                                            <div className='user-img'>
-                                                {user.category_name}
-                                            </div>
-                                            <div className='user-name'>{user.username}</div>
-                                        </div>
+                                        {cat.category_name}
                                     </td>
                                     <td>
-                                        {user.subCategories.map((subCategory) => (
-                                            <div key={subCategory._id}>
-                                                {subCategory.sub_category_name}
-                                            </div>
-                                        ))}
+                                        {cat?.parent_id?.category_name}
                                     </td>
                                     <td><span className='span-badge active-tag'>Active</span></td>
                                     <td>
@@ -138,14 +140,14 @@ export default function Category() {
                                                 <MoreIcon />
                                             </Dropdown.Toggle>
                                             <Dropdown.Menu>
-                                                <Dropdown.Item onClick={() => navigate(`/get-category-id/${user._id}`)}>Edit</Dropdown.Item>
-                                                <Dropdown.Item onClick={() => handleDelete(user._id)}>Delete</Dropdown.Item>
+                                            <Dropdown.Item onClick={() => navigate(`/competencies/${cat._id}`)}>Edit</Dropdown.Item>
+                                            <Dropdown.Item onClick={() => handleDelete(cat._id)}>Delete</Dropdown.Item>
                                             </Dropdown.Menu>
                                         </Dropdown>
                                     </td>
                                 </tr>
                             ))
-                        )}
+                        }
                     </tbody>
                 </table>
 
@@ -154,7 +156,7 @@ export default function Category() {
                 <Pagination className='justify-content-center pagination-outer'>
                     <Pagination.First onClick={() => handlePaginationClick(1)} disabled={currentPage === 1} />
                     <Pagination.Prev onClick={() => handlePaginationClick(currentPage - 1)} disabled={currentPage === 1} />
-                    {[...Array(totalPages).keys()].map(page => (
+                    {/*[...Array(totalPages).keys()].map(page => (
                         <Pagination.Item
                             key={page + 1}
                             className='link-page'
@@ -163,7 +165,7 @@ export default function Category() {
                         >
                             {page + 1}
                         </Pagination.Item>
-                    ))}
+                    ))*/}
                     <Pagination.Next onClick={() => handlePaginationClick(currentPage + 1)} disabled={currentPage === totalPages} />
                     <Pagination.Last onClick={() => handlePaginationClick(totalPages)} disabled={currentPage === totalPages} />
                 </Pagination>

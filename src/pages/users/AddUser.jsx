@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
-import AuthLayout from "../layout/Auth";
+import AuthLayout from "../../layout/Auth";
 import { Col, Row, Container, Form, Button } from "react-bootstrap";
 import {  useParams, useNavigate } from "react-router-dom";
-import { EditIcon } from "../components/svg-icons/icons"
 import Swal from 'sweetalert2'
 import axios from "axios"
+
+import { fetchOrgnizations } from "../../apis/OrgnizationApi";
+
 export default function AddEmployee() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -19,17 +21,26 @@ export default function AddEmployee() {
     skills: '',
     userType: '',
     _method: '',
+    organization_id : '',
     // image: null
   });
   const [skills, setSkills] = useState([]);
   const [errors, setErrors] = useState({});
   const [file, setFile] = useState("");
 
+  const [organizations, setOrganizations] = useState([]);
+
   const [previewImage, setPreviewImage] = useState(null);
   const isValidEmail = (email) => {
     // Simple email validation regex
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   };
+
+  useEffect(() => {
+    fetchOrgnizations().then((res) => {
+      setOrganizations(res.data);
+    });
+  },[]);
 
   const isValidPhoneNumber = (phone) => {
     // Simple phone number validation regex
@@ -72,9 +83,9 @@ export default function AddEmployee() {
     if (!formData.userType.trim()) {
       errors.userType = 'User type is required';
     }
-    if (file === '' && !previewImage) {
-      errors.image = 'User image is required';
-    }
+    // if (file === '' && !previewImage) {
+    //   errors.image = 'User image is required';
+    // }
     console.log(errors)
     return errors;
   };
@@ -86,23 +97,28 @@ export default function AddEmployee() {
       setErrors(validationErrors);
       return;
     }
-    const formDataWithSkills = { ...formData, skills, file };
     const formDataToSend = new FormData();
-    formDataToSend.append('name', formData.name ? formData.name : '');
-    formDataToSend.append('email', formData.email ? formData.email : '');
-    formDataToSend.append('phone', formData.phone ? formData.phone : '');
-    formDataToSend.append('designation', formData.designation ? formData.designation : '');
-    formDataToSend.append('password', formData.password ? formData.password : '');
-    formDataToSend.append('confirmPassword', formData.confirmPassword ? formData.confirmPassword : '');
-    formDataToSend.append('skills', skills ? skills : '');
-    formDataToSend.append('userType', formData.userType ? formData.userType : '');
-    formDataToSend.append('files', file ? file : '');
+          formDataToSend.append('name', formData.name ? formData.name : '');
+          formDataToSend.append('email', formData.email ? formData.email : '');
+          formDataToSend.append('phone', formData.phone ? formData.phone : '');
+          formDataToSend.append('designation', formData.designation ? formData.designation : '');
+          formDataToSend.append('password', formData.password ? formData.password : '');
+          formDataToSend.append('confirmPassword', formData.confirmPassword ? formData.confirmPassword : '');
+          formDataToSend.append('skills', skills ? skills : '');
+          formDataToSend.append('userType', formData.userType ? formData.userType : '');
+          formDataToSend.append('organization_id', formData.organization_id ? formData.organization_id : '');
+
     let url = "/api/register";
     if (id) {
       url = `/api/update-user/${id}`;
     }
 
-    await axios.post(url, formDataToSend)
+    await axios.post(url, formDataToSend,{
+      headers: { 
+        'x-api-key': import.meta.env.VITE_X_API_KEY,
+        'Content-Type': 'application/json'
+      }
+    })
       .then(response => {
         Swal.fire({
           position: "center",
@@ -115,11 +131,7 @@ export default function AddEmployee() {
       })
       .catch(error => {
         if (error.response) {
-          console.log('Server responded with non-2xx status:', error.response.status);
-          console.log('Response data:', error.response.data);
-          console.log('Response headers:', error.response.headers);
           setErrors(error.response.data.errors);
-
         } else if (error.request) {
           console.log('No response received from the server');
         } else {
@@ -146,127 +158,102 @@ export default function AddEmployee() {
     }
   };
  
-
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
     setErrors({ ...errors, [name]: '' });
   };
 
-  useEffect(() => {
-    const fetchUserDetails = async (id) => {
-      if (id) {
-        try {
-          const response = await fetch(`/api/show-user/${id}`);
-          if (!response.ok) {
-            throw new Error('Failed to fetch user details');
-          }
-          const userData = await response.json();
-          setFormData({
-            name: userData.username ? userData.username : '',
-            email: userData.email ? userData.email : '',
-            phone: userData.phone ? userData.phone : '',
-            designation: userData.designation ? userData.designation : '',
-            userType: userData.role ? userData.role : '',
-            _method: 'PUT',
-          });
-          setPreviewImage(userData.image ? '/employee-pics/' + userData.image : '');
-          setSkills(userData.skills);
-        } catch (error) {
-          console.error('Error fetching user details:', error);
-        }
-      }
-    };
+  console.log(formData);
 
-    fetchUserDetails(id);
+  useEffect(() => {
+    if (id) {
+      const fetchUserDetails = async (id) => {
+    
+          try {
+            const response = await fetch(`/api/show-user/${id}`);
+            if (!response.ok) {
+              throw new Error('Failed to fetch user details');
+            }
+            const userData = await response.json();
+            setFormData({
+              name: userData.username ? userData.username : '',
+              email: userData.email ? userData.email : '',
+              phone: userData.phone ? userData.phone : '',
+              designation: userData.designation ? userData.designation : '',
+              userType: userData.role ? userData.role : '',
+              orgnization_id: userData.orgnization_id ? userData.orgnization_id : '',
+              _method: 'PUT',
+            });
+            setPreviewImage(userData.image ? '/employee-pics/' + userData.image : '');
+            setSkills(userData.skills);
+          } catch (error) {
+            console.error('Error fetching user details:', error);
+          }
+      };
+      fetchUserDetails(id);
+    }
+
   }, [id]);
 
   useEffect(() => {
     fetchRoles();
   }, []);
 
-  const handleFileChange = (e) => {
-    let errors = {};
-    const file = e.target.files[0];
-    const allowedExtensions = ['png', 'jpg', 'jpeg'];
-    const maxFileSize = 5 * 1024 * 1024; // 5MB
+  // const handleFileChange = (e) => {
+  //   let errors = {};
+  //   const file = e.target.files[0];
+  //   const allowedExtensions = ['png', 'jpg', 'jpeg'];
+  //   const maxFileSize = 5 * 1024 * 1024; // 5MB
 
-    if (!file) {
-      return; // No file selected
-    }
+  //   if (!file) {
+  //     return; // No file selected
+  //   }
 
-    const fileExtension = file.name.split('.').pop().toLowerCase();
-    if (!allowedExtensions.includes(fileExtension)) {
-      Swal.fire({
-        position: 'top-center',
-        icon: 'warning',
-        title: 'Only PNG, JPG, or JPEG files are allowed.',
-        // showConfirmButton: true,
-        confirmButtonColor: "#000",
-        timer: 1500
-      });
-      return;
-    }
+  //   const fileExtension = file.name.split('.').pop().toLowerCase();
+  //   if (!allowedExtensions.includes(fileExtension)) {
+  //     Swal.fire({
+  //       position: 'top-center',
+  //       icon: 'warning',
+  //       title: 'Only PNG, JPG, or JPEG files are allowed.',
+  //       // showConfirmButton: true,
+  //       confirmButtonColor: "#000",
+  //       timer: 1500
+  //     });
+  //     return;
+  //   }
 
-    if (file.size > maxFileSize) {
-      Swal.fire({
-        position: 'top-center',
-        icon: 'warning',
-        title: 'File size exceeds the maximum limit of 5MB.',
-        confirmButtonColor: "#000",
-        timer: 1500
-      });
-      return;
-    }
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        setPreviewImage(reader.result);
-      };
-      reader.readAsDataURL(file);
-    }
-    setFile(file);
-  };
+  //   if (file.size > maxFileSize) {
+  //     Swal.fire({
+  //       position: 'top-center',
+  //       icon: 'warning',
+  //       title: 'File size exceeds the maximum limit of 5MB.',
+  //       confirmButtonColor: "#000",
+  //       timer: 1500
+  //     });
+  //     return;
+  //   }
+  //   if (file) {
+  //     const reader = new FileReader();
+  //     reader.onload = () => {
+  //       setPreviewImage(reader.result);
+  //     };
+  //     reader.readAsDataURL(file);
+  //   }
+  //   setFile(file);
+  // };
 
   return (
     <AuthLayout title={id ? 'Edit User' : "Add User"}>
       <div className="content-outer">
         <Form className="profile-form">
           <div className="employee-outer d-flex">
-            <div className="employee-profile">
 
-              <div className="profile-inner">
-                <div className="employee-profile-img">
-                  <input
-                    id={`file-input`}
-                    type="file"
-                    name="profile-image"
-                    style={{ display: 'none' }}
-                    onChange={handleFileChange}
-                  />
-                  <label htmlFor={`file-input`}>
-                    {previewImage ? (
-                      <img src={previewImage} alt="user image" style={{ width: '100%', height: 'auto' }} />
-                    ) : (
-                      <img src="/images/no-image.png" alt="user image" style={{ width: '100%', height: 'auto' }} />
-                    )}
-                    <span className="edit-image"><EditIcon /></span>
-                  </label>
-                </div>
-                <div className="employee-profile-name">
-                  <h3>{id ? formData.name : "Add Image"}</h3>
-                </div>
-                {errors.image && <small className="text-danger">{errors.image}</small>}
-              </div>
-
-            </div>
             <div className="employee-content">
-
 
               <Container>
                 <Row>
-                  <Col md={6}>
+                  <Col md={4}>
                     <Form.Group
                       className="mb-4">
                       <Form.Label>Name</Form.Label>
@@ -280,7 +267,7 @@ export default function AddEmployee() {
                       {errors.name && <small className="text-danger">{errors.name}</small>}
                     </Form.Group>
                   </Col>
-                  <Col md={6}>
+                  <Col md={4}>
                     <Form.Group
                       className="mb-4">
                       <Form.Label>Email Address</Form.Label>
@@ -294,7 +281,7 @@ export default function AddEmployee() {
                       {errors.email && <small className="text-danger">{errors.email}</small>}
                     </Form.Group>
                   </Col>
-                  <Col md={6}>
+                  <Col md={4}>
                     <Form.Group
                       className="mb-4">
                       <Form.Label>Phone number</Form.Label>
@@ -308,7 +295,7 @@ export default function AddEmployee() {
                       {errors.phone && <small className="text-danger">{errors.phone}</small>}
                     </Form.Group>
                   </Col>
-                  <Col md={6}>
+                  <Col md={4}>
                     <Form.Group
                       className="mb-4">
                       <Form.Label>User Type</Form.Label>
@@ -323,6 +310,24 @@ export default function AddEmployee() {
                       </Form.Select>
                       {errors.userType && <small className="text-danger">{errors.userType}</small>}
 
+                    </Form.Group>
+                  </Col>
+                  <Col md={4}>
+                    <Form.Group className="mb-4">
+                      <Form.Label>Organization</Form.Label>
+                      <Form.Select
+                        name="organization_id"
+                        value={formData.organization_id}
+                        onChange={handleChange}
+                      >
+                        <option value="">Select Organization (optional)</option>
+                        {organizations.length > 0 && organizations.map((org) => (
+                          <option key={org._id} value={org._id}>
+                            {org.name}
+                          </option>
+                        ))}
+                      </Form.Select>
+                      {errors.organization_id && <small className="text-danger">{errors.organization_id}</small>}
                     </Form.Group>
                   </Col>
                   {/* <Col md={6}>

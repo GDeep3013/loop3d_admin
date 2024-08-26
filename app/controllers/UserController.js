@@ -8,7 +8,7 @@ const path = require('path');
 const { v4: uuidv4 } = require('uuid');
 const uploadPath = path.join(__dirname, 'profile-pics');
 const fs = require('fs');
-
+const encryption = require("../utility/encryption");
 
 const UserController = {
     registerUser: [
@@ -16,10 +16,8 @@ const UserController = {
         check('name').not().isEmpty().withMessage('Name is required'),
         check('email').isEmail().withMessage('Invalid email'),
         check('phone').isMobilePhone().withMessage('Invalid phone number'),
-        check('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters long'),
-        check('designation').not().isEmpty().withMessage('Designation is required'),
+        check('password').isLength({ min: 8 }).withMessage('Password must be at least 8 characters long'),
         check('userType').not().isEmpty().withMessage('User type is required'),
-
         // Controller logic
         async (req, res) => {
             // Validate incoming request
@@ -29,7 +27,7 @@ const UserController = {
             }
 
             try {
-                const { name, password, email, phone, designation, userType } = req.body;
+                const { name, password, email, phone, designation, userType, organization_id } = req.body;
 
                 // Hash the password
                 const hashedPassword = await bcrypt.hash(password, 10);
@@ -42,6 +40,7 @@ const UserController = {
                     password: hashedPassword,
                     designation: designation,
                     role: userType,
+                    organization_id: organization_id ?? null
                 });
 
                 // Save the user to the database
@@ -94,11 +93,11 @@ const UserController = {
             }
             const role = await Role.findById(user.role);
 
-            const token = await bcrypt.hash(user.id, 10);
+            //const token = await encryption.encrypt(user.id);
 
             return res.status(200).json({
                 status: 'success',
-                token: token,
+                token: user.id, //token.iv + "." + token.encryptedData,
                 user: {
                     id: user.id,
                     email: user.email,
@@ -137,10 +136,15 @@ const UserController = {
 
             // Fetch users based on the constructed query and pagination parameters
             const users = await User.find(query)
-                .populate('role', '-__v')
-                .sort({ createdAt: -1 })
-                .skip(skip) // Skip documents for previous pages
+                .populate({
+                    path: 'organization_id',
+                    select: 'name', // Exclude the __v field from the populated organization documents
+                })
+                .populate('role', '-__v') // Populate the role field as well
+                .sort({ createdAt: -1 }) // Sort by creation date in descending order
+                .skip(skip) // Skip documents for pagination
                 .limit(parseInt(pageSize)); // Limit the number of documents per page
+
 
             const userCount = await User.countDocuments(query);
 
@@ -169,16 +173,30 @@ const UserController = {
         }
     },
 
-
     showUser: async (req, res) => {
         try {
+            let { id } = req.params;
+            let {token} = req.query;
+
+            if (token){
+                // let arr = id.split('.');
+                // let obj = {
+                //     iv: arr[0],
+                //     encryptedData: arr[1],
+                // }
+
+                // id = await encryption.decrypt(obj);
+            }
+
             const user = await User.findById(req.params.id);
             if (!user) {
                 return res.status(404).json({ error: 'User not found' });
             }
 
+            const role = await Role.findById(user.role);
+
             // Exclude sensitive fields like password from the response
-            const { _id, username, email, phone, designation, skills, role, image, createdAt, updatedAt } = user;
+            const { _id, username, email, phone, designation, skills, image, createdAt, updatedAt } = user;
             res.status(200).json({
                 _id,
                 username,
@@ -193,13 +211,13 @@ const UserController = {
             });
         } catch (error) {
             console.error('Error fetching user details:', error);
-            res.status(500).json({ error: 'Internal Server Error' });
+            res.status(500).json({ error: 'Internal Server Error', error });
         }
     },
 
     updateUser: async (req, res) => {
         const userId = req.params.id;
-        const { name, email, phone, designation, skills, userType } = req.body;
+        const { name, email, phone, designation, skills, userType , organization_id } = req.body;
         var uniqueFilename = '';
         try {
             // Find the user by ID
@@ -210,7 +228,6 @@ const UserController = {
             }
             if (req.files && req.files.length > 0) {
                 if (user.image) {
-                    console.log('image', path.join(__dirname, '../../public/employee-pics', user.image));
                     const prevImagePath = path.join(__dirname, '../../public/employee-pics', user.image);
                     fs.unlink(prevImagePath, (unlinkErr) => {
                         if (unlinkErr) {
@@ -231,14 +248,11 @@ const UserController = {
                 if (user.image) {
                     uniqueFilename = user.image;
                 }
-
             }
-            user.image = uniqueFilename;
             user.username = name;
             user.email = email;
             user.phone = phone;
-            user.designation = designation;
-            user.skills = skills;
+            user.organization_id = organization_id;
             user.role = userType;
             await user.save();
 

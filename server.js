@@ -15,7 +15,9 @@ const authenticateHeaderKey = require('./app/middlewares/auth');
 
 /**Import Routes */
 const authRoutes = require('./routes/auth.js');
+const usersRoutes = require('./routes/usersRoutes');
 const organizationRoutes = require('./routes/organization');
+const categoryRoutes = require('./routes/categoryRoutes');
 
 const app = express();
 
@@ -43,13 +45,13 @@ async function connectDB() {
 }
 
 connectDB();
-
-
 /**
  * Ssytem Routes
 */
 app.use('/', authRoutes);
+app.use('/users', authenticateHeaderKey, usersRoutes);
 app.use('/organizations', authenticateHeaderKey, organizationRoutes);
+app.use('/categories', authenticateHeaderKey, categoryRoutes);
 
 
 const port = process.env.PORT || 8080;

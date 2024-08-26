@@ -143,18 +143,16 @@ export default function LeftNav() {
 
           </li>
           <li className="sideNavItem">
-            <NavLink to="/categories">
-              <ProjectIcon />
-              Categories
+            <NavLink to="/competencies">
+              <Category />
+              Competencies 
             </NavLink>
           </li>       
         </>
         <li className="sideNavItem LogoutMenu">
           <NavLink to="#" className="dropdown-item" onClick={() => {
-            localStorage.removeItem("userData");
+            localStorage.removeItem("_token");
             localStorage.removeItem("userType");
-            localStorage.removeItem("userImage");
-            localStorage.removeItem('userName');
             navigate('/login');
           }}><Logout /> Logout</NavLink>         
         </li>

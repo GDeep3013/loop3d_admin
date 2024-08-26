@@ -2,7 +2,7 @@ import React,{useState} from 'react'
 import { Link ,useNavigate } from "react-router-dom";
 import { Container, Row, Col, Form, Button, InputGroup, } from "react-bootstrap";
 import { useDispatch } from "react-redux";
-import { setTokenValidity, userType } from "../../store/slices/UserSlice";
+import { setTokenValidity, userType, createUser } from "../../store/slices/UserSlice";
 
 export default function Login() {
   const dispatch = useDispatch();
@@ -71,13 +71,11 @@ export default function Login() {
     
             const { token, user: { email, role ,image,name} } = data;
 
-            localStorage.setItem('userData', JSON.stringify({ token: token }));
-            localStorage.setItem('userType', role);
-            localStorage.setItem('userImage', image);
-            localStorage.setItem('userName', name);
-            
-            dispatch(setTokenValidity({ isTokenValid: true }));
+            localStorage.setItem('_token', token);
+
             dispatch(userType({ userType: role }));
+
+            dispatch(createUser({ user: data.user }));
           
             role === 'admin' ? navigate("/organizations"):navigate("/users");
 

@@ -1,0 +1,40 @@
+/*
+* Comming Soon page css
+*/
+.coming-soon {
+    background-color: #f8f9fa;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #343a40;
+}
+
+.coming-soon h1 {
+    font-size: 3rem;
+    margin-bottom: 20px;
+}
+
+.coming-soon p {
+    font-size: 1.25rem;
+    margin-bottom: 30px;
+}
+
+.coming-soon .btn-primary {
+    padding: 10px 20px;
+    font-size: 1rem;
+    border-radius: 5px;
+}
+
+@media (max-width: 768px) {
+    .coming-soon h1 {
+        font-size: 2.5rem;
+    }
+
+    .coming-soon p {
+        font-size: 1rem;
+    }
+}
+/*
+* Comming Soon page css EDN
+*/
