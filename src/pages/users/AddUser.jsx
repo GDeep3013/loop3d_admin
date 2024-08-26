@@ -302,8 +302,8 @@ export default function AddEmployee() {
                       <Form.Select aria-label="Default select example" name="userType" value={formData.userType} onChange={handleChange}>
                         <option>Open this select menu</option>
                         {roles.map(option => (
-                          <option key={option.value} value={option.value}>
-                            {option.label}
+                          <option key={option.value} value={option.value} style={{ textTransform: "capitalize" }}>
+                            {option.label.replace(/_/g, " ")}
                           </option>
                         ))}
 
