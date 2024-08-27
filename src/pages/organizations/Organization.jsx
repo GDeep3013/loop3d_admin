@@ -149,8 +149,9 @@ export default function Organization() {
                                                     <MoreIcon />
                                                 </Dropdown.Toggle>
                                                 <Dropdown.Menu>
-                                                    <Dropdown.Item onClick={() => navigate(`edit/${org._id}`)}>Edit</Dropdown.Item>
-                                                    <Dropdown.Item onClick={() => handleDelete(org._id)}>Delete</Dropdown.Item>
+                                                    <Dropdown.Item key={"view"} onClick={() => navigate(`view/${org._id}`)}>View</Dropdown.Item>
+                                                    <Dropdown.Item key={"edit"}  onClick={() => navigate(`edit/${org._id}`)}>Edit</Dropdown.Item>
+                                                    <Dropdown.Item key={"delete"}  onClick={() => handleDelete(org._id)}>Delete</Dropdown.Item>
                                                 </Dropdown.Menu>
                                             </Dropdown>
                                         </td>

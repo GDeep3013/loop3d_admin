@@ -5,6 +5,8 @@ import { useParams, useNavigate } from "react-router-dom";
 import Swal from 'sweetalert2';
 import axios from "axios";
 
+import AssignCompetencies from "./AssignCompetencies";
+
 export default function AddOrganization() {
     const { id } = useParams();  // Retrieve the organization ID from the URL parameters
     const navigate = useNavigate();
@@ -115,6 +117,8 @@ export default function AddOrganization() {
                     </Container>
                 </Form>
             </div>
+
+            {id && <AssignCompetencies orgniation={{ orgniation_id: id, name: formData.name}} type="organization" />}
         </AuthLayout>
     );
 }
