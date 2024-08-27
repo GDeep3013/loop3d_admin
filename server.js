@@ -18,6 +18,8 @@ const authRoutes = require('./routes/auth.js');
 const usersRoutes = require('./routes/usersRoutes');
 const organizationRoutes = require('./routes/organization');
 const categoryRoutes = require('./routes/categoryRoutes');
+const questionRoutes = require('./routes/questionRoutes');
+
 
 const app = express();
 
@@ -52,6 +54,8 @@ app.use('/', authRoutes);
 app.use('/users', authenticateHeaderKey, usersRoutes);
 app.use('/organizations', authenticateHeaderKey, organizationRoutes);
 app.use('/categories', authenticateHeaderKey, categoryRoutes);
+app.use('/questions', authenticateHeaderKey, questionRoutes);
+
 
 
 const port = process.env.PORT || 8080;

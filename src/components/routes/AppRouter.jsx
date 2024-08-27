@@ -18,6 +18,13 @@ import AddProject from "../../admin/AddSurvey";
 import Category from "../../pages/categories/Category";
 import AddCategory from "../../pages/categories/AddCategory";
 
+import Question from "../../pages/questions/Question";
+import AddQuestion from "../../pages/questions/AddQuestion";
+import QuestionDetail from "../../pages/questions/QuestionDetail";
+
+
+
+
 import { getUser } from "../../apis/UserApi";
 
 import ForgetPassword from "../../pages/ForgetPassword";
@@ -90,6 +97,14 @@ const AppRouter = () => {
           <Route path="/competencies/create" exact element={<AddCategory />} />
           <Route path="/competencies/:id" exact element={<AddCategory />} />
           <Route path="/surveys" exact element={<CommingSoon />} />
+          <Route path="/questions" exact element={<Question />} />
+          <Route path="/questions/create" exact element={<AddQuestion />} />
+          <Route path="/questions/:id" exact element={<AddQuestion />} />
+          <Route path="/questions/detail/:questionId" exact element={<QuestionDetail />} />
+
+
+
+
         </>
       ) : (
         <>

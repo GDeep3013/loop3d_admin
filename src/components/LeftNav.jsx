@@ -147,7 +147,13 @@ export default function LeftNav() {
               <Category />
               Competencies 
             </NavLink>
-          </li>       
+          </li> 
+          <li className="sideNavItem">
+            <NavLink to="/questions">
+              <Category />
+              Qustions
+            </NavLink>
+          </li>        
         </>
         <li className="sideNavItem LogoutMenu">
           <NavLink to="#" className="dropdown-item" onClick={() => {

@@ -242,6 +242,12 @@ form.formOuter input.form-control {
 
 .edit-image { position: absolute; bottom: 5px; right: 5px; background-color: rgba(255, 255, 255, 0.7); padding: 5px; }
 
+        .custom-list li {
+          list-style-type: disc;
+          color: black;
+          padding-left: 20px;
+        }
+
 /* start responsive css */
 @media screen and (min-width: 1280px) and (max-width: 1440px) {
     .wrapper-outer .main-content{ padding: 40px 29px; }
