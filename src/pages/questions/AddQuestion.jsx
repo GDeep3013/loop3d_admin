@@ -6,12 +6,13 @@ import Swal from 'sweetalert2';
 import { useSelector } from 'react-redux';
 
 export default function AddQuestion() {
-    const user = useSelector((state) => state.auth.user); // Assuming user is in auth slice
-    const { id } = useParams(); // Retrieve question ID from URL parameters
+    const user = useSelector((state) => state.auth.user);
+    const { id } = useParams();
     const navigate = useNavigate();
 
     const [formData, setFormData] = useState({
         questionText: '',
+        questionType: '', // 'Text' or 'Radio'
         options: [{ text: '', isCorrect: false }],
         createdBy: user?.id
     });
@@ -19,7 +20,6 @@ export default function AddQuestion() {
     const [errors, setErrors] = useState({});
 
     useEffect(() => {
-        // Fetch categories for parent options (if needed)
         const fetchCategories = async () => {
             try {
                 const response = await fetch('/api/categories', {
@@ -56,14 +56,27 @@ export default function AddQuestion() {
 
     // Form validation
     const validateForm = (data) => {
-        let errors = {};
+        let validationErrors = {};
+
         if (!data.questionText.trim()) {
-            errors.questionText = 'Question text is required';
+            validationErrors.questionText = 'Question text is required';
         }
-        if (data.options.length === 0 || data.options.every(option => !option.text.trim())) {
-            errors.options = 'At least one option is required';
+
+        if (!data.questionType) {
+            validationErrors.questionType = 'Question type is required';
         }
-        return errors;
+
+        if (data.questionType === 'Radio') {
+            if (data.options.length === 0 || data.options.every(option => !option.text.trim())) {
+                validationErrors.options = 'At least one option is required';
+            }
+
+            if (!data.options.some(option => option.isCorrect)) {
+                validationErrors.options = 'At least one correct option is required for radio questions';
+            }
+        }
+
+        return validationErrors;
     };
 
     // Handle input changes
@@ -77,7 +90,15 @@ export default function AddQuestion() {
     const handleOptionChange = (index, e) => {
         const { name, value, checked } = e.target;
         const updatedOptions = [...formData.options];
-        updatedOptions[index][name] = name === 'isCorrect' ? checked : value;
+        
+        if (name === 'isCorrect' && formData.questionType === 'Radio') {
+            updatedOptions.forEach((option, i) => {
+                option.isCorrect = i === index ? checked : false;
+            });
+        } else {
+            updatedOptions[index][name] = name === 'isCorrect' ? checked : value;
+        }
+
         setFormData({ ...formData, options: updatedOptions });
     };
 
@@ -136,9 +157,9 @@ export default function AddQuestion() {
         <AuthLayout title={id ? 'Edit Question' : 'Add Question'}>
             <div className="content-outer">
                 <Form onSubmit={handleSubmit}>
-                    <Container>
+                    <Container className='outer-box'>
                         <Row>
-                            <Col md={12}>
+                        <Col md={6}>
                                 <Form.Group className="mb-4">
                                     <Form.Label>Question Text</Form.Label>
                                     <Form.Control
@@ -151,26 +172,61 @@ export default function AddQuestion() {
                                     {errors.questionText && <small className="text-danger">{errors.questionText}</small>}
                                 </Form.Group>
                             </Col>
-                            <Col md={12}>
-                                <h3>Options</h3>
-                                {formData.options.map((option, index) => (
-                                    <div key={index} className="mb-3">
-                                        <Form.Control
-                                            type="text"
-                                            name="text"
-                                            placeholder={`Option ${index + 1}`}
-                                            value={option.text}
-                                            onChange={(e) => handleOptionChange(index, e)}
-                                        />
-                                        <Button type="button" onClick={() => removeOption(index)} variant="danger">
-                                            Remove
-                                        </Button>
-                                    </div>
-                                ))}
-                                <Button type="button" onClick={addOption} variant="primary">
-                                    Add Option
-                                </Button>
+                            <Col md={6}>
+                                <Form.Group className="mb-4">
+                                    <Form.Label>Answer Type</Form.Label>
+                                    <Form.Control
+                                        as="select"
+                                        name="questionType"
+                                        value={formData.questionType}
+                                        onChange={handleChange}
+                                    >
+                                        <option value="">Select Type</option>
+                                        <option value="Text">Text</option>
+                                        <option value="Radio">Radio</option>
+                                    </Form.Control>
+                                    {errors.questionType && <small className="text-danger">{errors.questionType}</small>}
+                                </Form.Group>
                             </Col>
+                        </Row>
+                        <Row>
+                            {formData.questionType === 'Radio' && (
+                                <Col md={12}>
+                                    <div className='question-contant'>
+                                    <h3>Answers</h3>
+                                    <Button type="button" onClick={addOption} variant="primary">
+                                        Add Option
+                                    </Button>
+                                    </div>
+                                    <div className='question-from'>
+                                    {formData.options.map((option, index) => (
+                                        <div key={index} className="mb-3">
+                                            <Form.Control
+                                                type="text"
+                                                name="text" 
+                                                placeholder={`Option ${index + 1}`}
+                                                value={option.text}
+                                                onChange={(e) => handleOptionChange(index, e)}
+                                            />
+                                            <div className='question-inner'>
+                                            <Form.Check
+                                                type="checkbox"
+                                                name="isCorrect"
+                                                label="Correct"
+                                                checked={option.isCorrect}
+                                                onChange={(e) => handleOptionChange(index, e)}
+                                            />
+                                            
+                                            <Button type="button" onClick={() => removeOption(index)} variant="danger">
+                                                <img src='/images/remove.png'/>
+                                            </Button>
+                                            </div>
+                                        </div>
+                                    ))}
+                                        </div>
+                                    {errors.options && <small className="text-danger">{errors.options}</small>}
+                                </Col>
+                            )}
                             <Col md={12}>
                                 <div className="profile-btns">
                                     <Button type="submit" className="default-btn">

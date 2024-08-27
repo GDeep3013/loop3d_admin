@@ -15,6 +15,7 @@ export default function QuestionDetail() {
     }, [questionId]);
 
     console.log(`Question`, questionId);
+
     async function fetchQuestionDetails() {
         setLoading(true);
         try {
@@ -45,17 +46,24 @@ export default function QuestionDetail() {
                         {!loading && question && (
                             <Card className="mt-4 shadow-sm">
                                 <Card.Body>
-                                    <Card.Title className="mb-4"><strong>Question:</strong> {question.questionText}</Card.Title>
-                                    <ListGroup className='custom-list '>
+                                    <Card.Title className="mb-4">
+                                        <strong>Question:</strong> {question.questionText}
+                                    </Card.Title>
+                                    {/* <Card.Subtitle className="mb-3 text-muted">
+                                        <strong>Type:</strong> {question.questionType}
+                                    </Card.Subtitle> */}
+                                    <ListGroup className='custom-list'>
+                                        <ul>
                                         {question.options.map((option, index) => (
-                                            <ListGroup.Item key={index} as="li">
-                                                {option.text}
+                                                <ListGroup.Item key={index} as="li">
+                                                {option.text} {option.isCorrect && <strong>(Correct)</strong>}
                                             </ListGroup.Item>
                                         ))}
+                                            </ul>
                                     </ListGroup>
-                                    <div className="mt-4 d-flex justify-content-between">
-                                        <Button variant="primary" onClick={() => navigate(`/questions/${question._id}`)}>Edit</Button>
+                                    <div className="mt-4 d-flex gap-3">
                                         <Button variant="secondary" onClick={() => navigate('/questions')}>Back</Button>
+                                        <Button variant="primary edit-btn" onClick={() => navigate(`/questions/${question._id}`)}>Edit</Button>
                                     </div>
                                 </Card.Body>
                             </Card>

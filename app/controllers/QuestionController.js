@@ -4,11 +4,11 @@ const Question = require('../models/Question');
 exports.createQuestion = async (req, res) => {
     try {
         // Extract question data from the request body
-        const { questionText, type, options } = req.body;
+        const { questionText, questionType, options } = req.body;
 
         // Create a new question instance
         const newQuestion = new Question({
-            type,
+            questionType,
             questionText,
             options: []  // Start with an empty options array
         });
