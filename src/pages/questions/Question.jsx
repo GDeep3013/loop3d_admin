@@ -107,6 +107,7 @@ export default function Question() {
           <thead>
             <tr>
               <th>Question</th>
+              <th>Type</th>
               <th>Status <StatusIcon /> </th>
               <th>Action</th>
             </tr>
@@ -124,6 +125,9 @@ export default function Question() {
               <tr key={question._id}>
                 <td>
                   {question.questionText}
+                </td>
+                <td>
+                  {question.questionType}
                 </td>
                 <td><span className='span-badge active-tag'>Active</span></td>
                 <td>

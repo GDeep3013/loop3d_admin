@@ -9,6 +9,10 @@ const OptionSchema = new mongoose.Schema({
     questionId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Question',
+    },
+    isCorrect: {
+        type: Boolean,
+        default: false
     }
 });
 
@@ -22,7 +26,7 @@ const QuestionSchema = new mongoose.Schema({
         type: String,
         default: "Active"  // Set default value to true
     },
-    type: {
+    questionType: {
         type: String,
         required: true // Ensure the question type is required
     },

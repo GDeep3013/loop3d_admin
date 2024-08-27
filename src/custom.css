@@ -233,21 +233,24 @@ form.formOuter input.form-control {
 .sideNavList .accordion .accordion-body span.input-group-text input.form-check-input { height: 20px; width: 20px; margin: 0 11px 0 0; }
 .sideNavList .accordion .accordion-body label.form-label{ margin: 0; cursor: pointer; color: #747474;}
 .sideNavList .accordion .accordion-body span.input-group-text input.form-check-input:checked{ background-color: var(--theme-color); border-color: var(--theme-color); }
-
 .employee-profile-img { position: relative; display: inline-block; }
-
 .employee-profile-img input[type="file"] { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
-
 .employee-profile-img img { display: block; width: 100%; height: auto; }
-
 .edit-image { position: absolute; bottom: 5px; right: 5px; background-color: rgba(255, 255, 255, 0.7); padding: 5px; }
-
-        .custom-list li {
-          list-style-type: disc;
-          color: black;
-          padding-left: 20px;
-        }
-
+.custom-list li { list-style-type: disc; color: black; padding-left: 20px; }
+.question-from .mb-3 {width: 49%; position: relative;}
+.question-from .question-inner { display: flex; align-items: center; padding-top: 13px; justify-content: space-between; }
+.profile-btns { padding-top: 30px; }
+.outer-box button.btn { background-color: var(--theme-color); border: none; }
+.question-contant { display: flex; width: 49%; justify-content: space-between; padding-bottom: 20px; }
+.custom-list.list-group li.list-group-item { border: none; position: relative; padding: 0 0 15px 17px; }
+.custom-list.list-group li.list-group-item:after { position: absolute; content: ''; top: 7px; left: 0; width: 7px; height: 7px; background-color: #000; border-radius: 10px; }
+.card-body { padding: 25px; }
+.card-title strong { display: block; padding-bottom: 11px; }
+button.edit-btn { background-color: var(--theme-color); border: none; }
+.question-from .question-inner button.btn { position: absolute; right: 0; top: 0; }
+.question-from .question-inner button.btn img { max-width: 19px; filter: invert(1); }
+.question-from .mb-3 input.form-control { width: 92%; }
 /* start responsive css */
 @media screen and (min-width: 1280px) and (max-width: 1440px) {
     .wrapper-outer .main-content{ padding: 40px 29px; }
