@@ -13,7 +13,7 @@ const encryption = require("../utility/encryption");
 const UserController = {
     registerUser: [
         // Validation rules
-        check('name').not().isEmpty().withMessage('Name is required'),
+        check('first_name').not().isEmpty().withMessage('Name is required'),
         check('email').isEmail().withMessage('Invalid email'),
         check('phone').isMobilePhone().withMessage('Invalid phone number'),
         check('password').isLength({ min: 8 }).withMessage('Password must be at least 8 characters long'),
@@ -27,14 +27,15 @@ const UserController = {
             }
 
             try {
-                const { name, password, email, phone, designation, userType, organization_id } = req.body;
+                const { first_name, last_name, password, email, phone, designation, userType, organization_id } = req.body;
 
                 // Hash the password
                 const hashedPassword = await bcrypt.hash(password, 10);
 
                 // Create the user object
                 const user = new User({
-                    username: name,
+                    first_name: first_name,
+                    last_name: last_name,
                     email: email,
                     phone: phone,
                     password: hashedPassword,
@@ -114,7 +115,6 @@ const UserController = {
             });
         }
     },
-
     fetchUsers: async (req, res) => {
         try {
             // Extract search parameters and pagination parameters from request
@@ -124,10 +124,10 @@ const UserController = {
             const query = {};
             if (searchTerm) {
                 query.$or = [
-                    { username: { $regex: searchTerm, $options: 'i' } }, // Case-insensitive search by username
+                    { first_name: { $regex: searchTerm, $options: 'i' } }, // Case-insensitive search by username
+                    { last_name: { $regex: searchTerm, $options: 'i' } }, // Case-insensitive search by username
                     { email: { $regex: searchTerm, $options: 'i' } }, // Case-insensitive search by email
-                    { designation: { $regex: searchTerm, $options: 'i' } }, // Case-insensitive search by designation
-                    { skills: { $regex: searchTerm, $options: 'i' } }, // Case-insensitive search by skills
+                    { phone: { $regex: searchTerm, $options: 'i' } }, // Case-insensitive search by email
                 ];
             }
 
@@ -172,7 +172,6 @@ const UserController = {
             res.status(500).json({ error: 'Internal Server Error' });
         }
     },
-
     showUser: async (req, res) => {
         try {
             let { id } = req.params;
@@ -188,7 +187,7 @@ const UserController = {
                 // id = await encryption.decrypt(obj);
             }
 
-            const user = await User.findById(req.params.id);
+            const user = await User.findById(id);
             if (!user) {
                 return res.status(404).json({ error: 'User not found' });
             }
@@ -196,16 +195,15 @@ const UserController = {
             const role = await Role.findById(user.role);
 
             // Exclude sensitive fields like password from the response
-            const { _id, username, email, phone, designation, skills, image, createdAt, updatedAt } = user;
+            const { _id, first_name,last_name, email, phone, organization_id, createdAt, updatedAt } = user;
             res.status(200).json({
                 _id,
-                username,
+                first_name,
+                last_name,
                 email,
                 phone,
-                designation,
-                skills,
                 role,
-                image,
+                organization_id,
                 createdAt,
                 updatedAt
             });
@@ -214,10 +212,9 @@ const UserController = {
             res.status(500).json({ error: 'Internal Server Error', error });
         }
     },
-
     updateUser: async (req, res) => {
         const userId = req.params.id;
-        const { name, email, phone, designation, skills, userType , organization_id } = req.body;
+        const { first_name, last_name, email, phone, userType, organization_id } = req.body;
         var uniqueFilename = '';
         try {
             // Find the user by ID
@@ -249,7 +246,8 @@ const UserController = {
                     uniqueFilename = user.image;
                 }
             }
-            user.username = name;
+            user.first_name = first_name;
+            user.last_name = last_name;
             user.email = email;
             user.phone = phone;
             user.organization_id = organization_id;
@@ -263,7 +261,43 @@ const UserController = {
             res.status(500).json({ error: 'Internal Server Error' });
         }
     },
+    getLoopLeads: async (req, res) => {
+        try {
+            // Extract search parameters and pagination parameters from request
+            const { searchTerm } = req.query;
 
+            // Construct the query object for User.find() based on search term
+            const query = {};
+
+            if (searchTerm) {
+                query.$or = [
+                    { first_name: { $regex: searchTerm, $options: 'i' } }, // Case-insensitive search by username
+                    { last_name: { $regex: searchTerm, $options: 'i' } }, // Case-insensitive search by username
+                    { email: { $regex: searchTerm, $options: 'i' } }, // Case-insensitive search by email
+                    { phone: { $regex: searchTerm, $options: 'i' } }, // Case-insensitive search by email
+                ];
+            }
+
+            // Fetch users based on the constructed query and pagination parameters
+            const users = await User.find(query)
+                .populate({
+                    path: 'organization_id',
+                    select: 'name', // Exclude the __v field from the populated organization documents
+                })
+                .populate('role', 'type') // Populate the role field as well
+                .sort({ createdAt: -1 }); // Sort by creation date in descending order
+              
+
+            res.status(200).json({
+                status: 'success',
+                users: users,
+            });
+
+        } catch (error) {
+            console.error('Error fetching users:', error);
+            res.status(500).json({ error: 'Internal Server Error' });
+        }
+    }
 };
 
 module.exports = UserController;
