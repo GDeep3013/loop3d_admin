@@ -162,7 +162,7 @@ export default function AssignCompetencies({ orgniation, type }) {
 
             {orgniation && <AssignCompeteny
                 type={type}
-                id={orgniation?._id}
+                id={orgniation?.orgniation_id}
                 show={showAssignCompetencyModal}
                 handleClose={handleCloseAssignCompetencyModal}
                 getCategory={getCategory}
