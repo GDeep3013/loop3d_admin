@@ -1,24 +1,23 @@
-import React, { useState, useEffect } from 'react'
-
+import React, { useState, useEffect } from 'react';
 import { StatusIcon, PLusIcon, MoreIcon } from "../../components/svg-icons/icons";
-import { Container, Dropdown, Pagination, Row, Col, } from 'react-bootstrap'
+import { Container, Dropdown, Pagination, Row, Col,Button } from 'react-bootstrap';
 import { Link } from "react-router-dom";
-import Swal from 'sweetalert2'
+import Swal from 'sweetalert2';
+import AssignCompeteny from '../../components/AssignCompeteny'; // Import the AssignCompetency component
 
-import { fetchCompetencies } from "../../apis/CompentencyApi"
+import { fetchCompetencies } from "../../apis/CompentencyApi";
 
-export default function AssignCompetencies({orgniation,type}) {
-
+export default function AssignCompetencies({ orgniation, type }) {
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
-
     const [competencies, setCompetencies] = useState([]);
     const [loading, setLoading] = useState(true);
+
+    const [showAssignCompetencyModal, setShowAssignCompetencyModal] = useState(false); // State for modal visibility
 
     useEffect(() => {
         getCategory();
     }, [currentPage]);
-
 
     async function getCategory() {
         setLoading(true);
@@ -32,11 +31,10 @@ export default function AssignCompetencies({orgniation,type}) {
         }
     }
 
-
     const handlePaginationClick = (pageNumber) => {
         setCurrentPage(pageNumber);
     };
-  
+
     const handleDelete = async (id) => {
         try {
             const confirmResult = await Swal.fire({
@@ -54,7 +52,6 @@ export default function AssignCompetencies({orgniation,type}) {
                     method: 'DELETE',
                     headers: { "x-api-key": import.meta.env.VITE_X_API_KEY }
                 });
-                console.log(response, 'response');
                 if (response.ok) {
                     await Swal.fire({
                         title: "Deleted!",
@@ -62,7 +59,6 @@ export default function AssignCompetencies({orgniation,type}) {
                         icon: "success",
                         confirmButtonColor: "#000",
                     });
-                    // alert(response.message);
                     getCategory();
                 } else {
                     console.error('Failed to delete user');
@@ -71,6 +67,14 @@ export default function AssignCompetencies({orgniation,type}) {
         } catch (error) {
             console.error('Error deleting user:', error);
         }
+    };
+
+    const handleShowAssignCompetencyModal = () => {
+        setShowAssignCompetencyModal(true);
+    };
+
+    const handleCloseAssignCompetencyModal = () => {
+        setShowAssignCompetencyModal(false);
     };
 
     return (
@@ -82,11 +86,13 @@ export default function AssignCompetencies({orgniation,type}) {
                             <Container>
                                 <Row>
                                     <Col md={6}>
-                                        <h4>Competencies that's belongs to {orgniation?.name}</h4>
+                                        <h4>Competencies that belong to {orgniation?.name}</h4>
                                     </Col>
                                     <Col md={6} className='text-end'>
                                         <form className='d-flex justify-content-end'>
-                                            <Link to="create" className='default-btn' >Add Competency <PLusIcon /> </Link>
+                                            <Button onClick={handleShowAssignCompetencyModal} className='default-btn'>
+                                                Add Competency <PLusIcon />
+                                            </Button>
                                         </form>
                                     </Col>
                                 </Row>
@@ -99,7 +105,7 @@ export default function AssignCompetencies({orgniation,type}) {
                         <tr>
                             <th>Competency</th>
                             <th>Parent Competency</th>
-                            <th>Status <StatusIcon /> </th>
+                            <th>Status <StatusIcon /></th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -114,41 +120,34 @@ export default function AssignCompetencies({orgniation,type}) {
 
                         {!loading && competencies.length > 0 && competencies?.map(cat => (
                             <tr key={cat._id}>
-                                <td>
-                                    {cat.category_name}
-                                </td>
-                                <td>
-                                    {cat?.parent_id?.category_name}
-                                </td>
+                                <td>{cat.category_name}</td>
+                                <td>{cat?.parent_id?.category_name}</td>
                                 <td><span className='span-badge active-tag'>Active</span></td>
                                 <td>
                                     <Dropdown.Item onClick={() => handleDelete(cat._id)}>Delete</Dropdown.Item>
                                 </td>
                             </tr>
-                        ))
-                        }
+                        ))}
                     </tbody>
                 </table>
-
             </div>
+
             {totalPages > 1 && (
                 <Pagination className='justify-content-center pagination-outer'>
                     <Pagination.First onClick={() => handlePaginationClick(1)} disabled={currentPage === 1} />
                     <Pagination.Prev onClick={() => handlePaginationClick(currentPage - 1)} disabled={currentPage === 1} />
-                    {/*[...Array(totalPages).keys()].map(page => (
-                        <Pagination.Item
-                            key={page + 1}
-                            className='link-page'
-                            active={page + 1 === currentPage}
-                            onClick={() => handlePaginationClick(page + 1)}
-                        >
-                            {page + 1}
-                        </Pagination.Item>
-                    ))*/}
                     <Pagination.Next onClick={() => handlePaginationClick(currentPage + 1)} disabled={currentPage === totalPages} />
                     <Pagination.Last onClick={() => handlePaginationClick(totalPages)} disabled={currentPage === totalPages} />
                 </Pagination>
             )}
+
+            {/* Modal for Assigning Competencies */}
+            <AssignCompeteny
+                type={type}
+                id={orgniation?.orgniation_id}
+                show={showAssignCompetencyModal}
+                handleClose={handleCloseAssignCompetencyModal}
+            />
         </div>
-    )
+    );
 }

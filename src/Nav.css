@@ -79,6 +79,7 @@ nav.sideNavOuter{ z-index: 1031; position: relative; width: 273px; transition: w
 @keyframes fadeIn { 100% { opacity: 1; transform: none; } }
 .headerSearch .dropdown-menu a { border-radius: 5px; }
 .sideNavList li.sideNavItem a svg path { fill: #000; }
+.sideNavList li.sideNavItem a svg.question-icon path { fill: none; }
 .sideNavList li.sideNavItem a.active svg path { fill: #fff !important; }
 .headerSearch .dropdown-menu a:hover { background-color: var(--theme-color); color: #fff; }
 ul.sideNavList { padding: 22px 16px 12px; min-height: calc(100vh - 106px); width: 273px; margin: 0;}

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
-import { Category, MenuIcon, Technology, Job, FixedPrice, Logout, EmployeeIcon, DocomentIcon, ProjectIcon } from "./svg-icons/icons";
+import { Category, MenuIcon, Technology, Job, FixedPrice, Logout, EmployeeIcon, DocomentIcon, ProjectIcon,QuestionIcon } from "./svg-icons/icons";
 import "../Nav.css";
 // import { useSelector, useDispatch } from "react-redux";
 import { selectUserType } from "../../store/slices/UserSlice"
@@ -150,7 +150,7 @@ export default function LeftNav() {
           </li> 
           <li className="sideNavItem">
             <NavLink to="/questions">
-              <Category />
+              <QuestionIcon />
               Qustions
             </NavLink>
           </li>        
