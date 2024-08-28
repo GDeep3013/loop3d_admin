@@ -251,6 +251,10 @@ button.edit-btn { background-color: var(--theme-color); border: none; }
 .question-from .question-inner button.btn { position: absolute; right: 0; top: 0; }
 .question-from .question-inner button.btn img { max-width: 19px; filter: invert(1); }
 .question-from .mb-3 input.form-control { width: 92%; }
+svg.remove-icon { width: 28px; height: 25px; background-color: var(--theme-color); padding: 4px; border-radius: 4px; }
+svg.remove-icon path { fill: #fff; }
+.table-inner .table tr.subcatrgory-text td:first-child { padding-left: 65px; }
+.modal-footer button.btn.btn-primary { background-color: var(--theme-color); border: none; }
 /* start responsive css */
 @media screen and (min-width: 1280px) and (max-width: 1440px) {
     .wrapper-outer .main-content{ padding: 40px 29px; }

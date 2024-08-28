@@ -64,9 +64,9 @@ export const updateAssignCompetency = async (id, data) => {
     }
 }
 
-export const deleteAssignCompetency = async (id) => {
+export const deleteAssignCompetency = async (id,category_id) => {
     try {
-        const url = `/api/assign-competency/${id}`;
+        const url = `/api/assign-competency/${id}/${category_id}`;
         const response = await fetch(url, {
             method: 'DELETE',
             headers: { 'x-api-key': import.meta.env.VITE_X_API_KEY }

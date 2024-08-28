@@ -4,8 +4,9 @@ import Select from 'react-select';
 import { fetchCompetencies, fetchSubcategories } from "../apis/CompentencyApi";
 import { createAssignCompetency } from "../apis/assignCompetencyApi";
 import { useSelector } from 'react-redux';
+import Swal from 'sweetalert2';
 
-export default function AssignCompetency({ type, id, show, handleClose }) {
+export default function AssignCompetency({ type, id, show, handleClose,getCategory }) {
   const [selectedCategory, setSelectedCategory] = useState(null); // Selected category
   const [categories, setCategories] = useState([]);
   const [subcategories, setSubcategories] = useState([]);
@@ -69,10 +70,7 @@ export default function AssignCompetency({ type, id, show, handleClose }) {
   };
 
   const handleSubmit = async () => {
-    if (!selectedCategory || selectedSubcategories.length === 0) {
-      alert('Please select a category and at least one subcategory');
-      return;
-    }
+
 
     try {
       const response = await createAssignCompetency({
@@ -80,10 +78,18 @@ export default function AssignCompetency({ type, id, show, handleClose }) {
         user_id: userId,
         organization_id: id,
         category_id: selectedCategory.value, // Send selected category ID
-        subcategories: selectedSubcategories.map(option => option.value), // Send selected subcategory IDs
+        subcategories: (selectedSubcategories.length >0 )? selectedSubcategories.map(option => option.value):[] // Send selected subcategory IDs
       });
 
       if (response) {
+          await Swal.fire({
+            title: "Assigned!",
+            text: "Competency assigned successfully",
+            icon: "success",
+            confirmButtonColor: "#000",
+        });
+        getCategory();
+
         console.log('Competency assigned successfully');
       } else {
         console.error('Error assigning competency');
@@ -121,7 +127,7 @@ export default function AssignCompetency({ type, id, show, handleClose }) {
 
             {selectedCategory && (
               <Form.Group>
-                <Form.Label>Select Subcategories</Form.Label>
+                <Form.Label className='pt-3 font-weight-bold'>Select Subcategories</Form.Label>
                 <Select
                   options={subcategories}
                   value={selectedSubcategories}

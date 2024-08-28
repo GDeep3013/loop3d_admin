@@ -1,4 +1,5 @@
 const AssignCompetency = require('../models/AssignCompetencyModel');
+const Category = require('../models/categoryModel');
 
 // Create a new assignment
 exports.createAssignment = async (req, res) => {
@@ -30,7 +31,6 @@ exports.createAssignment = async (req, res) => {
         const existingAssignments = await AssignCompetency.find({
             organization_id,
             user_id,
-            type,
             category_id: { $in: [...subcategories, category_id] } // Check against all provided IDs
         });
 
@@ -40,8 +40,9 @@ exports.createAssignment = async (req, res) => {
         // Filter out assignments that already exist
         const filteredAssignments = newAssignments.filter(a => !existingCategoryIds.has(a.category_id.toString()));
 
+        // If no new assignments to add, return success
         if (filteredAssignments.length === 0) {
-            return res.status(400).json({ error: 'No new categories to add' });
+            return res.status(200).json({ message: 'All provided categories are already assigned' });
         }
 
         // Save all new assignments to the database
@@ -53,6 +54,7 @@ exports.createAssignment = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 };
+
 
 // Get all assignments
 exports.getAllAssignments = async (req, res) => {
@@ -105,16 +107,27 @@ exports.updateAssignment = async (req, res) => {
 // Delete an assignment by ID
 exports.deleteAssignment = async (req, res) => {
     try {
+        // Fetch all subcategories of the given category
+        const categories = await Category.find({ parent_id: req.params.category_id });
+
+        // Delete the specific assignment
         const deletedAssignment = await AssignCompetency.findByIdAndDelete(req.params.id);
+
         if (!deletedAssignment) {
             return res.status(404).json({ message: 'Assignment not found' });
         }
-        res.status(200).json({ message: 'Assignment deleted successfully' });
+
+        // Delete assignments for all subcategories
+        await Promise.all(categories.map(async (cat) => {
+            await AssignCompetency.deleteMany({ category_id: cat._id });
+        }));
+
+        res.status(200).json({ status: true, message: 'Assignment and related subcategory assignments deleted successfully' });
     } catch (error) {
+        console.error('Error deleting assignment:', error);
         res.status(500).json({ error: error.message });
     }
 };
-
 
 
 exports.getAssignmentsByUserAndOrg = async (req, res) => {

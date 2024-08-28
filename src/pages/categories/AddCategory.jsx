@@ -15,8 +15,8 @@ export default function AddCategory() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     category_name: '',
-    parent_id: '',
-    created_by: user?.id,
+    parent_id:null,
+    created_by: user?._id,
   });
   const [categories, setCategories] = useState([]);  // For parent categories select box
   const [errors, setErrors] = useState({});

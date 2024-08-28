@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { StatusIcon, PLusIcon } from "../../components/svg-icons/icons";
+import { StatusIcon, PLusIcon, Remove } from "../../components/svg-icons/icons";
 import { Container, Dropdown, Pagination, Row, Col, Button } from 'react-bootstrap';
 import Swal from 'sweetalert2';
 import AssignCompeteny from '../../components/AssignCompeteny'; // Import the AssignCompetency component
 import { useSelector } from 'react-redux';
 
-import { getAssignmentsByUserAndOrg } from "../../apis/assignCompetencyApi"; // Update to your actual API import
+import { getAssignmentsByUserAndOrg ,deleteAssignCompetency } from "../../apis/assignCompetencyApi"; // Update to your actual API import
 
 export default function AssignCompetencies({ orgniation, type }) {
     const [currentPage, setCurrentPage] = useState(1);
@@ -26,7 +26,7 @@ export default function AssignCompetencies({ orgniation, type }) {
         try {
             // Call the API with appropriate parameters
             const result = await getAssignmentsByUserAndOrg(userId,orgniation?.orgniation_id);
-            setCompetencies(result.assignments); // Adjust based on the API response structure
+            setCompetencies(result.assignments?result.assignments:[]); // Adjust based on the API response structure
             setTotalPages(result.totalPages); // Adjust based on the API response structure
             setLoading(false);
         } catch (error) {
@@ -39,7 +39,7 @@ export default function AssignCompetencies({ orgniation, type }) {
         setCurrentPage(pageNumber);
     };
 
-    const handleDelete = async (id) => {
+    const handleDelete = async (id,category_id) => {
         try {
             const confirmResult = await Swal.fire({
                 title: "Are you sure?",
@@ -52,11 +52,8 @@ export default function AssignCompetencies({ orgniation, type }) {
             });
 
             if (confirmResult.isConfirmed) {
-                const response = await fetch(`api/assignments/${id}`, {
-                    method: 'DELETE',
-                    headers: { "x-api-key": import.meta.env.VITE_X_API_KEY }
-                });
-                if (response.ok) {
+                const response = await deleteAssignCompetency(id,category_id);
+                if (response.status) {
                     await Swal.fire({
                         title: "Deleted!",
                         text: "The assignment has been deleted.",
@@ -95,7 +92,7 @@ export default function AssignCompetencies({ orgniation, type }) {
                                     </Col>
                                     <Col md={6} className='text-end'>
                                         <Button onClick={handleShowAssignCompetencyModal} className='default-btn'>
-                                            Add Competency <PLusIcon />
+                                        Assign Competency <PLusIcon />
                                         </Button>
                                     </Col>
                                 </Row>
@@ -122,15 +119,33 @@ export default function AssignCompetencies({ orgniation, type }) {
                         }
 
                         {!loading && competencies.length > 0 && competencies.map(cat => (
-                            <tr key={cat.category_id._id}>
-                                <td>{cat.category_id.category_name}</td>
-                                <td>{cat.user_id.username}</td>
-
-                                <td><span className='span-badge active-tag'>Active</span></td>
-                                <td>
-                                    <Dropdown.Item onClick={() => handleDelete(cat._id)}>Delete</Dropdown.Item>
-                                </td>
-                            </tr>
+                            
+                            !cat.category_id.parent_id ? (
+                                <React.Fragment key={cat.category_id._id}>
+                                    {/* Main Category Row */}
+                                    <tr>
+                                        <td>{cat.category_id.category_name}</td>
+                                        <td>{cat.user_id.username}</td>
+                                        <td><span className='span-badge active-tag'>Active</span></td>
+                                        <td>
+                                            <Dropdown.Item onClick={() => handleDelete(cat._id,cat.category_id._id)}><Remove/></Dropdown.Item>
+                                        </td>
+                                    </tr>
+                                    
+                                    {/* Subcategory Rows */}
+                                    {competencies.filter(sub => sub.category_id.parent_id === cat.category_id._id).map(subCat => (
+                                        <tr className='subcatrgory-text' key={subCat.category_id._id} style={{ }}>
+                                            <td>-- {subCat.category_id.category_name}</td>
+                                            <td>{subCat.user_id.username}</td>
+                                            <td><span className='span-badge active-tag'>Active</span></td>
+                                            <td>
+                                                <Dropdown.Item onClick={() => handleDelete(subCat._id,cat.category_id._id)}><Remove/></Dropdown.Item>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </React.Fragment>
+                            ) : null
+                                
                         ))}
                     </tbody>
                 </table>
@@ -150,6 +165,7 @@ export default function AssignCompetencies({ orgniation, type }) {
                 id={orgniation?.orgniation_id}
                 show={showAssignCompetencyModal}
                 handleClose={handleCloseAssignCompetencyModal}
+                getCategory={getCategory}
             />
         </div>
     );
