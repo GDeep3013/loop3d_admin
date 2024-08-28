@@ -1,6 +1,6 @@
-export const fetchCompetencies = async () => {
+export const fetchCompetencies = async (type) => {
     try {
-        let url = `/api/categories`;
+        let url = `/api/categories?getType=`+type;
         let response = await fetch(url, {
             headers: { 'x-api-key': import.meta.env.VITE_X_API_KEY }
         });
@@ -24,6 +24,19 @@ export const fetchCompetency = async (id) => {
     }
 }
 
+export const fetchSubcategories = async (categoryId) => {
+    try {
+        let url = `/api/categories/${categoryId}/subcategories`; // Update URL to match your API endpoint
+        let response = await fetch(url, {
+            headers: { 'x-api-key': import.meta.env.VITE_X_API_KEY }
+        });
+        let json = await response.json();
+        return json;
+    } catch (error) {
+        console.error('Error fetching subcategories:', error);
+        return false;
+    }
+}
 
 export const deleteCompetency = async (id) => {
     try {

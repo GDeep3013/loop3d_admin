@@ -1,23 +1,35 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Button, Form, Spinner } from 'react-bootstrap';
 import Select from 'react-select';
-import { fetchCompetencies } from "../apis/CompentencyApi";
+import { fetchCompetencies, fetchSubcategories } from "../apis/CompentencyApi";
+import { createAssignCompetency } from "../apis/assignCompetencyApi";
+import { useSelector } from 'react-redux';
 
 export default function AssignCompetency({ type, id, show, handleClose }) {
-  const [selectedOption, setSelectedOption] = useState(null); // Single select state
+  const [selectedCategory, setSelectedCategory] = useState(null); // Selected category
   const [categories, setCategories] = useState([]);
+  const [subcategories, setSubcategories] = useState([]);
+  const [selectedSubcategories, setSelectedSubcategories] = useState([]); // Multiple select state
   const [loading, setLoading] = useState(false);
+  const [subcatLoading, setSubcatLoading] = useState(false); // For subcategory loading
+  const userId = useSelector((state) => state.auth.user._id);
 
   useEffect(() => {
     if (show) {
-      getCategory(); // Fetch categories when modal is opened
+      getCategories(); // Fetch categories when modal is opened
     }
   }, [show]);
 
-  async function getCategory() {
+  useEffect(() => {
+    if (selectedCategory) {
+      getSubcategories(selectedCategory.value); // Fetch subcategories when a category is selected
+    }
+  }, [selectedCategory]);
+
+  async function getCategories() {
     setLoading(true);
     try {
-      let result = await fetchCompetencies();
+      let result = await fetchCompetencies("AssignCompetency");
       const categoryOptions = result.categories && result.categories.map((category) => ({
         value: category._id,
         label: category.category_name,
@@ -30,35 +42,57 @@ export default function AssignCompetency({ type, id, show, handleClose }) {
     }
   }
 
-  const handleSelectChange = (selected) => {
-    setSelectedOption(selected); // Set single selected option
+  async function getSubcategories(categoryId) {
+    setSubcatLoading(true);
+    try {
+      let result = await fetchSubcategories(categoryId);
+      const subcategoryOptions = result.subcategories && result.subcategories.map((subcat) => ({
+        value: subcat._id,
+        label: subcat.category_name,
+      }));
+
+      setSubcategories(subcategoryOptions);
+      setSubcatLoading(false);
+    } catch (error) {
+      console.error(error);
+      setSubcatLoading(false);
+    }
+  }
+
+  const handleCategoryChange = (selected) => {
+    setSelectedCategory(selected); // Set selected category
+    setSelectedSubcategories([]); // Reset subcategory selections when category changes
+  };
+
+  const handleSubcategoryChange = (selectedOptions) => {
+    setSelectedSubcategories(selectedOptions || []); // Set multiple selected subcategories
   };
 
   const handleSubmit = async () => {
-    console.log('selectedOption', selectedOption.value, id, type);
-    // Example API call:
-    // try {
-    //   const response = await fetch(`/api/assign-competency`, {
-    //     method: 'POST',
-    //     headers: {
-    //       'Content-Type': 'application/json',
-    //       'x-api-key': import.meta.env.VITE_X_API_KEY,
-    //     },
-    //     body: JSON.stringify({
-    //       type,
-    //       id,
-    //       competency: selectedOption.value, // Send selected competency ID
-    //     }),
-    //   });
-    //   if (response.ok) {
-    //     console.log('Competency assigned successfully');
-    //   } else {
-    //     console.error('Error assigning competency');
-    //   }
-    // } catch (error) {
-    //   console.error('Error submitting:', error);
-    // }
-    handleClose();
+    if (!selectedCategory || selectedSubcategories.length === 0) {
+      alert('Please select a category and at least one subcategory');
+      return;
+    }
+
+    try {
+      const response = await createAssignCompetency({
+        type,
+        user_id: userId,
+        organization_id: id,
+        category_id: selectedCategory.value, // Send selected category ID
+        subcategories: selectedSubcategories.map(option => option.value), // Send selected subcategory IDs
+      });
+
+      if (response) {
+        console.log('Competency assigned successfully');
+      } else {
+        console.error('Error assigning competency');
+      }
+    } catch (error) {
+      console.error('Error submitting:', error);
+    } finally {
+      handleClose();
+    }
   };
 
   return (
@@ -67,23 +101,40 @@ export default function AssignCompetency({ type, id, show, handleClose }) {
         <Modal.Title>Assign Competency</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        {loading ? (
+        {loading || subcatLoading ? (
           <Spinner animation="border" />
         ) : (
           <Form>
             <Form.Group>
-              <Form.Label>Select Competency</Form.Label>
+              <Form.Label>Select Category</Form.Label>
               <Select
                 options={categories}
-                value={selectedOption}
-                onChange={handleSelectChange}
-                placeholder="Select competency..."
+                value={selectedCategory}
+                onChange={handleCategoryChange}
+                placeholder="Select category..."
                 isSearchable
                 filterOption={(option, inputValue) =>
                   option.label.toLowerCase().includes(inputValue.toLowerCase())
                 }
               />
             </Form.Group>
+
+            {selectedCategory && (
+              <Form.Group>
+                <Form.Label>Select Subcategories</Form.Label>
+                <Select
+                  options={subcategories}
+                  value={selectedSubcategories}
+                  onChange={handleSubcategoryChange}
+                  isMulti
+                  placeholder="Select subcategories..."
+                  isSearchable
+                  filterOption={(option, inputValue) =>
+                    option.label.toLowerCase().includes(inputValue.toLowerCase())
+                  }
+                />
+              </Form.Group>
+            )}
           </Form>
         )}
       </Modal.Body>

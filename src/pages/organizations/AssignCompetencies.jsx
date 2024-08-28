@@ -1,29 +1,33 @@
 import React, { useState, useEffect } from 'react';
-import { StatusIcon, PLusIcon, MoreIcon } from "../../components/svg-icons/icons";
-import { Container, Dropdown, Pagination, Row, Col,Button } from 'react-bootstrap';
-import { Link } from "react-router-dom";
+import { StatusIcon, PLusIcon } from "../../components/svg-icons/icons";
+import { Container, Dropdown, Pagination, Row, Col, Button } from 'react-bootstrap';
 import Swal from 'sweetalert2';
 import AssignCompeteny from '../../components/AssignCompeteny'; // Import the AssignCompetency component
+import { useSelector } from 'react-redux';
 
-import { fetchCompetencies } from "../../apis/CompentencyApi";
+import { getAssignmentsByUserAndOrg } from "../../apis/assignCompetencyApi"; // Update to your actual API import
 
 export default function AssignCompetencies({ orgniation, type }) {
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const [competencies, setCompetencies] = useState([]);
     const [loading, setLoading] = useState(true);
-
-    const [showAssignCompetencyModal, setShowAssignCompetencyModal] = useState(false); // State for modal visibility
+    const [showAssignCompetencyModal, setShowAssignCompetencyModal] = useState(false);
+    const userId = useSelector((state) => state.auth.user._id);
 
     useEffect(() => {
-        getCategory();
-    }, [currentPage]);
+        if (orgniation?.orgniation_id) {
+            getCategory();
+        }
+    }, [currentPage, orgniation?.orgniation_id]);
 
     async function getCategory() {
         setLoading(true);
         try {
-            let result = await fetchCompetencies();
-            setCompetencies(result.categories);
+            // Call the API with appropriate parameters
+            const result = await getAssignmentsByUserAndOrg(userId,orgniation?.orgniation_id);
+            setCompetencies(result.assignments); // Adjust based on the API response structure
+            setTotalPages(result.totalPages); // Adjust based on the API response structure
             setLoading(false);
         } catch (error) {
             console.error(error);
@@ -48,24 +52,24 @@ export default function AssignCompetencies({ orgniation, type }) {
             });
 
             if (confirmResult.isConfirmed) {
-                const response = await fetch(`api/categories/${id}`, {
+                const response = await fetch(`api/assignments/${id}`, {
                     method: 'DELETE',
                     headers: { "x-api-key": import.meta.env.VITE_X_API_KEY }
                 });
                 if (response.ok) {
                     await Swal.fire({
                         title: "Deleted!",
-                        text: "Your file has been deleted.",
+                        text: "The assignment has been deleted.",
                         icon: "success",
                         confirmButtonColor: "#000",
                     });
                     getCategory();
                 } else {
-                    console.error('Failed to delete user');
+                    console.error('Failed to delete assignment');
                 }
             }
         } catch (error) {
-            console.error('Error deleting user:', error);
+            console.error('Error deleting assignment:', error);
         }
     };
 
@@ -77,6 +81,7 @@ export default function AssignCompetencies({ orgniation, type }) {
         setShowAssignCompetencyModal(false);
     };
 
+    console.log('competencies',competencies)
     return (
         <div>
             <div className='table-inner'>
@@ -89,11 +94,9 @@ export default function AssignCompetencies({ orgniation, type }) {
                                         <h4>Competencies that belong to {orgniation?.name}</h4>
                                     </Col>
                                     <Col md={6} className='text-end'>
-                                        <form className='d-flex justify-content-end'>
-                                            <Button onClick={handleShowAssignCompetencyModal} className='default-btn'>
-                                                Add Competency <PLusIcon />
-                                            </Button>
-                                        </form>
+                                        <Button onClick={handleShowAssignCompetencyModal} className='default-btn'>
+                                            Add Competency <PLusIcon />
+                                        </Button>
                                     </Col>
                                 </Row>
                             </Container>
@@ -104,7 +107,7 @@ export default function AssignCompetencies({ orgniation, type }) {
                     <thead>
                         <tr>
                             <th>Competency</th>
-                            <th>Parent Competency</th>
+                            <th>User Name</th>
                             <th>Status <StatusIcon /></th>
                             <th>Action</th>
                         </tr>
@@ -112,16 +115,17 @@ export default function AssignCompetencies({ orgniation, type }) {
                     <tbody>
                         {!loading && competencies.length === 0 &&
                             <tr>
-                                <td colSpan="6" style={{ textAlign: 'center' }}>
+                                <td colSpan="4" style={{ textAlign: 'center' }}>
                                     <h4>No Competencies Found</h4>
                                 </td>
                             </tr>
                         }
 
-                        {!loading && competencies.length > 0 && competencies?.map(cat => (
-                            <tr key={cat._id}>
-                                <td>{cat.category_name}</td>
-                                <td>{cat?.parent_id?.category_name}</td>
+                        {!loading && competencies.length > 0 && competencies.map(cat => (
+                            <tr key={cat.category_id._id}>
+                                <td>{cat.category_id.category_name}</td>
+                                <td>{cat.user_id.username}</td>
+
                                 <td><span className='span-badge active-tag'>Active</span></td>
                                 <td>
                                     <Dropdown.Item onClick={() => handleDelete(cat._id)}>Delete</Dropdown.Item>
@@ -141,7 +145,6 @@ export default function AssignCompetencies({ orgniation, type }) {
                 </Pagination>
             )}
 
-            {/* Modal for Assigning Competencies */}
             <AssignCompeteny
                 type={type}
                 id={orgniation?.orgniation_id}

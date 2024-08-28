@@ -28,4 +28,6 @@ const AssignCompetencySchema = new mongoose.Schema({
     }
 });
 
-module.exports = mongoose.model('AssignCompetency', AssignCompetencySchema);
+const AssignCompetency = mongoose.model('AssignCompetency', AssignCompetencySchema);
+module.exports = AssignCompetency;
+

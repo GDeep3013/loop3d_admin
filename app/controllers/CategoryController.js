@@ -29,7 +29,7 @@ const CategoryController = {
     getCategories: async (req, res) => {
         try {
             // Extract query parameters for pagination
-            let { page = 1, limit = 10 } = req.query;
+            let { page = 1, limit = 10, getType = null  } = req.query;
 
             // Convert query params to integers (since they are initially strings)
             page = parseInt(page, 10);
@@ -39,7 +39,13 @@ const CategoryController = {
             const skip = (page - 1) * limit;
 
             // Fetch categories with pagination
-            const categories = await Category.find().skip(skip).limit(limit).populate('parent_id', 'category_name');
+            let categories = [];
+            if (getType == "AssignCompetency") {
+                categories = await Category.find({ parent_id: null }).populate('parent_id', 'category_name');
+            } else {
+               categories = await Category.find().skip(skip).limit(limit).populate('parent_id', 'category_name');        
+
+            }
 
             // Fetch the total number of categories
             const totalCategories = await Category.countDocuments();
@@ -93,6 +99,16 @@ const CategoryController = {
             res.status(200).json(updatedCategory);
         } catch (error) {
             res.status(400).json({ error: error.message });
+        }
+    },
+    getSubcategoriesByCategoryId : async (req, res) => {
+        try {
+            const { categoryId } = req.params;
+            const subcategories = await Category.find({ parent_id: categoryId });
+            res.json({ subcategories });
+        } catch (error) {
+            console.error('Error fetching subcategories:', error);
+            res.status(500).json({ error: 'Server error' });
         }
     },
 
