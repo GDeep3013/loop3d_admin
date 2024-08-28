@@ -41,7 +41,7 @@ const UserController = {
                     password: hashedPassword,
                     designation: designation,
                     role: userType,
-                    organization_id: organization_id ?? null
+                    organization_id: (organization_id) ? organization_id : null
                 });
 
                 // Save the user to the database
@@ -102,9 +102,9 @@ const UserController = {
                 user: {
                     id: user.id,
                     email: user.email,
-                    name: user.username,
-                    role: role ? role.type : null,
-                    image: user.image ? user.image : null
+                    last_name: user.last_name,
+                    first_name: user.first_name,
+                    role: role ? role.type : null
                 }
             });
 
@@ -202,7 +202,7 @@ const UserController = {
                 last_name,
                 email,
                 phone,
-                role,
+                role: role ? role.type : null,
                 organization_id,
                 createdAt,
                 updatedAt
@@ -250,7 +250,7 @@ const UserController = {
             user.last_name = last_name;
             user.email = email;
             user.phone = phone;
-            user.organization_id = organization_id;
+            user.organization_id = (organization_id) ? organization_id : null;
             user.role = userType;
             await user.save();
 

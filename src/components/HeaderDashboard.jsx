@@ -8,6 +8,7 @@ export default function HeaderDashboard({title, subTitle}) {
 
   const user = useSelector((state) => state.auth.user);
 
+
   return (
     <div className='top-header'>
     <Container>
@@ -25,8 +26,8 @@ export default function HeaderDashboard({title, subTitle}) {
                 <img src='/images/profile-img.png' alt="User Image" />
               </div>
               <div className="profileName">
-                  <h3>{user.username}</h3>
-                  <p>{user.role?.type}</p>
+                  <h3>{user?.first_name + " " + user?.last_name}</h3>
+                  <p>{user?.role}</p>
               </div>
             </div>
           </Dropdown.Toggle>
@@ -35,10 +36,7 @@ export default function HeaderDashboard({title, subTitle}) {
             {/* <NavLink to="/" className="dropdown-item">Catogery</NavLink>
             <NavLink to="/" className="dropdown-item">Technology</NavLink> */}
                   <NavLink to="#" className="dropdown-item" onClick={() => {
-                      localStorage.removeItem("userData"); 
-                      localStorage.removeItem("userType"); 
-                      localStorage.removeItem("userImage"); 
-                      localStorage.removeItem('userName'); 
+                      localStorage.removeItem("_token"); 
                     navigate('/login');
                   }}>Logout</NavLink>
           </Dropdown.Menu>

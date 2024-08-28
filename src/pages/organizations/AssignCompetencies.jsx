@@ -145,12 +145,13 @@ export default function AssignCompetencies({ orgniation, type }) {
                 </Pagination>
             )}
 
-            <AssignCompeteny
+            {orgniation && <AssignCompeteny
                 type={type}
                 id={orgniation?.orgniation_id}
                 show={showAssignCompetencyModal}
                 handleClose={handleCloseAssignCompetencyModal}
-            />
+            /> }
+
         </div>
     );
 }
