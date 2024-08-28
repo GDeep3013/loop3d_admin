@@ -1,5 +1,5 @@
 const AssignCompetency = require('../models/AssignCompetencyModel');
-const Category = require('../models/categoryModel');
+const Category = require('../models/CategoryModel');
 
 // Create a new assignment
 exports.createAssignment = async (req, res) => {
