@@ -13,12 +13,7 @@ const AssignCompetencySchema = new mongoose.Schema({
     },
     question_id: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Question',
-        default: null
-    },
-    question_id: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Question',
+        ref: 'Question', 
         default: null
     },
     category_id: {
