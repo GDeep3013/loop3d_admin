@@ -20,4 +20,7 @@ router.get('/:id', UserController.showUser);
 // // Delete an User
 // router.delete('/:id', UserController.deleteUsers);
 
+
+router.get('/loop-leads/:org_id', UserController.getLoopLeads);
+
 module.exports = router;

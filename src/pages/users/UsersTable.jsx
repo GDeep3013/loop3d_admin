@@ -93,7 +93,8 @@ export default function EmployeeTable({ }) {
       <table className='table'>
         <thead>
           <tr>
-            <th>User</th>
+            <th>First Name</th>
+            <th>Last Name</th>
             <th>Email address</th>
             <th>Role</th>
             <th>Orgnization</th>
@@ -113,10 +114,12 @@ export default function EmployeeTable({ }) {
               <tr key={user._id}>
                 <td>
                   <div className="user-profile d-flex align-items-center">
-                    {/* <div className='user-img'>
-                      <img src={user.image?'employee-pics/'+user.image:'images/profile-img.png' }alt='profile image' />
-                    </div> */}
-                    <div className='user-name'>{user.username}</div>
+                    <div className='user-name'>{user.first_name}</div>
+                  </div>
+                </td>
+                <td>
+                  <div className="user-profile d-flex align-items-center">
+                    <div className='user-name'>{user.last_name}</div>
                   </div>
                 </td>
                 <td>{user.email}</td>

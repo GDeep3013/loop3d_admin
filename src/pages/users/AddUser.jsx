@@ -12,25 +12,20 @@ export default function AddEmployee() {
   const navigate = useNavigate();
   const [roles, setRoles] = useState([]);
   const [formData, setFormData] = useState({
-    name: '',
+    first_name: '',
+    last_name: '',
     email: '',
     phone: '',
-    designation: '',
     password: '',
     confirmPassword: '',
-    skills: '',
     userType: '',
     _method: '',
     organization_id : '',
-    // image: null
   });
-  const [skills, setSkills] = useState([]);
   const [errors, setErrors] = useState({});
-  const [file, setFile] = useState("");
 
   const [organizations, setOrganizations] = useState([]);
 
-  const [previewImage, setPreviewImage] = useState(null);
   const isValidEmail = (email) => {
     // Simple email validation regex
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -50,8 +45,8 @@ export default function AddEmployee() {
   const validateForm = (formData) => {
     let errors = {};
 
-    if (!formData.name.trim()) {
-      errors.name = 'Name is required';
+    if (!formData.first_name.trim()) {
+      errors.name = 'First name is required';
     }
 
     if (!formData.email.trim()) {
@@ -93,27 +88,27 @@ export default function AddEmployee() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const validationErrors = validateForm(formData);
+
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
       return;
     }
-    const formDataToSend = new FormData();
-          formDataToSend.append('name', formData.name ? formData.name : '');
-          formDataToSend.append('email', formData.email ? formData.email : '');
-          formDataToSend.append('phone', formData.phone ? formData.phone : '');
-          formDataToSend.append('designation', formData.designation ? formData.designation : '');
-          formDataToSend.append('password', formData.password ? formData.password : '');
-          formDataToSend.append('confirmPassword', formData.confirmPassword ? formData.confirmPassword : '');
-          formDataToSend.append('skills', skills ? skills : '');
-          formDataToSend.append('userType', formData.userType ? formData.userType : '');
-          formDataToSend.append('organization_id', formData.organization_id ? formData.organization_id : '');
+    // const formDataToSend = new FormData();
+    // formDataToSend.append('first_name', formData.first_name ? formData.first_name : '');
+    // formDataToSend.append('last_name', formData.last_name ? formData.last_name : '');
+    // formDataToSend.append('email', formData.email ? formData.email : '');
+    // formDataToSend.append('phone', formData.phone ? formData.phone : '');
+    // formDataToSend.append('password', formData.password ? formData.password : '');
+    // formDataToSend.append('confirmPassword', formData.confirmPassword ? formData.confirmPassword : '');
+    // formDataToSend.append('userType', formData.userType ? formData.userType : '');
+    // formDataToSend.append('organization_id', formData.organization_id ? formData.organization_id : null);
 
     let url = "/api/register";
     if (id) {
       url = `/api/update-user/${id}`;
     }
 
-    await axios.post(url, formDataToSend,{
+    await axios.post(url, formData,{
       headers: { 
         'x-api-key': import.meta.env.VITE_X_API_KEY,
         'Content-Type': 'application/json'
@@ -160,6 +155,7 @@ export default function AddEmployee() {
  
   const handleChange = (e) => {
     const { name, value } = e.target;
+    console.log(name, value);
     setFormData({ ...formData, [name]: value });
     setErrors({ ...errors, [name]: '' });
   };
@@ -169,7 +165,6 @@ export default function AddEmployee() {
   useEffect(() => {
     if (id) {
       const fetchUserDetails = async (id) => {
-    
           try {
             const response = await fetch(`/api/show-user/${id}`);
             if (!response.ok) {
@@ -177,16 +172,15 @@ export default function AddEmployee() {
             }
             const userData = await response.json();
             setFormData({
-              name: userData.username ? userData.username : '',
+              first_name: userData.first_name ? userData.first_name : '',
+              last_name: userData.last_name ? userData.last_name : '',
               email: userData.email ? userData.email : '',
               phone: userData.phone ? userData.phone : '',
               designation: userData.designation ? userData.designation : '',
-              userType: userData.role ? userData.role : '',
-              orgnization_id: userData.orgnization_id ? userData.orgnization_id : '',
+              userType: userData.role?._id ? userData.role?._id : '',
+              organization_id: userData.organization_id ? userData.organization_id : '',
               _method: 'PUT',
             });
-            setPreviewImage(userData.image ? '/employee-pics/' + userData.image : '');
-            setSkills(userData.skills);
           } catch (error) {
             console.error('Error fetching user details:', error);
           }
@@ -199,49 +193,6 @@ export default function AddEmployee() {
   useEffect(() => {
     fetchRoles();
   }, []);
-
-  // const handleFileChange = (e) => {
-  //   let errors = {};
-  //   const file = e.target.files[0];
-  //   const allowedExtensions = ['png', 'jpg', 'jpeg'];
-  //   const maxFileSize = 5 * 1024 * 1024; // 5MB
-
-  //   if (!file) {
-  //     return; // No file selected
-  //   }
-
-  //   const fileExtension = file.name.split('.').pop().toLowerCase();
-  //   if (!allowedExtensions.includes(fileExtension)) {
-  //     Swal.fire({
-  //       position: 'top-center',
-  //       icon: 'warning',
-  //       title: 'Only PNG, JPG, or JPEG files are allowed.',
-  //       // showConfirmButton: true,
-  //       confirmButtonColor: "#000",
-  //       timer: 1500
-  //     });
-  //     return;
-  //   }
-
-  //   if (file.size > maxFileSize) {
-  //     Swal.fire({
-  //       position: 'top-center',
-  //       icon: 'warning',
-  //       title: 'File size exceeds the maximum limit of 5MB.',
-  //       confirmButtonColor: "#000",
-  //       timer: 1500
-  //     });
-  //     return;
-  //   }
-  //   if (file) {
-  //     const reader = new FileReader();
-  //     reader.onload = () => {
-  //       setPreviewImage(reader.result);
-  //     };
-  //     reader.readAsDataURL(file);
-  //   }
-  //   setFile(file);
-  // };
 
   return (
     <AuthLayout title={id ? 'Edit User' : "Add User"}>
@@ -256,15 +207,29 @@ export default function AddEmployee() {
                   <Col md={4}>
                     <Form.Group
                       className="mb-4">
-                      <Form.Label>Name</Form.Label>
+                      <Form.Label>First Name</Form.Label>
                       <Form.Control
                         type="text"
-                        name="name"
-                        placeholder="Danny Gurety"
-                        value={formData.name}
+                        name="first_name"
+                        placeholder="First Name"
+                        value={formData.first_name}
                         onChange={(e) => { handleChange(e) }}
                       />
-                      {errors.name && <small className="text-danger">{errors.name}</small>}
+                      {errors.first_name && <small className="text-danger">{errors.first_name}</small>}
+                    </Form.Group>
+                  </Col>
+                  <Col md={4}>
+                    <Form.Group
+                      className="mb-4">
+                      <Form.Label>Last Name</Form.Label>
+                      <Form.Control
+                        type="text"
+                        name="last_name"
+                        placeholder="Last Name"
+                        value={formData.last_name}
+                        onChange={(e) => { handleChange(e) }}
+                      />
+                      {errors.last_name && <small className="text-danger">{errors.last_name}</small>}
                     </Form.Group>
                   </Col>
                   <Col md={4}>
