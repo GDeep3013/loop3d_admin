@@ -30,7 +30,6 @@ export default function AssignCompetencies({ orgniation, type }) {
             setTotalPages(result.totalPages); // Adjust based on the API response structure
             setLoading(false);
         } catch (error) {
-            console.error(error);
             setLoading(false);
         }
     }
