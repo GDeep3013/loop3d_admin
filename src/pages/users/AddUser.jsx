@@ -20,7 +20,8 @@ export default function AddEmployee() {
     confirmPassword: '',
     userType: '',
     _method: '',
-    organization_id : '',
+    organization_id: '',
+    created_by: null
   });
   const [errors, setErrors] = useState({});
 

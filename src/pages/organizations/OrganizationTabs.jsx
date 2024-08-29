@@ -2,7 +2,7 @@ import React,{useState ,useEffect} from 'react'
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 import AssignCompetencies from './AssignCompetencies';
-import LoopLeads from '../../components/LoopLeads';
+import LoopLeads from '../loopleads/LoopLeads';
 import AddOrganization from "./CreateOrganizations"
 import AuthLayout from "../../layout/Auth";
 import axios from "axios";

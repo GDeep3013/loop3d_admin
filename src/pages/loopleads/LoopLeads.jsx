@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from "react-router-dom";
-import { StatusIcon, MoreIcon } from "./svg-icons/icons";
+import { StatusIcon, MoreIcon } from "../../components/svg-icons/icons";
 import { Container, Dropdown, Row, Col } from 'react-bootstrap'
 import { Link } from "react-router-dom";
-import { fetchLoopLeads } from '../apis/UserApi';
+import { fetchLoopLeads } from '../../apis/UserApi';
 
 export default function LoopLeads({ organization }) {
     const navigate = useNavigate();
@@ -57,6 +57,7 @@ export default function LoopLeads({ organization }) {
                         <th>First Name</th>
                         <th>Last Name</th>
                         <th>Email address</th>
+                        <th>Supervisor</th>
                         <th>Role</th>
                         <th>Status <StatusIcon /> </th>
                         <th>Action</th>
@@ -82,7 +83,9 @@ export default function LoopLeads({ organization }) {
                                         <div className='user-name'>{user.last_name}</div>
                                     </div>
                                 </td>
-                                <td>{user.email}</td>
+                                    <td>{user.email}</td>
+                                    <td>{user.created_by?.username}</td>
+
                                 <td>{user.role.type}</td>
                                 <td><span className='span-badge active-tag'>Active</span></td>
                                 <td>
@@ -90,7 +93,9 @@ export default function LoopLeads({ organization }) {
                                         <Dropdown.Toggle variant="success" id="dropdown-basic">
                                             <MoreIcon />
                                         </Dropdown.Toggle>
-                                        <Dropdown.Menu>
+                                            <Dropdown.Menu>
+                                            <Dropdown.Item onClick={() => navigate(`/view-loop_lead/${user._id}/${organization.orgniation_id}`)}>View</Dropdown.Item>
+
                                             <Dropdown.Item onClick={() => navigate(`/add-user/${user._id}`)}>Edit</Dropdown.Item>
                                         </Dropdown.Menu>
                                     </Dropdown>

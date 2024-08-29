@@ -253,8 +253,14 @@ button.edit-btn { background-color: var(--theme-color); border: none; }
 .question-from .mb-3 input.form-control { width: 92%; }
 svg.remove-icon { width: 28px; height: 25px; background-color: var(--theme-color); padding: 4px; border-radius: 4px; }
 svg.remove-icon path { fill: #fff; }
-.table-inner .table tr.subcatrgory-text td:first-child { padding-left: 65px; }
+.table-inner .table tr.subcatrgory-text td:first-child { padding-left: 45px; }
 .modal-footer button.btn.btn-primary { background-color: var(--theme-color); border: none; }
+td.parent-category { font-weight: 600 !important; font-size: 17px !important; }
+.looplead-box { padding: 30px; border-radius: 10px; background-color: #fff; margin-top: 40px; }
+.looplead-box .looplead-box-outer { display: flex; column-gap: 40px; padding-top: 13px; }
+.looplead-box .looplead-box-outer p { padding-bottom: 11px; }
+.looplead-box .loop-inner span { font-size: 23px; line-height: normal; font-weight: 500; }
+.looplead-box .looplead-box-outer p span { font-size: 17px; line-height: normal; font-weight: 500; }
 /* start responsive css */
 @media screen and (min-width: 1280px) and (max-width: 1440px) {
     .wrapper-outer .main-content{ padding: 40px 29px; }

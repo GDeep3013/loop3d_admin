@@ -22,5 +22,7 @@ router.get('/:id', UserController.showUser);
 
 
 router.get('/loop-leads/:org_id', UserController.getLoopLeads);
+router.get('/loop-leads-user/:user_id/:org_id', UserController.getLoopLeadsUserByOrgId);
+
 
 module.exports = router;

@@ -12,7 +12,7 @@
 .table-heading form { column-gap: 10px; }
 .table-heading form input[type="search"] { background: url('../images/search-icon.svg') no-repeat; background-size: 17px; background-position: 12px center; padding-left: 36px; }
 .table-heading form .form-control, .table-heading form .default-btn { border-radius: 8px; }
-.table-inner .table th, .table-inner .table td{ padding: 18px 30px; vertical-align: middle}
+.table-inner .table th, .table-inner .table td{ padding: 12px 30px; vertical-align: middle}
 .table-inner thead th { background-color: #F4F4F5; border-top: 1px solid #D2D2D2; border-bottom: 1px solid #D2D2D2;  font-size: 16px; color: #2E2E2E; font-weight: 400;}
 .table-inner .table td { font-size: 16px; color: #2E2E2E; font-weight: 500; }
 .status-tags .span-badge { margin-right: 7px; }
@@ -36,7 +36,7 @@
 .employee-profile .employee-profile-name h3 { font-size: 30px; font-weight: 500;  word-wrap: break-word;}
 .employee-outer .employee-content { padding: 55px; }
 .profile-btns .default-btn { min-width: 87px; min-height: 40px; line-height: 40px; }
-.profile-btns .default-btn.cancel-btn { background-color: #F9F9F9; color: #000; margin-left: 8px; }
+.profile-btns .default-btn.cancel-btn { background-color: #fff; color: #000; margin-left: 8px; }
 .profile-btns .default-btn.cancel-btn:hover{ background-color: var(--theme-color); color: #fff; }
 .employee-content .profile-form { margin-top: 57px; }
 .profile-form .form-label { font-size: 16px; font-weight: 500; color: #2E2E2E; margin-bottom: 12px;}
@@ -66,6 +66,10 @@
 .milestone-outer .upload-btn input.form-control { width: 100%; min-height:46px; position: absolute; opacity: 0; }
 table .user-img img { vertical-align: middle; width: 42px; height: 42px; border: 1px solid #e1dede; border-radius: 33px; }
 .employee-profile .employee-profile-img img { border-radius: 50%; width: 110px!important; height: 110px!important; object-fit: cover; object-position: center; }
-
 .custom-tabs .nav-item .nav-link{ color: #000; }
 .custom-tabs .nav-item  .nav-link.active{ background-color: var(--theme-color); color: #fff;}
+ul.custom-tabs li.nav-item button { border: none; min-width: 138px; height: 47px; }
+ul.custom-tabs li.nav-item button:hover { border: none; box-shadow: none; }
+.tabe-outer .table-heading h4 { font-size: 25px; font-weight: 500; line-height: normal; }
+ul.custom-tabs { column-gap: 15px; }
+.custom-tabs .nav-item .nav-link.active { background-color: #fff; color: #000; font-size: 17px; font-weight: 500; }

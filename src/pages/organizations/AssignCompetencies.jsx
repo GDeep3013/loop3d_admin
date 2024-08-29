@@ -123,7 +123,7 @@ export default function AssignCompetencies({ orgniation, type }) {
                                 <React.Fragment key={cat.category_id._id}>
                                     {/* Main Category Row */}
                                     <tr>
-                                        <td>{cat.category_id.category_name}</td>
+                                        <td className='parent-category'>{cat.category_id.category_name}</td>
                                         <td>{cat.user_id.username}</td>
                                         <td><span className='span-badge active-tag'>Active</span></td>
                                         <td>

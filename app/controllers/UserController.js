@@ -27,7 +27,7 @@ const UserController = {
             }
 
             try {
-                const { first_name, last_name, password, email, phone, designation, userType, organization_id } = req.body;
+                const { first_name, last_name, password, email, phone, designation, userType, organization_id,created_by=null } = req.body;
 
                 // Hash the password
                 const hashedPassword = await bcrypt.hash(password, 10);
@@ -41,6 +41,7 @@ const UserController = {
                     password: hashedPassword,
                     designation: designation,
                     role: userType,
+                    created_by:created_by,
                     organization_id: (organization_id) ? organization_id : null
                 });
 
@@ -289,7 +290,8 @@ const UserController = {
                     path: 'organization_id',
                     select: 'name', // Exclude the __v field from the populated organization documents
                 })
-                .populate('role', 'type') // Populate the role field as well
+                .populate('role', 'type')
+                .populate('created_by', 'username') // Populate the role field as well
                 .sort({ createdAt: -1 }); // Sort by creation date in descending order
               
 
@@ -302,6 +304,40 @@ const UserController = {
             console.error('Error fetching users:', error);
             res.status(500).json({ error: 'Internal Server Error' });
         }
+    },
+    getLoopLeadsUserByOrgId: async (req, res) => {
+        try {
+            // Extract search parameters and pagination parameters from request
+            const { user_id ,org_id} = req.params;
+
+            const query = {
+                _id:user_id,
+                organization_id: org_id,
+            };
+
+            
+
+            // Fetch users based on the constructed query and pagination parameters
+            const user = await User.findOne(query)
+                .populate({
+                    path: 'organization_id',
+                    select: 'name', // Exclude the __v field from the populated organization documents
+                })
+                .populate('role', 'type')
+                .populate('created_by', 'username email phone') // Populate the role field as well
+                .sort({ createdAt: -1 }); // Sort by creation date in descending order
+              
+
+            res.status(200).json({
+                status: true,
+                user: user,
+            });
+
+        } catch (error) {
+            console.error('Error fetching users:', error);
+            res.status(500).json({ error: 'Internal Server Error' });
+        }
+        
     }
 };
 
