@@ -12,6 +12,11 @@ const userSchema = new mongoose.Schema({
         ref: 'Organization',
         default: null
     },
+    created_by: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        default: null
+    },
     role: { type: mongoose.Schema.Types.ObjectId, ref: 'Role' }
 }, { timestamps: true });
 
