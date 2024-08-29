@@ -108,7 +108,6 @@ exports.updateAssignment = async (req, res) => {
 exports.deleteAssignment = async (req, res) => {
     try {
         // Fetch all subcategories of the given category
-        const categories = await Category.find({ parent_id: req.params.category_id });
 
         // Delete the specific assignment
         const deletedAssignment = await AssignCompetency.findByIdAndDelete(req.params.id);
@@ -116,11 +115,20 @@ exports.deleteAssignment = async (req, res) => {
         if (!deletedAssignment) {
             return res.status(404).json({ message: 'Assignment not found' });
         }
+        const category = await Category.find({ _id: req.params.category_id, parent_id: null });
+        
+        if (!category) {
+            // Delete assignments for all subcategories
+            const categories = await Category.find({ parent_id: category._id});
 
-        // Delete assignments for all subcategories
-        await Promise.all(categories.map(async (cat) => {
-            await AssignCompetency.deleteMany({ category_id: cat._id });
-        }));
+            await Promise.all(categories.map(async (cat) => {
+                await AssignCompetency.deleteMany({ category_id: cat._id });
+            }));
+            
+        }
+
+
+       
 
         res.status(200).json({ status: true, message: 'Assignment and related subcategory assignments deleted successfully' });
     } catch (error) {

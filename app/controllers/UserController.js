@@ -264,19 +264,24 @@ const UserController = {
     getLoopLeads: async (req, res) => {
         try {
             // Extract search parameters and pagination parameters from request
-            const { searchTerm } = req.query;
+            const { searchTerm ,type} = req.query;
 
             // Construct the query object for User.find() based on search term
-            const query = {};
+            const role = await Role.findOne({ type: type });
+      
+            const query = {organization_id : req.params.org_id, role: role._id};
 
+      
             if (searchTerm) {
                 query.$or = [
-                    { first_name: { $regex: searchTerm, $options: 'i' } }, // Case-insensitive search by username
-                    { last_name: { $regex: searchTerm, $options: 'i' } }, // Case-insensitive search by username
-                    { email: { $regex: searchTerm, $options: 'i' } }, // Case-insensitive search by email
-                    { phone: { $regex: searchTerm, $options: 'i' } }, // Case-insensitive search by email
+                    { first_name: { $regex: searchTerm, $options: 'i' } }, // Case-insensitive search by first_name
+                    { last_name: { $regex: searchTerm, $options: 'i' } },  // Case-insensitive search by last_name
+                    { email: { $regex: searchTerm, $options: 'i' } },      // Case-insensitive search by email
+                    { phone: { $regex: searchTerm, $options: 'i' } },      // Case-insensitive search by phone
                 ];
             }
+    
+            
 
             // Fetch users based on the constructed query and pagination parameters
             const users = await User.find(query)

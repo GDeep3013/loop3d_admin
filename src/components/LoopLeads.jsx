@@ -1,23 +1,30 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from "react-router-dom";
-import { StatusIcon, MoreIcon } from "../../components/svg-icons/icons";
+import { StatusIcon, MoreIcon } from "./svg-icons/icons";
 import { Container, Dropdown, Row, Col } from 'react-bootstrap'
 import { Link } from "react-router-dom";
+import { fetchLoopLeads } from '../apis/UserApi';
 
 export default function LoopLeads({ organization }) {
     const navigate = useNavigate();
 
     const [users, setUsers] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
-
     useEffect(() => {
-        if(organization._id){
-            let users = fetchLoopLeads(organization._id);
-            if (Array.isArray(users) && users.length > 0) {
-                 setUsers(users);
-            }
+
+        if (organization.orgniation_id) {
+            (async () => {
+                try {
+                    let data = await fetchLoopLeads(organization.orgniation_id, searchTerm);
+                    if (Array.isArray(data.users) && data.users.length > 0) {
+                        setUsers(data.users);
+                    }
+                } catch (error) {
+                    console.error("Error fetching loop leads:", error);
+                }
+            })();
         }
-    }, [searchTerm]);
+    }, [organization.orgniation_id]);
 
 
     const handleSearch = (e) => {
@@ -32,7 +39,7 @@ export default function LoopLeads({ organization }) {
                         <Container>
                             <Row>
                                 <Col md={6}>
-                                    <h4>{organization?.name}</h4>
+                                    <h4> Loop leads that belong to {organization?.name}</h4>
                                 </Col>
                                 <Col md={6} className='text-end'>
                                     <form className='d-flex justify-content-end'>
@@ -85,7 +92,6 @@ export default function LoopLeads({ organization }) {
                                         </Dropdown.Toggle>
                                         <Dropdown.Menu>
                                             <Dropdown.Item onClick={() => navigate(`/add-user/${user._id}`)}>Edit</Dropdown.Item>
-                                            <Dropdown.Item onClick={() => handleDelete(user._id)}>Delete</Dropdown.Item>
                                         </Dropdown.Menu>
                                     </Dropdown>
                                 </td>

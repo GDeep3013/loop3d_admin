@@ -6,6 +6,7 @@ const userSchema = new mongoose.Schema({
     password: { type: String, required: true },
     email: { type: String, unique: true, required: true },
     phone: { type: String, unique: true, required: true },
+    
     organization_id: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Organization',

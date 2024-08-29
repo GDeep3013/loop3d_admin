@@ -1,4 +1,4 @@
-.tabe-outer { background-color: #fff; border: 1px solid #D2D2D2; border-radius: 10px; margin-top: 64px;}
+.tabe-outer { background-color: #fff; border: 1px solid #D2D2D2; border-radius: 10px; margin-top: 0;}
 .tabe-outer .table-heading { padding: 14px  19px; }
 .tabe-outer .table-heading h2 { font-size: 25px; font-weight: 600; color: var(--black-color); display: inline-block; margin-right: 10px;}
 .span-badge{ display: inline-block; min-height: 27px; line-height: 27px; padding: 0 14px; border-radius: 3px; font-size: 15px; font-weight: 500;}
@@ -66,3 +66,6 @@
 .milestone-outer .upload-btn input.form-control { width: 100%; min-height:46px; position: absolute; opacity: 0; }
 table .user-img img { vertical-align: middle; width: 42px; height: 42px; border: 1px solid #e1dede; border-radius: 33px; }
 .employee-profile .employee-profile-img img { border-radius: 50%; width: 110px!important; height: 110px!important; object-fit: cover; object-position: center; }
+
+.custom-tabs .nav-item .nav-link{ color: #000; }
+.custom-tabs .nav-item  .nav-link.active{ background-color: var(--theme-color); color: #fff;}

@@ -1,4 +1,3 @@
-// models/categoryModel.js
 const mongoose = require('mongoose');
 
 const categorySchema = new mongoose.Schema({
@@ -24,5 +23,7 @@ const categorySchema = new mongoose.Schema({
     }
 }, { timestamps: true }); // This will automatically add `createdAt` and `updatedAt` fields
 
-const Category = mongoose.model('Category', categorySchema);
+// Check if the model already exists before defining it
+const Category = mongoose.models.Category || mongoose.model('Category', categorySchema);
+
 module.exports = Category;

@@ -35,6 +35,7 @@ import CreateOrganizations from "../../pages/organizations/CreateOrganizations";
 import ViewOrganization from "../../pages/organizations/ViewOrganization";
 //import AssignCompetencies from "../../pages/organizations/AssignCompetencies";
 
+import OrganizationTabs from "../../pages/organizations/OrganizationTabs"
 import CommingSoon from "../../pages/CommingSoon";
 
 const AppRouter = () => {
@@ -85,7 +86,7 @@ const AppRouter = () => {
           {/* Authenticated Routes */}
           <Route path="/organizations" exact element={<Organization />} />
           <Route path="/organizations/create" exact element={<CreateOrganizations />} />
-          <Route path="/organizations/edit/:id" exact element={<CreateOrganizations />} />
+          <Route path="/organizations/edit/:id" exact element={<OrganizationTabs />} />
           <Route path="/organizations/view/:id" exact element={<ViewOrganization />} />
 
           <Route path="/project-overview/:id" exact element={<ProjectOverview />} />

@@ -85,7 +85,7 @@ export default function AssignCompetencies({ orgniation, type }) {
                     <div className='tabe-outer'>
                         <div className='table-heading'>
                             <Container>
-                                <Row>
+                                <Row className='align-items-center'>
                                     <Col md={6}>
                                         <h4>Competencies that belong to {orgniation?.name}</h4>
                                     </Col>
