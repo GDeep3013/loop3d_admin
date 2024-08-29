@@ -1,20 +1,26 @@
 import React, { useState, useEffect } from "react";
-import AuthLayout from "../../layout/Auth";
+//import AuthLayout from "../../layout/Auth";
 import { Col, Row, Container, Form, Button } from "react-bootstrap";
 import { useParams, useNavigate } from "react-router-dom";
 import Swal from 'sweetalert2';
-import axios from "axios";
- import OrganizationTabs from "./OrganizationTabs";
-import AssignCompetencies from "./AssignCompetencies";
 
 import { createOrgnizations } from "../../apis/OrgnizationApi"
 
-export default function AddOrganization({id,formData,setFormData}) {
+export default function CreateOrganization({id,savedData}) {
     // const { id } = useParams();  // Retrieve the organization ID from the URL parameters
     const navigate = useNavigate();
   
     const [errors, setErrors] = useState({});
 
+    const [formData, setFormData] = useState({});
+
+    useEffect(() => {
+        if (savedData?.name){
+            setFormData({...savedData});
+        }
+    }, [savedData]);
+
+    
     // Form validation
     const validateForm = (formData) => {
         let errors = {};
@@ -68,37 +74,36 @@ export default function AddOrganization({id,formData,setFormData}) {
     };
 
     return (
-            <div className="content-outer">
-                <Form className="organization-form">
-                    <Container>
-                        <Row>
-                            <Col md={6}>
-                                <Form.Group className="mb-4">
-                                    <Form.Label>Organization Name</Form.Label>
-                                    <Form.Control
-                                        type="text"
-                                        name="name"
-                                        value={formData.name}
-                                        onChange={handleChange}
-                                        placeholder="Organization Name"
-                                    />
-                                    {errors.name && <small className="text-danger">{errors.name}</small>}
-                                </Form.Group>
-                            </Col>
-                            <Col md={12}>
-                                <div className="profile-btns">
-                                    <Button className="default-btn" onClick={handleSubmit}>
-                                        {id ? "Update" : "Save"}
-                                    </Button>
-                                    <Button className="default-btn cancel-btn" onClick={() => navigate('/organizations')}>
-                                        Cancel
-                                    </Button>
-                                </div>
-                            </Col>
-                        </Row>
-                    </Container>
-                </Form>
-            </div>
-
+        <div className="content-outer">
+            <Form className="organization-form">
+                <Container>
+                    <Row>
+                        <Col md={6}>
+                            <Form.Group className="mb-4">
+                                <Form.Label>Organization Name</Form.Label>
+                                <Form.Control
+                                    type="text"
+                                    name="name"
+                                    value={formData?.name}
+                                    onChange={handleChange}
+                                    placeholder="Organization Name"
+                                />
+                                {errors.name && <small className="text-danger">{errors.name}</small>}
+                            </Form.Group>
+                        </Col>
+                        <Col md={12}>
+                            <div className="profile-btns">
+                                <Button className="default-btn" onClick={handleSubmit}>
+                                    {id ? "Update" : "Save"}
+                                </Button>
+                                <Button className="default-btn cancel-btn" onClick={() => navigate('/organizations')}>
+                                    Cancel
+                                </Button>
+                            </div>
+                        </Col>
+                    </Row>
+                </Container>
+            </Form>
+        </div>
     );
 }

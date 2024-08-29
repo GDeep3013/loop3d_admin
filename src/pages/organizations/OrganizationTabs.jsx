@@ -3,7 +3,7 @@ import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 import AssignCompetencies from './AssignCompetencies';
 import LoopLeads from '../loopleads/LoopLeads';
-import AddOrganization from "./CreateOrganizations"
+import CreateOrganization from "./CreateOrganizations"
 import AuthLayout from "../../layout/Auth";
 import axios from "axios";
 
@@ -24,7 +24,7 @@ export default function OrganizationTabs() {
                         headers: { 'x-api-key': import.meta.env.VITE_X_API_KEY }
                     });
                     const { name } = response.data;
-                    setFormData({ name });
+                    setFormData({ name: name });
                 } catch (error) {
                     console.error("Error fetching organization details:", error);
                 }
@@ -32,6 +32,7 @@ export default function OrganizationTabs() {
             fetchOrganizationDetails();
         }
     }, [id]);
+
     return (
         <AuthLayout title={id ? "Edit Organization" : "Add Organization"}>
 
@@ -41,7 +42,7 @@ export default function OrganizationTabs() {
                 className="mb-3 mt-5 custom-tabs"
             >
                 <Tab eventKey="home" title="Overview">
-                    <AddOrganization id={id} formData={formData} setFormData={setFormData} />
+                    <CreateOrganization id={id} savedData={formData} />
 
                 </Tab>
                 <Tab eventKey="profile" title="Competencies">
