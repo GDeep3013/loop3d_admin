@@ -151,7 +151,7 @@ export default function LeftNav() {
           <li className="sideNavItem">
             <NavLink to="/questions">
               <QuestionIcon />
-              Qustions
+              Questions
             </NavLink>
           </li>        
         </>
