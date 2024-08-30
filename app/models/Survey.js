@@ -13,18 +13,16 @@ const SurveySchema = new mongoose.Schema({
     mgr_id: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User', // Assuming you have a User model
-        default: null
     },
     organization_id: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Organization', // Assuming you have a User model
-        default: null
     },
     report_gen_date: {
         type: Date,
         default: null
     },
-    total_invitees: {
+    total_invites: {
         type: Number,
         default: null
     },
@@ -34,23 +32,21 @@ const SurveySchema = new mongoose.Schema({
         default: 'pending'
 
     },
-    ll_completed_survey: {
+    ll_survey_status: {
         type: String,
         enum: ['yes', 'no'],
         default: "no"
 
     },
-    mgr_completed_survey: {
+    mgr_survey_status: {
         type: String,
         enum: ['yes', 'no'],
         default: "no"
-
     }
-
 
  },{
         timestamps: true
-    });
+});
 
 const Survey = mongoose.model('Survey', SurveySchema);
 

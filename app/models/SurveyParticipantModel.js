@@ -1,30 +1,27 @@
 const mongoose = require('mongoose');
 
-const surveyMemberSchema = new mongoose.Schema({
-    participant_last: {
+const SurveyParticipantSchema = new mongoose.Schema({
+    p_last_name: {
         type: String,
         required: true
     },
-    participant_first: {
+    p_first_last: {
         type: String,
         required: true
     },
-    participant_email: {
+    p_email: {
         type: String,
         required: true
     },
-    participant_relationship: {
-        type: String,
+    p_mag_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
         required: true
     },
     survey_status: {
         type: String,
-        enum: ['pending', 'completed', 'in_progress'],
+        enum: ['pending', 'in_progress', 'completed'],
         default: 'pending'
-    },
-    participant_id: {
-        type: String,
-        required: true
     },
     survey_id: {
         type: mongoose.Schema.Types.ObjectId,
@@ -35,5 +32,5 @@ const surveyMemberSchema = new mongoose.Schema({
     timestamps: true
 });
 
-const SurveyMember = mongoose.model('SurveyMember', surveyMemberSchema);
-module.exports = SurveyMember;
+const SurveyParticipant = mongoose.model('SurveyParticipant', SurveyParticipantSchema);
+module.exports = SurveyParticipant;
