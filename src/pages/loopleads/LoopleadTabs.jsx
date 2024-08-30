@@ -20,7 +20,7 @@ export default function LoopleadTabs() {
           <ViewLoopLead user_id={userId} org_id={orgId} />
         </Tab>
         <Tab eventKey="profile" title="Survey">
-            <SurveyList/>
+            <SurveyList loop_lead_id={userId} org_id={orgId}/>
         </Tab>
     </Tabs>
 </AuthLayout>

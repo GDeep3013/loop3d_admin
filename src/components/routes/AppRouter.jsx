@@ -39,6 +39,7 @@ import OrganizationTabs from "../../pages/organizations/OrganizationTabs"
 import CommingSoon from "../../pages/CommingSoon";
 
 import LoopleadTabs from "../../pages/loopleads/LoopleadTabs"
+import SurveyParticipantDetails from "../../pages/loopleads/SurveyParticipantDetails"
 
 const AppRouter = () => {
   const user = useSelector((state) => state.auth.user);
@@ -109,6 +110,8 @@ const AppRouter = () => {
           <Route path="/questions/:id" exact element={<AddQuestion />} />
           <Route path="/questions/detail/:questionId" exact element={<QuestionDetail />} />
           <Route path="/view-loop_lead/:userId/:orgId" exact element={<LoopleadTabs />} />
+          <Route path="/view-survey-participant/:id" exact element={<SurveyParticipantDetails />} />
+
 
 
 

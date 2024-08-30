@@ -1,11 +1,11 @@
 const mongoose = require('mongoose');
 
 const SurveyParticipantSchema = new mongoose.Schema({
-    p_last_name: {
+    p_first_name: {
         type: String,
         required: true
     },
-    p_first_last: {
+    p_last_name: {
         type: String,
         required: true
     },
