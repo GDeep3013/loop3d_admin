@@ -9,10 +9,10 @@ import AssignCompetencies from "./AssignCompetencies";
 
 import { createOrgnizations } from "../../apis/OrgnizationApi"
 
-export default function AddOrganization({id,formData,setFormData}) {
+export default function AddOrganization({id, formData, setFormData}) {
     // const { id } = useParams();  // Retrieve the organization ID from the URL parameters
     const navigate = useNavigate();
-  
+  console.log('formData',formData)
     const [errors, setErrors] = useState({});
 
     // Form validation
@@ -78,7 +78,7 @@ export default function AddOrganization({id,formData,setFormData}) {
                                     <Form.Control
                                         type="text"
                                         name="name"
-                                        value={formData.name}
+                                        value={formData.name?formData.name:""}
                                         onChange={handleChange}
                                         placeholder="Organization Name"
                                     />
