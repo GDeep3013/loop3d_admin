@@ -37,7 +37,7 @@ export default function SurveyParticipantDetails() {
         <AuthLayout title={"Survey participant details"}>
             <div className='table-inner'>
                 <div className='content-outer'>
-                    <div className='table-outer'>
+                    <div className='tabe-outer'>
                         <div className='table-heading'>
                             <Container>
                                 <Row>
@@ -86,7 +86,7 @@ export default function SurveyParticipantDetails() {
                                     <td>{participant?.p_last_name}</td>
                                     <td>{participant?.p_email}</td>
                                     <td>{participant?.p_mag_id?.first_name} {participant?.p_mag_id?.last_name}</td>
-                                    <td>{participant.survey_status === 'completed' ? <span className='span-badge active-tag'>Completed</span> : <span className='span-badge active-tag'>Pending</span>}</td>                                    
+                                    <td>{participant.survey_status === 'completed' ? <span className='span-badge active-tag'>Completed</span> : <span className='span-badge inactive-tag'>Pending</span>}</td>                                    
                                     <td>
                                         <Dropdown className='custom-dropdown'>
                                             <Dropdown.Toggle variant="success" id="dropdown-basic">

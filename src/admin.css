@@ -12,9 +12,9 @@
 .table-heading form { column-gap: 10px; }
 .table-heading form input[type="search"] { background: url('../images/search-icon.svg') no-repeat; background-size: 17px; background-position: 12px center; padding-left: 36px; }
 .table-heading form .form-control, .table-heading form .default-btn { border-radius: 8px; }
-.table-inner .table th, .table-inner .table td{ padding: 12px 30px; vertical-align: middle}
+.table-inner .table th, .table-inner .table td{ padding: 12px 30px; vertical-align: middle; text-align: center; }
 .table-inner thead th { background-color: #F4F4F5; border-top: 1px solid #D2D2D2; border-bottom: 1px solid #D2D2D2;  font-size: 16px; color: #2E2E2E; font-weight: 400;}
-.table-inner .table td { font-size: 16px; color: #2E2E2E; font-weight: 500; }
+.table-inner .table td { font-size: 16px; color: #2E2E2E; font-weight: 500; text-align: left; }
 .status-tags .span-badge { margin-right: 7px; }
 .status-tags .span-badge:last-child{ margin-right: 0; }
 .custom-dropdown .dropdown-toggle { background-color: transparent; padding: 0; border: none; }

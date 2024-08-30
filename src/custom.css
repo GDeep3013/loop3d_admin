@@ -261,6 +261,7 @@ td.parent-category { font-weight: 600 !important; font-size: 17px !important; }
 .looplead-box .looplead-box-outer p { padding-bottom: 11px; }
 .looplead-box .loop-inner span { font-size: 23px; line-height: normal; font-weight: 500; }
 .looplead-box .looplead-box-outer p span { font-size: 17px; line-height: normal; font-weight: 500; }
+.table-outer .table-heading { padding-bottom: 30px; }
 /* start responsive css */
 @media screen and (min-width: 1280px) and (max-width: 1440px) {
     .wrapper-outer .main-content{ padding: 40px 29px; }

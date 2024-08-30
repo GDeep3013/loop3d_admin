@@ -33,11 +33,12 @@ export default function SurveyList({ loop_lead_id, org_id }) {
   return (
     <div className='table-inner'>
       <div className='content-outer'>
-        <div className='table-outer'>
+        <div className='tabe-outer'>
           <div className='table-heading'>
             <Container>
               <Row>
                 <Col md={6} className='text-end'>
+                  
                 </Col>
                 <Col md={6} className='text-end'>
                   <form className='d-flex justify-content-end'>
@@ -82,8 +83,8 @@ export default function SurveyList({ loop_lead_id, org_id }) {
                 <td>{new Date(survey.createdAt).toLocaleDateString()}</td>
                 <td>{survey.total_invites}</td>
                 <td>{survey.completed_survey}</td>
-                <td>{survey.ll_survey_status === 'yes' ? <span className='span-badge active-tag'>Yes</span> :<span className='span-badge active-tag'>No</span>}</td>
-                <td>{survey.mgr_survey_status === 'yes' ? <span className='span-badge active-tag'>Yes</span> : <span className='span-badge active-tag'>No</span>}</td>
+                <td>{survey.ll_survey_status === 'yes' ? <span className='span-badge active-tag'>Yes</span> :<span className='span-badge inactive-tag'>No</span>}</td>
+                <td>{survey.mgr_survey_status === 'yes' ? <span className='span-badge active-tag'>Yes</span> : <span className='span-badge inactive-tag'>No</span>}</td>
                 <td>
                   {survey.report_gen_date
                     ? new Date(survey.report_gen_date).toLocaleDateString()
