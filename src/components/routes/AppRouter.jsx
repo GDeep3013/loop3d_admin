@@ -31,7 +31,7 @@ import ForgetPassword from "../../pages/ForgetPassword";
 import ResetPassword from "../../pages/ResetPassword";
 
 import Organization from "../../pages/organizations/Organization";
-import CreateOrganizations from "../../pages/organizations/CreateOrganizations";
+import CreateFrom from "../../pages/organizations/CreateFrom";
 import ViewOrganization from "../../pages/organizations/ViewOrganization";
 //import AssignCompetencies from "../../pages/organizations/AssignCompetencies";
 
@@ -87,7 +87,7 @@ const AppRouter = () => {
         <>
           {/* Authenticated Routes */}
           <Route path="/organizations" exact element={<Organization />} />
-          <Route path="/organizations/create" exact element={<CreateOrganizations />} />
+          <Route path="/organizations/create" exact element={<CreateFrom />} />
           <Route path="/organizations/edit/:id" exact element={<OrganizationTabs />} />
           <Route path="/organizations/view/:id" exact element={<ViewOrganization />} />
 

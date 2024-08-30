@@ -77,7 +77,6 @@ export default function AssignCompetencies({ orgniation, type }) {
         setShowAssignCompetencyModal(false);
     };
 
-    console.log('competencies',competencies)
     return (
         <div>
             <div className='table-inner'>

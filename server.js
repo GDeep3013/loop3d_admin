@@ -19,7 +19,8 @@ const usersRoutes = require('./routes/usersRoutes');
 const organizationRoutes = require('./routes/organization');
 const categoryRoutes = require('./routes/categoryRoutes');
 const questionRoutes = require('./routes/questionRoutes');
-const assignCompetencyRoutes = require('./routes/assignCompetencyRoutes'); // Adjust path as necessary
+const assignCompetencyRoutes = require('./routes/assignCompetencyRoutes');
+const surveyRoutes = require('./routes/surveyRoutes');// Adjust path as necessary
 
 
 
@@ -58,6 +59,8 @@ app.use('/organizations', authenticateHeaderKey, organizationRoutes);
 app.use('/categories', authenticateHeaderKey, categoryRoutes);
 app.use('/questions', authenticateHeaderKey, questionRoutes);
 app.use('/assign-competency', authenticateHeaderKey, assignCompetencyRoutes);
+app.use('/surveys', authenticateHeaderKey, surveyRoutes);
+
 
 
 
