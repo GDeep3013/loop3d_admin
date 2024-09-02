@@ -83,9 +83,9 @@ export const deleteAssignCompetency = async (id,category_id) => {
     }
 }
 
-export const getAssignmentsByUserAndOrg = async (userId, orgId) => {
+export const getAssignmentsByUserAndOrg = async (userId, ref_id,type) => {
     try {
-        const url = `/api/assign-competency/${userId}/${orgId}`;
+        const url = `/api/assign-competency/${userId}/${ref_id}?type=${type}`;
         const response = await fetch(url, {
             headers: { 'x-api-key': import.meta.env.VITE_X_API_KEY }
         });

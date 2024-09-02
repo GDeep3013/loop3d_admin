@@ -17,7 +17,7 @@ router.put('/:id', AssignCompetencyController.updateAssignment);
 
 // Route to delete an assignment by ID
 router.delete('/:id/:category_id', AssignCompetencyController.deleteAssignment);
-router.get('/:user_id/:organization_id', AssignCompetencyController.getAssignmentsByUserAndOrg);
+router.get('/:user_id/:ref_id', AssignCompetencyController.getAssignmentsByUserAndOrg);
 
 
 module.exports = router;

@@ -4,7 +4,13 @@ const Category = require('../models/CategoryModel');
 // Create a new assignment
 exports.createAssignment = async (req, res) => {
     try {
-        const { type, organization_id, user_id, category_id, subcategories = [] } = req.body;
+        const { type, ref_id, user_id, category_id, subcategories = [] } = req.body;
+        let referenceIdField = '';
+        if (type === 'question') {
+            referenceIdField = 'question_id';
+        } else if (type === 'organization') {
+            referenceIdField = 'organization_id';
+        }
 
         // Create an array to hold the new assignments
         const newAssignments = [];
@@ -13,7 +19,7 @@ exports.createAssignment = async (req, res) => {
         newAssignments.push({
             type,
             user_id,
-            organization_id,
+            [referenceIdField]: ref_id,
             category_id, // Use provided category_id directly
             status: 'active', // Default status or modify as needed
         });
@@ -22,14 +28,14 @@ exports.createAssignment = async (req, res) => {
         newAssignments.push(...subcategories.map(subcategoryId => ({
             type,
             user_id,
-            organization_id,
+            [referenceIdField]: ref_id,
             category_id: subcategoryId, // Use subcategory ID as category_id
             status: 'active', // Default status or modify as needed
         })));
 
         // Check for existing assignments to avoid duplication
         const existingAssignments = await AssignCompetency.find({
-            organization_id,
+            [referenceIdField]: ref_id,
             user_id,
             category_id: { $in: [...subcategories, category_id] } // Check against all provided IDs
         });
@@ -140,16 +146,22 @@ exports.deleteAssignment = async (req, res) => {
 
 exports.getAssignmentsByUserAndOrg = async (req, res) => {
     try {
-        const { user_id, organization_id } = req.params; // Get user_id and organization_id from query parameters
+        const { user_id, ref_id, } = req.params; // Get user_id and organization_id from query parameters
 
-        if (!user_id || !organization_id) {
+        if (!user_id || !ref_id) {
             return res.status(400).json({ error: 'user_id and organization_id are required' });
         }
 
+        let referenceIdField = '';
+        if (req.query.type === 'question') {
+            referenceIdField = 'question_id';
+        } else if (req.query.type === 'organization') {
+            referenceIdField = 'organization_id';
+        }
         // Fetch assignments based on user_id and organization_id
         const assignments = await AssignCompetency.find({
             user_id,
-            organization_id
+            [referenceIdField]: ref_id,
         })
         .populate({
             path: 'organization_id',

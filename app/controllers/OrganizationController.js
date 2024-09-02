@@ -29,10 +29,15 @@ const OrganizationController = {
 
             // Calculate the number of documents to skip
             const skip = (page - 1) * limit;
-
-
+            let searchTerm = req.query.searchTerm
+            const query = {};
+            if (searchTerm) {
+                query.$or = [
+                    { name: { $regex: searchTerm, $options: 'i' } }
+                ];
+            }
             // Query the database with pagination
-            const organizations = await Organization.find().skip(skip).limit(limit);
+            const organizations = await Organization.find(query).sort({ _id: -1 }).skip(skip).limit(limit);
 
             // Get the total count of documents in the collection
             const totalOrganizations = await Organization.countDocuments();

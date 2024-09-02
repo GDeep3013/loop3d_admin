@@ -31,3 +31,21 @@ export const getSurveyParticipantsById = async (id, searchTerm) => {
     return json.data;
 
 };
+
+
+export const getSurveys = async (searchTerm) => {
+
+    let url = `/api/surveys/all-survey`;
+
+    if (searchTerm) {
+        url += `?searchTerm=${encodeURIComponent(searchTerm)}`;
+    }
+    let result = await fetch(url, {
+        headers: { 'x-api-key': import.meta.env.VITE_X_API_KEY }
+    });
+
+    let json = await result.json();
+
+    return json.data;
+
+};

@@ -29,7 +29,13 @@ const CategoryController = {
     getCategories: async (req, res) => {
         try {
             // Extract query parameters for pagination
-            let { page = 1, limit = 10, getType = null  } = req.query;
+            let { page = 1, limit = 10, getType = null, searchTerm } = req.query;
+            const query = {};
+            if (searchTerm) {
+                query.$or = [
+                    { category_name: { $regex: searchTerm, $options: 'i' } }
+                ];
+            }
 
             // Convert query params to integers (since they are initially strings)
             page = parseInt(page, 10);
@@ -43,7 +49,7 @@ const CategoryController = {
             if (getType == "AssignCompetency") {
                 categories = await Category.find({ parent_id: null }).populate('parent_id', 'category_name');
             } else {
-               categories = await Category.find().skip(skip).limit(limit).populate('parent_id', 'category_name');        
+               categories = await Category.find(query).sort({ _id: -1 }).skip(skip).limit(limit).populate('parent_id', 'category_name');        
 
             }
 

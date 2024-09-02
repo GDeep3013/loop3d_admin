@@ -51,6 +51,52 @@ exports.createSurveyWithMembers = async (req, res) => {
     }
 };
 
+exports.getAllSurvey = async (req, res) => {
+    try {
+
+        let {searchTerm } = req.query;
+        const query = {};
+
+        if (searchTerm) {
+            query.$or = [
+                { survey_status: { $regex: searchTerm, $options: 'i' } },
+                { ll_survey_status: { $regex: searchTerm, $options: 'i' } },
+                { mgr_survey_status: { $regex: searchTerm, $options: 'i' } }
+
+
+            ];
+        }
+
+        // Find the survey(s) by the provided ID(s) and populate related fields
+        const surveys = await Survey.find(query)
+            .populate('mgr_id', 'first_name last_name email')
+            .populate('loop_lead_id', 'first_name last_name email') // Populate mgr_id with name and email fields
+            // Populate mgr_id with name and email fields
+            .populate('organization_id', 'name') // Populate organization_id with name field
+        // if (!surveys || surveys.length === 0) {
+        //     return res.status(404).json({ error: 'Survey not found' });
+        // }
+        const results = await Promise.all(
+            surveys.map(async (survey) => {
+                const totalParticipants = await SurveyParticipant.countDocuments({ survey_id: survey._id });
+                const completed_survey = await SurveyParticipant.countDocuments({ survey_id: survey._id, survey_status:'completed' });
+
+                return {
+                    ...survey.toObject(), // Convert the Mongoose document to a plain object
+                    totalParticipants,
+                    completed_survey
+                };
+            })
+        );
+        res.status(200).json({
+            status: 'success',
+            data: results
+        });
+    } catch (error) {
+        console.error('Error fetching survey:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+};
 
 exports.getSurveyById = async (req, res) => {
     try {
@@ -65,7 +111,8 @@ exports.getSurveyById = async (req, res) => {
         // Find the survey(s) by the provided ID(s) and populate related fields
         const surveys = await Survey.find(query)
             .populate('loop_lead_id', 'name email') // Populate loop_lead_id with name and email fields
-            .populate('mgr_id', 'first_name last_name email') // Populate mgr_id with name and email fields
+            .populate('mgr_id', 'first_name last_name email')
+            .populate('loop_lead_id', 'first_name last_name email') // Populate mgr_id with name and email fields
             .populate('organization_id', 'name') // Populate organization_id with name field
         if (!surveys || surveys.length === 0) {
             return res.status(404).json({ error: 'Survey not found' });
@@ -94,16 +141,24 @@ exports.getSurveyById = async (req, res) => {
 
 exports.getSurveyParticipantsById = async (req, res) => {
     try {
-        const { survey_id } = req.query;
-
+        const { survey_id, searchTerm } = req.query;
+        let query={survey_id:survey_id}
+        if (searchTerm) {
+            query.$or = [
+                { p_first_name: { $regex: searchTerm, $options: 'i' } }, // Case-insensitive search by first_name
+                { p_last_name: { $regex: searchTerm, $options: 'i' } },  // Case-insensitive search by last_name
+                { p_email: { $regex: searchTerm, $options: 'i' } },      // Case-insensitive search by email
+                { survey_status: { $regex: searchTerm, $options: 'i' } },      // Case-insensitive search by phone
+            ];
+        }
         // Find the survey participants by survey_id
-        const participants = await SurveyParticipant.find({ survey_id })
+        const participants = await SurveyParticipant.find(query)
             .populate('survey_id', 'name')
             .populate('p_mag_id', 'first_name last_name');// Populate survey_id with name field
 
-        if (!participants || participants.length === 0) {
-            return res.status(404).json({ error: 'No participants found for this survey' });
-        }
+        // if (!participants || participants.length === 0) {
+        //     return res.status(404).json({ error: 'No participants found for this survey' });
+        // }
 
         res.status(200).json({
             status: 'success',
@@ -114,3 +169,15 @@ exports.getSurveyParticipantsById = async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 };
+
+exports.deleteParticipant = async (req, res) => {
+    try {
+        const Participant = await SurveyParticipant.findByIdAndDelete(req.params.id);
+        if (!Participant) {
+            return res.status(404).json({ error: "Survey Participant not found" });
+        }
+        res.status(200).json({ message: "Survey Participant deleted successfully" });
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+}

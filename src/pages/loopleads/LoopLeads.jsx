@@ -18,13 +18,16 @@ export default function LoopLeads({ organization }) {
                     let data = await fetchLoopLeads(organization.orgniation_id, searchTerm);
                     if (Array.isArray(data.users) && data.users.length > 0) {
                         setUsers(data.users);
+                    } else {
+                        setUsers([]);
+
                     }
                 } catch (error) {
                     console.error("Error fetching loop leads:", error);
                 }
             })();
         }
-    }, [organization.orgniation_id]);
+    }, [organization.orgniation_id,searchTerm]);
 
 
     const handleSearch = (e) => {
@@ -66,7 +69,7 @@ export default function LoopLeads({ organization }) {
                 <tbody>
                     {users.length === 0 ? (
                         <tr>
-                            <td colSpan="6" style={{ textAlign: 'center' }}>
+                            <td colSpan="12" style={{ textAlign: 'center' }}>
                                 <h4>No Loop3D Lead Found</h4>
                             </td>
                         </tr>

@@ -7,7 +7,7 @@ import { useSelector } from 'react-redux';
 
 import { getAssignmentsByUserAndOrg ,deleteAssignCompetency } from "../../apis/assignCompetencyApi"; // Update to your actual API import
 
-export default function AssignCompetencies({ orgniation, type }) {
+export default function AssignCompetencies({ data, type }) {
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const [competencies, setCompetencies] = useState([]);
@@ -16,16 +16,16 @@ export default function AssignCompetencies({ orgniation, type }) {
     const userId = useSelector((state) => state.auth.user._id);
 
     useEffect(() => {
-        if (orgniation?.orgniation_id) {
+        if (data?.ref_id) {
             getCategory();
         }
-    }, [currentPage, orgniation?.orgniation_id]);
+    }, [currentPage, data?.ref_id]);
 
     async function getCategory() {
         setLoading(true);
         try {
             // Call the API with appropriate parameters
-            const result = await getAssignmentsByUserAndOrg(userId,orgniation?.orgniation_id);
+            const result = await getAssignmentsByUserAndOrg(userId,data?.ref_id, type);
             setCompetencies(result.assignments?result.assignments:[]); // Adjust based on the API response structure
             setTotalPages(result.totalPages); // Adjust based on the API response structure
             setLoading(false);
@@ -86,7 +86,7 @@ export default function AssignCompetencies({ orgniation, type }) {
                             <Container>
                                 <Row className='align-items-center'>
                                     <Col md={6}>
-                                        <h4>Competencies that belong to {orgniation?.name}</h4>
+                                        {data?.type != "question" && <h4>Competencies that belong to {data?.name}</h4>}
                                     </Col>
                                     <Col md={6} className='text-end'>
                                         <Button onClick={handleShowAssignCompetencyModal} className='default-btn'>
@@ -158,9 +158,9 @@ export default function AssignCompetencies({ orgniation, type }) {
                 </Pagination>
             )}
 
-            {orgniation && <AssignCompeteny
+            {data && <AssignCompeteny
                 type={type}
-                id={orgniation?.orgniation_id}
+                id={data?.ref_id}
                 show={showAssignCompetencyModal}
                 handleClose={handleCloseAssignCompetencyModal}
                 getCategory={getCategory}

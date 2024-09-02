@@ -5,9 +5,8 @@ import { Col, Row, Container, Form, Button } from 'react-bootstrap';
 import Swal from 'sweetalert2';
 import { useSelector } from 'react-redux';
 
-export default function AddQuestion() {
+export default function AddQuestion({ id, savedData }) {
     const user = useSelector((state) => state.auth.user);
-    const { id } = useParams();
     const navigate = useNavigate();
 
     const [formData, setFormData] = useState({
@@ -35,24 +34,15 @@ export default function AddQuestion() {
     }, []);
 
     useEffect(() => {
-        if (id) {
-            const fetchQuestionDetails = async () => {
-                try {
-                    const response = await fetch(`/api/questions/${id}`, {
-                        headers: { 'x-api-key': import.meta.env.VITE_X_API_KEY }
-                    });
-                    const data = await response.json();
-                    setFormData({
-                        ...data,
-                        createdBy: user?.id // Ensure createdBy is set
-                    });
-                } catch (error) {
-                    console.error('Error fetching question details:', error);
-                }
-            };
-            fetchQuestionDetails();
+        if (savedData) {
+      
+            setFormData({
+                ...savedData,
+                createdBy: user?.id // Ensure createdBy is set
+            });
+           
         }
-    }, [id, user?.id]);
+    }, [savedData, user?.id]);
 
     // Form validation
     const validateForm = (data) => {
@@ -82,7 +72,14 @@ export default function AddQuestion() {
     // Handle input changes
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
+        if (name == "questionType" &&  value=="Text") {
+            setFormData({ ...formData, [name]: value , options:[] });  
+
+        } else {
+            setFormData({ ...formData, [name]: value });  
+            setFormData({ ...formData, [name]: value , options:[{ text: '', isCorrect: false }] });  
+
+        }
         setErrors({});
     };
 
@@ -154,7 +151,6 @@ export default function AddQuestion() {
     };
 
     return (
-        <AuthLayout title={id ? 'Edit Question' : 'Add Question'}>
             <div className="content-outer">
                 <Form onSubmit={handleSubmit}>
                     <Container className='outer-box'>
@@ -242,6 +238,5 @@ export default function AddQuestion() {
                     </Container>
                 </Form>
             </div>
-        </AuthLayout>
     );
 }

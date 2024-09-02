@@ -187,7 +187,7 @@ export default function Login() {
                     Remember me
                   </label>
                   <Link
-                    to="/forgot-password"
+                    to="/forget-password"
                     className="fw-bold text-decoration-none float-right fs-7 text-dark">
                     Forgot Password?
                   </Link>
