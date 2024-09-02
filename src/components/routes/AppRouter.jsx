@@ -73,11 +73,9 @@ const AppRouter = () => {
 
     const currentUrl = window.location.pathname;
 
-    if (!user && currentUrl !== '/login' && currentUrl !== '/forget-password') {
+    if (!user && currentUrl !== '/login' && currentUrl !== '/forget-password' && currentUrl !== '/reset-password') {
       navigate('/login'); // Redirect to login if not authenticated
-    } else if (currentUrl == '/forget-password') {
-      navigate('/forget-password')
-    } else if (user && (currentUrl === '/' || currentUrl === '/login')) {
+    }else if (user && (currentUrl === '/' || currentUrl === '/login')) {
       // Redirect based on userType after login
       if (user.role === "admin") {
         navigate('/organizations');

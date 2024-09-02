@@ -10,7 +10,7 @@ const transporter = nodemailer.createTransport({
 });
 
 const sendResetEmail = (email, token) => {
-  const resetUrl = `https://marketer-ai.webziainfotech.com/reset-password?token=${token}`;
+  const resetUrl = `http://localhost:5173/reset-password?token=${token}`;
 
   const mailOptions = {
     from: 'sahil.610weblab@gmail.com',
