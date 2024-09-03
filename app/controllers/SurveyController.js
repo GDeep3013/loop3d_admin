@@ -1,52 +1,76 @@
 const Survey = require('../models/Survey');
 const SurveyParticipant = require('../models/SurveyParticipantModel');
+const User = require('../models/User')
+const Role  = require('../models/Role')
+
+const { check, validationResult } = require('express-validator');
 
 // Create Survey and Add Survey Members
 exports.createSurveyWithMembers = async (req, res) => {
     try {
-        const { surveyData, membersData } = req.body;
-
-        // Create the Survey
-        const survey = new Survey(surveyData);
-        const savedSurvey = await survey.save();
-
-        // Filter out members with duplicate emails for the same survey
-        const uniqueMembers = [];
-        for (let member of membersData) {
-            const existingParticipant = await SurveyParticipant.findOne({
-                survey_id: savedSurvey._id,
-                email: member.email,
-            });
-
-            if (!existingParticipant) {
-                uniqueMembers.push({
-                    ...member,
-                    survey_id: savedSurvey._id
-                });
-            }
-        }
-
-        // Insert only unique survey members
-        if (uniqueMembers.length > 0) {
-            let survey_participants = await SurveyParticipant.insertMany(uniqueMembers);
-
-            const totalInviteesCount = survey_participants.length;
-            await Survey.findByIdAndUpdate(savedSurvey._id, {
-                total_invites: totalInviteesCount
-            }, { new: true });
-
+        check('surveyData').not().isEmpty().withMessage('surveyData is required'),
+        check('email').isEmail().withMessage('Invalid email'),
+        check('phone').isMobilePhone().withMessage('Invalid phone number'),
+        check('password').isLength({ min: 8 }).withMessage('Password must be at least 8 characters long'),
+            check('userType').not().isEmpty().withMessage('User type is required')
             
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
+        
+        const { surveyData } = req.body;
+        // Create the Survey
+        
+
+        // Create loop lead users and associate them with the survey
+        const loopLeads = surveyData.loop_leads;
+        let Manager = await User.findOne({ _id: surveyData.mgr_id });
+        let savedSurveys = [];
+        for (let lead of loopLeads) {
+            const { first_name, last_name, email } = lead;
+
+            // Check if the user already exists by email
+            let user = await User.findOne({ email: email });
+
+            if (!user) {
+                // Create a new loop lead user
+                let role = await Role.findOne({ type: "looped_lead" })
+                // Create the user object
+                user = new User({
+                    first_name,
+                    last_name,
+                    email,
+                    role: role?._id,
+                    organization_id: Manager?.organization_id || null, // Assign the organization_id if available
+                    created_by: surveyData?.mgr_id, // Assuming you are capturing who created the user
+                });
+
+                await user.save();
+            }
+
+            // Associate the loop lead with the survey by saving loop_lead_id in the survey
+            const survey = new Survey({
+                name: surveyData.name,
+                mgr_id: surveyData.mgr_id,
+                loop_lead_id: user?._id,
+                organization_id: Manager?.organization_id 
+
+
+            });
+           let savedSurvey= await survey.save();
+            savedSurveys.push(savedSurvey);
         }
 
         res.status(201).json({
             status: 'success',
             data: {
-                survey: savedSurvey,
-                surveyMembers: uniqueMembers
+                survey: savedSurveys,
+                message: 'Users created and associated with the survey'
             }
         });
     } catch (error) {
-        console.error('Error creating survey and survey members:', error);
+        console.error('Error creating survey and loop leads:', error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 };

@@ -127,7 +127,8 @@ export default function AddEmployee() {
       })
       .catch(error => {
         if (error.response) {
-          setErrors(error.response.data.errors);
+          console.log('error.response',error.response);
+          setErrors(error.response.data.errors?.[0]);
         } else if (error.request) {
           console.log('No response received from the server');
         } else {
@@ -137,6 +138,7 @@ export default function AddEmployee() {
       });
   };
 
+  console.log('errors',errors)
   const fetchRoles = async () => {
     try {
       const response = await fetch('/api/get-role');

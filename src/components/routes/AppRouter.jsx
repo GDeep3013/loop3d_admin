@@ -44,6 +44,7 @@ import SurveyParticipantDetails from "../../pages/loopleads/SurveyParticipantDet
 import QuestionTabs from "../../pages/questions/QuestionTabs";
 import CreateQuestion from "../../pages/questions/CreateQuestion";
 import Survey from "../../pages/surveys/survey";
+import CreateSurvey from "../../pages/surveys/CreateSurvey";
 
 const AppRouter = () => {
   const user = useSelector((state) => state.auth.user);
@@ -115,11 +116,6 @@ const AppRouter = () => {
           <Route path="/questions/detail/:questionId" exact element={<QuestionDetail />} />
           <Route path="/view-loop_lead/:userId/:orgId" exact element={<LoopleadTabs />} />
           <Route path="/view-survey-participant/:id" exact element={<SurveyParticipantDetails />} />
-
-
-
-
-
 
         </>
       ) : (

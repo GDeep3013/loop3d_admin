@@ -24,6 +24,7 @@ const surveyRoutes = require('./routes/surveyRoutes');// Adjust path as necessar
 
 
 
+
 const app = express();
 
 app.use(express.json());
@@ -54,11 +55,12 @@ connectDB();
  * Ssytem Routes
 */
 app.use('/', authRoutes);
+
 app.use('/users', authenticateHeaderKey, usersRoutes);
 app.use('/organizations', authenticateHeaderKey, organizationRoutes);
 app.use('/categories', authenticateHeaderKey, categoryRoutes);
 app.use('/questions', authenticateHeaderKey, questionRoutes);
-app.use('/assign-competency', authenticateHeaderKey, assignCompetencyRoutes);
+app.use('/competencies', authenticateHeaderKey, assignCompetencyRoutes);
 app.use('/surveys', authenticateHeaderKey, surveyRoutes);
 
 

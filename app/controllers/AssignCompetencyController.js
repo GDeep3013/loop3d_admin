@@ -146,9 +146,9 @@ exports.deleteAssignment = async (req, res) => {
 
 exports.getAssignmentsByUserAndOrg = async (req, res) => {
     try {
-        const { user_id, ref_id, } = req.params; // Get user_id and organization_id from query parameters
+        const { id, ref_id, } = req.params; // Get user_id and organization_id from query parameters
 
-        if (!user_id || !ref_id) {
+        if (!id || !ref_id) {
             return res.status(400).json({ error: 'user_id and organization_id are required' });
         }
 
@@ -160,7 +160,7 @@ exports.getAssignmentsByUserAndOrg = async (req, res) => {
         }
         // Fetch assignments based on user_id and organization_id
         const assignments = await AssignCompetency.find({
-            user_id,
+            user_id:id,
             [referenceIdField]: ref_id,
         })
         .populate({
@@ -168,6 +168,34 @@ exports.getAssignmentsByUserAndOrg = async (req, res) => {
             select: 'name', // Exclude the __v field from the populated organization documents
         })
         .populate('user_id', 'username')
+        .populate('question_id', 'questionText')
+        .populate('category_id', 'category_name parent_id',);
+
+        if (assignments.length === 0) {
+            return res.status(404).json({ message: 'No assignments found for the given user and organization' });
+        }
+
+        res.status(200).json({ assignments: assignments });
+    } catch (error) {
+        console.error('Error fetching assignments:', error);
+        res.status(500).json({ error: error.message });
+    }
+};
+
+
+exports.getAssignmentsByUserId = async (req, res) => {
+    try {
+        const { user_id} = req.query; // Get user_id and organization_id from query parameters
+
+        if (!user_id ) {
+            return res.status(400).json({ error: 'User id is required' });
+        }
+        // Fetch assignments based on user_id and organization_id
+        const assignments = await AssignCompetency.find({user_id:user_id})
+        .populate({
+            path: 'organization_id',
+            select: 'name', // Exclude the __v field from the populated organization documents
+        })
         .populate('question_id', 'questionText')
         .populate('category_id', 'category_name parent_id',);
 
