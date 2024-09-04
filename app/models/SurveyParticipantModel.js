@@ -16,7 +16,7 @@ const SurveyParticipantSchema = new mongoose.Schema({
     p_mag_id: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
-        required: true
+        default: null
     },
     survey_status: {
         type: String,

@@ -306,7 +306,8 @@ const UserController = {
                     select: 'name', // Exclude the __v field from the populated organization documents
                 })
                 .populate('role', 'type')
-                .populate('created_by', 'username') // Populate the role field as well
+                .populate('created_by', 'first_name last_name email phone') // Populate the role field as well
+                // Populate the role field as well
                 .sort({ createdAt: -1 }); // Sort by creation date in descending order
               
 
@@ -339,7 +340,7 @@ const UserController = {
                     select: 'name', // Exclude the __v field from the populated organization documents
                 })
                 .populate('role', 'type')
-                .populate('created_by', 'username email phone') // Populate the role field as well
+                .populate('created_by', 'first_name last_name email phone') // Populate the role field as well
                 .sort({ createdAt: -1 }); // Sort by creation date in descending order
               
 

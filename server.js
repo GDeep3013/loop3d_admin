@@ -21,6 +21,8 @@ const categoryRoutes = require('./routes/categoryRoutes');
 const questionRoutes = require('./routes/questionRoutes');
 const assignCompetencyRoutes = require('./routes/assignCompetencyRoutes');
 const surveyRoutes = require('./routes/surveyRoutes');// Adjust path as necessary
+const emailRoutes = require('./routes/emailRoutes');// Adjust path as necessary
+
 
 
 
@@ -62,6 +64,8 @@ app.use('/categories', authenticateHeaderKey, categoryRoutes);
 app.use('/questions', authenticateHeaderKey, questionRoutes);
 app.use('/competencies', authenticateHeaderKey, assignCompetencyRoutes);
 app.use('/surveys', authenticateHeaderKey, surveyRoutes);
+app.use('/emails', authenticateHeaderKey, emailRoutes);
+
 
 
 

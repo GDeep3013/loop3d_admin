@@ -87,7 +87,7 @@ export default function LoopLeads({ organization }) {
                                     </div>
                                 </td>
                                     <td>{user.email}</td>
-                                    <td>{user.created_by?.username}</td>
+                                    <td>{user.created_by?.first_name} {user.created_by?.last_name}</td>
 
                                 <td>{user.role.type}</td>
                                 <td><span className='span-badge active-tag'>Active</span></td>
