@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
-import { MoreIcon } from "../../components/svg-icons/icons";
+import { MoreIcon,View } from "../../components/svg-icons/icons";
 import { Container, Dropdown, Row, Col } from 'react-bootstrap';
 import { getSurveyById } from '../../apis/SurveyApi';
 import { formatDateGB, formatDateUS } from '../../utils/dateUtils';
@@ -93,7 +93,9 @@ export default function SurveyList({ loop_lead_id, org_id }) {
                     : 'Never'}
                 </td>
                 <td>
-                  <Dropdown className='custom-dropdown'>
+                <button className='action-btn' onClick={() => navigate(`/view-survey-participant/${survey._id}`)}><View /></button>
+
+                  {/* <Dropdown className='custom-dropdown'>
                     <Dropdown.Toggle variant="success" id="dropdown-basic">
                       <MoreIcon />
                     </Dropdown.Toggle>
@@ -102,7 +104,7 @@ export default function SurveyList({ loop_lead_id, org_id }) {
                         View
                       </Dropdown.Item>
                     </Dropdown.Menu>
-                  </Dropdown>
+                  </Dropdown> */}
                 </td>
               </tr>
             ))

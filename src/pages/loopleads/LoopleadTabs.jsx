@@ -14,16 +14,24 @@ export default function LoopleadTabs() {
 
   return (
     <AuthLayout title={"Loop lead details"}>
-      <div className="profile-btns">
-        <Button className="default-btn cancel-btn" onClick={() => navigate(-1)}>
-          Back
-        </Button>
+          <div className='table-inner main-wrapper pd-2 bg-white'>
+            <div class="main-back-heading mb-0">
+      <div class="container">
+         <div class="row">
+            <div class="col-md-6 p-0">
+            <div className="profile-btns pt-0">
+                <Button className="default-btn cancel-btn ml-0" onClick={() => navigate(-1)}>
+                    Back
+                </Button>
+            </div>                  
+            </div>
+         </div>
       </div>
-
+   </div>
       <Tabs
         defaultActiveKey="home"
         id="uncontrolled-tab-example"
-        className="mb-3 mt-5 custom-tabs"
+        className=" custom-tabs"
       >
         <Tab eventKey="home" title="Overview">
           <ViewLoopLead user_id={userId} org_id={orgId} />
@@ -31,7 +39,8 @@ export default function LoopleadTabs() {
         <Tab eventKey="profile" title="Survey">
           <SurveyList loop_lead_id={userId} org_id={orgId} />
         </Tab>
-      </Tabs>
+        </Tabs>
+        </div>
     </AuthLayout>
   )
 }

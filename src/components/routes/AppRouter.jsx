@@ -47,6 +47,7 @@ import Survey from "../../pages/surveys/survey";
 import CreateSurvey from "../../pages/surveys/CreateSurvey";
 import EmailList from "../../pages/emails/EmailList";
 import CreateEmail from "../../pages/emails/CreateEmail";
+import ViewEmail from "../../pages/emails/ViewEmail";
 
 const AppRouter = () => {
   const user = useSelector((state) => state.auth.user);
@@ -95,7 +96,7 @@ const AppRouter = () => {
         <>
           {/* Authenticated Routes */}
           <Route path="/organizations" exact element={<Organization />} />
-          <Route path="/organizations/create" exact element={<CreateFrom />} />
+          <Route path="/organizations/create" exact element={<OrganizationTabs />} />
           <Route path="/organizations/edit/:id" exact element={<OrganizationTabs />} />
           <Route path="/organizations/view/:id" exact element={<ViewOrganization />} />
 
@@ -121,6 +122,8 @@ const AppRouter = () => {
           <Route path="/emails" exact element={<EmailList />} />
           <Route path="/emails/create" exact element={<CreateEmail />} />
           <Route path="/emails/:id" exact element={<CreateEmail />} />
+          <Route path="/emails/detail/:id" exact element={<ViewEmail />} />
+
 
 
 

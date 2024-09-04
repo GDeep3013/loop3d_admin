@@ -257,7 +257,7 @@ svg.remove-icon path { fill: #fff; }
 .table-inner .table tr.subcatrgory-text td:first-child { padding-left: 45px; }
 .modal-footer button.btn.btn-primary { background-color: var(--theme-color); border: none; }
 td.parent-category { font-weight: 600 !important; font-size: 17px !important; }
-.looplead-box { padding: 30px; border-radius: 10px; background-color: #fff; margin-top: 40px; }
+.looplead-box { padding: 30px; border-radius: 10px; background-color: #fff; }
 .looplead-box .looplead-box-outer { display: flex; column-gap: 40px; padding-top: 13px; }
 .looplead-box .looplead-box-outer p { padding-bottom: 11px; }
 .looplead-box .loop-inner span { font-size: 23px; line-height: normal; font-weight: 500; }

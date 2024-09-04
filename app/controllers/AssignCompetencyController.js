@@ -66,7 +66,7 @@ exports.createAssignment = async (req, res) => {
 exports.getAllAssignments = async (req, res) => {
     try {
         const assignments = await AssignCompetency.find()
-            .populate('user_id', 'name') // Adjust fields as needed
+            .populate('user_id', 'first_name last_name') // Adjust fields as needed
             .populate('organization_id', 'name')
             .populate('question_id', 'text')
             .populate('category_id', 'name');
@@ -80,7 +80,7 @@ exports.getAllAssignments = async (req, res) => {
 exports.getAssignmentById = async (req, res) => {
     try {
         const assignment = await AssignCompetency.findById(req.params.id)
-            .populate('user_id', 'name')
+            .populate('user_id', 'first_name last_name')
             .populate('organization_id', 'name')
             .populate('question_id', 'text')
             .populate('category_id', 'name');
@@ -167,7 +167,7 @@ exports.getAssignmentsByUserAndOrg = async (req, res) => {
             path: 'organization_id',
             select: 'name', // Exclude the __v field from the populated organization documents
         })
-        .populate('user_id', 'username')
+        .populate('user_id', 'first_name last_name')
         .populate('question_id', 'questionText')
         .populate('category_id', 'category_name parent_id',);
 

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
-import { MoreIcon } from "../../components/svg-icons/icons";
+import { MoreIcon,View  } from "../../components/svg-icons/icons";
 import { Container, Dropdown, Row, Col, Pagination } from 'react-bootstrap';
 import { getSurveys } from '../../apis/SurveyApi';
 import AuthLayout from '../../layout/Auth';

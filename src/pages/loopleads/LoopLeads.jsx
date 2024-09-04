@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from "react-router-dom";
-import { StatusIcon, MoreIcon } from "../../components/svg-icons/icons";
+import { StatusIcon, MoreIcon,View ,Edit } from "../../components/svg-icons/icons";
 import { Container, Dropdown, Row, Col } from 'react-bootstrap'
 import { Link } from "react-router-dom";
 import { fetchLoopLeads } from '../../apis/UserApi';
@@ -91,8 +91,10 @@ export default function LoopLeads({ organization }) {
 
                                 <td>{user.role.type}</td>
                                 <td><span className='span-badge active-tag'>Active</span></td>
-                                <td>
-                                    <Dropdown className='custom-dropdown'>
+                                    <td>
+                                    <button className='action-btn' onClick={() => navigate(`/view-loop_lead/${user._id}/${organization.orgniation_id}`)}><View /></button>
+                                    <button className='action-btn' onClick={() => navigate(`/add-user/${user._id}`)}><Edit /></button>
+                                    {/* <Dropdown className='custom-dropdown'>
                                         <Dropdown.Toggle variant="success" id="dropdown-basic">
                                             <MoreIcon />
                                         </Dropdown.Toggle>
@@ -101,7 +103,7 @@ export default function LoopLeads({ organization }) {
 
                                             <Dropdown.Item onClick={() => navigate(`/add-user/${user._id}`)}>Edit</Dropdown.Item>
                                         </Dropdown.Menu>
-                                    </Dropdown>
+                                    </Dropdown> */}
                                 </td>
                             </tr>
                         ))

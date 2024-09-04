@@ -75,7 +75,7 @@ export default function CreateOrganization({ id, savedData }) {
     return (
         <div className="content-outer main-wrapper pd-2 bg-white">
 
-            {!id && <div class="tabe-outer">
+            {/* {!id && <div class="tabe-outer">
                 <div class="main-back-heading">
                     <div class="container">
                         <div class="row">
@@ -89,7 +89,7 @@ export default function CreateOrganization({ id, savedData }) {
                         </div>
                     </div>
                 </div>
-            </div>}   
+            </div>}    */}
             <Form className="organization-form">
                 <Container>
                     <Row>

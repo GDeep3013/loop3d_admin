@@ -123,10 +123,10 @@ export default function AssignCompetencies({ data, type }) {
                                     {/* Main Category Row */}
                                     <tr>
                                         <td className='parent-category'>{cat.category_id.category_name}</td>
-                                        <td>{cat.user_id.username}</td>
+                                        <td>{cat.user_id?.first_name} {cat.user_id?.last_name}</td>
                                         <td><span className='span-badge active-tag'>Active</span></td>
                                         <td>
-                                            <Dropdown.Item onClick={() => handleDelete(cat._id,cat.category_id._id)}><Remove/></Dropdown.Item>
+                                        <button className='action-btn' onClick={() => handleDelete(subCat._id,cat.category_id._id)}><Remove /></button>
                                         </td>
                                     </tr>
                                     
@@ -134,10 +134,10 @@ export default function AssignCompetencies({ data, type }) {
                                     {competencies.filter(sub => sub.category_id.parent_id === cat.category_id._id).map(subCat => (
                                         <tr className='subcatrgory-text' key={subCat.category_id._id} style={{ }}>
                                             <td>-- {subCat.category_id.category_name}</td>
-                                            <td>{subCat.user_id.username}</td>
+                                            <td>{subCat?.user_id?.first_name} {subCat?.user_id?.last_name}</td>
                                             <td><span className='span-badge active-tag'>Active</span></td>
                                             <td>
-                                                <Dropdown.Item onClick={() => handleDelete(subCat._id,cat.category_id._id)}><Remove/></Dropdown.Item>
+                                            <button className='action-btn' onClick={() => handleDelete(subCat._id,cat.category_id._id)}><Remove /></button>
                                             </td>
                                         </tr>
                                     ))}
