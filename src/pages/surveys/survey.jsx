@@ -4,7 +4,7 @@ import { MoreIcon } from "../../components/svg-icons/icons";
 import { Container, Dropdown, Row, Col } from 'react-bootstrap';
 import { getSurveys } from '../../apis/SurveyApi';
 import AuthLayout from '../../layout/Auth';
-
+import {View} from '../../components/svg-icons/icons';
 export default function Survey() {
     const navigate = useNavigate();
 
@@ -34,7 +34,7 @@ export default function Survey() {
 
     return (
         <AuthLayout title={"surveys"}>
-            <div className='table-inner'>
+            <div className='table-inner main-wrapper '>
                 <div className='content-outer'>
                     <div className='tabe-outer'>
                         <div className='table-heading'>
@@ -86,8 +86,8 @@ export default function Survey() {
                                 <tr key={survey._id}>
                                     <td>{index + 1}</td>
                                     <td>{new Date(survey.createdAt).toLocaleDateString()}</td>
-                                    <td>{survey?.loop_lead_id.first_name} {survey?.loop_lead_id.last_name}</td>
-                                    <td>{survey?.mgr_id.first_name}  {survey?.mgr_id.last_name}</td>
+                                    <td>{survey?.loop_lead_id?.first_name} {survey?.loop_lead_id?.last_name}</td>
+                                    <td>{survey?.mgr_id?.first_name}  {survey?.mgr_id?.last_name}</td>
                                     <td>{survey.total_invites}</td>
                                     <td>{survey.completed_survey}</td>
                                     <td>{survey.ll_survey_status === 'yes' ? <span className='span-badge active-tag'>Yes</span> : <span className='span-badge inactive-tag'>No</span>}</td>
@@ -98,7 +98,9 @@ export default function Survey() {
                                             : 'Never'}
                                     </td>
                                     <td>
-                                        <Dropdown className='custom-dropdown'>
+                                    <button className='action-btn' onClick={() => navigate(`/view-survey-participant/${survey._id}`)}><View /></button>
+
+                                        {/* <Dropdown className='custom-dropdown'>
                                             <Dropdown.Toggle variant="success" id="dropdown-basic">
                                                 <MoreIcon />
                                             </Dropdown.Toggle>
@@ -107,7 +109,7 @@ export default function Survey() {
                                                     View
                                                 </Dropdown.Item>
                                             </Dropdown.Menu>
-                                        </Dropdown>
+                                        </Dropdown> */}
                                     </td>
                                 </tr>
                             ))

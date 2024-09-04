@@ -37,19 +37,27 @@ export default function ViewOrganization() {
 
     return (
         <AuthLayout title={id ? "Edit Organization" : "Add Organization"}>
-            <div className="content-outer">
+            <div className="content-outer  main-wrapper pd-2 bg-white">
+            <div class="tabe-outer">
+   <div class="main-back-heading">
+      <div class="container">
+         <div class="row">
+            <div class="col-md-6 p-0">
+            <div className="profile-btns pt-0">
+                <Button className="default-btn cancel-btn ml-0" onClick={() => navigate(-1)}>
+                    Back
+                </Button>
+            </div>                  
+            </div>
+         </div>
+      </div>
+   </div>
+</div>   
                 <Form className="organization-form">
                     <Container>
                         <Row>
                             <Col md={6}>
-                                <h2>{organization.name}</h2>
-                            </Col>
-                            <Col md={12}>
-                                <div className="profile-btns">
-                                    <Button className="default-btn cancel-btn" onClick={() => navigate('/organizations')}>
-                                        Back
-                                    </Button>
-                                </div>
+                                <h2 class="orgname">{organization.name}</h2>
                             </Col>
                         </Row>
                     </Container>

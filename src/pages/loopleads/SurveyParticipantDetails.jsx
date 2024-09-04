@@ -4,7 +4,7 @@ import { Container, Dropdown, Row, Col, Button } from 'react-bootstrap';
 import { getSurveyParticipantsById } from '../../apis/SurveyApi';
 import { useParams, useNavigate } from "react-router-dom";
 import Swal from 'sweetalert2'
-
+import {Remove} from '../../components/svg-icons/icons';
 import AuthLayout from "../../layout/Auth";
 
 export default function SurveyParticipantDetails() {
@@ -77,12 +77,20 @@ export default function SurveyParticipantDetails() {
 
     return (
         <AuthLayout title={"Survey participant details"}>
-            <div className='table-inner'>
-                <div className="profile-btns">
-                    <Button className="default-btn cancel-btn" onClick={() => navigate(-1)}>
-                        Back
-                    </Button>
-                </div>
+            <div className='table-inner main-wrapper pd-2 bg-white'>
+            <div class="main-back-heading mb-0">
+      <div class="container">
+         <div class="row">
+            <div class="col-md-6 p-0">
+            <div className="profile-btns pt-0">
+                <Button className="default-btn cancel-btn ml-0" onClick={() => navigate(-1)}>
+                    Back
+                </Button>
+            </div>                  
+            </div>
+         </div>
+      </div>
+   </div>
                 <div className='content-outer'>
 
                     <div className='tabe-outer'>
@@ -138,14 +146,15 @@ export default function SurveyParticipantDetails() {
                                     <td>{participant?.p_mag_id?.first_name} {participant?.p_mag_id?.last_name}</td>
                                     <td>{participant.survey_status === 'completed' ? <span className='span-badge active-tag'>Completed</span> : <span className='span-badge inactive-tag'>Pending</span>}</td>
                                     <td>
-                                        <Dropdown className='custom-dropdown'>
+                                    <button className='action-btn' onClick={() => handleDelete(participant._id)}><Remove /></button>
+                                        {/* <Dropdown className='custom-dropdown'>
                                             <Dropdown.Toggle variant="success" id="dropdown-basic">
                                                 <MoreIcon />
                                             </Dropdown.Toggle>
                                             <Dropdown.Menu>
                                                 <Dropdown.Item onClick={() => handleDelete(participant._id)}>Delete</Dropdown.Item>
                                             </Dropdown.Menu>
-                                        </Dropdown>
+                                        </Dropdown> */}
                                     </td>
                                 </tr>
                             ))

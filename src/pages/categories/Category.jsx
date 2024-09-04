@@ -5,7 +5,7 @@ import { StatusIcon, PLusIcon, MoreIcon } from "../../components/svg-icons/icons
 import { Container, Dropdown, Pagination, Row, Col, } from 'react-bootstrap'
 import { Link } from "react-router-dom";
 import Swal from 'sweetalert2'
-
+import { Edit,Remove } from '../../components/svg-icons/icons';
 
 export default function Category() {
 
@@ -88,7 +88,7 @@ export default function Category() {
     return (
         <AuthLayout title={'Welcome to Competency'} subTitle={'Competency'}>
 
-            <div className='table-inner'>
+            <div className='table-inner main-wrapper'>
                 <div className='content-outer'>
                     <div className='tabe-outer'>
                         <div className='table-heading'>
@@ -134,8 +134,10 @@ export default function Category() {
                                         {cat?.parent_id?.category_name}
                                     </td>
                                     <td><span className='span-badge active-tag'>Active</span></td>
-                                    <td>
-                                        <Dropdown className='custom-dropdown'>
+                                <td>
+                                <button className='action-btn' onClick={() => navigate(`/competencies/${cat._id}`)}><Edit /></button>
+                                <button className='action-btn' onClick={() => handleDelete(cat._id)}><Remove /></button>
+                                        {/* <Dropdown className='custom-dropdown'>
                                             <Dropdown.Toggle variant="success" id="dropdown-basic">
                                                 <MoreIcon />
                                             </Dropdown.Toggle>
@@ -143,7 +145,7 @@ export default function Category() {
                                             <Dropdown.Item onClick={() => navigate(`/competencies/${cat._id}`)}>Edit</Dropdown.Item>
                                             <Dropdown.Item onClick={() => handleDelete(cat._id)}>Delete</Dropdown.Item>
                                             </Dropdown.Menu>
-                                        </Dropdown>
+                                        </Dropdown> */}
                                     </td>
                                 </tr>
                             ))

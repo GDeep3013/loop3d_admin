@@ -5,6 +5,7 @@ import { StatusIcon, PLusIcon, MoreIcon } from "../../components/svg-icons/icons
 import { Container, Dropdown, Pagination, Row, Col } from 'react-bootstrap';
 import { Link } from "react-router-dom";
 import Swal from 'sweetalert2';
+import {View,Edit,Remove} from '../../components/svg-icons/icons';
 import QuestionStatusUpdate from './QuestionStatusUpdate';
 
 export default function Question() {
@@ -84,7 +85,7 @@ export default function Question() {
 
   return (
     <AuthLayout title={'Welcome to Questions'} subTitle={'Questions'}>
-      <div className='table-inner'>
+      <div className='table-inner main-wrapper'>
         <div className='content-outer'>
           <div className='tabe-outer'>
             <div className='table-heading'>
@@ -131,7 +132,10 @@ export default function Question() {
                 </td>
                 <td><span className='span-badge active-tag'>Active</span></td>
                 <td>
-                  <Dropdown className='custom-dropdown'>
+                <button className='action-btn' onClick={() => navigate(`/questions/detail/${question._id}`)}><View /></button>
+                 <button className='action-btn' onClick={() => navigate(`/questions/${question._id}`)}><Edit /></button>
+                 <button className='action-btn' onClick={() => handleDelete(question._id)}><Remove /></button>
+                  {/* <Dropdown className='custom-dropdown'>
                     <Dropdown.Toggle variant="success" id="dropdown-basic">
                       <MoreIcon />
                     </Dropdown.Toggle>
@@ -140,7 +144,7 @@ export default function Question() {
                      <Dropdown.Item onClick={() => navigate(`/questions/${question._id}`)}>Edit</Dropdown.Item>
                       <Dropdown.Item onClick={() => handleDelete(question._id)}>Delete</Dropdown.Item>
                     </Dropdown.Menu>
-                  </Dropdown>
+                  </Dropdown> */}
                 </td>
               </tr>
             ))

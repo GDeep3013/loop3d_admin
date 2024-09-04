@@ -17,7 +17,7 @@
 .profileImg img {width: 50px;height: 50px;object-fit: cover;}
 .profile .user h3 { font-size: 14px; margin: 0; color: #000; font-weight: 500; }
 .profile .user p {font-size: 12px;font-weight: 400;margin: 6px 0 0 0;}
-.wrapper-outer .main-content { width: 100%; padding: 50px; max-height: calc(100vh - 0px); overflow: hidden; overflow-y: auto; scrollbar-color: #6d6d6d #ccc;scrollbar-width: thin;}
+.wrapper-outer .main-content { width: 100%; padding: 17px 25px; max-height: calc(100vh - 0px); overflow: hidden; overflow-y: auto; scrollbar-color: #6d6d6d #ccc;scrollbar-width: thin;}
 .wrapper-outer .main-content::-webkit-scrollbar-thumb { background: #6d6d6d; border-radius: 5px;}
 .wrapper-outer .main-content::-webkit-scrollbar-track { background: #ccc; }
 .wrapper-outer .main-content::-webkit-scrollbar { width: 8px; height: 8px; }
@@ -262,6 +262,10 @@ td.parent-category { font-weight: 600 !important; font-size: 17px !important; }
 .looplead-box .loop-inner span { font-size: 23px; line-height: normal; font-weight: 500; }
 .looplead-box .looplead-box-outer p span { font-size: 17px; line-height: normal; font-weight: 500; }
 .table-outer .table-heading { padding-bottom: 30px; }
+.main-wrapper { box-shadow: rgba(145, 158, 171, 0.2) 0px 2px 1px -1px, rgba(145, 158, 171, 0.14) 0px 1px 1px 0px, rgba(145, 158, 171, 0.12) 0px 1px 3px 0px; border: 1px solid rgb(196, 205, 213) !important; margin-top: 25px; border-top-right-radius: 10px; border-top-left-radius: 10px; }
+table.table { margin-bottom: 0px; }
+table.table th:last-child, table.table td:last-child { text-align: right; }
+.table-inner .table th { background: #edf9ff;font-weight: 600; font-size: 14px; border: 0px; }
 /* start responsive css */
 @media screen and (min-width: 1280px) and (max-width: 1440px) {
     .wrapper-outer .main-content{ padding: 40px 29px; }

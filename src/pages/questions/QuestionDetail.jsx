@@ -38,13 +38,29 @@ export default function QuestionDetail() {
 
     return (
         <AuthLayout title={'Question Details'} subTitle={'Details of the question'}>
+            <div className="content-outer main-wrapper pd-2 bg-white question-wrapper">
+            <div class="tabe-outer ">
+   <div class="main-back-heading">
+      <div class="container">
+         <div class="row">
+            <div class="col-md-6 p-0">
+            <div className="profile-btns pt-0">
+                <Button className="default-btn cancel-btn ml-0" onClick={() => navigate(-1)}>
+                    Back
+                </Button>
+            </div>                  
+            </div>
+         </div>
+      </div>
+   </div>
+</div>  
             <Container>
                 <Row>
-                    <Col md={{ span: 8, offset: 2 }}>
+                    <Col md={{ span: 6 }}>
                         {loading && <Spinner animation="border" />}
                         {error && <Alert variant="danger">{error}</Alert>}
                         {!loading && question && (
-                            <Card className="mt-4 shadow-sm">
+                            <Card className="">
                                 <Card.Body>
                                     <Card.Title className="mb-4">
                                         <strong>Question:</strong> {question.questionText}
@@ -62,7 +78,7 @@ export default function QuestionDetail() {
                                             </ul>
                                     </ListGroup>
                                     <div className="mt-4 d-flex gap-3">
-                                        <Button variant="secondary" onClick={() => navigate('/questions')}>Back</Button>
+                                        {/* <Button variant="secondary" onClick={() => navigate('/questions')}>Back</Button> */}
                                         <Button variant="primary edit-btn" onClick={() => navigate(`/questions/${question._id}`)}>Edit</Button>
                                     </div>
                                 </Card.Body>
@@ -70,7 +86,8 @@ export default function QuestionDetail() {
                         )}
                     </Col>
                 </Row>
-            </Container>
+                </Container>
+                </div>
         </AuthLayout>
     );
 }
