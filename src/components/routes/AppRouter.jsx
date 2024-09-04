@@ -44,6 +44,9 @@ import SurveyParticipantDetails from "../../pages/loopleads/SurveyParticipantDet
 import QuestionTabs from "../../pages/questions/QuestionTabs";
 import CreateQuestion from "../../pages/questions/CreateQuestion";
 import Survey from "../../pages/surveys/survey";
+import CreateSurvey from "../../pages/surveys/CreateSurvey";
+import EmailList from "../../pages/emails/EmailList";
+import CreateEmail from "../../pages/emails/CreateEmail";
 
 const AppRouter = () => {
   const user = useSelector((state) => state.auth.user);
@@ -115,7 +118,9 @@ const AppRouter = () => {
           <Route path="/questions/detail/:questionId" exact element={<QuestionDetail />} />
           <Route path="/view-loop_lead/:userId/:orgId" exact element={<LoopleadTabs />} />
           <Route path="/view-survey-participant/:id" exact element={<SurveyParticipantDetails />} />
-
+          <Route path="/emails" exact element={<EmailList />} />
+          <Route path="/emails/create" exact element={<CreateEmail />} />
+          <Route path="/emails/:id" exact element={<CreateEmail />} />
 
 
 

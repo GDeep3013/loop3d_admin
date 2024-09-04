@@ -47,7 +47,7 @@
 .latest-projects { margin-top: 80px; }
 .latest-projects .filterBox .d-flex { justify-content: right; }
 .latest-projects h2 { font-size: 18px; font-weight: 500; }
-.dashboard-header h1 { font-size: 24px; font-weight: 600; color: var(--black-color);}
+.dashboard-header h1 { font-size: 21px; font-weight: 600; color: var(--black-color); margin-bottom: 3px; }
 .dashboard-header p { font-size: 14px; color: #747474; }
 .latest-projects .filterBox .dropdown { width: auto; max-width: fit-content; min-width: 160px; }
 /* pagination css */

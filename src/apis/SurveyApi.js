@@ -33,12 +33,12 @@ export const getSurveyParticipantsById = async (id, searchTerm) => {
 };
 
 
-export const getSurveys = async (searchTerm) => {
+export const getSurveys = async (searchTerm,currentPage) => {
 
     let url = `/api/surveys/all-survey`;
 
     if (searchTerm) {
-        url += `?searchTerm=${encodeURIComponent(searchTerm)}`;
+        url += `?page=${currentPage}&searchTerm=${encodeURIComponent(searchTerm)}`;
     }
     let result = await fetch(url, {
         headers: { 'x-api-key': import.meta.env.VITE_X_API_KEY }
@@ -46,6 +46,6 @@ export const getSurveys = async (searchTerm) => {
 
     let json = await result.json();
 
-    return json.data;
+    return json;
 
 };

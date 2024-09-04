@@ -110,12 +110,10 @@ nav.sideNavOuter.open .sideNavLogo button.toggleMenu { margin: 0 0 0 8px; }
 .latest-projects .filterBox input.form-control { min-height: 45px; max-width: 340px; }
 .latest-projects .filterBox button { margin: 0; }
 .latest-projects .filterBox .d-flex { column-gap: 13px; }
-nav.sideNavOuter.open ul.sideNavList li.sideNavItem a {
-  display: inline-block;
-  max-width: 48px;
-}
+nav.sideNavOuter.open ul.sideNavList li.sideNavItem a { display: inline-block; max-width: 48px; }
+h3.title-add-option { font-size: 17px; padding-top: 8px; }
 /* start 23/08/2024 css */
-.wrapper-outer .side-nav { background-color: #174a6d; }
+.wrapper-outer .side-nav { background-color: #174a6d;height:100vh; }
 .sub-outer { background-color: #4d7b9b; padding: 5px 12px; margin-bottom: 10px; border-radius: 0 0 8px 8px; }
 .sub-outer li.subNavItem { border-bottom: 1px solid #fff; }
 .sub-outer li.subNavItem a { color: #fff; display: block; padding: 6px 0 9px 0; background: transparent; }

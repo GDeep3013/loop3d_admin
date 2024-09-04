@@ -66,7 +66,7 @@ button.MenuOpen svg.action-icon {transform: scale(1.3);position: relative;left: 
 .milestone-outer .upload-btn{ line-height: 0; }
 .milestone-outer .upload-btn .default-btn { min-width: 104px; min-height: 46px; line-height: 46px; cursor: pointer;}
 .milestone-outer .upload-btn { position: relative; }
-.milestone-outer .upload-btn input.form-control { width: 100%; min-height:46px; position: absolute; opacity: 0; }
+.milestone-outer .upload-btn input.form-control { width: 100%; min-height:40px; position: absolute; opacity: 0; }
 table .user-img img { vertical-align: middle; width: 42px; height: 42px; border: 1px solid #e1dede; border-radius: 33px; }
 .employee-profile .employee-profile-img img { border-radius: 50%; width: 110px!important; height: 110px!important; object-fit: cover; object-position: center; }
 .custom-tabs .nav-item .nav-link{ color: #000; }
@@ -75,17 +75,20 @@ ul.custom-tabs li.nav-item button { border: none; min-width: 138px; height: 47px
 ul.custom-tabs li.nav-item button:hover { border: none; box-shadow: none; }
 .tabe-outer .table-heading h4,table.table tbody h4 { font-size: 17px; font-weight: 500; line-height: normal; }
 ul.custom-tabs { column-gap: 15px; }
-.custom-tabs .nav-item .nav-link.active { background-color: #fff; color: #000; font-size: 17px; font-weight: 500; }
 table.table th svg { width: 17px; height: 12px; }
 .pd-2 { padding: 0px 5px 15px; }
 label.form-label { font-size: 14px; }
-input.form-control { height: 46px; font-size: 14px; }
+input.form-control { height: 40px; font-size: 14px; }
 .main-back-heading { border-bottom: 1px solid #ededed; margin-bottom: 23px; padding: 10px 0px; }
 button.action-btn { transition: all ease-in-out 0.5s; transform: scale(1.0); }
 button.action-btn:hover { transform: scale(1.2); }
 button.action-btn:hover svg { opacity: 1; }
-h2.orgname { font-size: 18px; }   
+.orgname { font-size: 18px; }   
 select.form-select,select.form-control { height: 46px; font-size: 14px; }
+.edit-org .main-wrapper { border: 0px !important; box-shadow: none; }
+.custom-tabs .nav-item .nav-link.active { background-color: #7abcdb; color: #ffffff; font-size: 17px; font-weight: 500; }
+ul.custom-tabs { margin: 0px 16px; }
+.default-btn { display: flex; align-items: center; justify-content: space-around; }
 @media  (max-width: 767px) {
     table.table {
       white-space: nowrap;

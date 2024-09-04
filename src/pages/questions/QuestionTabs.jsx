@@ -43,16 +43,27 @@ export default function QuestionTabs() {
 
     return (
         <AuthLayout title={id ? 'Edit Question' : 'Add Question'}>
-            <div className="profile-btns">
-                <Button className="default-btn cancel-btn" onClick={() => navigate(-1)}>
-                    Back
-                </Button>
+              <div className="content-outer main-wrapper pd-2 bg-white edit-org">
+        <div class="tabe-outer">
+                <div class="main-back-heading">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-6 p-0">
+                                <div className="profile-btns pt-0">
+                                    <Button className="default-btn cancel-btn ml-0" onClick={() => navigate(-1)}>
+                                        Back
+                                    </Button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <Tabs
                 defaultActiveKey="home"
                 id="uncontrolled-tab-example"
-                className="mb-3 mt-5 custom-tabs"
+                className="custom-tabs"
             >
                 <Tab eventKey="home" title="Overview">
                     <AddQuestion id={id} savedData={formData} />
@@ -61,7 +72,8 @@ export default function QuestionTabs() {
                 <Tab eventKey="profile" title="Competencies">
                     <AssignCompetencies data={{ ref_id: id}} type="question" />
                 </Tab>
-            </Tabs>
+                </Tabs>
+                </div>
         </AuthLayout>
 
     )

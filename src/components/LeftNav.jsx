@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 
-import { Category, MenuIcon, Technology, Job, FixedPrice, Logout, EmployeeIcon, DocomentIcon, ProjectIcon,QuestionIcon } from "./svg-icons/icons";
+import { Category, MenuIcon,EmailIcon, Technology, Job, FixedPrice, Logout, EmployeeIcon, DocomentIcon, ProjectIcon,QuestionIcon } from "./svg-icons/icons";
 import "../Nav.css";
 import { Menuicon } from '../components/svg-icons/icons';
 // import { useSelector, useDispatch } from "react-redux";
@@ -154,7 +154,13 @@ export default function LeftNav({isMenuOpen,setIsMenuOpen}) {
               <QuestionIcon />
               Questions
             </NavLink>
-          </li>        
+          </li>
+          <li className="sideNavItem">
+            <NavLink to="/emails">
+              <EmailIcon />
+              Emails
+            </NavLink>
+          </li>      
         </>
         <li className="sideNavItem LogoutMenu">
           <NavLink to="#" className="dropdown-item" onClick={() => {

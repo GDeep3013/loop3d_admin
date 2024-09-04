@@ -10,6 +10,8 @@ const uploadPath = path.join(__dirname, 'profile-pics');
 const fs = require('fs');
 const encryption = require("../utility/encryption");
 const { sendResetEmail } = require('../../emailService');
+const { sendSurveyCreationEmail } = require('../../emails/sendCreateSurveyLink');
+
 const crypto = require('crypto');
 
 
@@ -52,6 +54,15 @@ const UserController = {
                 // Save the user to the database
                 let response = await user.save();
 
+                if (response?._id) {
+                    const role = await Role.findById(userType);
+                    if (role?.type == "manager") {
+                        let url = "http://localhost:5173/create-survey?token="+response?._id
+                        let emailRes = await sendSurveyCreationEmail(response?.email, url);
+
+                    }
+                    
+                }
                 return res.status(201).json({
                     user: response,
                     message: 'User registered successfully',
@@ -61,9 +72,9 @@ const UserController = {
                 // Handle duplicate email/phone error
                 if (error.code === 11000) {
                     if (error.keyPattern && error.keyPattern.email) {
-                        return res.status(400).json({ errors: [{ msg: 'Email already exists' }] });
+                        return res.status(400).json({ errors:{ email: 'Email already exists' } });
                     } else if (error.keyPattern && error.keyPattern.phone) {
-                        return res.status(400).json({ errors: [{ msg: 'Phone number already exists' }] });
+                        return res.status(400).json({ errors:{ phone: 'Phone number already exists' } });
                     }
                 }
 
@@ -295,7 +306,8 @@ const UserController = {
                     select: 'name', // Exclude the __v field from the populated organization documents
                 })
                 .populate('role', 'type')
-                .populate('created_by', 'username') // Populate the role field as well
+                .populate('created_by', 'first_name last_name email phone') // Populate the role field as well
+                // Populate the role field as well
                 .sort({ createdAt: -1 }); // Sort by creation date in descending order
               
 
@@ -328,7 +340,7 @@ const UserController = {
                     select: 'name', // Exclude the __v field from the populated organization documents
                 })
                 .populate('role', 'type')
-                .populate('created_by', 'username email phone') // Populate the role field as well
+                .populate('created_by', 'first_name last_name email phone') // Populate the role field as well
                 .sort({ createdAt: -1 }); // Sort by creation date in descending order
               
 

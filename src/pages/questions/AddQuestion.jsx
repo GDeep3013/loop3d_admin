@@ -152,21 +152,21 @@ export default function AddQuestion({ id, savedData }) {
 
     return (
         <div className="content-outer main-wrapper pd-2 bg-white">
-            <div class="tabe-outer">
-   <div class="main-back-heading">
-      <div class="container">
-         <div class="row">
-            <div class="col-md-6 p-0">
-            <div className="profile-btns pt-0">
-                <Button className="default-btn cancel-btn ml-0" onClick={() => navigate(-1)}>
-                    Back
-                </Button>
-            </div>                  
-            </div>
-         </div>
-      </div>
-   </div>
-</div>  
+            {!id && <div class="tabe-outer">
+                <div class="main-back-heading">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-6 p-0">
+                                <div className="profile-btns pt-0">
+                                    <Button className="default-btn cancel-btn ml-0" onClick={() => navigate(-1)}>
+                                        Back
+                                    </Button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>} 
                 <Form onSubmit={handleSubmit}>
                     <Container className='outer-box'>
                         <Row>
@@ -204,7 +204,7 @@ export default function AddQuestion({ id, savedData }) {
                             {formData.questionType === 'Radio' && (
                                 <Col md={12}>
                                     <div className='question-contant'>
-                                    <h3>Answers</h3>
+                                    <h3 className="title-add-option">Answers</h3>
                                     <Button type="button" onClick={addOption} variant="primary">
                                         Add Option
                                     </Button>

@@ -39,7 +39,7 @@ export default function ViewLoopLead({ user_id, org_id }) {
               <p><span>Title:</span> Brand Manager</p>
           </div>
           <div className='loop-contant'>
-              <p><span>Supervisor: </span>{leadUser?.created_by.username}</p>
+              <p><span>Supervisor: </span>{leadUser?.created_by.first_name} {leadUser?.created_by.last_name}</p>
               <p><span>Supervisor Email: </span><a href='mailto:twilks@y.com'>{leadUser?.created_by.email}</a></p>
               <p><span>Supervisor Phone: </span>{leadUser?.created_by.phone}</p>
           </div>

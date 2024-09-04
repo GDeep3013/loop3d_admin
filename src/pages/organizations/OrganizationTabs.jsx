@@ -39,16 +39,27 @@ export default function OrganizationTabs() {
 
     return (
         <AuthLayout title={id ? "Edit Organization" : "Add Organization"}>
-            <div className="profile-btns">
-                <Button className="default-btn cancel-btn" onClick={() => navigate(-1)}>
-                    Back
-                </Button>
+             <div className="content-outer main-wrapper pd-2 bg-white edit-org">
+            <div class="tabe-outer">
+                <div class="main-back-heading">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-6 p-0">
+                                <div className="profile-btns pt-0">
+                                    <Button className="default-btn cancel-btn ml-0" onClick={() => navigate(-1)}>
+                                        Back
+                                    </Button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <Tabs
                 defaultActiveKey="home"
                 id="uncontrolled-tab-example"
-                className="mb-3 mt-5 custom-tabs"
+                className="custom-tabs"
             >
                 <Tab eventKey="home" title="Overview">
                     <CreateOrganization id={id} savedData={formData} />
@@ -61,7 +72,8 @@ export default function OrganizationTabs() {
                 <Tab eventKey="contact" title="Loop Leads">
                     <LoopLeads organization={{ orgniation_id: id, name: formData.name }} />
                 </Tab>
-            </Tabs>
+                </Tabs>
+                </div>
         </AuthLayout>
 
     )
