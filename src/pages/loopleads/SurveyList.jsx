@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { MoreIcon } from "../../components/svg-icons/icons";
 import { Container, Dropdown, Row, Col } from 'react-bootstrap';
 import { getSurveyById } from '../../apis/SurveyApi';
+import { formatDateGB, formatDateUS } from '../../utils/dateUtils';
+
 
 export default function SurveyList({ loop_lead_id, org_id }) {
   const navigate = useNavigate();
@@ -80,14 +82,14 @@ export default function SurveyList({ loop_lead_id, org_id }) {
             surveys.map((survey, index) => (
               <tr key={survey._id}>
                 <td>{index + 1}</td>
-                <td>{new Date(survey.createdAt).toLocaleDateString()}</td>
+                <td>{formatDateGB(survey.createdAt)}</td>
                 <td>{survey.total_invites}</td>
                 <td>{survey.completed_survey}</td>
                 <td>{survey.ll_survey_status === 'yes' ? <span className='span-badge active-tag'>Yes</span> :<span className='span-badge inactive-tag'>No</span>}</td>
                 <td>{survey.mgr_survey_status === 'yes' ? <span className='span-badge active-tag'>Yes</span> : <span className='span-badge inactive-tag'>No</span>}</td>
                 <td>
                   {survey.report_gen_date
-                    ? new Date(survey.report_gen_date).toLocaleDateString()
+                    ? formatDateGB(survey.report_gen_date)
                     : 'Never'}
                 </td>
                 <td>

@@ -4,6 +4,7 @@ import { MoreIcon } from "../../components/svg-icons/icons";
 import { Container, Dropdown, Row, Col, Pagination } from 'react-bootstrap';
 import { getSurveys } from '../../apis/SurveyApi';
 import AuthLayout from '../../layout/Auth';
+import { formatDateGB, formatDateUS } from '../../utils/dateUtils';
 
 export default function Survey() {
     const navigate = useNavigate();
@@ -98,7 +99,7 @@ export default function Survey() {
                             surveys.map((survey, index) => (
                                 <tr key={survey._id}>
                                     <td>{index + 1}</td>
-                                    <td>{new Date(survey.createdAt).toLocaleDateString()}</td>
+                                    <td>{formatDateGB(survey.createdAt)}</td>
                                     <td>{survey?.loop_lead_id?.first_name} {survey?.loop_lead_id?.last_name}</td>
                                     <td>{survey?.mgr_id?.first_name}  {survey?.mgr_id?.last_name}</td>
                                     <td>{survey.total_invites}</td>
@@ -107,7 +108,7 @@ export default function Survey() {
                                     <td>{survey.mgr_survey_status === 'yes' ? <span className='span-badge active-tag'>Yes</span> : <span className='span-badge inactive-tag'>No</span>}</td>
                                     <td>
                                         {survey.report_gen_date
-                                            ? new Date(survey.report_gen_date).toLocaleDateString()
+                                            ? formatDateGB(survey.report_gen_date)
                                             : 'Never'}
                                     </td>
                                     <td>
