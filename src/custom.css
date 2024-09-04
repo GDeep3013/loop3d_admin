@@ -42,8 +42,10 @@
 .project___info input[type="checkbox"] { position: absolute; top: 0; left: 0; width: 80%; height: 100%; opacity: 0; }
 .mainContet-outer .custom-checkbox span svg { width: 15px; height: 15px; position: absolute; top: 3px; left: 5px; }
 .project___info { position: relative; padding-left: 40px; }
-
+.headerSearch .dropdown-menu { padding: 0px; }
+.headerSearch .dropdown-menu a.dropdown-item { font-size: 15px; }
 /* start search-outer component css */
+.form-check-input:checked { background-color: #7abcdb; border-color: #174a6d; }
 .latest-projects { margin-top: 80px; }
 .latest-projects .filterBox .d-flex { justify-content: right; }
 .latest-projects h2 { font-size: 18px; font-weight: 500; }
@@ -243,7 +245,6 @@ form.formOuter input.form-control {
 .profile-btns { padding-top: 30px; }
 .outer-box button.btn { background-color: var(--theme-color); border: none; }
 .question-contant { display: flex; width: 49%; justify-content: space-between; padding-bottom: 20px; }
-.custom-list.list-group li.list-group-item { border: none; position: relative; padding: 0 0 15px 17px; }
 .custom-list.list-group li.list-group-item:after { position: absolute; content: ''; top: 7px; left: 0; width: 7px; height: 7px; background-color: #000; border-radius: 10px; }
 .card-body { padding: 25px; }
 .card-title strong { display: block; padding-bottom: 11px; }
@@ -265,7 +266,18 @@ td.parent-category { font-weight: 600 !important; font-size: 17px !important; }
 .main-wrapper { box-shadow: rgba(145, 158, 171, 0.2) 0px 2px 1px -1px, rgba(145, 158, 171, 0.14) 0px 1px 1px 0px, rgba(145, 158, 171, 0.12) 0px 1px 3px 0px; border: 1px solid rgb(196, 205, 213) !important; margin-top: 25px; border-top-right-radius: 10px; border-top-left-radius: 10px; }
 table.table { margin-bottom: 0px; }
 table.table th:last-child, table.table td:last-child { text-align: right; }
+.ans-block .col-md-8 { padding-right: 0px; }
 .table-inner .table th { background: #edf9ff;font-weight: 600; font-size: 14px; border: 0px; }
+.ans-block { border: 1px solid #e1e1e1; border-radius: 5px; padding: 10px 10px 4px; background: #fbfbfb; }
+.ans-block button.btn.btn-danger { top: 16px; right: 10px; }
+.ans-block label.form-check-label { font-size: 14px; color: #4c4c4c; }
+.ans-block select.form-control { height: 40px; }
+.ans-block button.btn.btn-danger { top: 12px; right: 10px; background: transparent; }
+ .ans-block button.btn.btn-danger img {filter: unset;opacity: 0.6;}
+ .add-title { font-size: 20px; }
+ .question-from .ans-block input.form-control { width: 100%; }
+ .question-from .ans-block .question-inner { padding-top: 6px; }
+ .custom-list.list-group li.list-group-item { border: none; position: relative; padding: 0 0 9px 17px; font-size: 14px; }
 /* start responsive css */
 @media screen and (min-width: 1280px) and (max-width: 1440px) {
     .wrapper-outer .main-content{ padding: 40px 29px; }

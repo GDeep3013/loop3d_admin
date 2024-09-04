@@ -81,7 +81,7 @@ nav.sideNavOuter.open button.MenuOpen svg.action-icon { transform: rotate(180deg
 .headerSearch .dropdown-menu a { border-radius: 5px; }
 .sideNavList li.sideNavItem a svg path { fill: #000; }
 .sideNavList li.sideNavItem a svg.question-icon path { fill: none; }
-.sideNavList li.sideNavItem a.active svg path { fill: #fff !important; }
+.sideNavList li.sideNavItem a.active svg path,.sideNavList li.sideNavItem a:hover svg path { fill: #fff !important; }
 .headerSearch .dropdown-menu a:hover { background-color: var(--theme-color); color: #fff; }
 ul.sideNavList { padding: 22px 16px 12px; min-height: calc(100vh - 106px); margin: 0;}
 .sideNavList li.sideNavItem { margin-bottom: 10px; }
@@ -90,7 +90,7 @@ ul.sideNavList { padding: 22px 16px 12px; min-height: calc(100vh - 106px); margi
 .sideNavList li.sideNavItem a svg { vertical-align: middle; margin: 0 16px 0 0; min-width: 24px; width: 24px; height: 24px; }
 .sideNavList li.sideNavItem.campaignIcon svg { width: 28px; height: 28px; margin-right: 14px; margin-left: -2px; }
 .sideNavOuter .settingMenu a { margin-top: 8px; }
-.sideNavList li.sideNavItem a.active{  background-color: var(--theme-color);; color:#fff; }
+.sideNavList li.sideNavItem a.active,.sideNavList li.sideNavItem a:hover{  background-color: var(--theme-color);; color:#fff; }
 nav.sideNavOuter.open{ width: 70px; }
 nav.sideNavOuter.open ul.sideNavList { width: 70px; min-height: calc(100vh - 30px);}
 nav.sideNavOuter.open ul.sideNavList li.sideNavItem a { padding: 12px 0; font-size: 0; line-height: inherit; }

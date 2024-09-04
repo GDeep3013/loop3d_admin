@@ -14,7 +14,7 @@
 .table-heading form .form-control, .table-heading form .default-btn { border-radius: 8px; }
 .table-inner .table th, .table-inner .table td{ padding: 12px 15px; vertical-align: middle; }
 .table-inner thead th { background-color: #F4F4F5; border-top: 1px solid #D2D2D2; border-bottom: 1px solid #D2D2D2;  font-size: 16px; color: #2E2E2E; font-weight: 400;}
-.table-inner .table td { font-size: 14px; color: #2E2E2E; font-weight: 500; text-align: left; }
+.table-inner .table td { font-size: 14px; color: #2E2E2E; font-weight: 400; text-align: left; }
 .status-tags .span-badge { margin-right: 7px; }
 .status-tags .span-badge:last-child{ margin-right: 0; }
 .custom-dropdown .dropdown-toggle { background-color: transparent; padding: 0; border: none; }
@@ -22,7 +22,7 @@
 .custom-dropdown .dropdown-menu { transform: translate(0px, 26px) !important; }
 .table-inner .user-profile .user-name { padding-left: 15px; }
 .table-inner tr:last-child td { border-bottom: none; }
-.action-btn svg {width: 17px;height: 17px;opacity: 0.7;}
+.action-btn svg {width: 17px;height: 17px;opacity: 0.6;}
 .action-btn {background: none;border: 0px;}
 button.MenuOpen { position: absolute; right: -14px; top: 52px; border: 1px solid #ccc; border-radius: 17px; width: 26px; height: 26px; text-align: center; display: flex; align-items: center; justify-content: center; } 
 button.MenuOpen svg.action-icon {transform: scale(1.3);position: relative;left: -1px;}
@@ -42,7 +42,6 @@ button.MenuOpen svg.action-icon {transform: scale(1.3);position: relative;left: 
 .profile-btns .default-btn.cancel-btn { background-color: #fff; color: #000; margin-left: 8px; }
 .profile-btns .default-btn.cancel-btn:hover{ background-color: var(--theme-color); color: #fff; }
 .employee-content .profile-form { margin-top: 57px; }
-.profile-form .form-label { font-size: 16px; font-weight: 500; color: #2E2E2E; margin-bottom: 12px;}
 .profile-form .form-control, .profile-form .form-select { min-height: 46px; padding: 0 15px;}
 .skills-outer .select__control { min-height: 50px; border-color: #dee2e6; border-radius: 6px;}
 .skills-outer .select__control .select__multi-value { background-color: var(--theme-color); padding: 3px; position: relative; min-width: 43px;}
@@ -86,9 +85,14 @@ button.action-btn:hover svg { opacity: 1; }
 .orgname { font-size: 18px; }   
 select.form-select,select.form-control { height: 46px; font-size: 14px; }
 .edit-org .main-wrapper { border: 0px !important; box-shadow: none; }
-.custom-tabs .nav-item .nav-link.active { background-color: #7abcdb; color: #ffffff; font-size: 17px; font-weight: 500; }
+select.form-control,select.form-select { height: 40px; }
+.profile-form .form-label { font-size: 14px; font-weight: 400; color: #2E2E2E; margin-bottom: 8px; }
 ul.custom-tabs { margin: 0px 16px; }
-.default-btn { display: flex; align-items: center; justify-content: space-around; }
+.default-btn {align-items: center; justify-content: space-around; }
+.table-inner .table td {border-color: #f7f7f7; }
+.table-inner .table td:first-child { font-weight: 500; }
+.custom-tabs .nav-item .nav-link { border-bottom: 2px solid #00000000; font-weight: 500; font-size: 17px; }
+.custom-tabs .nav-item .nav-link.active, .custom-tabs .nav-item .nav-link:hover { background-color: #ffffff; color: #7abcdb; font-size: 17px; border-bottom: 2px solid #7abcdb; }
 @media  (max-width: 767px) {
     table.table {
       white-space: nowrap;

@@ -12,7 +12,7 @@ export default function AddQuestion({ id, savedData }) {
     const [formData, setFormData] = useState({
         questionText: '',
         questionType: '', // 'Text' or 'Radio'
-        options: [{ text: '', isCorrect: false }],
+        options: [{ text: '', isCorrect: false, weightage: 1 }], // Added weightage
         createdBy: user?.id
     });
     const [categories, setCategories] = useState([]);
@@ -35,12 +35,10 @@ export default function AddQuestion({ id, savedData }) {
 
     useEffect(() => {
         if (savedData) {
-      
             setFormData({
                 ...savedData,
                 createdBy: user?.id // Ensure createdBy is set
             });
-           
         }
     }, [savedData, user?.id]);
 
@@ -72,13 +70,10 @@ export default function AddQuestion({ id, savedData }) {
     // Handle input changes
     const handleChange = (e) => {
         const { name, value } = e.target;
-        if (name == "questionType" &&  value=="Text") {
-            setFormData({ ...formData, [name]: value , options:[] });  
-
+        if (name === "questionType" && value === "Text") {
+            setFormData({ ...formData, [name]: value, options: [] });
         } else {
-            setFormData({ ...formData, [name]: value });  
-            setFormData({ ...formData, [name]: value , options:[{ text: '', isCorrect: false }] });  
-
+            setFormData({ ...formData, [name]: value, options: [{ text: '', isCorrect: false, weightage: 1 }] });
         }
         setErrors({});
     };
@@ -87,7 +82,7 @@ export default function AddQuestion({ id, savedData }) {
     const handleOptionChange = (index, e) => {
         const { name, value, checked } = e.target;
         const updatedOptions = [...formData.options];
-        
+
         if (name === 'isCorrect' && formData.questionType === 'Radio') {
             updatedOptions.forEach((option, i) => {
                 option.isCorrect = i === index ? checked : false;
@@ -101,7 +96,7 @@ export default function AddQuestion({ id, savedData }) {
 
     // Add a new option
     const addOption = () => {
-        setFormData({ ...formData, options: [...formData.options, { text: '', isCorrect: false }] });
+        setFormData({ ...formData, options: [...formData.options, { text: '', isCorrect: false, weightage: 1 }] });
     };
 
     // Remove an option
@@ -151,7 +146,8 @@ export default function AddQuestion({ id, savedData }) {
     };
 
     return (
-        <div className="content-outer main-wrapper pd-2 bg-white">
+        
+            <div className="content-outer main-wrapper pd-2 bg-white">
             {!id && <div class="tabe-outer">
                 <div class="main-back-heading">
                     <div class="container">
@@ -167,91 +163,114 @@ export default function AddQuestion({ id, savedData }) {
                     </div>
                 </div>
             </div>} 
-                <Form onSubmit={handleSubmit}>
-                    <Container className='outer-box'>
-                        <Row>
+            <Form onSubmit={handleSubmit}>
+            <Container className="outer-box">
+                    <Row>
                         <Col md={6}>
-                                <Form.Group className="mb-4">
-                                    <Form.Label>Question Text</Form.Label>
-                                    <Form.Control
-                                        type="text"
-                                        name="questionText"
-                                        value={formData.questionText}
-                                        onChange={handleChange}
-                                        placeholder="Enter question text"
-                                    />
-                                    {errors.questionText && <small className="text-danger">{errors.questionText}</small>}
-                                </Form.Group>
-                            </Col>
-                            <Col md={6}>
-                                <Form.Group className="mb-4">
-                                    <Form.Label>Answer Type</Form.Label>
-                                    <Form.Control
-                                        as="select"
-                                        name="questionType"
-                                        value={formData.questionType}
-                                        onChange={handleChange}
-                                    >
-                                        <option value="">Select Type</option>
-                                        <option value="Text">Text</option>
-                                        <option value="Radio">Radio</option>
-                                    </Form.Control>
-                                    {errors.questionType && <small className="text-danger">{errors.questionType}</small>}
-                                </Form.Group>
-                            </Col>
-                        </Row>
-                        <Row>
-                            {formData.questionType === 'Radio' && (
-                                <Col md={12}>
-                                    <div className='question-contant'>
-                                    <h3 className="title-add-option">Answers</h3>
+                            <Form.Group className="mb-4">
+                                <Form.Label>Question Text</Form.Label>
+                                <Form.Control
+                                    type="text"
+                                    name="questionText"
+                                    value={formData.questionText}
+                                    onChange={handleChange}
+                                    placeholder="Enter question text"
+                                />
+                                {errors.questionText && <small className="text-danger">{errors.questionText}</small>}
+                            </Form.Group>
+                        </Col>
+                        <Col md={6}>
+                            <Form.Group className="mb-4">
+                                <Form.Label>Answer Type</Form.Label>
+                                <Form.Control
+                                    as="select"
+                                    name="questionType"
+                                    value={formData.questionType}
+                                    onChange={handleChange}
+                                >
+                                    <option value="">Select Type</option>
+                                    <option value="Text">Text</option>
+                                    <option value="Radio">Radio</option>
+                                </Form.Control>
+                                {errors.questionType && <small className="text-danger">{errors.questionType}</small>}
+                            </Form.Group>
+                        </Col>
+                    </Row>
+                    <Row>
+                        {formData.questionType === 'Radio' && (
+                            <Col md={12}>
+                                <div className='question-contant'>
+                                    <h3 class="add-title">Answers</h3>
                                     <Button type="button" onClick={addOption} variant="primary">
                                         Add Option
                                     </Button>
-                                    </div>
-                                    <div className='question-from'>
+                                </div>
+                                <div className='question-from'>
                                     {formData.options.map((option, index) => (
-                                        <div key={index} className="mb-3">
-                                            <Form.Control
-                                                type="text"
-                                                name="text" 
-                                                placeholder={`Option ${index + 1}`}
-                                                value={option.text}
-                                                onChange={(e) => handleOptionChange(index, e)}
-                                            />
+                                        <div key={index} className="mb-3 ans-block">
+                                            <Row>
+                                                <Col md={8}>
+                                                    <Form.Control
+                                                        type="text"
+                                                        name="text"
+                                                        placeholder={`Option ${index + 1}`}
+                                                        value={option.text}
+                                                        onChange={(e) => handleOptionChange(index, e)}
+                                                    />
+                                                </Col>
+                                                <Col md={3}>
+                                                    <Form.Control
+                                                        as="select"
+                                                        name="weightage"
+                                                        value={option.weightage}
+                                                        onChange={(e) => handleOptionChange(index, e)}
+                                                    >
+                                                        <option value="">Select weightage</option>
+                                                        <option value="1">1</option>
+                                                        <option value="2">2</option>
+                                                        <option value="3">3</option>
+                                                        <option value="4">4</option>
+                                                        <option value="5">5</option>
+                                                        <option value="6">6</option>
+                                                        <option value="7">7</option>
+                                                        <option value="8">8</option>
+                                                        <option value="9">9</option>
+                                                        <option value="10">10</option>
+                                                    </Form.Control>
+                                                </Col>
+                                            </Row>
                                             <div className='question-inner'>
-                                            <Form.Check
-                                                type="checkbox"
-                                                name="isCorrect"
-                                                label="Correct"
-                                                checked={option.isCorrect}
-                                                onChange={(e) => handleOptionChange(index, e)}
-                                            />
-                                            
-                                            <Button type="button" onClick={() => removeOption(index)} variant="danger">
-                                                <img src='/images/remove.png'/>
-                                            </Button>
+                                                <Form.Check
+                                                    type="checkbox"
+                                                    name="isCorrect"
+                                                    label="Correct"
+                                                    checked={option.isCorrect}
+                                                    onChange={(e) => handleOptionChange(index, e)}
+                                                />
+                                                <Button type="button" onClick={() => removeOption(index)} variant="danger">
+                                                    <img src='/images/remove.png' alt='Remove' />
+                                                </Button>
                                             </div>
                                         </div>
                                     ))}
-                                        </div>
-                                    {errors.options && <small className="text-danger">{errors.options}</small>}
-                                </Col>
-                            )}
-                            <Col md={12}>
-                                <div className="profile-btns pt-0">
-                                    <Button type="submit" className="default-btn">
-                                        {id ? 'Update' : 'Save'}
-                                    </Button>
-                                    <Button type="button" className="default-btn cancel-btn" onClick={() => navigate('/questions')}>
-                                        Cancel
-                                    </Button>
                                 </div>
-                                {errors.form && <p className="text-danger">{errors.form}</p>}
+                                {errors.options && <small className="text-danger">{errors.options}</small>}
                             </Col>
-                        </Row>
-                    </Container>
-                </Form>
-            </div>
+                        )}
+                        <Col md={12}>
+                            <div className="profile-btns pt-0">
+                                <Button type="submit" className="default-btn">
+                                    {id ? 'Update' : 'Save'}
+                                </Button>
+                                <Button type="button" className="default-btn cancel-btn" onClick={() => navigate('/questions')}>
+                                    Cancel
+                                </Button>
+                            </div>
+                            {errors.form && <p className="text-danger">{errors.form}</p>}
+                        </Col>
+                    </Row>
+                </Container>
+            </Form>
+        </div>
     );
 }
