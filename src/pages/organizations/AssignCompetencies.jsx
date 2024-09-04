@@ -86,7 +86,6 @@ export default function AssignCompetencies({ data, type }) {
                             <Container>
                                 <Row className='align-items-center'>
                                     <Col md={6}>
-                                        {data?.type != "question" && <h4>Competencies that belong to {data?.name}</h4>}
                                     </Col>
                                     <Col md={6} className='text-end'>
                                         <Button onClick={handleShowAssignCompetencyModal} className='default-btn'>

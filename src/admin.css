@@ -91,8 +91,8 @@ ul.custom-tabs { margin: 0px 16px; }
 .default-btn {align-items: center; justify-content: space-around; }
 .table-inner .table td {border-color: #f7f7f7; }
 .table-inner .table td:first-child { font-weight: 500; }
-.custom-tabs .nav-item .nav-link { border-bottom: 2px solid #00000000; font-weight: 500; font-size: 17px; }
-.custom-tabs .nav-item .nav-link.active, .custom-tabs .nav-item .nav-link:hover { background-color: #ffffff; color: #7abcdb; font-size: 17px; border-bottom: 2px solid #7abcdb; }
+.custom-tabs .nav-item .nav-link { border: 1px solid #00000000; font-weight: 500; font-size: 17px;border-bottom: 0px; }
+.custom-tabs .nav-item .nav-link.active, .custom-tabs .nav-item .nav-link:hover { background-color: #ffffff; color: #7abcdb; font-size: 17px; border: 1px solid #7abcdb;border-bottom: 0px solid #7abcdb; }
 @media  (max-width: 767px) {
     table.table {
       white-space: nowrap;

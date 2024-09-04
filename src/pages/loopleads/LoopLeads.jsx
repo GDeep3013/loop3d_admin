@@ -42,7 +42,6 @@ export default function LoopLeads({ organization }) {
                         <Container>
                             <Row>
                                 <Col md={6}>
-                                    <h4> Loop leads that belong to {organization?.name}</h4>
                                 </Col>
                                 <Col md={6} className='text-end'>
                                     <form className='d-flex justify-content-end'>
