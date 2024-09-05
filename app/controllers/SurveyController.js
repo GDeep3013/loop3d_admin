@@ -1,7 +1,9 @@
 const Survey = require('../models/Survey');
 const SurveyParticipant = require('../models/SurveyParticipantModel');
 const User = require('../models/User')
-const Role  = require('../models/Role')
+const Role = require('../models/Role')
+const AssignCompetency = require('../models/AssignCompetencyModel');
+
 
 const { check, validationResult } = require('express-validator');
 
@@ -11,7 +13,7 @@ exports.createSurvey = async (req, res) => {
         // Validate request
         await check('surveyData').not().isEmpty().withMessage('surveyData is required').run(req);
         await check('surveyData.name').not().isEmpty().withMessage('Survey name is required').run(req);
-        await check('surveyData.manager').not().isEmpty().withMessage('Manager ID (manager) is required').run(req);
+        await check('surveyData.mgr_id').not().isEmpty().withMessage('Manager ID (manager) is required').run(req);
         await check('surveyData.loop_leads').isArray({ min: 1 }).withMessage('At least one loop lead is required').run(req);
         await check('surveyData.loop_leads.*.email').isEmail().withMessage('Invalid email').run(req);
         await check('surveyData.loop_leads.*.competencies').isArray().withMessage('Competencies must be an array').run(req);
@@ -52,7 +54,7 @@ exports.createSurvey = async (req, res) => {
             // Create the survey and associate it with the user
             const survey = new Survey({
                 name: surveyData.name,
-                manager: surveyData.manager,
+                manager:surveyData.mgr_id,
                 loop_lead_id: user._id,
                 organization_id: manager?.organization_id,
                 competencies: competencies || [] 
@@ -189,46 +191,55 @@ exports.getAllSurvey = async (req, res) => {
 
 exports.getSurveyById = async (req, res) => {
     try {
-        const { loop_lead_id, manager, survey_id,org_id } = req.query;
+        const { loop_lead_id, mgr_id, survey_id, org_id } = req.query;
 
         // Build the query object based on the provided parameters
         let query = {};
-        if (loop_lead_id && org_id) query = { loop_lead_id: loop_lead_id, organization_id: org_id };
-        if (manager) query.manager = manager;
+        if (loop_lead_id && org_id) query = { loop_lead_id, organization_id: org_id };
+        if (mgr_id) query.mgr_id = mgr_id;
         if (survey_id) query._id = survey_id;
 
-        // Find the survey(s) by the provided ID(s) and populate related fields
+        // Step 1: Find the survey(s) by the provided ID(s) and populate related fields
         const surveys = await Survey.find(query)
-            .populate('loop_lead_id', 'name email') // Populate loop_lead_id with name and email fields
-            .populate('manager', 'first_name last_name email')
-            .populate('loop_lead_id', 'first_name last_name email') // Populate manager with name and email fields
-            .populate('organization_id', 'name')
-            .populate({
-                path: 'competencies', // Path to populate
-                populate: {
-                    path: 'question_id', // Path to populate within competencies
-                    select: 'questionText questionType',
-                    populate: {
-                        path: 'options', // Path to populate within competencies
-                        select: 'text',
-                    }
-                }
-            })
+            .populate('loop_lead_id', 'first_name last_name email') // Populate loop_lead_id with name and email fields
+            .populate('manager', 'first_name last_name email') // Populate mgr_id with name and email fields
+            .populate('organization_id', 'name') // Populate organization_id with name
+            .populate('competencies', '_id'); // Populate competencies with _id (Category)
+
         if (!surveys || surveys.length === 0) {
             return res.status(404).json({ error: 'Survey not found' });
         }
-        const results = await Promise.all(
-            surveys.map(async (survey) => {
-                const totalParticipants = await SurveyParticipant.countDocuments({ survey_id: survey._id });
-                const completed_survey = await SurveyParticipant.countDocuments({ survey_id: survey._id, survey_status:'completed' });
 
-                return {
-                    ...survey.toObject(), // Convert the Mongoose document to a plain object
-                    totalParticipants,
-                    completed_survey
-                };
-            })
-        );
+        // Step 2: Fetch related AssignCompetency data for the survey(s)
+        const categoryIds = surveys.flatMap(survey => survey.competencies.map(comp => comp._id));
+        const assignCompetencies = await AssignCompetency.find({ category_id: { $in: categoryIds } })
+            .populate({
+                path: 'question_id',
+                select: 'questionText questionType options',
+                populate: {
+                    path: 'options',
+                    select: 'text weightage'
+                }
+            });
+
+        // Step 3: Merge competencies and assignCompetencies data into the survey(s)
+        const results = await Promise.all(surveys.map(async (survey) => {
+            const relatedCompetencies = assignCompetencies.filter(ac =>
+                survey.competencies.some(comp => comp._id.equals(ac.category_id))
+            );
+
+            const totalParticipants = await SurveyParticipant.countDocuments({ survey_id: survey._id });
+            const completed_survey = await SurveyParticipant.countDocuments({ survey_id: survey._id, survey_status: 'completed' });
+
+            return {
+                ...survey.toObject(), // Convert the Mongoose document to a plain object
+                relatedCompetencies, // Add related competencies with questions to each survey
+                totalParticipants,
+                completed_survey
+            };
+        }));
+
+        // Step 4: Return the result in the response
         res.status(200).json({
             status: 'success',
             data: results
@@ -238,6 +249,7 @@ exports.getSurveyById = async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 };
+
 
 exports.getSurveyParticipantsById = async (req, res) => {
     try {

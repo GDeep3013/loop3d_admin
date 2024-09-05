@@ -12,7 +12,7 @@ export default function AddQuestion({ id, savedData }) {
     const [formData, setFormData] = useState({
         questionText: '',
         questionType: '', // 'Text' or 'Radio'
-        options: [{ text: '', isCorrect: false, weightage: 1 }], // Added weightage
+        options: [{ text: '', weightage: 1 }], // Added weightage
         createdBy: user?.id
     });
     const [categories, setCategories] = useState([]);
@@ -59,9 +59,6 @@ export default function AddQuestion({ id, savedData }) {
                 validationErrors.options = 'At least one option is required';
             }
 
-            if (!data.options.some(option => option.isCorrect)) {
-                validationErrors.options = 'At least one correct option is required for radio questions';
-            }
         }
 
         return validationErrors;
@@ -83,13 +80,8 @@ export default function AddQuestion({ id, savedData }) {
         const { name, value, checked } = e.target;
         const updatedOptions = [...formData.options];
 
-        if (name === 'isCorrect' && formData.questionType === 'Radio') {
-            updatedOptions.forEach((option, i) => {
-                option.isCorrect = i === index ? checked : false;
-            });
-        } else {
             updatedOptions[index][name] = name === 'isCorrect' ? checked : value;
-        }
+        
 
         setFormData({ ...formData, options: updatedOptions });
     };
@@ -240,13 +232,6 @@ export default function AddQuestion({ id, savedData }) {
                                                 </Col>
                                             </Row>
                                             <div className='question-inner'>
-                                                <Form.Check
-                                                    type="checkbox"
-                                                    name="isCorrect"
-                                                    label="Correct"
-                                                    checked={option.isCorrect}
-                                                    onChange={(e) => handleOptionChange(index, e)}
-                                                />
                                                 <Button type="button" onClick={() => removeOption(index)} variant="danger">
                                                     <img src='/images/remove.png' alt='Remove' />
                                                 </Button>

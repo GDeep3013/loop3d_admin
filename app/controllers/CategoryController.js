@@ -6,13 +6,12 @@ const CategoryController = {
 
     createCategory : async (req, res) => {
         try {
-            console.log(req.body);
 
-            const { category_name, parent_id, created_by, status } = req.body;
+            const { category_name, competency_type, created_by, status } = req.body;
 
             const newCategory = new Category({
                 category_name,
-                parent_id,
+                competency_type,
                 created_by,
                 status
             });
@@ -47,9 +46,9 @@ const CategoryController = {
             // Fetch categories with pagination
             let categories = [];
             if (getType == "AssignCompetency") {
-                categories = await Category.find({ parent_id: null }).populate('parent_id', 'category_name');
+                categories = await Category.find()
             } else {
-               categories = await Category.find(query).sort({ _id: -1 }).skip(skip).limit(limit).populate('parent_id', 'category_name');        
+               categories = await Category.find(query).sort({ _id: -1 }).skip(skip).limit(limit);        
 
             }
 
@@ -90,11 +89,11 @@ const CategoryController = {
     // Update a category by ID
     updateCategory : async (req, res) => {
         try {
-            const { category_name, parent_id, status } = req.body;
+            const { category_name, competency_type, status } = req.body;
 
             const updatedCategory = await Category.findByIdAndUpdate(
                 req.params.id,
-                { category_name, parent_id, status },
+                { category_name, competency_type, status },
                 { new: true, runValidators: true }
             );
 

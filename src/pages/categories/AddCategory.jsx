@@ -15,7 +15,7 @@ export default function AddCategory() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     category_name: '',
-    parent_id:null,
+    competency_type:'',
     created_by: user?._id,
   });
   const [categories, setCategories] = useState([]);  // For parent categories select box
@@ -26,6 +26,9 @@ export default function AddCategory() {
     let errors = {};
     if (!formData.category_name.trim()) {
       errors.category_name = 'Competency name is required';
+    }
+    if (!formData.category_name.trim()) {
+      errors.competency_type = 'competency_type name is required';
     }
     return errors;
   };
@@ -54,8 +57,8 @@ export default function AddCategory() {
           const response = await axios.get(`/api/categories/${id}`,{
             headers: { 'x-api-key': import.meta.env.VITE_X_API_KEY }
           });
-          const { category_name, parent_id } = response.data;
-          setFormData({ category_name, parent_id , created_by : user?.id });
+          const { category_name, competency_type } = response.data;
+          setFormData({ category_name, competency_type , created_by : user?.id });
         } catch (error) {
           console.error("Error fetching category details:", error);
         }
@@ -141,20 +144,25 @@ export default function AddCategory() {
               </Col>
               <Col md={6}>
                 <Form.Group className="mb-4">
-                  <Form.Label>Parent Competency</Form.Label>
+                  <Form.Label>Competency Type</Form.Label>
                   <Form.Select
-                    name="parent_id"
-                    value={formData.parent_id}
+                    name="competency_type"
+                    value={formData.competency_type}
                     onChange={handleChange}
                   >
-                    <option value="">Select Parent Competency (optional)</option>
+                    <option value="">Select Competency Type</option>
+                    <option value="individual_contributor">Individual Contributor</option>
+                    <option value="people_manager">People Manager</option>
+{/* 
+
+
                     {categories.length > 0 && categories.map((category) => (
                       category.parent_id == null && <option key={category._id} value={category._id}>
                         {category.category_name}
                       </option>
-                    ))}
+                    ))} */}
                   </Form.Select>
-                  {errors.parent_id && <small className="text-danger">{errors.parent_id}</small>}
+                  {errors.competency_type && <small className="text-danger">{errors.competency_type}</small>}
                 </Form.Group>
               </Col>
               <Col md={12}>

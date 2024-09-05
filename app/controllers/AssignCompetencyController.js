@@ -83,7 +83,7 @@ exports.getAssignmentById = async (req, res) => {
             .populate('user_id', 'first_name last_name')
             .populate('organization_id', 'name')
             .populate('question_id', 'text')
-            .populate('category_id', 'name');
+            .populate('category_id', 'category_name competency_type');
         if (!assignment) {
             return res.status(404).json({ message: 'Assignment not found' });
         }
@@ -120,21 +120,7 @@ exports.deleteAssignment = async (req, res) => {
 
         if (!deletedAssignment) {
             return res.status(404).json({ message: 'Assignment not found' });
-        }
-        const category = await Category.find({ _id: req.params.category_id, parent_id: null });
-        
-        if (!category) {
-            // Delete assignments for all subcategories
-            const categories = await Category.find({ parent_id: category._id});
-
-            await Promise.all(categories.map(async (cat) => {
-                await AssignCompetency.deleteMany({ category_id: cat._id });
-            }));
-            
-        }
-
-
-       
+        }    
 
         res.status(200).json({ status: true, message: 'Assignment and related subcategory assignments deleted successfully' });
     } catch (error) {
@@ -169,7 +155,7 @@ exports.getAssignmentsByUserAndOrg = async (req, res) => {
         })
         .populate('user_id', 'first_name last_name')
         .populate('question_id', 'questionText')
-        .populate('category_id', 'category_name parent_id',);
+        .populate('category_id', 'category_name competency_type',);
 
         if (assignments.length === 0) {
             return res.status(404).json({ message: 'No assignments found for the given user and organization' });
@@ -197,7 +183,7 @@ exports.getAssignmentsByUserId = async (req, res) => {
             select: 'name', // Exclude the __v field from the populated organization documents
         })
         .populate('question_id', 'questionText')
-        .populate('category_id', 'category_name parent_id',);
+        .populate('category_id', 'category_name competency_type',);
 
         if (assignments.length === 0) {
             return res.status(404).json({ message: 'No assignments found for the given user and organization' });
