@@ -10,7 +10,7 @@ const SurveySchema = new mongoose.Schema({
         ref: 'User', // Assuming you have a User model
         default: null
     },
-    mgr_id: {
+    manager: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User', // Assuming you have a User model
     },

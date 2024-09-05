@@ -11,7 +11,7 @@ exports.createSurvey = async (req, res) => {
         // Validate request
         await check('surveyData').not().isEmpty().withMessage('surveyData is required').run(req);
         await check('surveyData.name').not().isEmpty().withMessage('Survey name is required').run(req);
-        await check('surveyData.mgr_id').not().isEmpty().withMessage('Manager ID (mgr_id) is required').run(req);
+        await check('surveyData.manager').not().isEmpty().withMessage('Manager ID (manager) is required').run(req);
         await check('surveyData.loop_leads').isArray({ min: 1 }).withMessage('At least one loop lead is required').run(req);
         await check('surveyData.loop_leads.*.email').isEmail().withMessage('Invalid email').run(req);
         await check('surveyData.loop_leads.*.competencies').isArray().withMessage('Competencies must be an array').run(req);
@@ -23,7 +23,7 @@ exports.createSurvey = async (req, res) => {
 
         const { surveyData } = req.body;
         const loopLeads = surveyData.loop_leads;
-        const manager = await User.findById(surveyData.mgr_id);
+        const manager = await User.findById(surveyData.manager);
         let savedSurveys = [];
 
         for (let lead of loopLeads) {
@@ -43,7 +43,7 @@ exports.createSurvey = async (req, res) => {
                     email,
                     role: role?._id,
                     organization_id: manager?.organization_id || null,
-                    created_by: surveyData.mgr_id
+                    created_by: surveyData.manager
                 });
 
                 await user.save();
@@ -52,7 +52,7 @@ exports.createSurvey = async (req, res) => {
             // Create the survey and associate it with the user
             const survey = new Survey({
                 name: surveyData.name,
-                mgr_id: surveyData.mgr_id,
+                manager: surveyData.manager,
                 loop_lead_id: user._id,
                 organization_id: manager?.organization_id,
                 competencies: competencies || [] 
@@ -74,6 +74,7 @@ exports.createSurvey = async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 };
+
 exports.createSurveyParticipants = async (req, res) => {
     try {
         await check('participants').isArray({ min: 1 }).withMessage('Participants array is required and cannot be empty').run(req),
@@ -121,7 +122,6 @@ exports.createSurveyParticipants = async (req, res) => {
     }
 };
 
-
 exports.getAllSurvey = async (req, res) => {
     try {
         let { searchTerm, page = 1, limit = 10 } = req.query;
@@ -144,7 +144,7 @@ exports.getAllSurvey = async (req, res) => {
 
         // Find the surveys with pagination and populate related fields
         const surveys = await Survey.find(query)
-            .populate('mgr_id', 'first_name last_name email')
+            .populate('manager', 'first_name last_name email')
             .populate('loop_lead_id', 'first_name last_name email')
             .populate('organization_id', 'name')
             .skip(skip)
@@ -189,19 +189,19 @@ exports.getAllSurvey = async (req, res) => {
 
 exports.getSurveyById = async (req, res) => {
     try {
-        const { loop_lead_id, mgr_id, survey_id,org_id } = req.query;
+        const { loop_lead_id, manager, survey_id,org_id } = req.query;
 
         // Build the query object based on the provided parameters
         let query = {};
         if (loop_lead_id && org_id) query = { loop_lead_id: loop_lead_id, organization_id: org_id };
-        if (mgr_id) query.mgr_id = mgr_id;
+        if (manager) query.manager = manager;
         if (survey_id) query._id = survey_id;
 
         // Find the survey(s) by the provided ID(s) and populate related fields
         const surveys = await Survey.find(query)
             .populate('loop_lead_id', 'name email') // Populate loop_lead_id with name and email fields
-            .populate('mgr_id', 'first_name last_name email')
-            .populate('loop_lead_id', 'first_name last_name email') // Populate mgr_id with name and email fields
+            .populate('manager', 'first_name last_name email')
+            .populate('loop_lead_id', 'first_name last_name email') // Populate manager with name and email fields
             .populate('organization_id', 'name')
             .populate({
                 path: 'competencies', // Path to populate
