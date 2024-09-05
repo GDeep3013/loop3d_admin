@@ -39,7 +39,6 @@ export default function OrganizationTabs() {
 
     return (
         <AuthLayout title={id ? "Edit Organization" : "Add Organization"}>
-             <div className="content-outer main-wrapper pd-2 bg-white edit-org">
             <div class="tabe-outer">
                 <div class="main-back-heading">
                     <div class="container">
@@ -55,7 +54,7 @@ export default function OrganizationTabs() {
                     </div>
                 </div>
             </div>
-
+             <div className="content-outer pd-2 edit-org ">
             <Tabs
                 defaultActiveKey="home"
                 id="uncontrolled-tab-example"

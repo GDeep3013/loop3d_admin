@@ -77,8 +77,7 @@ export default function SurveyParticipantDetails() {
 
     return (
         <AuthLayout title={"Survey participant details"}>
-            <div className='table-inner main-wrapper pd-2 bg-white'>
-            <div class="main-back-heading mb-0">
+               <div class="main-back-heading mb-0">
       <div class="container">
          <div class="row">
             <div class="col-md-6 p-0">
@@ -91,6 +90,8 @@ export default function SurveyParticipantDetails() {
          </div>
       </div>
    </div>
+            <div className='table-inner main-wrapper pd-2 bg-white shadow-border-wrapper ml-8'>
+         
                 <div className='content-outer'>
 
                     <div className='tabe-outer'>
@@ -100,7 +101,7 @@ export default function SurveyParticipantDetails() {
                                 <Row>
                                     <Col md={6} className='text-end'>
                                     </Col>
-                                    <Col md={6} className='text-end'>
+                                    <Col md={6} className='text-end pt-3'>
                                         <form className='d-flex justify-content-end'>
                                             <input
                                                 type='search'
@@ -117,6 +118,8 @@ export default function SurveyParticipantDetails() {
                         </div>
                     </div>
                 </div>
+              
+                <div className='table-scroll table-pd'>
                 <table className='table'>
                     <thead>
                         <tr>
@@ -161,6 +164,8 @@ export default function SurveyParticipantDetails() {
                         )}
                     </tbody>
                 </table>
+                </div>
+               
             </div>
         </AuthLayout>
     );

@@ -53,6 +53,7 @@ export default function LoopLeads({ organization }) {
                     </div>
                 </div>
             </div>
+            <div className='table-scroll table-pd'>
             <table className='table'>
                 <thead>
                     <tr>
@@ -109,7 +110,7 @@ export default function LoopLeads({ organization }) {
                     )}
                 </tbody>
             </table>
-
+            </div>
         </div>
     </>
     )

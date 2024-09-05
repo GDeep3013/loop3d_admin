@@ -146,23 +146,25 @@ export default function AddQuestion({ id, savedData }) {
     };
 
     return (
-        
-            <div className="content-outer main-wrapper pd-2 bg-white">
-            {!id && <div class="tabe-outer">
-                <div class="main-back-heading">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-md-6 p-0">
-                                <div className="profile-btns pt-0">
-                                    <Button className="default-btn cancel-btn ml-0" onClick={() => navigate(-1)}>
-                                        Back
-                                    </Button>
-                                </div>
+        <div>
+        {!id && <div class="tabe-outer">
+            <div class="main-back-heading">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-6 p-0">
+                            <div className="profile-btns pt-0">
+                                <Button className="default-btn cancel-btn ml-0" onClick={() => navigate(-1)}>
+                                    Back
+                                </Button>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>} 
+            </div>
+        </div>} 
+        
+            <div className="content-outer bg-white ml-8 p-c-3 ">
+           
             <Form onSubmit={handleSubmit}>
             <Container className="outer-box">
                     <Row>
@@ -271,6 +273,7 @@ export default function AddQuestion({ id, savedData }) {
                     </Row>
                 </Container>
             </Form>
+        </div>
         </div>
     );
 }

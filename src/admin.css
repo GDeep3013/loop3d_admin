@@ -1,5 +1,5 @@
-.tabe-outer { background-color: #fff; border-radius: 10px; margin-top: 0;}
-.tabe-outer .table-heading { padding: 14px  19px; }
+.tabe-outer {     background-color: #ffffff00; border-radius: 10px; margin-top: 0;}
+.tabe-outer .table-heading { padding: 14px  0px; }
 .tabe-outer .table-heading h2 { font-size: 25px; font-weight: 600; color: var(--black-color); display: inline-block; margin-right: 10px;}
 .span-badge{ display: inline-block; min-height: 27px; line-height: 27px; padding: 0 14px; border-radius: 3px; font-size: 14px; font-weight: 500;}
 .primary-tag {  background-color: #E9EFFF; color: #0C48E8; }
@@ -71,14 +71,12 @@ table .user-img img { vertical-align: middle; width: 42px; height: 42px; border:
 .custom-tabs .nav-item .nav-link{ color: #000; }
 .custom-tabs .nav-item  .nav-link.active{ background-color: var(--theme-color); color: #fff;}
 ul.custom-tabs li.nav-item button { border: none; min-width: 138px; height: 47px; }
-ul.custom-tabs li.nav-item button:hover { border: none; box-shadow: none; }
 .tabe-outer .table-heading h4,table.table tbody h4 { font-size: 17px; font-weight: 500; line-height: normal; }
-ul.custom-tabs { column-gap: 15px; }
 table.table th svg { width: 17px; height: 12px; }
-.pd-2 { padding: 0px 5px 15px; }
+.pd-2 { padding: 0px; }
 label.form-label { font-size: 14px; }
 input.form-control { height: 40px; font-size: 14px; }
-.main-back-heading { border-bottom: 1px solid #ededed; margin-bottom: 23px; padding: 10px 0px; }
+.main-back-heading {padding: 14px 0px; }
 button.action-btn { transition: all ease-in-out 0.5s; transform: scale(1.0); }
 button.action-btn:hover { transform: scale(1.2); }
 button.action-btn:hover svg { opacity: 1; }
@@ -87,12 +85,16 @@ select.form-select,select.form-control { height: 46px; font-size: 14px; }
 .edit-org .main-wrapper { border: 0px !important; box-shadow: none; }
 select.form-control,select.form-select { height: 40px; }
 .profile-form .form-label { font-size: 14px; font-weight: 400; color: #2E2E2E; margin-bottom: 8px; }
-ul.custom-tabs { margin: 0px 16px; }
 .default-btn {align-items: center; justify-content: space-around; }
 .table-inner .table td {border-color: #f7f7f7; }
 .table-inner .table td:first-child { font-weight: 500; }
 .custom-tabs .nav-item .nav-link { border: 1px solid #00000000; font-weight: 500; font-size: 17px;border-bottom: 0px; }
-.custom-tabs .nav-item .nav-link.active, .custom-tabs .nav-item .nav-link:hover { background-color: #ffffff; color: #7abcdb; font-size: 17px; border: 1px solid #7abcdb;border-bottom: 0px solid #7abcdb; }
+.custom-tabs .nav-item .nav-link.active { background-color: #ffffff; color: #7abcdb; font-size: 17px; border: 1px solid #7abcdb;border-bottom: 0px solid #7abcdb; }
+ul.custom-tabs.nav.nav-tabs { border-bottom: 1px solid #7abcdb; }
+.bt-0 { border-top: 0px !important; }
+.tab-content { background: #fff; box-shadow: rgba(145, 158, 171, 0.2) 0px 2px 1px -1px, rgba(145, 158, 171, 0.14) 0px 1px 1px 0px, rgba(145, 158, 171, 0.12) 0px 1px 3px 0px; border: 1px solid rgb(196, 205, 213) !important; margin-top: 0px; }
+.tab-content { padding: 15px 5px; border-top: 0px !important; }
+.tabe-outer .table-heading { padding: 0px 0px 15px; }
 @media  (max-width: 767px) {
     table.table {
       white-space: nowrap;

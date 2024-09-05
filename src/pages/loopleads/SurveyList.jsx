@@ -58,6 +58,7 @@ export default function SurveyList({ loop_lead_id, org_id }) {
           </div>
         </div>
       </div>
+      <div className='table-scroll table-pd'>
       <table className='table'>
         <thead>
           <tr>
@@ -111,6 +112,7 @@ export default function SurveyList({ loop_lead_id, org_id }) {
           )}
         </tbody>
       </table>
+    </div>
     </div>
   );
 }

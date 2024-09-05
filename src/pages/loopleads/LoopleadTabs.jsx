@@ -14,7 +14,7 @@ export default function LoopleadTabs() {
 
   return (
     <AuthLayout title={"Loop lead details"}>
-          <div className='table-inner main-wrapper pd-2 bg-white'>
+          <div className='table-inner main-wrapper pd-2  '>
             <div class="main-back-heading mb-0">
       <div class="container">
          <div class="row">
@@ -28,6 +28,7 @@ export default function LoopleadTabs() {
          </div>
       </div>
    </div>
+   <div className='ml-8'>
       <Tabs
         defaultActiveKey="home"
         id="uncontrolled-tab-example"
@@ -40,7 +41,8 @@ export default function LoopleadTabs() {
           <SurveyList loop_lead_id={userId} org_id={orgId} />
         </Tab>
         </Tabs>
-        </div>
+    </div>
+    </div>
     </AuthLayout>
   )
 }

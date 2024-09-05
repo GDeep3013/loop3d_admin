@@ -199,8 +199,7 @@ export default function AddEmployee() {
 
   return (
     <AuthLayout title={id ? 'Edit User' : "Add User"}>
-      <div className="content-outer main-wrapper pd-2 bg-white">
-      <div class="tabe-outer">
+       <div class="tabe-outer">
    <div class="main-back-heading">
       <div class="container">
          <div class="row">
@@ -215,6 +214,8 @@ export default function AddEmployee() {
       </div>
    </div>
 </div>   
+      <div className="content-outer main-wrapper p-c-3 bg-white ml-8 shadow-border-wrapper">
+     
         <Form className="profile-form">
           <div className="employee-outer d-flex">
 

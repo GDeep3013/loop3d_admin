@@ -109,7 +109,6 @@ export default function AddCategory() {
 
   return (
     <AuthLayout title={id ? "Edit Competency" : "Add Competency"}>
-      <div className="content-outer main-wrapper pd-2 bg-white">
       <div class="main-back-heading">
       <div class="container">
          <div class="row">
@@ -123,6 +122,8 @@ export default function AddCategory() {
          </div>
       </div>
    </div>
+      <div className="content-outer bg-white p-c-3 ml-8 shadow-border-wrapper">
+      
         <Form className="category-form">
           <Container>
             <Row>

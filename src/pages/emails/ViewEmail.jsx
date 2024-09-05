@@ -33,8 +33,7 @@ export default function CreateEmail() {
 
   return (
     <AuthLayout title={id ? "Edit Email" : "Add Email"}>
-      <div className="content-outer main-wrapper pd-2 bg-white">
-        <div class="tabe-outer">
+      <div class="tabe-outer">
           <div class="main-back-heading">
             <div class="container">
               <div class="row">
@@ -49,13 +48,15 @@ export default function CreateEmail() {
             </div>
           </div>
         </div>
-        <Form className="email-form">
+      <div className="content-outer shadow-border-wrapper ml-8 p-c-3 bg-white">
+        
+        <Form className="email-form email-box">
           <Container>
             <Row>
               <Col md={12}>
                 <h4>{email?.subject_line}</h4>
               </Col>
-              <Col md={12}>{email?.email_content}</Col>
+              <Col md={12}><p>{email?.email_content}</p></Col>
             </Row>
           </Container>
         </Form>

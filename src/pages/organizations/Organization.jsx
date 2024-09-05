@@ -96,16 +96,15 @@ export default function Organization() {
 
     return (
         <AuthLayout title={'Welcome to Organizations'} subTitle={'Organizations List'}>
-            <div className='table-inner main-wrapper'>
-                <div className='content-outer'>
+        <div className='content-outer'>
                     <div className='tabe-outer'>
-                        <div className='table-heading'>
+                        <div className='table-heading pt-3'>
                             <Container>
                                 <Row>
                                     <Col md={6}>
                                         {/* <span className='span-badge primary-tag'>12 members</span> */}
                                     </Col>
-                                    <Col md={6} className='text-end'>
+                                    <Col md={6} className='text-end p-0'>
                                         <form className='d-flex justify-content-end'>
                                             <input type='search' placeholder='Search...' value={searchTerm} onChange={handleSearch} className='form-control' />
                                             <Link to="create" className='default-btn' >Add Organizations  <PLusIcon /> </Link>
@@ -116,6 +115,7 @@ export default function Organization() {
                         </div>
                     </div>
                 </div>
+            <div className='table-inner shadow-border-wrapper  ml-8'>
                 <div className='table-scroll'>
                 <table className='table'>
                     <thead>

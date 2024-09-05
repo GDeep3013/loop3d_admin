@@ -72,7 +72,7 @@ export default function EmployeeTable({ }) {
   };
   return (<>
     <div className='table-inner main-wrapper '>
-      <div className='content-outer'>
+      <div className='content-outer mt-3'>
         <div className='tabe-outer'>
           <div className='table-heading'>
             <Container>
@@ -80,7 +80,7 @@ export default function EmployeeTable({ }) {
                 <Col md={6}>
                   {/* <span className='span-badge primary-tag'>12 members</span> */}
                 </Col>
-                <Col md={6} className='text-end'>
+                <Col md={6} className='text-end p-0'>
                   <form className='d-flex justify-content-end'>
                     <input type='search' placeholder='Search...' value={searchTerm} onChange={handleSearch} className='form-control' />
                     <Link to="/add-user" className='default-btn' >Add User  <PLusIcon /> </Link>
@@ -91,6 +91,7 @@ export default function EmployeeTable({ }) {
           </div>
         </div>
       </div>
+      <div className='table-scroll shadow-border-wrapper'>
       <table className='table'>
         <thead>
           <tr>
@@ -137,7 +138,7 @@ export default function EmployeeTable({ }) {
           )}
         </tbody>
       </table>
-
+</div>
     </div>
     {totalPages > 1 && (
       <Pagination className='justify-content-center pagination-outer'>

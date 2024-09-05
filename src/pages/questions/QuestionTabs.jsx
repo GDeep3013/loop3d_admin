@@ -43,8 +43,7 @@ export default function QuestionTabs() {
 
     return (
         <AuthLayout title={id ? 'Edit Question' : 'Add Question'}>
-              <div className="content-outer main-wrapper pd-2 bg-white edit-org">
-        <div class="tabe-outer">
+               <div class="tabe-outer">
                 <div class="main-back-heading">
                     <div class="container">
                         <div class="row">
@@ -59,6 +58,8 @@ export default function QuestionTabs() {
                     </div>
                 </div>
             </div>
+              <div className="content-outer main-wrapper pd-2 edit-org ml-8 ">
+     
 
             <Tabs
                 defaultActiveKey="home"

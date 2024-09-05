@@ -37,8 +37,7 @@ export default function ViewOrganization() {
 
     return (
         <AuthLayout title={id ? "Edit Organization" : "Add Organization"}>
-            <div className="content-outer  main-wrapper pd-2 bg-white">
-            <div class="tabe-outer">
+             <div class="tabe-outer">
    <div class="main-back-heading">
       <div class="container">
          <div class="row">
@@ -52,7 +51,8 @@ export default function ViewOrganization() {
          </div>
       </div>
    </div>
-</div>   
+</div>  
+            <div className="content-outer  main-wrapper pd-2 bg-white p-3 shadow-border-wrapper ml-8 bg-white">
                 <Form className="organization-form">
                     <Container>
                         <Row>

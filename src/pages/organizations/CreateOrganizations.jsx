@@ -73,7 +73,7 @@ export default function CreateOrganization({ id, savedData }) {
     };
 
     return (
-        <div className="content-outer main-wrapper pd-2 bg-white">
+        <div className="content-outer pd-2 bg-white  bt-0">
 
             {/* {!id && <div class="tabe-outer">
                 <div class="main-back-heading">

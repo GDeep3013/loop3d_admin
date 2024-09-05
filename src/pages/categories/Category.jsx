@@ -91,12 +91,12 @@ export default function Category() {
             <div className='table-inner main-wrapper'>
                 <div className='content-outer'>
                     <div className='tabe-outer'>
-                        <div className='table-heading'>
+                        <div className='table-heading mt-3'>
                             <Container>
                                 <Row>
                                     <Col md={6}>
                                     </Col>
-                                    <Col md={6} className='text-end'>
+                                    <Col md={6} className='text-end p-0'>
                                         <form className='d-flex justify-content-end'>
                                             <input type='search' placeholder='Search...' value={searchTerm} onChange={handleSearch} className='form-control' />
                                             <Link to="create" className='default-btn' >Add Competency <PLusIcon /> </Link>
@@ -107,6 +107,7 @@ export default function Category() {
                         </div>
                     </div>
                 </div>
+                <div className='table-scroll  shadow-border-wrapper ml-8'>
                 <table className='table'>
                     <thead>
                         <tr>
@@ -152,7 +153,7 @@ export default function Category() {
                         }
                     </tbody>
                 </table>
-
+</div>
             </div>
             {totalPages > 1 && (
                 <Pagination className='justify-content-center pagination-outer'>

@@ -97,6 +97,7 @@ export default function AssignCompetencies({ data, type }) {
                         </div>
                     </div>
                 </div>
+                <div className='table-scroll table-pd'>
                 <table className='table'>
                     <thead>
                         <tr>
@@ -146,6 +147,7 @@ export default function AssignCompetencies({ data, type }) {
                         ))}
                     </tbody>
                 </table>
+                </div>
             </div>
 
             {totalPages > 1 && (

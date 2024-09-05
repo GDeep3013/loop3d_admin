@@ -38,8 +38,7 @@ export default function QuestionDetail() {
 
     return (
         <AuthLayout title={'Question Details'} subTitle={'Details of the question'}>
-            <div className="content-outer main-wrapper pd-2 bg-white question-wrapper">
-            <div class="tabe-outer ">
+                <div class="tabe-outer ">
    <div class="main-back-heading">
       <div class="container">
          <div class="row">
@@ -54,7 +53,9 @@ export default function QuestionDetail() {
       </div>
    </div>
 </div>  
-            <Container>
+         
+            <div className="content-outer bg-white shadow-border-wrapper  question-wrapper ml-8 p-c-3">
+           <Container>
                 <Row>
                     <Col md={{ span: 6 }}>
                         {loading && <Spinner animation="border" />}
