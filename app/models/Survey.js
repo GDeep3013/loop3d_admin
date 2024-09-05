@@ -5,7 +5,7 @@ const SurveySchema = new mongoose.Schema({
         type: String,
         default: null 
     },
-    loop_lead_id: {
+    loop_lead: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User', // Assuming you have a User model
         default: null

@@ -146,7 +146,7 @@ export default function SurveyParticipantDetails() {
                                     <td>{participant?.p_first_name}</td>
                                     <td>{participant?.p_last_name}</td>
                                     <td>{participant?.p_email}</td>
-                                    <td>{participant?.p_mag_id?.first_name} {participant?.p_mag_id?.last_name}</td>
+                                    <td>{participant?.survey_id?.loop_lead?.first_name} {participant?.survey_id?.loop_lead?.last_name}</td>
                                     <td>{participant.survey_status === 'completed' ? <span className='span-badge active-tag'>Completed</span> : <span className='span-badge inactive-tag'>Pending</span>}</td>
                                     <td>
                                     <button className='action-btn' onClick={() => handleDelete(participant._id)}><Remove /></button>

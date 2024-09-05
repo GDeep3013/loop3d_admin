@@ -101,7 +101,7 @@ export default function Survey() {
                                 <tr key={survey._id}>
                                     <td>{index + 1}</td>
                                     <td>{formatDateGB(survey.createdAt)}</td>
-                                    <td>{survey?.loop_lead_id?.first_name} {survey?.loop_lead_id?.last_name}</td>
+                                    <td>{survey?.loop_lead?.first_name} {survey?.loop_lead?.last_name}</td>
                                     <td>{survey?.mgr_id?.first_name}  {survey?.mgr_id?.last_name}</td>
                                     <td>{survey.total_invites}</td>
                                     <td>{survey.completed_survey}</td>

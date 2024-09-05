@@ -91,7 +91,7 @@ export default function AssignCompetency({ type, id, show, handleClose,getCatego
                 options={categories}
                 value={selectedCategory}
                 onChange={handleCategoryChange}
-                placeholder="Select category..."
+                placeholder="Select Competency..."
                 isSearchable
                 filterOption={(option, inputValue) =>
                   option.label.toLowerCase().includes(inputValue.toLowerCase())

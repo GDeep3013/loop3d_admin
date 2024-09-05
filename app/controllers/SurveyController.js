@@ -25,7 +25,7 @@ exports.createSurvey = async (req, res) => {
 
         const { surveyData } = req.body;
         const loopLeads = surveyData.loop_leads;
-        const manager = await User.findById(surveyData.manager);
+        const manager = await User.findById(surveyData.mgr_id);
         let savedSurveys = [];
 
         for (let lead of loopLeads) {
@@ -55,7 +55,7 @@ exports.createSurvey = async (req, res) => {
             const survey = new Survey({
                 name: surveyData.name,
                 manager:surveyData.mgr_id,
-                loop_lead_id: user._id,
+                loop_lead: user._id,
                 organization_id: manager?.organization_id,
                 competencies: competencies || [] 
             });
@@ -147,7 +147,7 @@ exports.getAllSurvey = async (req, res) => {
         // Find the surveys with pagination and populate related fields
         const surveys = await Survey.find(query)
             .populate('manager', 'first_name last_name email')
-            .populate('loop_lead_id', 'first_name last_name email')
+            .populate('loop_lead', 'first_name last_name email')
             .populate('organization_id', 'name')
             .skip(skip)
             .limit(limit);
@@ -195,13 +195,13 @@ exports.getSurveyById = async (req, res) => {
 
         // Build the query object based on the provided parameters
         let query = {};
-        if (loop_lead_id && org_id) query = { loop_lead_id, organization_id: org_id };
+        if (loop_lead_id && org_id) query = { loop_lead:loop_lead_id, organization_id: org_id };
         if (mgr_id) query.mgr_id = mgr_id;
         if (survey_id) query._id = survey_id;
 
         // Step 1: Find the survey(s) by the provided ID(s) and populate related fields
         const surveys = await Survey.find(query)
-            .populate('loop_lead_id', 'first_name last_name email') // Populate loop_lead_id with name and email fields
+            .populate('loop_lead', 'first_name last_name email') // Populate loop_lead_id with name and email fields
             .populate('manager', 'first_name last_name email') // Populate mgr_id with name and email fields
             .populate('organization_id', 'name') // Populate organization_id with name
             .populate('competencies', '_id'); // Populate competencies with _id (Category)
@@ -212,30 +212,34 @@ exports.getSurveyById = async (req, res) => {
 
         // Step 2: Fetch related AssignCompetency data for the survey(s)
         const categoryIds = surveys.flatMap(survey => survey.competencies.map(comp => comp._id));
-        const assignCompetencies = await AssignCompetency.find({ category_id: { $in: categoryIds } })
-            .populate({
-                path: 'question_id',
-                select: 'questionText questionType options',
-                populate: {
-                    path: 'options',
-                    select: 'text weightage'
-                }
-            });
+        const assignCompetencies = await AssignCompetency.find({ category_id: { $in: categoryIds }, organization_id: null })
+        .populate({
+            path: 'question_id', // Populate question_id field
+            select: 'questionText questionType options', // Select only the necessary fields from Question
+            populate: {
+                path: 'options', // Populate options within the question
+                select: 'text weightage' // Select only text and weightage fields from Option
+            }
+        })
+        const questionsArray = assignCompetencies.map(ac => ac.question_id);
+
+// Optionally remove duplicates if needed (e.g., if multiple entries for the same question)
+            const questions = Array.from(new Set(questionsArray.map(q => q._id)))
+                .map(id => {
+                    return questionsArray.find(q => q._id.equals(id));
+                });
 
         // Step 3: Merge competencies and assignCompetencies data into the survey(s)
         const results = await Promise.all(surveys.map(async (survey) => {
-            const relatedCompetencies = assignCompetencies.filter(ac =>
-                survey.competencies.some(comp => comp._id.equals(ac.category_id))
-            );
 
             const totalParticipants = await SurveyParticipant.countDocuments({ survey_id: survey._id });
             const completed_survey = await SurveyParticipant.countDocuments({ survey_id: survey._id, survey_status: 'completed' });
 
             return {
                 ...survey.toObject(), // Convert the Mongoose document to a plain object
-                relatedCompetencies, // Add related competencies with questions to each survey
                 totalParticipants,
-                completed_survey
+                completed_survey,
+                questions
             };
         }));
 
@@ -266,6 +270,14 @@ exports.getSurveyParticipantsById = async (req, res) => {
         // Find the survey participants by survey_id
         const participants = await SurveyParticipant.find(query)
             .populate('survey_id', 'name')
+            .populate({
+                path: 'survey_id', // Populate the question_id field
+                select: 'name', // Select only the fields you need from the Question model
+                populate: {
+                    path: 'loop_lead', // Populate the options within the question
+                    select: 'first_name last_name' // Select only the fields you need from the Option model
+                }
+            })
             .populate('p_mag_id', 'first_name last_name');// Populate survey_id with name field
 
         // if (!participants || participants.length === 0) {

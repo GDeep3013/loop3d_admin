@@ -93,7 +93,7 @@ export default function LoopLeads({ organization }) {
                                 <td><span className='span-badge active-tag'>Active</span></td>
                                     <td>
                                     <button className='action-btn' onClick={() => navigate(`/view-loop_lead/${user._id}/${organization.orgniation_id}`)}><View /></button>
-                                    <button className='action-btn' onClick={() => navigate(`/add-user/${user._id}`)}><Edit /></button>
+                                    {/* <button className='action-btn' onClick={() => navigate(`/add-user/${user._id}`)}><Edit /></button> */}
                                     {/* <Dropdown className='custom-dropdown'>
                                         <Dropdown.Toggle variant="success" id="dropdown-basic">
                                             <MoreIcon />
