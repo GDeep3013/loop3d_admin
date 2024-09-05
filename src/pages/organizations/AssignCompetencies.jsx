@@ -51,7 +51,7 @@ export default function AssignCompetencies({ data, type }) {
             });
 
             if (confirmResult.isConfirmed) {
-                const response = await deleteAssignCompetency(id,category_id);
+                const response = await deleteAssignCompetency(id);
                 if (response.status) {
                     await Swal.fire({
                         title: "Deleted!",
@@ -102,6 +102,7 @@ export default function AssignCompetencies({ data, type }) {
                     <thead>
                         <tr>
                             <th>Competency</th>
+                            <th>Competency Type</th>
                             <th>User Name</th>
                             <th>Status <StatusIcon /></th>
                             <th>Action</th>
@@ -118,31 +119,15 @@ export default function AssignCompetencies({ data, type }) {
 
                         {!loading && competencies.length > 0 && competencies.map(cat => (
                             
-                            !cat.category_id.parent_id ? (
-                                <React.Fragment key={cat.category_id._id}>
-                                    {/* Main Category Row */}
                                     <tr>
-                                        <td className='parent-category'>{cat.category_id.category_name}</td>
+                                <td>{cat.category_id?.category_name}</td>
+                                <td>{cat.category_id?.competency_type}</td>
                                         <td>{cat.user_id?.first_name} {cat.user_id?.last_name}</td>
                                         <td><span className='span-badge active-tag'>Active</span></td>
                                         <td>
-                                        <button className='action-btn' onClick={() => handleDelete(subCat._id,cat.category_id._id)}><Remove /></button>
+                                        <button className='action-btn' onClick={() => handleDelete(cat._id)}><Remove /></button>
                                         </td>
                                     </tr>
-                                    
-                                    {/* Subcategory Rows */}
-                                    {competencies.filter(sub => sub.category_id.parent_id === cat.category_id._id).map(subCat => (
-                                        <tr className='subcatrgory-text' key={subCat.category_id._id} style={{ }}>
-                                            <td>-- {subCat.category_id.category_name}</td>
-                                            <td>{subCat?.user_id?.first_name} {subCat?.user_id?.last_name}</td>
-                                            <td><span className='span-badge active-tag'>Active</span></td>
-                                            <td>
-                                            <button className='action-btn' onClick={() => handleDelete(subCat._id,cat.category_id._id)}><Remove /></button>
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </React.Fragment>
-                            ) : null
                                 
                         ))}
                     </tbody>

@@ -1,6 +1,5 @@
 const authenticateHeaderKey = (req, res, next) => {
     const headerKey = req.headers['x-api-key'];
-    console.log('Header Key:', headerKey); // Debugging line
 
     if (!headerKey) {
         return res.status(401).json({ error: 'Missing API Key' });

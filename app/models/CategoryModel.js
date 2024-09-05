@@ -6,10 +6,9 @@ const categorySchema = new mongoose.Schema({
         required: true,
         unique: true
     },
-    parent_id: { 
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Category',
-        default: null 
+    competency_type: { 
+        type: String,
+        required: true,
     },
     created_by: {
         type: mongoose.Schema.Types.ObjectId,

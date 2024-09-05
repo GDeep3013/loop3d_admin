@@ -5,7 +5,7 @@ import { StatusIcon, PLusIcon, MoreIcon } from "../../components/svg-icons/icons
 import { Container, Dropdown, Pagination, Row, Col, } from 'react-bootstrap'
 import { Link } from "react-router-dom";
 import Swal from 'sweetalert2'
-import { Edit,Remove } from '../../components/svg-icons/icons';
+import { Edit, Remove } from '../../components/svg-icons/icons';
 
 export default function Category() {
 
@@ -28,7 +28,7 @@ export default function Category() {
             if (searchTerm) {
                 url += `&searchTerm=${encodeURIComponent(searchTerm)}`;
             }
-            let result = await fetch(url,{
+            let result = await fetch(url, {
                 headers: { 'x-api-key': import.meta.env.VITE_X_API_KEY }
             });
             result = await result.json();
@@ -64,7 +64,7 @@ export default function Category() {
             if (confirmResult.isConfirmed) {
                 const response = await fetch(`api/categories/${id}`, {
                     method: 'DELETE',
-                    headers: { "x-api-key" : import.meta.env.VITE_X_API_KEY }
+                    headers: { "x-api-key": import.meta.env.VITE_X_API_KEY }
                 });
                 console.log(response, 'response');
                 if (response.ok) {
@@ -112,13 +112,13 @@ export default function Category() {
                     <thead>
                         <tr>
                             <th>Competency</th>
-                            <th>Parent Competency</th>
+                            <th>Competency Type</th>
                             <th>Status <StatusIcon /> </th>
                             <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {!loading && category.length === 0 && 
+                        {!loading && category.length === 0 &&
                             <tr>
                                 <td colSpan="6" style={{ textAlign: 'center' }}>
                                     <h4>No Category Found</h4>
@@ -128,17 +128,21 @@ export default function Category() {
 
                         {!loading && category.length > 0 && category?.map(cat => (
                             <tr key={cat._id}>
-                                    <td>
-                                        {cat.category_name}
-                                    </td>
-                                    <td>
-                                        {cat?.parent_id?.category_name}
-                                    </td>
-                                    <td><span className='span-badge active-tag'>Active</span></td>
                                 <td>
-                                <button className='action-btn' onClick={() => navigate(`/competencies/${cat._id}`)}><Edit /></button>
-                                <button className='action-btn' onClick={() => handleDelete(cat._id)}><Remove /></button>
-                                        {/* <Dropdown className='custom-dropdown'>
+                                    {cat.category_name}
+                                </td>
+                                <td>
+                                    {cat?.competency_type && (
+                                        cat.competency_type === "individual_contributor" ? "Individual Contributor" :
+                                            cat.competency_type === "people_manager" ? "People Manager" :
+                                                null // Default or fallback value if needed
+                                    )}
+                                </td>
+                                <td><span className='span-badge active-tag'>Active</span></td>
+                                <td>
+                                    <button className='action-btn' onClick={() => navigate(`/competencies/${cat._id}`)}><Edit /></button>
+                                    <button className='action-btn' onClick={() => handleDelete(cat._id)}><Remove /></button>
+                                    {/* <Dropdown className='custom-dropdown'>
                                             <Dropdown.Toggle variant="success" id="dropdown-basic">
                                                 <MoreIcon />
                                             </Dropdown.Toggle>
@@ -147,9 +151,9 @@ export default function Category() {
                                             <Dropdown.Item onClick={() => handleDelete(cat._id)}>Delete</Dropdown.Item>
                                             </Dropdown.Menu>
                                         </Dropdown> */}
-                                    </td>
-                                </tr>
-                            ))
+                                </td>
+                            </tr>
+                        ))
                         }
                     </tbody>
                 </table>

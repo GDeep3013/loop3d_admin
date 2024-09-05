@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import AuthLayout from "../../layout/Auth";
 import { Col, Row, Container, Form, Button } from "react-bootstrap";
-import {  useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import Swal from 'sweetalert2'
 import axios from "axios"
 
@@ -15,7 +15,6 @@ export default function AddEmployee() {
     first_name: '',
     last_name: '',
     email: '',
-    phone: '',
     password: '',
     confirmPassword: '',
     userType: '',
@@ -36,7 +35,7 @@ export default function AddEmployee() {
     fetchOrgnizations().then((res) => {
       setOrganizations(res.data);
     });
-  },[]);
+  }, []);
 
   const isValidPhoneNumber = (phone) => {
     // Simple phone number validation regex
@@ -56,11 +55,6 @@ export default function AddEmployee() {
       errors.email = 'Invalid email address';
     }
 
-    if (!formData.phone.trim()) {
-      errors.phone = 'Phone number is required';
-    } else if (!isValidPhoneNumber(formData.phone)) {
-      errors.phone = 'Invalid phone number';
-    }
 
     if (!id) {
       if (!formData.password.trim()) {
@@ -74,7 +68,7 @@ export default function AddEmployee() {
       } else if (formData.password !== formData.confirmPassword) {
         errors.confirmPassword = 'Passwords do not match';
       }
-    }   
+    }
 
     if (!formData.userType.trim()) {
       errors.userType = 'User type is required';
@@ -109,8 +103,8 @@ export default function AddEmployee() {
       url = `/api/update-user/${id}`;
     }
 
-    await axios.post(url, formData,{
-      headers: { 
+    await axios.post(url, formData, {
+      headers: {
         'x-api-key': import.meta.env.VITE_X_API_KEY,
         'Content-Type': 'application/json'
       }
@@ -127,7 +121,7 @@ export default function AddEmployee() {
       })
       .catch(error => {
         if (error.response) {
-          console.log('error.response',error.response);
+          console.log('error.response', error.response);
           setErrors(error.response.data.errors?.[0]);
         } else if (error.request) {
           console.log('No response received from the server');
@@ -138,7 +132,7 @@ export default function AddEmployee() {
       });
   };
 
-  console.log('errors',errors)
+  console.log('errors', errors)
   const fetchRoles = async () => {
     try {
       const response = await fetch('/api/get-role');
@@ -146,16 +140,18 @@ export default function AddEmployee() {
         throw new Error('Failed to fetch roles');
       }
       const data = await response.json();
-      const fetchedOptions = data.roles.map(role => ({
-        value: role._id,
-        label: role.type
-      }));
+      const fetchedOptions = data.roles
+        .filter(role => role.type !== "admin" && role.type !== "looped_lead")
+        .map(role => ({
+          value: role._id,
+          label: role.type
+        }));
       setRoles(fetchedOptions);
     } catch (error) {
       console.error('Error fetching roles:', error);
     }
   };
- 
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     console.log(name, value);
@@ -168,25 +164,25 @@ export default function AddEmployee() {
   useEffect(() => {
     if (id) {
       const fetchUserDetails = async (id) => {
-          try {
-            const response = await fetch(`/api/show-user/${id}`);
-            if (!response.ok) {
-              throw new Error('Failed to fetch user details');
-            }
-            const userData = await response.json();
-            setFormData({
-              first_name: userData.first_name ? userData.first_name : '',
-              last_name: userData.last_name ? userData.last_name : '',
-              email: userData.email ? userData.email : '',
-              phone: userData.phone ? userData.phone : '',
-              designation: userData.designation ? userData.designation : '',
-              userType: userData.role?._id ? userData.role?._id : '',
-              organization_id: userData.organization_id ? userData.organization_id : '',
-              _method: 'PUT',
-            });
-          } catch (error) {
-            console.error('Error fetching user details:', error);
+        try {
+          const response = await fetch(`/api/show-user/${id}`);
+          if (!response.ok) {
+            throw new Error('Failed to fetch user details');
           }
+          const userData = await response.json();
+          setFormData({
+            first_name: userData.first_name ? userData.first_name : '',
+            last_name: userData.last_name ? userData.last_name : '',
+            email: userData.email ? userData.email : '',
+            phone: userData.phone ? userData.phone : '',
+            designation: userData.designation ? userData.designation : '',
+            userType: userData.role?._id ? userData.role?._id : '',
+            organization_id: userData.organization_id ? userData.organization_id : '',
+            _method: 'PUT',
+          });
+        } catch (error) {
+          console.error('Error fetching user details:', error);
+        }
       };
       fetchUserDetails(id);
     }
@@ -216,6 +212,22 @@ export default function AddEmployee() {
 </div>   
       <div className="content-outer main-wrapper p-c-3 bg-white ml-8 shadow-border-wrapper">
      
+      <div className="content-outer main-wrapper pd-2 bg-white">
+        <div class="tabe-outer">
+          <div class="main-back-heading">
+            <div class="container">
+              <div class="row">
+                <div class="col-md-6 p-0">
+                  <div className="profile-btns pt-0">
+                    <Button className="default-btn cancel-btn ml-0" onClick={() => navigate(-1)}>
+                      Back
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
         <Form className="profile-form">
           <div className="employee-outer d-flex">
 
@@ -263,20 +275,6 @@ export default function AddEmployee() {
                         placeholder="hello@gmail.com"
                       />
                       {errors.email && <small className="text-danger">{errors.email}</small>}
-                    </Form.Group>
-                  </Col>
-                  <Col md={4}>
-                    <Form.Group
-                      className="mb-4">
-                      <Form.Label>Phone number</Form.Label>
-                      <Form.Control
-                        type="number"
-                        name="phone"
-                        value={formData.phone}
-                        onChange={(e) => { handleChange(e) }}
-                        placeholder="+1234567890"
-                      />
-                      {errors.phone && <small className="text-danger">{errors.phone}</small>}
                     </Form.Group>
                   </Col>
                   <Col md={4}>
@@ -331,7 +329,7 @@ export default function AddEmployee() {
                   </Col> */}
                   {!id && (
                     <>
-                      <Col md={6}>
+                      <Col md={4}>
                         <Form.Group className="mb-4">
                           <Form.Label>Password</Form.Label>
                           <Form.Control
@@ -344,7 +342,7 @@ export default function AddEmployee() {
                           {errors.password && <small className="text-danger">{errors.password}</small>}
                         </Form.Group>
                       </Col>
-                      <Col md={6}>
+                      <Col md={4}>
                         <Form.Group className="mb-4">
                           <Form.Label>Confirm Password</Form.Label>
                           <Form.Control
@@ -379,7 +377,7 @@ export default function AddEmployee() {
                       </div>
                     </Form.Group>
                   </Col> */}
-                
+
 
                   <Col md={12}>
                     <div className="profile-btns pt-0">
@@ -393,6 +391,7 @@ export default function AddEmployee() {
             </div>
           </div>
         </Form>
+      </div>
       </div>
     </AuthLayout>
   );

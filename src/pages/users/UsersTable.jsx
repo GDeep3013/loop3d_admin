@@ -112,8 +112,9 @@ export default function EmployeeTable({ }) {
               </td>
             </tr>
           ) : (
-            Employe.map(user => (
-              <tr key={user._id}>
+              Employe.map(user => (
+              
+                user?.role?.type !="admin" && <tr key={user._id}>
                 <td>
                   <div className="user-profile d-flex align-items-center">
                     <div className='user-name'>{user.first_name}</div>
@@ -129,7 +130,7 @@ export default function EmployeeTable({ }) {
                 <td>{user.organization_id?.name}</td>
                <td><span className='span-badge active-tag'>Active</span></td>
                 <td>
-                <button className='action-btn' onClick={() => navigate(`/add-user/${user._id}`)}><Edit /></button>
+                {/* <button className='action-btn' onClick={() => navigate(`/add-user/${user._id}`)}><Edit /></button> */}
                  <button className='action-btn' onClick={() => handleDelete(user._id)}><Remove /></button>
                  
                 </td>

@@ -10,10 +10,6 @@ const OptionSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Question',
     },
-    isCorrect: {
-        type: Boolean,
-        default: false
-    },
     weightage: {
         type: Number,
         default: 1

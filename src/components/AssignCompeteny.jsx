@@ -16,16 +16,10 @@ export default function AssignCompetency({ type, id, show, handleClose,getCatego
   const userId = useSelector((state) => state.auth.user._id);
 
   useEffect(() => {
-    if (show) {
       getCategories(); // Fetch categories when modal is opened
-    }
-  }, [show]);
+  }, []);
 
-  useEffect(() => {
-    if (selectedCategory) {
-      getSubcategories(selectedCategory.value); // Fetch subcategories when a category is selected
-    }
-  }, [selectedCategory]);
+  
 
   async function getCategories() {
     setLoading(true);
@@ -43,31 +37,12 @@ export default function AssignCompetency({ type, id, show, handleClose,getCatego
     }
   }
 
-  async function getSubcategories(categoryId) {
-    setSubcatLoading(true);
-    try {
-      let result = await fetchSubcategories(categoryId);
-      const subcategoryOptions = result.subcategories && result.subcategories.map((subcat) => ({
-        value: subcat._id,
-        label: subcat.category_name,
-      }));
-
-      setSubcategories(subcategoryOptions);
-      setSubcatLoading(false);
-    } catch (error) {
-      console.error(error);
-      setSubcatLoading(false);
-    }
-  }
 
   const handleCategoryChange = (selected) => {
     setSelectedCategory(selected); // Set selected category
     setSelectedSubcategories([]); // Reset subcategory selections when category changes
   };
 
-  const handleSubcategoryChange = (selectedOptions) => {
-    setSelectedSubcategories(selectedOptions || []); // Set multiple selected subcategories
-  };
 
   const handleSubmit = async () => {
 
@@ -78,7 +53,6 @@ export default function AssignCompetency({ type, id, show, handleClose,getCatego
         user_id: userId,
         ref_id: id,
         category_id: selectedCategory.value, // Send selected category ID
-        subcategories: (selectedSubcategories.length >0 )? selectedSubcategories.map(option => option.value):[] // Send selected subcategory IDs
       });
 
       if (response) {
@@ -112,7 +86,7 @@ export default function AssignCompetency({ type, id, show, handleClose,getCatego
         ) : (
           <Form>
             <Form.Group>
-              <Form.Label>Select Category</Form.Label>
+              <Form.Label>Select Competency</Form.Label>
               <Select
                 options={categories}
                 value={selectedCategory}
@@ -125,22 +99,6 @@ export default function AssignCompetency({ type, id, show, handleClose,getCatego
               />
             </Form.Group>
 
-            {selectedCategory && (
-              <Form.Group>
-                <Form.Label className='pt-3 font-weight-bold'>Select Subcategories</Form.Label>
-                <Select
-                  options={subcategories}
-                  value={selectedSubcategories}
-                  onChange={handleSubcategoryChange}
-                  isMulti
-                  placeholder="Select subcategories..."
-                  isSearchable
-                  filterOption={(option, inputValue) =>
-                    option.label.toLowerCase().includes(inputValue.toLowerCase())
-                  }
-                />
-              </Form.Group>
-            )}
           </Form>
         )}
       </Modal.Body>
