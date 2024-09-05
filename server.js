@@ -51,7 +51,7 @@ async function connectDB() {
 
 connectDB();
 /**
- * Ssytem Routes
+ * System Routes
 */
 app.use('/', authRoutes);
 app.use('/users', authenticateHeaderKey, usersRoutes);
@@ -60,10 +60,6 @@ app.use('/categories', authenticateHeaderKey, categoryRoutes);
 app.use('/questions', authenticateHeaderKey, questionRoutes);
 app.use('/assign-competency', authenticateHeaderKey, assignCompetencyRoutes);
 app.use('/surveys', authenticateHeaderKey, surveyRoutes);
-
-
-
-
 
 const port = process.env.PORT || 8080;
 app.listen(port, () => {
