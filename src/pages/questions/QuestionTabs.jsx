@@ -1,46 +1,50 @@
+
 import React, { useState, useEffect } from 'react'
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
-import AssignCompetencies from './AssignCompetencies';
-import LoopLeads from '../loopleads/LoopLeads';
-import CreateOrganization from "./CreateOrganizations"
 import AuthLayout from "../../layout/Auth";
 import { Button } from 'react-bootstrap';
+import AddQuestion from './AddQuestion';
 
+import AssignCompetencies from '../organizations/AssignCompetencies';
 import axios from "axios";
 
 
 import { useParams, useNavigate } from "react-router-dom";
 
 
-export default function OrganizationTabs() {
+export default function QuestionTabs() {
     const navigate = useNavigate();
 
     const { id } = useParams();
     const [formData, setFormData] = useState({
-        name: ''
+        questionText: '',
+        questionType: '', // 'Text' or 'Radio'
+        options: [{ text: '', isCorrect: false }],
     });
     useEffect(() => {
         if (id) {
-            const fetchOrganizationDetails = async () => {
+            const fetchQuestionDetails = async () => {
                 try {
-                    const response = await axios.get(`/api/organizations/${id}`, {
+                    const response = await fetch(`/api/questions/${id}`, {
                         headers: { 'x-api-key': import.meta.env.VITE_X_API_KEY }
                     });
-                    const { name } = response.data;
-                    setFormData({ name: name });
+                    const data = await response.json();
+                    setFormData({
+                        ...data
+                    });
                 } catch (error) {
-                    console.error("Error fetching organization details:", error);
+                    console.error('Error fetching question details:', error);
                 }
             };
-            fetchOrganizationDetails();
+            fetchQuestionDetails();
         }
     }, [id]);
 
     return (
-        <AuthLayout title={id ? "Edit Organization" : "Add Organization"}>
-             <div className="content-outer main-wrapper pd-2 bg-white edit-org">
-            <div class="tabe-outer">
+        <AuthLayout title={id ? 'Edit Question' : 'Add Question'}>
+              <div className="content-outer main-wrapper pd-2 bg-white edit-org">
+        <div class="tabe-outer">
                 <div class="main-back-heading">
                     <div class="container">
                         <div class="row">
@@ -62,15 +66,11 @@ export default function OrganizationTabs() {
                 className="custom-tabs"
             >
                 <Tab eventKey="home" title="Overview">
-                    <CreateOrganization id={id} savedData={formData} />
+                    <AddQuestion id={id} savedData={formData} />
 
                 </Tab>
                 <Tab eventKey="profile" title="Competencies">
-                    <AssignCompetencies data={{ ref_id: id, name: formData.name }} type="organization" />
-
-                </Tab>
-                <Tab eventKey="contact" title="Loop Leads">
-                    <LoopLeads organization={{ orgniation_id: id, name: formData.name }} />
+                    <AssignCompetencies data={{ ref_id: id}} type="question" />
                 </Tab>
                 </Tabs>
                 </div>
@@ -78,3 +78,4 @@ export default function OrganizationTabs() {
 
     )
 }
+

@@ -127,7 +127,8 @@ export default function AddEmployee() {
       })
       .catch(error => {
         if (error.response) {
-          setErrors(error.response.data.errors);
+          console.log('error.response',error.response);
+          setErrors(error.response.data.errors?.[0]);
         } else if (error.request) {
           console.log('No response received from the server');
         } else {
@@ -137,6 +138,7 @@ export default function AddEmployee() {
       });
   };
 
+  console.log('errors',errors)
   const fetchRoles = async () => {
     try {
       const response = await fetch('/api/get-role');
@@ -197,7 +199,22 @@ export default function AddEmployee() {
 
   return (
     <AuthLayout title={id ? 'Edit User' : "Add User"}>
-      <div className="content-outer">
+      <div className="content-outer main-wrapper pd-2 bg-white">
+      <div class="tabe-outer">
+   <div class="main-back-heading">
+      <div class="container">
+         <div class="row">
+            <div class="col-md-6 p-0">
+            <div className="profile-btns pt-0">
+                <Button className="default-btn cancel-btn ml-0" onClick={() => navigate(-1)}>
+                    Back
+                </Button>
+            </div>                  
+            </div>
+         </div>
+      </div>
+   </div>
+</div>   
         <Form className="profile-form">
           <div className="employee-outer d-flex">
 
@@ -364,7 +381,7 @@ export default function AddEmployee() {
                 
 
                   <Col md={12}>
-                    <div className="profile-btns">
+                    <div className="profile-btns pt-0">
                       <Button className="default-btn" onClick={handleSubmit}>{id ? "Update" : "Save"}</Button>
                       <Button className="default-btn cancel-btn">Cancel</Button>
                     </div>

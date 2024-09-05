@@ -37,7 +37,14 @@ exports.createQuestion = async (req, res) => {
 exports.getAllQuestions = async (req, res) => {
     try {
         // Extract query parameters for pagination
-        let { page = 1, limit = 10 } = req.query;
+        let { page = 1, limit = 10, searchTerm } = req.query;
+        const query = {};
+
+        if (searchTerm) {
+            query.$or = [
+                { questionText: { $regex: searchTerm, $options: 'i' } }
+            ];
+        }
 
         // Convert query params to integers (since they are initially strings)
         page = parseInt(page, 10);
@@ -47,7 +54,7 @@ exports.getAllQuestions = async (req, res) => {
         const skip = (page - 1) * limit;
 
         // Fetch categories with pagination
-        const questions = await Question.find().skip(skip).limit(limit)
+        const questions = await Question.find(query).sort({ _id: -1 }).skip(skip).limit(limit)
 
         // Fetch the total number of categories
         const totalQuestion = await Question.countDocuments();

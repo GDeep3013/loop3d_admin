@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Col, Container, Row, Dropdown } from 'react-bootstrap'
 import { Link } from "react-router-dom";
 import Swal from 'sweetalert2';
+import {View,Edit,Remove} from '../../components/svg-icons/icons';
 
 
 import AuthLayout from '../../layout/Auth'
@@ -95,7 +96,7 @@ export default function Organization() {
 
     return (
         <AuthLayout title={'Welcome to Organizations'} subTitle={'Organizations List'}>
-            <div className='table-inner'>
+            <div className='table-inner main-wrapper'>
                 <div className='content-outer'>
                     <div className='tabe-outer'>
                         <div className='table-heading'>
@@ -115,10 +116,11 @@ export default function Organization() {
                         </div>
                     </div>
                 </div>
+                <div className='table-scroll'>
                 <table className='table'>
                     <thead>
                         <tr>
-                            <th>ID</th>
+                            <th>S/N</th>
                             <th>Organizations Name</th>
                             <th>CreatedAt </th>
                             <th>Status <StatusIcon /> </th>
@@ -133,18 +135,25 @@ export default function Organization() {
                                 </td>
                             </tr>
                         ) : (
-                                Organizations.map(org => (
+                                Organizations.map((org ,index) => (
                                     <tr key={org._id}>
-                                        <td>{org._id}</td>
+                                        <td>{index + 1}</td>
                                         <td>
                                             <div className="user-profile d-flex align-items-center">
                                                 <div className='user-name'>{org.name}</div>
                                             </div>
                                         </td>
-                                        <td>{org.createdAt}</td>
+                                        <td>{new Date(org.createdAt).toLocaleDateString('en-GB', {
+                                            day: '2-digit',
+                                            month: 'short',
+                                            year: 'numeric',
+                                        })}</td>
                                         <td><span className='span-badge active-tag'>Active</span></td>
                                         <td>
-                                            <Dropdown className='custom-dropdown'>
+                                            <button className='action-btn' onClick={() => navigate(`view/${org._id}`)}><View /></button>
+                                            <button className='action-btn' onClick={() => navigate(`edit/${org._id}`)}><Edit /></button>
+                                            <button className='action-btn' onClick={() => handleDelete(org._id)}><Remove /></button>
+                                            {/* <Dropdown className='custom-dropdown'>
                                                 <Dropdown.Toggle variant="success" id="dropdown-basic">
                                                     <MoreIcon />
                                                 </Dropdown.Toggle>
@@ -153,7 +162,7 @@ export default function Organization() {
                                                     <Dropdown.Item key={"edit"}  onClick={() => navigate(`edit/${org._id}`)}>Edit</Dropdown.Item>
                                                     <Dropdown.Item key={"delete"}  onClick={() => handleDelete(org._id)}>Delete</Dropdown.Item>
                                                 </Dropdown.Menu>
-                                            </Dropdown>
+                                            </Dropdown> */}
                                         </td>
                                 </tr>
                             ))
@@ -161,6 +170,7 @@ export default function Organization() {
                     </tbody>
                 </table>
 
+               </div>
             </div>
             {totalPages > 1 && (
                 <Pagination className='justify-content-center pagination-outer'>

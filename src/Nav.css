@@ -2,16 +2,17 @@
 /* side nav css */
 .mainOuter { display: flex; }
 nav.sideNavOuter{ z-index: 1031; position: relative; width: 273px; transition: width 0.5s; }
-.sideNavLogo{ padding: 29px 16px 0; width: 100%; max-width: 274px; min-width: 274px; }
+.sideNavLogo{ padding: 5px 16px 0; width: 100%; max-width: 274px; min-width: 274px; }
 .sideNavLogo hr.sideBorder { border: none; margin: 0;}
 .topnav nav.topnav.navbar { padding: 18px 32px; background: var(--additional-white, #FFF); width: calc(100vw - 274px); margin: 0 0 0 auto; }
-.sideNavOuter  button.toggleMenu { background-color: transparent; border: none; padding: 0; margin-right: 13px; }
 .topnav h2 { margin: 0;}
 .navOuter .headerTitle{ max-width: 30%; }
 .navOuter .headerTitle,
 .navOuter .headerSearch {
   width: 100%;
 }
+button.MenuOpen svg.action-icon { position: relative; left: -1px; transition: all ease-in-out 0.5s; transform: rotate(360deg) scale(1.3); }
+nav.sideNavOuter.open button.MenuOpen svg.action-icon { transform: rotate(180deg) scale(1.34); left: 1px; }
 .navOuter .headerSearch {
   text-align: right;
 }
@@ -80,18 +81,18 @@ nav.sideNavOuter{ z-index: 1031; position: relative; width: 273px; transition: w
 .headerSearch .dropdown-menu a { border-radius: 5px; }
 .sideNavList li.sideNavItem a svg path { fill: #000; }
 .sideNavList li.sideNavItem a svg.question-icon path { fill: none; }
-.sideNavList li.sideNavItem a.active svg path { fill: #fff !important; }
+.sideNavList li.sideNavItem a.active svg path,.sideNavList li.sideNavItem a:hover svg path { fill: #fff !important; }
 .headerSearch .dropdown-menu a:hover { background-color: var(--theme-color); color: #fff; }
-ul.sideNavList { padding: 22px 16px 12px; min-height: calc(100vh - 106px); width: 273px; margin: 0;}
+ul.sideNavList { padding: 22px 16px 12px; min-height: calc(100vh - 106px); margin: 0;}
 .sideNavList li.sideNavItem { margin-bottom: 10px; }
 .sideNavList li.sideNavItem:last-child { margin-bottom: 0; }
-.sideNavList li.sideNavItem a { padding: 13px 10px; border-radius: 8px; width: 100%; display: inline-block; color: #000; font-size: 14px; font-weight: 500; line-height: 22px; transition: line-height 0.5s; background: #fff; text-decoration: none; }
+.sideNavList li.sideNavItem a { padding: 13px 10px; border-radius: 8px; width: 100%; display: flex; color: #000; font-size: 14px; font-weight: 500; line-height: 22px; transition: line-height 0.5s; background: #fff; text-decoration: none; }
 .sideNavList li.sideNavItem a svg { vertical-align: middle; margin: 0 16px 0 0; min-width: 24px; width: 24px; height: 24px; }
 .sideNavList li.sideNavItem.campaignIcon svg { width: 28px; height: 28px; margin-right: 14px; margin-left: -2px; }
 .sideNavOuter .settingMenu a { margin-top: 8px; }
-.sideNavList li.sideNavItem a.active{  background-color: var(--theme-color);; color:#fff; }
+.sideNavList li.sideNavItem a.active,.sideNavList li.sideNavItem a:hover{  background-color: var(--theme-color);; color:#fff; }
 nav.sideNavOuter.open{ width: 70px; }
-nav.sideNavOuter.open ul.sideNavList { width: 70px; min-height: calc(100vh - 131px);}
+nav.sideNavOuter.open ul.sideNavList { width: 70px; min-height: calc(100vh - 30px);}
 nav.sideNavOuter.open ul.sideNavList li.sideNavItem a { padding: 12px 0; font-size: 0; line-height: inherit; }
 nav.sideNavOuter.open ul.sideNavList .settingMenu, nav.sideNavOuter.open .sideNavList li.LogoutMenu{ width: 100%; left:0; }
 nav.sideNavOuter.open .sideNavList li.sideNavItem a{ position: relative; }
@@ -109,8 +110,10 @@ nav.sideNavOuter.open .sideNavLogo button.toggleMenu { margin: 0 0 0 8px; }
 .latest-projects .filterBox input.form-control { min-height: 45px; max-width: 340px; }
 .latest-projects .filterBox button { margin: 0; }
 .latest-projects .filterBox .d-flex { column-gap: 13px; }
+nav.sideNavOuter.open ul.sideNavList li.sideNavItem a { display: inline-block; max-width: 48px; }
+h3.title-add-option { font-size: 17px; padding-top: 8px; }
 /* start 23/08/2024 css */
-.wrapper-outer .side-nav { background-color: #174a6d; }
+.wrapper-outer .side-nav { background-color: #174a6d;height:100vh; }
 .sub-outer { background-color: #4d7b9b; padding: 5px 12px; margin-bottom: 10px; border-radius: 0 0 8px 8px; }
 .sub-outer li.subNavItem { border-bottom: 1px solid #fff; }
 .sub-outer li.subNavItem a { color: #fff; display: block; padding: 6px 0 9px 0; background: transparent; }
@@ -119,3 +122,63 @@ nav.sideNavOuter.open .sideNavLogo button.toggleMenu { margin: 0 0 0 8px; }
 .sideNavList li.sideNavItem a span {position: absolute;right: 10px;}
 .sideNavList li.sideNavItem a span img { width: 20px; filter: inherit }
 li.sideNavItem.active-inner { margin: 0; }
+
+@media  (max-width: 767px) {
+  nav.sideNavOuter.open .sideNavLogo img {
+    display: block;
+}
+nav.sideNavOuter.open {
+  width: 273px;
+}
+nav.sideNavOuter.open ul.sideNavList {
+  width: auto;
+  min-height: calc(100vh - 106px);
+}
+nav.sideNavOuter.open ul.sideNavList li.sideNavItem a {
+  display: flex;
+  font-size: 14px;
+  line-height: 22px;
+  max-width: 100%;
+  padding: 13px 10px;
+}
+nav.sideNavOuter.open .sideNavList li.sideNavItem svg {
+  margin: 0 16px 0 0;
+}
+nav.sideNavOuter.open .sideNavList li.LogoutMenu {
+  width: 100%;
+  left: 16px;
+}
+nav.sideNavOuter.open .sideNavList li.sideNavItem a.active::after{
+  background-color: var(--theme-color)!important;
+}
+.side-nav.sidenavMobile {
+  margin-left: -273px;
+}
+.wrapper-outer .side-nav {
+  transition: all ease-in-out 0.5s;
+  position: absolute;
+  z-index: 9;
+}
+button.MenuOpen {
+  right: -27px;
+  top: 0px;
+  border-radius: 0px;
+}
+table.table {
+  white-space: nowrap;
+}
+.tabe-outer .table-heading {
+  padding: 9px 0px;
+}
+.dashboard-header h1 {
+  font-size: 20px;
+  text-align: center;
+}
+.dashboard-header p {
+  text-align: center;
+  margin-bottom: 15px;
+}
+table-scroll {
+  overflow: scroll;
+}
+}

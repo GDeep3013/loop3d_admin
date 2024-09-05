@@ -32,6 +32,9 @@ router.get('/fetch-project', ProjectController.fetchProject);
 router.get('/show-project/:id', ProjectController.showProject);
 router.delete('/delete-project/:id', ProjectController.deleteProject);
 router.post("/update-project/:id", upload.array("files", 5), ProjectController.updateProject);
+router.post('/forget_password', UserController.forgetPassword);
+router.post('/reset-password', UserController.resetPassword);
+
 
 //createCategory Routes
 

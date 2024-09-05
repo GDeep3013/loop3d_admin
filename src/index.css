@@ -48,7 +48,7 @@
 :root{
   --theme-color:#7abcdb;
   --black-color:#000000;
-  --bg-color:#F1F5F9;
+  --bg-color:#F7f7f7;
   --menu-bg:#F7F7F9;
 }
 body { background-color: var(--bg-color); -ms-overflow-style: block !important; scrollbar-width: none !important; line-height: normal; font-family: "Inter", sans-serif !important; box-sizing: border-box; color: var(--white); text-rendering: optimizeLegibility; -webkit-font-smoothing: subpixel-antialiased; }

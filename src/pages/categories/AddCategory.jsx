@@ -109,7 +109,20 @@ export default function AddCategory() {
 
   return (
     <AuthLayout title={id ? "Edit Competency" : "Add Competency"}>
-      <div className="content-outer">
+      <div className="content-outer main-wrapper pd-2 bg-white">
+      <div class="main-back-heading">
+      <div class="container">
+         <div class="row">
+            <div class="col-md-6 p-0">
+            <div className="profile-btns pt-0">
+                <Button className="default-btn cancel-btn ml-0" onClick={() => navigate(-1)}>
+                    Back
+                </Button>
+            </div>                  
+            </div>
+         </div>
+      </div>
+   </div>
         <Form className="category-form">
           <Container>
             <Row>
@@ -145,7 +158,7 @@ export default function AddCategory() {
                 </Form.Group>
               </Col>
               <Col md={12}>
-                <div className="profile-btns">
+                <div className="profile-btns pt-0">
                   <Button className="default-btn" onClick={handleSubmit}>
                     {id ? "Update" : "Save"}
                   </Button>

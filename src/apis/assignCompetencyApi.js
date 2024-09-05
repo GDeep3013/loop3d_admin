@@ -2,7 +2,7 @@
 
 export const createAssignCompetency = async (data) => {
     try {
-        const url = `/api/assign-competency`;
+        const url = `/api/competencies/assign`;
         const response = await fetch(url, {
             method: 'POST',
             headers: {
@@ -25,7 +25,7 @@ export const createAssignCompetency = async (data) => {
 
 export const getAssignCompetency = async (id) => {
     try {
-        const url = `/api/assign-competency/${id}`;
+        const url = `/api/competencies/${id}`;
         const response = await fetch(url, {
             headers: { 'x-api-key': import.meta.env.VITE_X_API_KEY }
         });
@@ -43,7 +43,7 @@ export const getAssignCompetency = async (id) => {
 
 export const updateAssignCompetency = async (id, data) => {
     try {
-        const url = `/api/assign-competency/${id}`;
+        const url = `/api/competencies/${id}`;
         const response = await fetch(url, {
             method: 'PUT',
             headers: {
@@ -66,7 +66,7 @@ export const updateAssignCompetency = async (id, data) => {
 
 export const deleteAssignCompetency = async (id,category_id) => {
     try {
-        const url = `/api/assign-competency/${id}/${category_id}`;
+        const url = `/api/competencies/assign/${id}/${category_id}`;
         const response = await fetch(url, {
             method: 'DELETE',
             headers: { 'x-api-key': import.meta.env.VITE_X_API_KEY }
@@ -83,9 +83,9 @@ export const deleteAssignCompetency = async (id,category_id) => {
     }
 }
 
-export const getAssignmentsByUserAndOrg = async (userId, orgId) => {
+export const getAssignmentsByUserAndOrg = async (userId, ref_id,type) => {
     try {
-        const url = `/api/assign-competency/${userId}/${orgId}`;
+        const url = `/api/competencies/${userId}/${ref_id}?type=${type}`;
         const response = await fetch(url, {
             headers: { 'x-api-key': import.meta.env.VITE_X_API_KEY }
         });

@@ -1,14 +1,16 @@
 import React, { useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
-import { Category, MenuIcon, Technology, Job, FixedPrice, Logout, EmployeeIcon, DocomentIcon, ProjectIcon,QuestionIcon } from "./svg-icons/icons";
+
+import { Category, MenuIcon,EmailIcon, Technology, Job, FixedPrice, Logout, EmployeeIcon, DocomentIcon, ProjectIcon,QuestionIcon } from "./svg-icons/icons";
 import "../Nav.css";
+import { Menuicon } from '../components/svg-icons/icons';
 // import { useSelector, useDispatch } from "react-redux";
 import { selectUserType } from "../../store/slices/UserSlice"
 import { Accordion, InputGroup, Form, Button } from 'react-bootstrap';
 
 import { selectFilterValue, setFilterValue } from '../../store/slices/DashboardSlice'
 import { useSelector, useDispatch } from 'react-redux';
-export default function LeftNav() {
+export default function LeftNav({isMenuOpen,setIsMenuOpen}) {
 
   const [isUsersOpen, setIsUsersOpen] = useState(false);
   const [isSurveyOpen, setIsSurveyOpen] = useState(false);
@@ -23,7 +25,6 @@ export default function LeftNav() {
   const location = useLocation();
 
   const userType = localStorage.getItem('userType');
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [selectedTechnology, setSelectedTechnology] = useState([]);
   const [selectedPrice, setSelectedPrice] = useState(null);
   const toggleMenu = () => {
@@ -83,7 +84,7 @@ export default function LeftNav() {
     <nav className={`sideNavOuter ${isMenuOpen ? "open" : ""}`}>
 
       <div className="sideNavLogo">
-        <button onClick={toggleMenu} className="toggleMenu"> <MenuIcon /> </button>
+        <button onClick={toggleMenu} className="toggleMenu MenuOpen" ><Menuicon /></button>
         <img src="/images/logoheader.svg" alt="Logo" />
     
         <hr className="sideBorder" />
@@ -96,7 +97,7 @@ export default function LeftNav() {
               className={({ isActive }) => (isActive ? 'active' : '')}
             >
               <DocomentIcon />
-              Organizations
+             Organizations
             </NavLink>
           </li>
 
@@ -153,7 +154,13 @@ export default function LeftNav() {
               <QuestionIcon />
               Questions
             </NavLink>
-          </li>        
+          </li>
+          <li className="sideNavItem">
+            <NavLink to="/emails">
+              <EmailIcon />
+              Emails
+            </NavLink>
+          </li>      
         </>
         <li className="sideNavItem LogoutMenu">
           <NavLink to="#" className="dropdown-item" onClick={() => {
@@ -163,6 +170,7 @@ export default function LeftNav() {
           }}><Logout /> Logout</NavLink>         
         </li>
       </ul>
+      
     </nav>
   );
 }

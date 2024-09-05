@@ -13,6 +13,10 @@ const OptionSchema = new mongoose.Schema({
     isCorrect: {
         type: Boolean,
         default: false
+    },
+    weightage: {
+        type: Number,
+        default: 1
     }
 });
 

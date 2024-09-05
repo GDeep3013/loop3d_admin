@@ -76,7 +76,7 @@ export default function AssignCompetency({ type, id, show, handleClose,getCatego
       const response = await createAssignCompetency({
         type,
         user_id: userId,
-        organization_id: id,
+        ref_id: id,
         category_id: selectedCategory.value, // Send selected category ID
         subcategories: (selectedSubcategories.length >0 )? selectedSubcategories.map(option => option.value):[] // Send selected subcategory IDs
       });

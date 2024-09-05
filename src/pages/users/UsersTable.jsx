@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { StatusIcon, PLusIcon, MoreIcon } from "../../components/svg-icons/icons";
 import { Container, Dropdown, Pagination, Row, Col, } from 'react-bootstrap'
 import { Link } from "react-router-dom";
+import {Edit,Remove} from '../../components/svg-icons/icons';
 import Swal from 'sweetalert2'
 export default function EmployeeTable({ }) {
   const navigate = useNavigate();
@@ -70,7 +71,7 @@ export default function EmployeeTable({ }) {
     }
   };
   return (<>
-    <div className='table-inner'>
+    <div className='table-inner main-wrapper '>
       <div className='content-outer'>
         <div className='tabe-outer'>
           <div className='table-heading'>
@@ -105,7 +106,7 @@ export default function EmployeeTable({ }) {
         <tbody>
           {Employe.length === 0 ? (
             <tr>
-              <td colSpan="6" style={{ textAlign: 'center' }}>
+              <td colSpan="12" style={{ textAlign: 'center' }}>
                 <h4>No User Found</h4>
               </td>
             </tr>
@@ -127,15 +128,9 @@ export default function EmployeeTable({ }) {
                 <td>{user.organization_id?.name}</td>
                <td><span className='span-badge active-tag'>Active</span></td>
                 <td>
-                  <Dropdown className='custom-dropdown'>
-                    <Dropdown.Toggle variant="success" id="dropdown-basic">
-                      <MoreIcon />
-                    </Dropdown.Toggle>
-                    <Dropdown.Menu>
-                      <Dropdown.Item onClick={() => navigate(`/add-user/${user._id}`)}>Edit</Dropdown.Item>
-                      <Dropdown.Item onClick={() => handleDelete(user._id)}>Delete</Dropdown.Item>
-                    </Dropdown.Menu>
-                  </Dropdown>
+                <button className='action-btn' onClick={() => navigate(`/add-user/${user._id}`)}><Edit /></button>
+                 <button className='action-btn' onClick={() => handleDelete(user._id)}><Remove /></button>
+                 
                 </td>
               </tr>
             ))

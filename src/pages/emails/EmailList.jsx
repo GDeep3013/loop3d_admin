@@ -4,26 +4,25 @@ import { useNavigate } from "react-router-dom";
 import { StatusIcon, PLusIcon, MoreIcon } from "../../components/svg-icons/icons";
 import { Container, Dropdown, Pagination, Row, Col } from 'react-bootstrap';
 import { Link } from "react-router-dom";
-import Swal from 'sweetalert2';
 import {View,Edit,Remove} from '../../components/svg-icons/icons';
-import QuestionStatusUpdate from './QuestionStatusUpdate';
+import Swal from 'sweetalert2';
 
-export default function Question() {
+export default function EmailList() {
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const [questions, setQuestions] = useState([]);
+  const [emails, setEmails] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    getQuestions();
+    getEmails();
   }, [searchTerm, currentPage]);
 
-  async function getQuestions() {
+  async function getEmails() {
     setLoading(true);
     try {
-      let url = `/api/questions?page=${currentPage}`;
+      let url = `/api/emails?page=${currentPage}`;
       if (searchTerm) {
         url += `&searchTerm=${encodeURIComponent(searchTerm)}`;
       }
@@ -31,7 +30,7 @@ export default function Question() {
         headers: { 'x-api-key': import.meta.env.VITE_X_API_KEY }
       });
       result = await result.json();
-      setQuestions(result.questions);
+      setEmails(result.emails);
       setTotalPages(result.meta.totalPages);
       setLoading(false);
     } catch (error) {
@@ -61,7 +60,7 @@ export default function Question() {
       });
 
       if (confirmResult.isConfirmed) {
-        const response = await fetch(`/api/questions/${id}`, {
+        const response = await fetch(`/api/emails/${id}`, {
           method: 'DELETE',
           headers: { "x-api-key": import.meta.env.VITE_X_API_KEY }
         });
@@ -69,34 +68,33 @@ export default function Question() {
         if (response.ok) {
           await Swal.fire({
             title: "Deleted!",
-            text: "The question has been deleted.",
+            text: "The email has been deleted.",
             icon: "success",
             confirmButtonColor: "#000",
           });
-          getQuestions();
+          getEmails();
         } else {
-          console.error('Failed to delete question');
+          console.error('Failed to delete email');
         }
       }
     } catch (error) {
-      console.error('Error deleting question:', error);
+      console.error('Error deleting email:', error);
     }
   };
 
   return (
-    <AuthLayout title={'Welcome to Questions'} subTitle={'Questions'}>
+    <AuthLayout title={'Welcome to Emails'} subTitle={'Manage your emails'}>
       <div className='table-inner main-wrapper'>
         <div className='content-outer'>
           <div className='tabe-outer'>
             <div className='table-heading'>
               <Container>
                 <Row>
-                  <Col md={6}>
-                  </Col>
+                  <Col md={6}></Col>
                   <Col md={6} className='text-end'>
                     <form className='d-flex justify-content-end'>
                       <input type='search' placeholder='Search...' value={searchTerm} onChange={handleSearch} className='form-control' />
-                      <Link to="create" className='default-btn' >Add Question <PLusIcon /> </Link>
+                      <Link to="create" className='default-btn' >Add Email <PLusIcon /> </Link>
                     </form>
                   </Col>
                 </Row>
@@ -107,51 +105,43 @@ export default function Question() {
         <table className='table'>
           <thead>
             <tr>
-              <th>Question</th>
-              <th>Type</th>
-              <th>Status <StatusIcon /> </th>
+              <th>Subject</th>
+              <th>Recipient</th>
               <th>Action</th>
             </tr>
           </thead>
           <tbody>
-            {!loading && questions.length === 0 &&
+            {!loading && emails.length === 0 &&
               <tr>
                 <td colSpan="6" style={{ textAlign: 'center' }}>
-                  <h4>No Questions Found</h4>
+                  <h4>No Emails Found</h4>
                 </td>
               </tr>
             }
 
-            {!loading && questions.length > 0 && questions?.map(question => (
-              <tr key={question._id}>
+            {!loading && emails.length > 0 && emails.map(email => (
+              <tr key={email._id}>
+                <td>{email?.subject_line}</td>
+                    <td>{email?.recipient_type}</td>
                 <td>
-                  {question.questionText}
-                </td>
-                <td>
-                  {question.questionType}
-                </td>
-                <td><span className='span-badge active-tag'>Active</span></td>
-                <td>
-                <button className='action-btn' onClick={() => navigate(`/questions/detail/${question._id}`)}><View /></button>
-                 <button className='action-btn' onClick={() => navigate(`/questions/${question._id}`)}><Edit /></button>
-                 <button className='action-btn' onClick={() => handleDelete(question._id)}><Remove /></button>
+                <button className='action-btn' onClick={() => navigate(`/emails/detail/${email._id}`)}><View /></button>
+                <button className='action-btn' onClick={() => navigate(`/emails/${email._id}`)}><Edit /></button>
+                <button className='action-btn' onClick={() => handleDelete(email._id)}><Remove /></button>
                   {/* <Dropdown className='custom-dropdown'>
                     <Dropdown.Toggle variant="success" id="dropdown-basic">
                       <MoreIcon />
                     </Dropdown.Toggle>
                     <Dropdown.Menu>
-                      <Dropdown.Item onClick={() => navigate(`/questions/detail/${question._id}`)}>View</Dropdown.Item>
-                     <Dropdown.Item onClick={() => navigate(`/questions/${question._id}`)}>Edit</Dropdown.Item>
-                      <Dropdown.Item onClick={() => handleDelete(question._id)}>Delete</Dropdown.Item>
+                      <Dropdown.Item onClick={() => navigate(`/emails/detail/${email._id}`)}>View</Dropdown.Item>
+                      <Dropdown.Item onClick={() => navigate(`/emails/${email._id}`)}>Edit</Dropdown.Item>
+                      <Dropdown.Item onClick={() => handleDelete(email._id)}>Delete</Dropdown.Item>
                     </Dropdown.Menu>
                   </Dropdown> */}
                 </td>
               </tr>
-            ))
-            }
+            ))}
           </tbody>
         </table>
-
       </div>
       {totalPages > 1 && (
         <Pagination className='justify-content-center pagination-outer'>

@@ -4,10 +4,12 @@ const AssignCompetencyController = require('../app/controllers/AssignCompetencyC
 
 
 // Route to create a new assignment
-router.post('/', AssignCompetencyController.createAssignment);
+router.post('/assign', AssignCompetencyController.createAssignment);
 
 // Route to get all assignments
 router.get('/', AssignCompetencyController.getAllAssignments);
+router.get('/assign', AssignCompetencyController.getAssignmentsByUserId);
+
 
 // Route to get a specific assignment by ID
 router.get('/:id', AssignCompetencyController.getAssignmentById);
@@ -17,7 +19,9 @@ router.put('/:id', AssignCompetencyController.updateAssignment);
 
 // Route to delete an assignment by ID
 router.delete('/:id/:category_id', AssignCompetencyController.deleteAssignment);
-router.get('/:user_id/:organization_id', AssignCompetencyController.getAssignmentsByUserAndOrg);
+// router.get('/assign/:user_id', AssignCompetencyController.getAssignmentsByUserId);
+router.get('/:id/:ref_id', AssignCompetencyController.getAssignmentsByUserAndOrg);
+
 
 
 module.exports = router;

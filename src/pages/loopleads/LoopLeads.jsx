@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from "react-router-dom";
-import { StatusIcon, MoreIcon } from "../../components/svg-icons/icons";
+import { StatusIcon, MoreIcon,View ,Edit } from "../../components/svg-icons/icons";
 import { Container, Dropdown, Row, Col } from 'react-bootstrap'
 import { Link } from "react-router-dom";
 import { fetchLoopLeads } from '../../apis/UserApi';
@@ -18,13 +18,16 @@ export default function LoopLeads({ organization }) {
                     let data = await fetchLoopLeads(organization.orgniation_id, searchTerm);
                     if (Array.isArray(data.users) && data.users.length > 0) {
                         setUsers(data.users);
+                    } else {
+                        setUsers([]);
+
                     }
                 } catch (error) {
                     console.error("Error fetching loop leads:", error);
                 }
             })();
         }
-    }, [organization.orgniation_id]);
+    }, [organization.orgniation_id,searchTerm]);
 
 
     const handleSearch = (e) => {
@@ -39,7 +42,6 @@ export default function LoopLeads({ organization }) {
                         <Container>
                             <Row>
                                 <Col md={6}>
-                                    <h4> Loop leads that belong to {organization?.name}</h4>
                                 </Col>
                                 <Col md={6} className='text-end'>
                                     <form className='d-flex justify-content-end'>
@@ -66,7 +68,7 @@ export default function LoopLeads({ organization }) {
                 <tbody>
                     {users.length === 0 ? (
                         <tr>
-                            <td colSpan="6" style={{ textAlign: 'center' }}>
+                            <td colSpan="12" style={{ textAlign: 'center' }}>
                                 <h4>No Loop3D Lead Found</h4>
                             </td>
                         </tr>
@@ -84,12 +86,14 @@ export default function LoopLeads({ organization }) {
                                     </div>
                                 </td>
                                     <td>{user.email}</td>
-                                    <td>{user.created_by?.username}</td>
+                                    <td>{user.created_by?.first_name} {user.created_by?.last_name}</td>
 
                                 <td>{user.role.type}</td>
                                 <td><span className='span-badge active-tag'>Active</span></td>
-                                <td>
-                                    <Dropdown className='custom-dropdown'>
+                                    <td>
+                                    <button className='action-btn' onClick={() => navigate(`/view-loop_lead/${user._id}/${organization.orgniation_id}`)}><View /></button>
+                                    <button className='action-btn' onClick={() => navigate(`/add-user/${user._id}`)}><Edit /></button>
+                                    {/* <Dropdown className='custom-dropdown'>
                                         <Dropdown.Toggle variant="success" id="dropdown-basic">
                                             <MoreIcon />
                                         </Dropdown.Toggle>
@@ -98,7 +102,7 @@ export default function LoopLeads({ organization }) {
 
                                             <Dropdown.Item onClick={() => navigate(`/add-user/${user._id}`)}>Edit</Dropdown.Item>
                                         </Dropdown.Menu>
-                                    </Dropdown>
+                                    </Dropdown> */}
                                 </td>
                             </tr>
                         ))

@@ -39,6 +39,15 @@ import OrganizationTabs from "../../pages/organizations/OrganizationTabs"
 import CommingSoon from "../../pages/CommingSoon";
 
 import LoopleadTabs from "../../pages/loopleads/LoopleadTabs"
+import SurveyParticipantDetails from "../../pages/loopleads/SurveyParticipantDetails"
+
+import QuestionTabs from "../../pages/questions/QuestionTabs";
+import CreateQuestion from "../../pages/questions/CreateQuestion";
+import Survey from "../../pages/surveys/survey";
+import CreateSurvey from "../../pages/surveys/CreateSurvey";
+import EmailList from "../../pages/emails/EmailList";
+import CreateEmail from "../../pages/emails/CreateEmail";
+import ViewEmail from "../../pages/emails/ViewEmail";
 
 const AppRouter = () => {
   const user = useSelector((state) => state.auth.user);
@@ -68,9 +77,9 @@ const AppRouter = () => {
 
     const currentUrl = window.location.pathname;
 
-    if (!user && currentUrl !== '/login') {
+    if (!user && currentUrl !== '/login' && currentUrl !== '/forget-password' && currentUrl !== '/reset-password') {
       navigate('/login'); // Redirect to login if not authenticated
-    } else if (user && (currentUrl === '/' || currentUrl === '/login')) {
+    }else if (user && (currentUrl === '/' || currentUrl === '/login')) {
       // Redirect based on userType after login
       if (user.role === "admin") {
         navigate('/organizations');
@@ -87,7 +96,7 @@ const AppRouter = () => {
         <>
           {/* Authenticated Routes */}
           <Route path="/organizations" exact element={<Organization />} />
-          <Route path="/organizations/create" exact element={<CreateFrom />} />
+          <Route path="/organizations/create" exact element={<OrganizationTabs />} />
           <Route path="/organizations/edit/:id" exact element={<OrganizationTabs />} />
           <Route path="/organizations/view/:id" exact element={<ViewOrganization />} />
 
@@ -103,12 +112,18 @@ const AppRouter = () => {
           <Route path="/competencies" exact element={<Category />} />
           <Route path="/competencies/create" exact element={<AddCategory />} />
           <Route path="/competencies/:id" exact element={<AddCategory />} />
-          <Route path="/surveys" exact element={<CommingSoon />} />
+          <Route path="/surveys" exact element={<Survey />} />
           <Route path="/questions" exact element={<Question />} />
-          <Route path="/questions/create" exact element={<AddQuestion />} />
-          <Route path="/questions/:id" exact element={<AddQuestion />} />
+          <Route path="/questions/create" exact element={<CreateQuestion />} />
+          <Route path="/questions/:id" exact element={<QuestionTabs />} />
           <Route path="/questions/detail/:questionId" exact element={<QuestionDetail />} />
           <Route path="/view-loop_lead/:userId/:orgId" exact element={<LoopleadTabs />} />
+          <Route path="/view-survey-participant/:id" exact element={<SurveyParticipantDetails />} />
+          <Route path="/emails" exact element={<EmailList />} />
+          <Route path="/emails/create" exact element={<CreateEmail />} />
+          <Route path="/emails/:id" exact element={<CreateEmail />} />
+          <Route path="/emails/detail/:id" exact element={<ViewEmail />} />
+
 
 
 
