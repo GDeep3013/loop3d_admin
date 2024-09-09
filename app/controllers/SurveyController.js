@@ -3,6 +3,7 @@ const SurveyParticipant = require('../models/SurveyParticipantModel');
 const User = require('../models/User')
 const Role = require('../models/Role')
 const AssignCompetency = require('../models/AssignCompetencyModel');
+const Category = require('../models/CategoryModel')
 
 
 const { check, validationResult } = require('express-validator');
@@ -12,11 +13,11 @@ exports.createSurvey = async (req, res) => {
     try {
         // Validate request
         await check('surveyData').not().isEmpty().withMessage('surveyData is required').run(req);
-        await check('surveyData.name').not().isEmpty().withMessage('Survey name is required').run(req);
         await check('surveyData.mgr_id').not().isEmpty().withMessage('Manager ID (manager) is required').run(req);
         await check('surveyData.loop_leads').isArray({ min: 1 }).withMessage('At least one loop lead is required').run(req);
         await check('surveyData.loop_leads.*.email').isEmail().withMessage('Invalid email').run(req);
-        await check('surveyData.loop_leads.*.competencies').isArray().withMessage('Competencies must be an array').run(req);
+        await check('surveyData.loop_leads.*.name').not().isEmpty().withMessage('Name is required').run(req);
+        await check('surveyData.competencies').isArray().withMessage('Competencies must be an array').run(req);
 
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
@@ -29,7 +30,7 @@ exports.createSurvey = async (req, res) => {
         let savedSurveys = [];
 
         for (let lead of loopLeads) {
-            const { first_name, last_name, email, competencies } = lead;
+            const { name, email} = lead;
 
             // Check if the user already exists by email
             let user = await User.findOne({ email: email });
@@ -40,12 +41,11 @@ exports.createSurvey = async (req, res) => {
                 
                 // Create the user object
                 user = new User({
-                    first_name,
-                    last_name,
+                    first_name:name, 
                     email,
                     role: role?._id,
                     organization_id: manager?.organization_id || null,
-                    created_by: surveyData.manager
+                    created_by: surveyData.mgr_id
                 });
 
                 await user.save();
@@ -57,7 +57,7 @@ exports.createSurvey = async (req, res) => {
                 manager:surveyData.mgr_id,
                 loop_lead: user._id,
                 organization_id: manager?.organization_id,
-                competencies: competencies || [] 
+                competencies: surveyData.competencies || [] 
             });
 
             const savedSurvey = await survey.save();
@@ -82,7 +82,9 @@ exports.createSurveyParticipants = async (req, res) => {
         await check('participants').isArray({ min: 1 }).withMessage('Participants array is required and cannot be empty').run(req),
         await check('survey_id').not().isEmpty().withMessage('Survey ID is required for each participant').run(req),
         await check('participants.*.p_first_name').not().isEmpty().withMessage('Participant first name is required').run(req),
-        await  check('participants.*.p_last_name').not().isEmpty().withMessage('Participant last name is required').run(req),
+            await check('participants.*.p_last_name').not().isEmpty().withMessage('Participant last name is required').run(req),
+            await  check('participants.*.p_type').not().isEmpty().withMessage('Participant type is required').run(req),
+
         await  check('participants.*.p_email').isEmail().withMessage('Invalid email address').run(req)
         
         const errors = validationResult(req);
@@ -97,11 +99,12 @@ exports.createSurveyParticipants = async (req, res) => {
         let savedParticipants = [];
 
         for (let participant of participants) {
-            const { p_first_name, p_last_name, p_email } = participant;
+            const { p_first_name, p_last_name, p_email,p_type } = participant;
 
             // Create a new SurveyParticipant
             const newParticipant = new SurveyParticipant({
                 survey_id,
+                p_type,
                 p_first_name,
                 p_last_name,
                 p_email
@@ -228,6 +231,9 @@ exports.getSurveyById = async (req, res) => {
                 .map(id => {
                     return questionsArray.find(q => q._id.equals(id));
                 });
+        
+          
+                const competencies = await Category.find({ _id: { $in: categoryIds }})
 
         // Step 3: Merge competencies and assignCompetencies data into the survey(s)
         const results = await Promise.all(surveys.map(async (survey) => {
@@ -239,6 +245,7 @@ exports.getSurveyById = async (req, res) => {
                 ...survey.toObject(), // Convert the Mongoose document to a plain object
                 totalParticipants,
                 completed_survey,
+                competencies,
                 questions
             };
         }));

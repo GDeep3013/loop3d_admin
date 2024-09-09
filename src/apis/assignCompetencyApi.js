@@ -100,3 +100,23 @@ export const getAssignmentsByUserAndOrg = async (userId, ref_id,type) => {
         return false;
     }
 };
+
+
+
+export const getAssignments = async (userId) => {
+    try {
+        const url = `/api/competencies/assign?user_id=${userId}`;
+        const response = await fetch(url, {
+            headers: { 'x-api-key': import.meta.env.VITE_X_API_KEY }
+        });
+        if (response.ok) {
+            return await response.json();
+        } else {
+            console.error('Failed to fetch assignments');
+            return false;
+        }
+    } catch (error) {
+        console.error('Error fetching assignments:', error);
+        return false;
+    }
+};

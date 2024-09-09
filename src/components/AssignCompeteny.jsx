@@ -13,7 +13,7 @@ export default function AssignCompetency({ type, id, show, handleClose,getCatego
   const [selectedSubcategories, setSelectedSubcategories] = useState([]); // Multiple select state
   const [loading, setLoading] = useState(false);
   const [subcatLoading, setSubcatLoading] = useState(false); // For subcategory loading
-  const userId = useSelector((state) => state.auth.user._id);
+  const user = useSelector((state) => state.auth.user);
 
   useEffect(() => {
       getCategories(); // Fetch categories when modal is opened
@@ -50,7 +50,7 @@ export default function AssignCompetency({ type, id, show, handleClose,getCatego
     try {
       const response = await createAssignCompetency({
         type,
-        user_id: userId,
+        user_id: user?._id,
         ref_id: id,
         category_id: selectedCategory.value, // Send selected category ID
       });

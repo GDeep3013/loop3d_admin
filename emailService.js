@@ -4,8 +4,8 @@ const nodemailer = require('nodemailer');
 const transporter = nodemailer.createTransport({
   service: 'Gmail',
   auth: {
-    user: 'sahil.610weblab@gmail.com',
-    pass: 'qrpclksspftimwxx'
+    user: 'yogeshrana.610weblab@gmail.com',
+    pass: 'qtjeckjckuouhckk'
   }
 });
 
@@ -13,7 +13,7 @@ const sendResetEmail = (email, token) => {
   const resetUrl = `https://marketer-ai.webziainfotech.com/reset-password?token=${token}`;
 
   const mailOptions = {
-    from: 'sahil.610weblab@gmail.com',
+    from: 'yogeshrana.610weblab@gmail.com',
     to: email,
     subject: 'Password Reset',
     text: `You requested a password reset. Click the link to reset your password: ${resetUrl}`,
