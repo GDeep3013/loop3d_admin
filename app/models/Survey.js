@@ -43,8 +43,8 @@ const SurveySchema = new mongoose.Schema({
         enum: ['yes', 'no'],
         default: "no"
     },
-    competencies: [{ type: mongoose.Schema.Types.ObjectId, ref: 'AssignCompetency' }] // Add competencies field
-    
+    competencies: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Category' }] // Add competencies field
+
  },{
         timestamps: true
 });

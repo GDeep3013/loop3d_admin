@@ -1,84 +1,19 @@
 import React, { useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
-
-import { Category, MenuIcon,EmailIcon, Technology, Job, FixedPrice, Logout, EmployeeIcon, DocomentIcon, ProjectIcon,QuestionIcon } from "./svg-icons/icons";
+import { useSelector, useDispatch } from "react-redux";
+import { Category, Logout,EmailIcon, EmployeeIcon, DocomentIcon, ProjectIcon,QuestionIcon } from "./svg-icons/icons";
 import "../Nav.css";
 import { Menuicon } from '../components/svg-icons/icons';
-// import { useSelector, useDispatch } from "react-redux";
-import { selectUserType } from "../../store/slices/UserSlice"
-import { Accordion, InputGroup, Form, Button } from 'react-bootstrap';
 
-import { selectFilterValue, setFilterValue } from '../../store/slices/DashboardSlice'
-import { useSelector, useDispatch } from 'react-redux';
 export default function LeftNav({isMenuOpen,setIsMenuOpen}) {
 
-  const [isUsersOpen, setIsUsersOpen] = useState(false);
-  const [isSurveyOpen, setIsSurveyOpen] = useState(false);
+  const user = useSelector((state) => state.auth.user);
 
-  
-  const dispatch = useDispatch();
-  const handleFilterChange = (newValue) => {
-    dispatch(setFilterValue(newValue));
-  };
-
-
-  const location = useLocation();
-
-  const userType = localStorage.getItem('userType');
-  const [selectedTechnology, setSelectedTechnology] = useState([]);
-  const [selectedPrice, setSelectedPrice] = useState(null);
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
-  const isActive = () => {
-    return location.pathname === '/projects' || location.pathname === '/add-surveys';
-  }
-
-  // const applyFilters = () => {
-  //   onFilterChange(selectedOptions);
-  // };
-
-  const techonolgyOption = [
-
-    { value: 'HTML', label: 'HTML' },
-    { value: 'CSS', label: 'CSS' },
-    { value: 'Figma', label: 'Figma' },
-    { value: 'Wordpress', label: 'Wordpress' },
-    { value: 'Php', label: 'Php' },
-    { value: 'Shopify', label: 'Shopify' },
-  ];
-
-  const priceOption = [
-    { value: '', label: 'All' },
-    { value: '<100', label: 'Less than $100' },
-    { value: '100-500', label: '$100 to $500' },
-    { value: '500-1000', label: '$500 to $1k' },
-    { value: '1000-5000', label: '$1k to $5k' },
-    { value: '5000+', label: '$5k+' },
-  ];
 
 
-  const handleCheckboxChange = (option, index) => {
-
-    setSelectedTechnology(prevSelectedTechnology => {
-      const index = prevSelectedTechnology.indexOf(option);
-      if (index === -1) {
-        const updatedTechnology = [...prevSelectedTechnology, option];
-        handleFilterChange({ technology: updatedTechnology, price: selectedPrice });
-        return updatedTechnology;
-      } else {
-        const updatedTechnology = prevSelectedTechnology.filter(item => item !== option);
-        handleFilterChange({ technology: updatedTechnology, price: selectedPrice });
-        return updatedTechnology;
-      }
-    });
-    // handleFilterChange({ technology: selectedTechnology, price: selectedPrice });
-  };
-
-  const handleRadioChange = (value) => {
-    setSelectedPrice(value);
-    handleFilterChange({ technology: selectedTechnology, price: value });
-  };
 
   return (
     <nav className={`sideNavOuter ${isMenuOpen ? "open" : ""}`}>
@@ -90,53 +25,31 @@ export default function LeftNav({isMenuOpen,setIsMenuOpen}) {
         <hr className="sideBorder" />
       </div>
       <ul className="sideNavList">
-        <>
+        {user.role =="admin"?<>
           <li className={`sideNavItem`}>
             <NavLink
               to="/organizations"
               className={({ isActive }) => (isActive ? 'active' : '')}
             >
               <DocomentIcon />
-             Organizations
+              Organizations
             </NavLink>
           </li>
 
-          <li className={`sideNavItem ${isUsersOpen?'active-inner':'' }`}>
-            <NavLink 
-            to="/users"
-            className={({ isActive }) => (isActive ? 'active' : '')} 
+          <li className={`sideNavItem`}>
+            <NavLink
+              to="/users"
+              className={({ isActive }) => (isActive ? 'active' : '')}
             >
               <EmployeeIcon />
               Users
-              <span>
-                {!isUsersOpen?<img src='/images/down-arrow.svg'/>:<img src='/images/arrow-up.svg'/>}
-              </span>
             </NavLink>
           </li>
-          {isUsersOpen && (
-            <div className="sub-outer">
-              <li className="subNavItem">
-                <NavLink 
-                to="/add-user"
-                className={({ isActive }) => (isActive ? 'active-user' : '')}
-                >
-                  Add User
-                </NavLink>
-              </li>
-              <li className="subNavItem">
-                <NavLink 
-                to="/users" 
-                className={({ isActive }) => (isActive ? 'active-user' : '')}
-                >
-                  All Users
-                </NavLink>
-              </li>
-            </div>
-          )}
+
           <li className="sideNavItem">
-            <NavLink 
-            to="/surveys" 
-            className={({ isActive }) => (isActive ? 'active' : '')} 
+            <NavLink
+              to="/surveys"
+              className={({ isActive }) => (isActive ? 'active' : '')}
             >
               <ProjectIcon />
               Surveys
@@ -146,9 +59,9 @@ export default function LeftNav({isMenuOpen,setIsMenuOpen}) {
           <li className="sideNavItem">
             <NavLink to="/competencies">
               <Category />
-              Competencies 
+              Competencies
             </NavLink>
-          </li> 
+          </li>
           <li className="sideNavItem">
             <NavLink to="/questions">
               <QuestionIcon />
@@ -160,8 +73,18 @@ export default function LeftNav({isMenuOpen,setIsMenuOpen}) {
               <EmailIcon />
               Emails
             </NavLink>
-          </li>      
-        </>
+          </li>
+        </> :
+          <li className={`sideNavItem`}>
+          <NavLink
+            to="/manager/dashboard"
+            className={({ isActive }) => (isActive ? 'active' : '')}
+          >
+            <DocomentIcon />
+           Dashboard
+          </NavLink>
+        </li>
+        }
         <li className="sideNavItem LogoutMenu">
           <NavLink to="#" className="dropdown-item" onClick={() => {
             localStorage.removeItem("_token");

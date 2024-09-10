@@ -64,9 +64,9 @@ export const updateAssignCompetency = async (id, data) => {
     }
 }
 
-export const deleteAssignCompetency = async (id,category_id) => {
+export const deleteAssignCompetency = async (id) => {
     try {
-        const url = `/api/competencies/assign/${id}/${category_id}`;
+        const url = `/api/competencies/assign/${id}`;
         const response = await fetch(url, {
             method: 'DELETE',
             headers: { 'x-api-key': import.meta.env.VITE_X_API_KEY }
@@ -86,6 +86,26 @@ export const deleteAssignCompetency = async (id,category_id) => {
 export const getAssignmentsByUserAndOrg = async (userId, ref_id,type) => {
     try {
         const url = `/api/competencies/${userId}/${ref_id}?type=${type}`;
+        const response = await fetch(url, {
+            headers: { 'x-api-key': import.meta.env.VITE_X_API_KEY }
+        });
+        if (response.ok) {
+            return await response.json();
+        } else {
+            console.error('Failed to fetch assignments');
+            return false;
+        }
+    } catch (error) {
+        console.error('Error fetching assignments:', error);
+        return false;
+    }
+};
+
+
+
+export const getAssignments = async (userId) => {
+    try {
+        const url = `/api/competencies/assign?user_id=${userId}`;
         const response = await fetch(url, {
             headers: { 'x-api-key': import.meta.env.VITE_X_API_KEY }
         });

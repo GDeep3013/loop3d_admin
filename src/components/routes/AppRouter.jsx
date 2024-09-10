@@ -10,17 +10,17 @@ import Home from "../../pages/Home";
 import ProjectOverview from "../../pages/ProjectOverview";
 import Login from "../../pages/Login";
 import AdminDashboard from "../../admin/AdminDashboard";
-import Employees from "../../admin/Users";
-import AddEmployee from "../../pages/users/AddUser";
+import Employees from "../../admin/pages/users/Users";
+import AddEmployee from "../../admin/pages/users/AddUser";
 import Projects from "../../admin/Projects";
 import AddProject from "../../admin/AddSurvey";
 
-import Category from "../../pages/categories/Category";
-import AddCategory from "../../pages/categories/AddCategory";
+import Category from "../../admin/pages/categories/Category";
+import AddCategory from "../../admin/pages/categories/AddCategory";
 
-import Question from "../../pages/questions/Question";
-import AddQuestion from "../../pages/questions/AddQuestion";
-import QuestionDetail from "../../pages/questions/QuestionDetail";
+import Question from "../../admin/pages/questions/Question";
+import AddQuestion from "../../admin/pages/questions/AddQuestion";
+import QuestionDetail from "../../admin/pages/questions/QuestionDetail";
 
 
 
@@ -30,24 +30,24 @@ import { getUser } from "../../apis/UserApi";
 import ForgetPassword from "../../pages/ForgetPassword";
 import ResetPassword from "../../pages/ResetPassword";
 
-import Organization from "../../pages/organizations/Organization";
-import CreateFrom from "../../pages/organizations/CreateFrom";
-import ViewOrganization from "../../pages/organizations/ViewOrganization";
+import Organization from "../../admin/pages/organizations/Organization";
+import ViewOrganization from "../../admin/pages/organizations/ViewOrganization";
 //import AssignCompetencies from "../../pages/organizations/AssignCompetencies";
 
-import OrganizationTabs from "../../pages/organizations/OrganizationTabs"
+import OrganizationTabs from "../../admin/pages/organizations/OrganizationTabs"
 import CommingSoon from "../../pages/CommingSoon";
 
-import LoopleadTabs from "../../pages/loopleads/LoopleadTabs"
-import SurveyParticipantDetails from "../../pages/loopleads/SurveyParticipantDetails"
+import LoopleadTabs from "../../admin/pages/loopleads/LoopleadTabs"
+import SurveyParticipantDetails from "../../admin/pages/loopleads/SurveyParticipantDetails"
 
-import QuestionTabs from "../../pages/questions/QuestionTabs";
-import CreateQuestion from "../../pages/questions/CreateQuestion";
-import Survey from "../../pages/surveys/survey";
-import CreateSurvey from "../../pages/surveys/CreateSurvey";
-import EmailList from "../../pages/emails/EmailList";
-import CreateEmail from "../../pages/emails/CreateEmail";
-import ViewEmail from "../../pages/emails/ViewEmail";
+import QuestionTabs from "../../admin/pages/questions/QuestionTabs";
+import CreateQuestion from "../../admin/pages/questions/CreateQuestion";
+import Survey from "../../admin/pages/surveys/survey";
+import EmailList from "../../admin/pages/emails/EmailList";
+import CreateEmail from "../../admin/pages/emails/CreateEmail";
+import ViewEmail from "../../admin/pages/emails/ViewEmail";
+import SurveyList from "../../manager/pages/surveys/SurveyList";
+import CreateSurvey from "../../manager/pages/surveys/CreateSurvey";
 
 const AppRouter = () => {
   const user = useSelector((state) => state.auth.user);
@@ -83,12 +83,15 @@ const AppRouter = () => {
       // Redirect based on userType after login
       if (user.role === "admin") {
         navigate('/organizations');
-      } else {
-        navigate('/organizations');
       }
+      // else {
+      //   navigate('/organizations');
+      // }
     }
 
   }, [navigate, user]);
+
+  console.log('user',user)
 
   return (
     <Routes>
@@ -123,6 +126,11 @@ const AppRouter = () => {
           <Route path="/emails/create" exact element={<CreateEmail />} />
           <Route path="/emails/:id" exact element={<CreateEmail />} />
           <Route path="/emails/detail/:id" exact element={<ViewEmail />} />
+
+          {/* <Route path="/manager/dashboard" exact element={<SurveyList />} />
+          <Route path="/manager/surveys/create" exact element={<CreateSurvey />} /> */}
+
+
 
 
 

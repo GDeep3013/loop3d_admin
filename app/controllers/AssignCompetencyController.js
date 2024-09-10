@@ -1,5 +1,6 @@
 const AssignCompetency = require('../models/AssignCompetencyModel');
 const Category = require('../models/CategoryModel');
+const User = require('../models/User');
 
 // Create a new assignment
 exports.createAssignment = async (req, res) => {
@@ -83,7 +84,7 @@ exports.getAssignmentById = async (req, res) => {
             .populate('user_id', 'first_name last_name')
             .populate('organization_id', 'name')
             .populate('question_id', 'text')
-            .populate('category_id', 'name');
+            .populate('category_id', 'category_name competency_type');
         if (!assignment) {
             return res.status(404).json({ message: 'Assignment not found' });
         }
@@ -120,21 +121,7 @@ exports.deleteAssignment = async (req, res) => {
 
         if (!deletedAssignment) {
             return res.status(404).json({ message: 'Assignment not found' });
-        }
-        const category = await Category.find({ _id: req.params.category_id, parent_id: null });
-        
-        if (!category) {
-            // Delete assignments for all subcategories
-            const categories = await Category.find({ parent_id: category._id});
-
-            await Promise.all(categories.map(async (cat) => {
-                await AssignCompetency.deleteMany({ category_id: cat._id });
-            }));
-            
-        }
-
-
-       
+        }    
 
         res.status(200).json({ status: true, message: 'Assignment and related subcategory assignments deleted successfully' });
     } catch (error) {
@@ -169,7 +156,7 @@ exports.getAssignmentsByUserAndOrg = async (req, res) => {
         })
         .populate('user_id', 'first_name last_name')
         .populate('question_id', 'questionText')
-        .populate('category_id', 'category_name parent_id',);
+        .populate('category_id', 'category_name competency_type',);
 
         if (assignments.length === 0) {
             return res.status(404).json({ message: 'No assignments found for the given user and organization' });
@@ -185,23 +172,41 @@ exports.getAssignmentsByUserAndOrg = async (req, res) => {
 
 exports.getAssignmentsByUserId = async (req, res) => {
     try {
-        const { user_id} = req.query; // Get user_id and organization_id from query parameters
+        const { user_id, search } = req.query; // Get user_id and search from query parameters
 
-        if (!user_id ) {
+        if (!user_id) {
             return res.status(400).json({ error: 'User id is required' });
         }
+
+        // Fetch the user to get the organization_id
+        const user = await User.findById(user_id);
+
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
         // Fetch assignments based on user_id and organization_id
-        const assignments = await AssignCompetency.find({user_id:user_id})
-        .populate({
-            path: 'organization_id',
-            select: 'name', // Exclude the __v field from the populated organization documents
-        })
-        .populate('question_id', 'questionText')
-        .populate('category_id', 'category_name parent_id',);
+        let assignments = await AssignCompetency.find({ organization_id: user.organization_id })
+            .populate({
+                path: 'organization_id',
+                select: 'name', // Include the organization name only
+            })
+            .populate('question_id', 'questionText')
+            .populate('category_id', 'category_name competency_type');
+
+        // Filter assignments by competency_type if search parameter is provided
+        if (search) {
+            assignments = assignments.filter(assignment => 
+                assignment.category_id && 
+                assignment.category_id.competency_type === search
+            );
+        }
 
         if (assignments.length === 0) {
-            return res.status(404).json({ message: 'No assignments found for the given user and organization' });
+            return res.status(404).json({ message: 'No assignments found for the given criteria' });
         }
+
+
 
         res.status(200).json({ assignments: assignments });
     } catch (error) {

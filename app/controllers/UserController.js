@@ -21,7 +21,6 @@ const UserController = {
         // Validation rules
         check('first_name').not().isEmpty().withMessage('Name is required'),
         check('email').isEmail().withMessage('Invalid email'),
-        check('phone').isMobilePhone().withMessage('Invalid phone number'),
         check('password').isLength({ min: 8 }).withMessage('Password must be at least 8 characters long'),
         check('userType').not().isEmpty().withMessage('User type is required'),
         // Controller logic
@@ -33,7 +32,7 @@ const UserController = {
             }
 
             try {
-                const { first_name, last_name, password, email, phone, designation, userType, organization,created_by=null } = req.body;
+                const { first_name, last_name, password, email, designation, userType, organization_id,created_by=null } = req.body;
 
                 // Hash the password
                 const hashedPassword = await bcrypt.hash(password, 10);
@@ -43,7 +42,6 @@ const UserController = {
                     first_name: first_name,
                     last_name: last_name,
                     email: email,
-                    phone: phone,
                     password: hashedPassword,
                     designation: designation,
                     role: userType,
@@ -57,7 +55,7 @@ const UserController = {
                 if (response?._id) {
                     const role = await Role.findById(userType);
                     if (role?.type == "manager") {
-                        let url = "http://localhost:5173/create-survey?token="+response?._id
+                        let url = "http://localhost:3000/start-survey?token="+response?._id
                         let emailRes = await sendSurveyCreationEmail(response?.email, url);
 
                     }
