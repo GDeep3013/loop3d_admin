@@ -55,7 +55,7 @@ const UserController = {
                 if (response?._id) {
                     const role = await Role.findById(userType);
                     if (role?.type == "manager") {
-                        let url = "http://localhost:3000/start-survey?token="+response?._id
+                        let url =   `${process.env.FRONT_END_URL}/start-survey?token=`+response?._id
                         let emailRes = await sendSurveyCreationEmail(response?.email, url);
 
                     }
