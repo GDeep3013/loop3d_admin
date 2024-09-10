@@ -9,7 +9,7 @@ const userSchema = new mongoose.Schema({
     resetPasswordToken: { type: String },   
     resetPasswordExpires: { type: String },  
     
-    organization_id: {
+    organization: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Organization',
         default: null

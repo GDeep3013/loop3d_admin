@@ -27,6 +27,7 @@ exports.createSurvey = async (req, res) => {
         let savedSurveys = [];
 
         for (let lead of loopLeads) {
+
             const { first_name, last_name, email, competencies } = lead;
 
             // Check if the user already exists by email
@@ -42,7 +43,7 @@ exports.createSurvey = async (req, res) => {
                     last_name,
                     email,
                     role: role?._id,
-                    organization_id: manager?.organization_id || null,
+                    organization: manager?.organization || null,
                     created_by: surveyData.manager
                 });
 
@@ -53,8 +54,8 @@ exports.createSurvey = async (req, res) => {
             const survey = new Survey({
                 name: surveyData.name,
                 manager: surveyData.manager,
-                loop_lead_id: user._id,
-                organization_id: manager?.organization_id,
+                loop_lead: user._id,
+                organization: manager?.organization,
                 competencies: competencies || [] 
             });
 
@@ -145,8 +146,8 @@ exports.getAllSurvey = async (req, res) => {
         // Find the surveys with pagination and populate related fields
         const surveys = await Survey.find(query)
             .populate('manager', 'first_name last_name email')
-            .populate('loop_lead_id', 'first_name last_name email')
-            .populate('organization_id', 'name')
+            .populate('loop_lead', 'first_name last_name email')
+            .populate('organization', 'name')
             .skip(skip)
             .limit(limit);
 
@@ -189,20 +190,20 @@ exports.getAllSurvey = async (req, res) => {
 
 exports.getSurveyById = async (req, res) => {
     try {
-        const { loop_lead_id, manager, survey_id,org_id } = req.query;
+        const { loop_lead, manager, survey_id,org_id } = req.query;
 
         // Build the query object based on the provided parameters
         let query = {};
-        if (loop_lead_id && org_id) query = { loop_lead_id: loop_lead_id, organization_id: org_id };
+        if (loop_lead && org_id) query = { loop_lead: loop_lead, organization: org_id };
         if (manager) query.manager = manager;
         if (survey_id) query._id = survey_id;
 
         // Find the survey(s) by the provided ID(s) and populate related fields
         const surveys = await Survey.find(query)
-            .populate('loop_lead_id', 'name email') // Populate loop_lead_id with name and email fields
+            .populate('loop_lead', 'name email') // Populate loop_lead with name and email fields
             .populate('manager', 'first_name last_name email')
-            .populate('loop_lead_id', 'first_name last_name email') // Populate manager with name and email fields
-            .populate('organization_id', 'name')
+            .populate('loop_lead', 'first_name last_name email') // Populate manager with name and email fields
+            .populate('organization', 'name')
             .populate({
                 path: 'competencies', // Path to populate
                 populate: {

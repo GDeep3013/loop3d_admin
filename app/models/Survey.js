@@ -5,7 +5,7 @@ const SurveySchema = new mongoose.Schema({
         type: String,
         default: null 
     },
-    loop_lead_id: {
+    loop_lead: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User', // Assuming you have a User model
         default: null
@@ -14,7 +14,7 @@ const SurveySchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User', // Assuming you have a User model
     },
-    organization_id: {
+    organization: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Organization', // Assuming you have a User model
     },
@@ -44,8 +44,7 @@ const SurveySchema = new mongoose.Schema({
         default: "no"
     },
     competencies: [{ type: mongoose.Schema.Types.ObjectId, ref: 'AssignCompetency' }] // Add competencies field
-
-
+    
  },{
         timestamps: true
 });

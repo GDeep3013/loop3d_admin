@@ -33,7 +33,7 @@ const UserController = {
             }
 
             try {
-                const { first_name, last_name, password, email, phone, designation, userType, organization_id,created_by=null } = req.body;
+                const { first_name, last_name, password, email, phone, designation, userType, organization,created_by=null } = req.body;
 
                 // Hash the password
                 const hashedPassword = await bcrypt.hash(password, 10);
@@ -48,7 +48,7 @@ const UserController = {
                     designation: designation,
                     role: userType,
                     created_by:created_by,
-                    organization_id: (organization_id) ? organization_id : null
+                    organization: (organization) ? organization : null
                 });
 
                 // Save the user to the database
@@ -153,7 +153,7 @@ const UserController = {
             // Fetch users based on the constructed query and pagination parameters
             const users = await User.find(query)
                 .populate({
-                    path: 'organization_id',
+                    path: 'organization',
                     select: 'name', // Exclude the __v field from the populated organization documents
                 })
                 .populate('role', '-__v') // Populate the role field as well
@@ -211,7 +211,7 @@ const UserController = {
             const role = await Role.findById(user.role);
 
             // Exclude sensitive fields like password from the response
-            const { _id, first_name,last_name, email, phone, organization_id, createdAt, updatedAt } = user;
+            const { _id, first_name,last_name, email, phone, organization, createdAt, updatedAt } = user;
             res.status(200).json({
                 _id,
                 first_name,
@@ -219,7 +219,7 @@ const UserController = {
                 email,
                 phone,
                 role: role ? role.type : null,
-                organization_id,
+                organization,
                 createdAt,
                 updatedAt
             });
@@ -230,7 +230,7 @@ const UserController = {
     },
     updateUser: async (req, res) => {
         const userId = req.params.id;
-        const { first_name, last_name, email, phone, userType, organization_id } = req.body;
+        const { first_name, last_name, email, phone, userType, organization } = req.body;
         var uniqueFilename = '';
         try {
             // Find the user by ID
@@ -266,7 +266,7 @@ const UserController = {
             user.last_name = last_name;
             user.email = email;
             user.phone = phone;
-            user.organization_id = (organization_id) ? organization_id : null;
+            user.organization = (organization) ? organization : null;
             user.role = userType;
             await user.save();
 
@@ -285,8 +285,7 @@ const UserController = {
             // Construct the query object for User.find() based on search term
             const role = await Role.findOne({ type: type });
       
-            const query = {organization_id : req.params.org_id, role: role._id};
-
+            const query = { organization : req.params.org_id, role: role._id};
       
             if (searchTerm) {
                 query.$or = [
@@ -302,7 +301,7 @@ const UserController = {
             // Fetch users based on the constructed query and pagination parameters
             const users = await User.find(query)
                 .populate({
-                    path: 'organization_id',
+                    path: 'organization',
                     select: 'name', // Exclude the __v field from the populated organization documents
                 })
                 .populate('role', 'type')
@@ -328,7 +327,7 @@ const UserController = {
 
             const query = {
                 _id:user_id,
-                organization_id: org_id,
+                organization: org_id,
             };
 
             
@@ -336,7 +335,7 @@ const UserController = {
             // Fetch users based on the constructed query and pagination parameters
             const user = await User.findOne(query)
                 .populate({
-                    path: 'organization_id',
+                    path: 'organization',
                     select: 'name', // Exclude the __v field from the populated organization documents
                 })
                 .populate('role', 'type')
