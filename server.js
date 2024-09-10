@@ -44,7 +44,7 @@ app.use(cors());
 
 async function connectDB() {
   try {
-    await mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true, dbName: 'loom3d_admin' });
+    await mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true, dbName:process.env.MONGODB_DB_NAME });
       console.log('MongoDB connection established');
   } catch (error) {
       console.error('Error connecting to MongoDB', error);

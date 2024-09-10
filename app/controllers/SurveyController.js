@@ -264,8 +264,14 @@ exports.getSurveyById = async (req, res) => {
 
 exports.getSurveyParticipantsById = async (req, res) => {
     try {
-        const { survey_id, searchTerm } = req.query;
-        let query={survey_id:survey_id}
+        const { survey_id,participant_id, searchTerm } = req.query;
+        let query = {}
+        if (!survey_id && !participant_id) {
+            return res.status(404).json({ error: 'Id is required'});
+        }
+
+        if (participant_id) query._id = participant_id;
+        if (survey_id) query.survey_id = survey_id;
         if (searchTerm) {
             query.$or = [
                 { p_first_name: { $regex: searchTerm, $options: 'i' } }, // Case-insensitive search by first_name

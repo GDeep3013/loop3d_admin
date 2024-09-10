@@ -1,5 +1,5 @@
 // controllers/categoryController.js
-const Category = require('../models/categoryModel');
+const Category = require('../models/CategoryModel');
 
 // Create a new category
 const CategoryController = {
