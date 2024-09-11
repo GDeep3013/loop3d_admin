@@ -15,6 +15,8 @@ router.post('/participants/create', surveyController.createSurveyParticipants);
 router.post('/answers/create', SurveyAnswersController.saveSurveyAnswers);
 router.get('/answers/:survey_id', SurveyAnswersController.getSurveyAnswersBySurveyId);
 router.get('/participants/invited/:survey_id', SurveyAnswersController.getTotalParticipantsInvited);
+router.get('/generate-report/:survey_id', surveyController.generateSurveyReport);
+
 
 
 

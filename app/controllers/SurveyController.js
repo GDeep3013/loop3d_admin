@@ -3,7 +3,8 @@ const SurveyParticipant = require('../models/SurveyParticipantModel');
 const User = require('../models/User')
 const Role = require('../models/Role')
 const AssignCompetency = require('../models/AssignCompetencyModel');
-const Category = require('../models/CategoryModel')
+const Category = require('../models/CategoryModel');
+const SurveyAnswers = require('../models/SurveyAnswers');
 
 
 const { check, validationResult } = require('express-validator');
@@ -264,48 +265,72 @@ exports.getSurveyById = async (req, res) => {
 
 exports.getSurveyParticipantsById = async (req, res) => {
     try {
-        const { survey_id,participant_id, searchTerm } = req.query;
-        let query = {}
+        const { survey_id, participant_id } = req.query;
+
         if (!survey_id && !participant_id) {
-            return res.status(404).json({ error: 'Id is required'});
+            return res.status(400).json({ error: 'Either survey_id or participant_id is required' });
         }
 
-        if (participant_id) query._id = participant_id;
-        if (survey_id) query.survey_id = survey_id;
-        if (searchTerm) {
-            query.$or = [
-                { p_first_name: { $regex: searchTerm, $options: 'i' } }, // Case-insensitive search by first_name
-                { p_last_name: { $regex: searchTerm, $options: 'i' } },  // Case-insensitive search by last_name
-                { p_email: { $regex: searchTerm, $options: 'i' } },      // Case-insensitive search by email
-                { survey_status: { $regex: searchTerm, $options: 'i' } },      // Case-insensitive search by phone
+        // Initialize the query object
+        let surveyQuery = {};
+        let participantQuery = {};
+
+        // Construct the query for surveys
+        if (survey_id) {
+            surveyQuery._id = survey_id;
+        }
+
+        if (participant_id) {
+            surveyQuery.$or = [
+                { loop_lead: participant_id },
+                { manager: participant_id }
             ];
         }
-        // Find the survey participants by survey_id
-        const participants = await SurveyParticipant.find(query)
-            .populate('survey_id', 'name')
-            .populate({
-                path: 'survey_id', // Populate the question_id field
-                select: 'name', // Select only the fields you need from the Question model
-                populate: {
-                    path: 'loop_lead', // Populate the options within the question
-                    select: 'first_name last_name' // Select only the fields you need from the Option model
-                }
-            })
-            .populate('p_mag_id', 'first_name last_name');// Populate survey_id with name field
 
-        // if (!participants || participants.length === 0) {
-        //     return res.status(404).json({ error: 'No participants found for this survey' });
-        // }
+        // Fetch surveys based on the constructed query
+        let surveys = await Survey.find(surveyQuery)
+            .populate('loop_lead', 'first_name last_name email')
+            .populate('manager', 'first_name last_name email')
+            .exec();
 
-        res.status(200).json({
-            status: 'success',
-            data: participants
-        });
+        if (surveys.length > 0) {
+            // Return the found surveys
+            return res.status(200).json({
+                status: 'success',
+                data: surveys
+            });
+        }
+
+        // If no surveys found, search for survey participants if survey_id is provided
+        if (survey_id) {
+            participantQuery.survey_id = survey_id;
+            let participants = await SurveyParticipant.find(participantQuery)
+                .populate('survey_id', 'name')
+                .populate({
+                    path: 'survey_id',
+                    select: 'name',
+                    populate: {
+                        path: 'loop_lead',
+                        select: 'first_name last_name'
+                    }
+                })
+                .populate('p_mag_id', 'first_name last_name'); // Adjust according to your schema
+
+            return res.status(200).json({
+                status: 'success',
+                data: participants
+            });
+        }
+
+        // If no surveys or participants found
+        res.status(404).json({ error: 'No data found' });
+
     } catch (error) {
         console.error('Error fetching survey participants:', error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 };
+
 
 exports.deleteParticipant = async (req, res) => {
     try {
@@ -318,3 +343,135 @@ exports.deleteParticipant = async (req, res) => {
         res.status(400).json({ error: error.message });
     }
 }
+
+const processParticipantAnswers = (participant, answers, participantType, assignCompetencies, competencies, questions, report) => {
+    if (answers) {
+        for (const answer of answers) {
+            const question = questions.find(q => q._id.equals(answer?.questionId));
+            if (question) {
+                const assignCompetency = assignCompetencies.find(ac => ac.question_id.equals(question._id));
+                if (assignCompetency) {
+                    const competency = competencies.find(c => c._id.equals(assignCompetency.category_id));
+                    if (competency) {
+                        const categoryName = competency.category_name;
+                        const selectedOption = question.options.find(option =>
+                            option?._id?.toString() === answer?.optionId?.toString()
+                        );
+                        const weightage = selectedOption ? selectedOption.weightage : (answer?.weightage || 0);
+
+                        // Initialize category for each participant type
+                        if (!report.categories[categoryName]) {
+                            report.categories[categoryName] = {
+                                Self: { totalQuestions: 0, totalWeightage: 0 },
+                                'Direct Report': { totalQuestions: 0, totalWeightage: 0 },
+                                Teammate: { totalQuestions: 0, totalWeightage: 0 },
+                                Supervisor: { totalQuestions: 0, totalWeightage: 0 },
+                                Other: { totalQuestions: 0, totalWeightage: 0 }
+                            };
+                        }
+
+                        // Increment totalQuestions and totalWeightage for the participantType
+                        if (!answer.answer) {
+                            report.categories[categoryName][participantType].totalQuestions += 1;
+                        }
+                        report.categories[categoryName][participantType].totalWeightage += weightage;
+                    }
+                }
+            }
+        }
+    }
+};
+
+exports.generateSurveyReport = async (req, res) => {
+    try {
+        const { survey_id } = req.params;
+
+        const survey = await Survey.findById(survey_id)
+            .populate('loop_lead', 'first_name last_name email')
+            .populate('manager', 'first_name last_name email')
+            .populate('organization_id', 'name')
+            .populate('competencies', '_id');
+
+        if (!survey) {
+            return res.status(404).json({ error: 'Survey not found' });
+        }
+
+        const categoryIds = survey.competencies.map(comp => comp._id);
+        const assignCompetencies = await AssignCompetency.find({
+            category_id: { $in: categoryIds },
+            organization_id: null
+        }).populate({
+            path: 'question_id',
+            select: 'questionText questionType options',
+            populate: {
+                path: 'options',
+                select: 'text weightage'
+            }
+        });
+
+        const questionsArray = assignCompetencies.map(ac => ac.question_id);
+        const questions = Array.from(new Set(questionsArray.map(q => q._id)))
+            .map(id => questionsArray.find(q => q._id.equals(id)));
+
+        const competencies = await Category.find({ _id: { $in: categoryIds } });
+
+        const report = {
+            surveyDetails: {
+                id: survey._id,
+                name: survey.name,
+                loop_lead: survey.loop_lead,
+                manager: survey.manager,
+                organization: survey.organization_id.name,
+            },
+            categories: {}
+        };
+
+        // Initialize categories for all competencies
+        competencies.forEach((category) => {
+            report.categories[category.category_name] = {
+                Self: { totalQuestions: 0, totalWeightage: 0 },
+                'Direct Report': { totalQuestions: 0, totalWeightage: 0 },
+                Teammate: { totalQuestions: 0, totalWeightage: 0 },
+                Supervisor: { totalQuestions: 0, totalWeightage: 0 },
+                Other: { totalQuestions: 0, totalWeightage: 0 }
+            };
+        });
+
+        // Process Loop Lead (Self)
+        const loopLeadAnswers = await SurveyAnswers.findOne({ participant_id: survey.loop_lead._id });
+        processParticipantAnswers(survey.loop_lead, loopLeadAnswers?.answers, 'Self', assignCompetencies, competencies, questions, report);
+
+        // Process Manager (Supervisor)
+        const managerAnswers = await SurveyAnswers.findOne({ participant_id: survey.manager._id });
+        processParticipantAnswers(survey.manager, managerAnswers?.answers, 'Supervisor', assignCompetencies, competencies, questions, report);
+
+        // Process other participants (Direct Report, Teammate, Other)
+        const participants = await SurveyParticipant.find({ survey_id });
+        for (const participant of participants) {
+            const participantType = participant.p_type || 'Other';
+            const participantAnswers = await SurveyAnswers.findOne({ participant_id: participant._id });
+            processParticipantAnswers(participant, participantAnswers?.answers, participantType, assignCompetencies, competencies, questions, report);
+        }
+
+        // Step 4: Calculate totals for each category and participant type
+        for (const categoryName in report.categories) {
+            const category = report.categories[categoryName];
+            // Iterate over all participant types
+            ['Self', 'Direct Report', 'Teammate', 'Supervisor', 'Other'].forEach(participantType => {
+                if (category[participantType].totalQuestions > 0) {
+                    category[participantType].averageWeightage = category[participantType].totalWeightage / category[participantType].totalQuestions;
+                } else {
+                    category[participantType].averageWeightage = 0; // Avoid division by zero
+                }
+            });
+        }
+
+        return res.status(200).json({ report });
+
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: 'An error occurred while generating the report' });
+    }
+};
+
+

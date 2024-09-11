@@ -4,17 +4,27 @@ const SurveyParticipant = require('../models/SurveyParticipantModel');
 const Survey = require('../models/Survey')
 // Save or Update Survey Answers
 exports.saveSurveyAnswers = async (req, res) => {
-    const { survey_id, participant_id, answers } = req.body;
+    const {
+        survey_id,
+        participant_id,
+        answers
+    } = req.body;
 
     try {
         // Validate if required data is present
         if (!survey_id || !participant_id || !answers || !answers.length) {
-            return res.status(400).json({ error: "Missing required fields" });
+            return res.status(400).json({
+                error: "Missing required fields"
+            });
         }
 
         // Validate each answer
         const formattedAnswers = answers.map(answer => {
-            const { questionId, optionId, answer: answerText } = answer;
+            const {
+                questionId,
+                optionId,
+                answer: answerText
+            } = answer;
 
             if (!questionId) {
                 throw new Error("Question ID is required for each answer.");
@@ -33,6 +43,41 @@ exports.saveSurveyAnswers = async (req, res) => {
             };
         });
 
+        // Fetch the survey details
+        const survey = await Survey.findById(survey_id)
+
+        if (!survey) {
+            return res.status(404).json({
+                error: "Survey not found"
+            });
+        }
+
+        // Determine if the survey is completed
+        let isSurveyCompleted = true;
+        const participants = await SurveyParticipant.find({ survey_id });
+
+        for (const participant of participants) {
+            const participantAnswers = await SurveyAnswers.findOne({ participant_id: participant._id });
+
+            if (!participantAnswers || !participantAnswers.answers.length) {
+                isSurveyCompleted = false;
+                break;
+            }
+        }
+
+        // Update survey status based on the participant_id
+        if (survey?.loop_lead?.toString() === participant_id) {
+            // If the participant is the loop_lead
+            await Survey.findByIdAndUpdate(survey_id, {
+                ll_survey_status: 'yes',
+            });
+        } else if (survey.manager?.toString() === participant_id) {
+            // If the participant is the manager
+            await Survey.findByIdAndUpdate(survey_id, {
+                mgr_survey_status: 'yes',
+            });
+        }
+
         // Check if there's an existing SurveyAnswers document for this survey and participant
         let existingAnswers = await SurveyAnswers.findOne({
             survey_id,
@@ -43,12 +88,6 @@ exports.saveSurveyAnswers = async (req, res) => {
             // Update existing answers
             existingAnswers.answers = formattedAnswers;
             await existingAnswers.save();
-            await SurveyParticipant.findByIdAndUpdate(
-                participant_id, // Directly pass the participant ID
-                { survey_status: 'completed' }, // Update survey status
-                { new: true } // Return the updated document
-            );
-            return res.status(200).json({ message: 'Survey answers updated successfully!' });
         } else {
             // Create new survey answers
             const newAnswers = new SurveyAnswers({
@@ -57,43 +96,62 @@ exports.saveSurveyAnswers = async (req, res) => {
                 answers: formattedAnswers
             });
             await newAnswers.save();
-            await SurveyParticipant.findByIdAndUpdate(
-                participant_id, // Directly pass the participant ID
-                { survey_status: 'completed' }, // Update survey status
-                { new: true } // Return the updated document
-            );
-            return res.status(201).json({ message: 'Survey answers saved successfully!' });
         }
+
+        // Update participant's survey status to completed
+        await SurveyParticipant.findByIdAndUpdate(
+            participant_id,
+            {
+                survey_status: 'completed'
+            },
+            {
+                new: true
+            }
+        );
+
+        return res.status(existingAnswers ? 200 : 201).json({
+            message: existingAnswers ? 'Survey answers updated successfully!' : 'Survey answers saved successfully!'
+        });
     } catch (error) {
         console.error('Error saving or updating survey answers:', error);
-        return res.status(500).json({ error: 'Failed to save or update survey answers' });
+        return res.status(500).json({
+            error: 'Failed to save or update survey answers'
+        });
     }
 };
 
 exports.getSurveyAnswersBySurveyId = async (req, res) => {
-    const { survey_id } = req.params;
+    const {
+        survey_id
+    } = req.params;
 
     try {
         if (!survey_id) {
-            return res.status(404).json({ message: "Survey id is required." });
+            return res.status(404).json({
+                message: "Survey id is required."
+            });
         }
 
         // Find answers by survey_id and populate participant and question details
-        const surveyAnswers = await SurveyAnswers.find({ survey_id })
+        const surveyAnswers = await SurveyAnswers.find({
+                survey_id
+            })
             .populate('participant_id', 'p_first_name p_last_name p_email survey_status p_type createdAt') // Participant details
             .populate('answers.questionId', 'questionText options questionType') // Question details
             .exec();
 
         // Check if no answers found
         if (!surveyAnswers || surveyAnswers.length === 0) {
-            return res.status(404).json({ message: "No answers found for this survey." });
+            return res.status(404).json({
+                message: "No answers found for this survey."
+            });
         }
 
         // Format the survey answers, including finding the selected option text
         const formattedSurveyAnswers = surveyAnswers.map(answer => {
             const formattedAnswers = answer.answers.map(singleAnswer => {
                 // Find the selected option based on optionId
-                const selectedOption = singleAnswer.questionId.options.find(option => 
+                const selectedOption = singleAnswer.questionId.options.find(option =>
                     option?._id?.toString() === singleAnswer?.optionId?.toString()
                 );
 
@@ -114,16 +172,22 @@ exports.getSurveyAnswersBySurveyId = async (req, res) => {
         return res.status(200).json(formattedSurveyAnswers);
     } catch (error) {
         console.error('Error fetching survey answers:', error);
-        return res.status(500).json({ error: 'Failed to fetch survey answers' });
+        return res.status(500).json({
+            error: 'Failed to fetch survey answers'
+        });
     }
 };
 
 exports.getTotalParticipantsInvited = async (req, res) => {
-    const { survey_id } = req.params; // Use req.query or req.params depending on route configuration
+    const {
+        survey_id
+    } = req.params; // Use req.query or req.params depending on route configuration
 
     try {
         if (!survey_id) {
-            return res.status(400).json({ error: "Survey ID is required." });
+            return res.status(400).json({
+                error: "Survey ID is required."
+            });
         }
 
         // Retrieve the survey to get loop_lead_id and manager_id
@@ -133,7 +197,9 @@ exports.getTotalParticipantsInvited = async (req, res) => {
             .exec();
 
         if (!survey) {
-            return res.status(404).json({ error: "Survey not found." });
+            return res.status(404).json({
+                error: "Survey not found."
+            });
         }
 
 
@@ -174,9 +240,9 @@ exports.getTotalParticipantsInvited = async (req, res) => {
 
         // Calculate percentage of completed responses
         const totalCompleted = Object.values(completedResponses).reduce((a, b) => a + b, 0);
-        const percentageCompleted = totalInvited > 0
-            ? ((totalCompleted / totalInvited) * 100).toFixed(2)
-            : 0;
+        const percentageCompleted = totalInvited > 0 ?
+            ((totalCompleted / totalInvited) * 100).toFixed(2) :
+            0;
 
         return res.status(200).json({
             survey,
@@ -186,6 +252,8 @@ exports.getTotalParticipantsInvited = async (req, res) => {
 
     } catch (error) {
         console.error('Error fetching participant totals:', error);
-        return res.status(500).json({ error: 'Failed to fetch participant totals' });
+        return res.status(500).json({
+            error: 'Failed to fetch participant totals'
+        });
     }
 };
