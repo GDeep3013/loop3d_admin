@@ -4,8 +4,7 @@ const User = require('../models/User')
 const Role = require('../models/Role')
 const AssignCompetency = require('../models/AssignCompetencyModel');
 const Category = require('../models/CategoryModel')
-
-
+const { sendEmail } = require('../../emails/sendEmail');
 const { check, validationResult } = require('express-validator');
 
 // Create Survey and Add Survey Members
@@ -49,6 +48,7 @@ exports.createSurvey = async (req, res) => {
                 });
 
                 await user.save();
+             
             } 
 
             // Create the survey and associate it with the user
@@ -61,6 +61,9 @@ exports.createSurvey = async (req, res) => {
             });
 
             const savedSurvey = await survey.save();
+            let url = `${process.env.FRONT_END_URL}/lead-dashboard?token=` + savedSurvey?._id            
+            await sendEmail('sendLoopLeadLink', { name, email, url });
+                       
             savedSurveys.push(savedSurvey);
         }
 
@@ -82,8 +85,8 @@ exports.createSurveyParticipants = async (req, res) => {
         await check('participants').isArray({ min: 1 }).withMessage('Participants array is required and cannot be empty').run(req),
         await check('survey_id').not().isEmpty().withMessage('Survey ID is required for each participant').run(req),
         await check('participants.*.p_first_name').not().isEmpty().withMessage('Participant first name is required').run(req),
-            await check('participants.*.p_last_name').not().isEmpty().withMessage('Participant last name is required').run(req),
-            await  check('participants.*.p_type').not().isEmpty().withMessage('Participant type is required').run(req),
+        await check('participants.*.p_last_name').not().isEmpty().withMessage('Participant last name is required').run(req),
+        await  check('participants.*.p_type').not().isEmpty().withMessage('Participant type is required').run(req),
 
         await  check('participants.*.p_email').isEmail().withMessage('Invalid email address').run(req)
         
@@ -109,8 +112,18 @@ exports.createSurveyParticipants = async (req, res) => {
                 p_last_name,
                 p_email
             });
-
+            
             const savedParticipant = await newParticipant.save();
+
+            const survey= await Survey.findById(survey_id)
+            .populate('manager', 'first_name last_name email')
+            .populate('loop_lead', 'first_name last_name email');
+            
+            let name = survey?.loop_lead?.first_name;
+            
+            let url = `${process.env.FRONT_END_URL}/feedback-survey?survey_id=${survey_id}&participant_id=${savedParticipant?._id}`
+            await sendEmail('sendMailToParticipant', { name, p_email, url });
+              
             savedParticipants.push(savedParticipant);
         }
 
@@ -167,7 +180,7 @@ exports.getAllSurvey = async (req, res) => {
                 const totalParticipants = await SurveyParticipant.countDocuments({ survey_id: survey._id });
                 const completed_survey = await SurveyParticipant.countDocuments({ survey_id: survey._id, survey_status: 'completed' });
 
-                return {
+                   return {
                     ...survey.toObject(),
                     totalParticipants,
                     completed_survey

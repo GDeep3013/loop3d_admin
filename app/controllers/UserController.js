@@ -10,8 +10,8 @@ const uploadPath = path.join(__dirname, 'profile-pics');
 const fs = require('fs');
 const encryption = require("../utility/encryption");
 const { sendResetEmail } = require('../../emailService');
-const { sendSurveyCreationEmail } = require('../../emails/sendCreateSurveyLink');
 
+const { sendEmail } = require('../../emails/sendEmail');
 const crypto = require('crypto');
 
 
@@ -56,8 +56,11 @@ const UserController = {
                     const role = await Role.findById(userType);
                     if (role?.type == "manager") {
                         let url =   `${process.env.FRONT_END_URL}/start-survey?token=`+response?._id
-                        let emailRes = await sendSurveyCreationEmail(response?.email, url);
+                        // let emailRes = await sendSurveyCreationEmail(response?.email, url,role?.type);
 
+                        let email = response?.email
+                        let roles=role?.type
+                        let emailRes = await sendEmail('sendSurveyCreationEmail', { email, url,roles});
                     }
                     
                 }
