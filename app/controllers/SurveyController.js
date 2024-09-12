@@ -5,7 +5,6 @@ const Role = require('../models/Role')
 const AssignCompetency = require('../models/AssignCompetencyModel');
 const Category = require('../models/CategoryModel')
 const { sendEmail } = require('../../emails/sendEmail');
-const Category = require('../models/CategoryModel');
 const SurveyAnswers = require('../models/SurveyAnswers');
 
 
@@ -279,6 +278,7 @@ exports.getSurveyById = async (req, res) => {
 };
 
 
+
 exports.getSurveyParticipantsById = async (req, res) => {
     try {
         const { survey_id, participant_id } = req.query;
@@ -292,9 +292,6 @@ exports.getSurveyParticipantsById = async (req, res) => {
         let participantQuery = {};
 
         // Construct the query for surveys
-        if (survey_id) {
-            surveyQuery._id = survey_id;
-        }
 
         if (participant_id) {
             surveyQuery.$or = [
@@ -304,22 +301,26 @@ exports.getSurveyParticipantsById = async (req, res) => {
         }
 
         // Fetch surveys based on the constructed query
-        let surveys = await Survey.find(surveyQuery)
-            .populate('loop_lead', 'first_name last_name email')
-            .populate('manager', 'first_name last_name email')
-            .exec();
+        if (surveyQuery && Object.keys(surveyQuery).length > 0) {
+            let surveys = await Survey.find(surveyQuery)
+                .populate('loop_lead', 'first_name last_name email')
+                .populate('manager', 'first_name last_name email')
+                .exec();
 
-        if (surveys.length > 0) {
-            // Return the found surveys
-            return res.status(200).json({
-                status: 'success',
-                data: surveys
-            });
+            if (surveys.length > 0) {
+                // Return the found surveys
+                return res.status(200).json({
+                    status: 'succesiis',
+                    data: surveys
+                });
+            }
         }
 
         // If no surveys found, search for survey participants if survey_id is provided
-        if (survey_id) {
-            participantQuery.survey_id = survey_id;
+        if (survey_id ||participant_id) {
+            if (survey_id) participantQuery.survey_id = survey_id;
+            if (participant_id) participantQuery._id = participant_id;
+
             let participants = await SurveyParticipant.find(participantQuery)
                 .populate('survey_id', 'name')
                 .populate({
@@ -333,7 +334,7 @@ exports.getSurveyParticipantsById = async (req, res) => {
                 .populate('p_mag_id', 'first_name last_name'); // Adjust according to your schema
 
             return res.status(200).json({
-                status: 'success',
+                status: 'successssss',
                 data: participants
             });
         }

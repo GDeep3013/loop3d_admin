@@ -60,6 +60,7 @@ const UserController = {
 
                         let email = response?.email
                         let roles=role?.type
+                        let emailcred = await sendEmail('sendCredentialMail', { email, first_name,last_name,password})
                         let emailRes = await sendEmail('sendSurveyCreationEmail', { email, url,roles});
                     }
                     

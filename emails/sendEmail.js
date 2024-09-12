@@ -8,9 +8,7 @@ const { thirdDayUpDateEmailToLead } = require('./templates/thirdDayUpDateEmailTo
 const { sixDayUpDateEmailToLead } = require('./templates/sixDayUpDateEmailToLead');
 const { twoThreeMonthEmailToLead } = require('./templates/twoThreeMonthEmailToLead');
 const { reminderEmailToParticapated } = require('./templates/reminderEmailToParticapated');
-
-
-
+const { sendCredentialMail } = require('./templates/sendCredentialMail');
 
 const sendEmail = (type, recipientDetails) => {
     let mailOptions = {};
@@ -41,6 +39,9 @@ const sendEmail = (type, recipientDetails) => {
             break;
         case 'reminderEmailToParticapated':
             mailOptions = reminderEmailToParticapated(recipientDetails);
+            break;
+            case 'sendCredentialMail':
+            mailOptions = sendCredentialMail(recipientDetails);
             break;
 
         default:
