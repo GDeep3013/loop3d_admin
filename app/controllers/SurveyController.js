@@ -492,3 +492,119 @@ exports.generateSurveyReport = async (req, res) => {
 };
 
 
+exports.generateCompetencyAverageReport = async (req, res) => {
+    try {
+        const { survey_id } = req.params;
+
+        // Fetch survey details with related data
+        const survey = await Survey.findById(survey_id)
+            .populate('loop_lead', 'first_name last_name email')
+            .populate('manager', 'first_name last_name email')
+            .populate('organization_id', 'name')
+            .populate('competencies', '_id');
+
+        if (!survey) {
+            return res.status(404).json({ error: 'Survey not found' });
+        }
+
+        // Get competency categories related to survey
+        const categoryIds = survey.competencies.map(comp => comp._id);
+        const assignCompetencies = await AssignCompetency.find({
+            category_id: { $in: categoryIds },
+            organization_id: null
+        }).populate({
+            path: 'question_id',
+            select: 'questionText questionType options',
+            populate: {
+                path: 'options',
+                select: 'text weightage'
+            }
+        });
+
+        // Initialize the report structure
+        const report = {
+            surveyDetails: {
+                id: survey._id,
+                name: survey.name,
+                loop_lead: survey.loop_lead,
+                manager: survey.manager,
+                organization: survey.organization_id.name
+            },
+            categories: {}
+        };
+
+        const competencies = await Category.find({ _id: { $in: categoryIds } });
+        
+        // Initialize categories in the report
+        competencies.forEach((category) => {
+            report.categories[category.category_name] = {};
+        });
+
+        // Fetch participants for the survey
+        const participants = await SurveyParticipant.find({ survey_id });
+
+        // Iterate through participants
+        for (const participant of participants) {
+            // Skip the loop lead's own responses
+            if (participant._id.equals(survey.loop_lead._id)) {
+                continue;
+            }
+
+            const participantAnswers = await SurveyAnswers.findOne({ participant_id: participant._id });
+
+            if (!participantAnswers || !participantAnswers.answers || participantAnswers.answers.length === 0) {
+                continue;
+            }
+
+            // Classify participant by their type
+            const participantType = participant.p_type || 'Other';
+
+            // Iterate through the answers and organize them by category and question
+            participantAnswers.answers.forEach((answer) => {
+
+
+
+                const assignedCompetency = assignCompetencies.find(ac => ac.question_id.equals(answer.questionId));
+                
+                if (!assignedCompetency) {
+                    return; // Skip if no competency is found
+                }
+
+                const category = competencies.find(c => c._id.equals(assignedCompetency.category_id));
+                const categoryName = category.category_name;
+                const question = assignedCompetency.question_id;
+
+                // Initialize question response structure within the category
+                if (!report.categories[categoryName][question.questionText]) {
+                    report.categories[categoryName][question.questionText] = {
+                        self: { l: 0, m: 0, h: 0 },
+                        'Direct Report': { l: 0, m: 0, h: 0 },
+                        Teammate: { l: 0, m: 0, h: 0 },
+                        Supervisor: { l: 0, m: 0, h: 0 },
+                        Other: { l: 0, m: 0, h: 0 }
+                    };
+                }
+
+                // Aggregate the response by participant type
+                const responseCategory = report.categories[categoryName][question.questionText];
+                const weightage = answer.weightage; // Assume the weightage is provided in the answer
+
+                // Update the specific category for this question and participant type
+                if (weightage <= 3) {
+                    responseCategory[participantType].l++;
+                } else if (weightage <= 6) {
+                    responseCategory[participantType].m++;
+                } else {
+                    responseCategory[participantType].h++;
+                }
+            });
+        }
+
+        return res.status(200).json({ report });
+
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: 'An error occurred while generating the competency average report' });
+    }
+};
+
