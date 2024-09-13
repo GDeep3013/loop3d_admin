@@ -2,11 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import { MoreIcon,View ,PLusIcon  } from "../../../components/svg-icons/icons";
 import { Container, Dropdown, Row, Col, Pagination } from 'react-bootstrap';
-import { getSurveys } from '../../../apis/SurveyApi';
+import { getSurveys , getSurveyById } from '../../../apis/SurveyApi';
 import AuthLayout from '../../../layout/Auth';
 import { formatDateGB, formatDateUS } from '../../../utils/dateUtils';
 import { Link } from "react-router-dom";
-
+import { useSelector } from 'react-redux';
 export default function SurveyList() {
     const navigate = useNavigate();
 
@@ -15,14 +15,15 @@ export default function SurveyList() {
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const [loading, setLoading] = useState(false);
+    const user = useSelector((state) => state.auth.user);
 
     useEffect(() => {
         const fetchSurveys = async () => {
             setLoading(true);
+            let mgr_id = user?._id            
             try {
-                const data = await getSurveys(searchTerm, currentPage);
-                setSurveys(data.surveys);
-                setTotalPages(data.meta.totalPages);
+                const data = await getSurveyById(mgr_id,searchTerm);
+                setSurveys(data);
                 setLoading(false);
             } catch (error) {
                 setLoading(false);
@@ -43,7 +44,7 @@ export default function SurveyList() {
       };
 
     return (
-        <AuthLayout title={"surveys"}>
+        <AuthLayout title={"Surveys"}>
             <div className='table-inner main-wrapper '>
                 <div className='content-outer'>
                     <div className='tabe-outer'>
@@ -93,14 +94,14 @@ export default function SurveyList() {
                                     Loading...
                                 </td>
                             </tr>
-                        ) : surveys.length === 0 ? (
+                        ) :surveys&& surveys.length === 0 ? (
                             <tr>
                                 <td colSpan="10" style={{ textAlign: 'center' }}>
                                     <h4>No surveys found</h4>
                                 </td>
                             </tr>
                         ) : (
-                            surveys.map((survey, index) => (
+                            surveys && surveys.map((survey, index) => (
                                 <tr key={survey._id}>
                                     <td>{index + 1}</td>
                                     <td>{formatDateGB(survey.createdAt)}</td>

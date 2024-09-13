@@ -17,7 +17,7 @@ export default function SurveyParticipantDetails() {
     const getParticipants = async () => {
         try {
             let data = await getSurveyParticipantsById(id, searchTerm);
-            console.log('data', data);
+            // console.log('data', data);
             if (Array.isArray(data) && data.length > 0) {
                 setSurveyParticipant(data);
             } else {

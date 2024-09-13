@@ -5,18 +5,20 @@ import { Container, Dropdown, Row, Col } from 'react-bootstrap';
 import { getSurveyById } from '../../../apis/SurveyApi';
 import { formatDateGB, formatDateUS } from '../../../utils/dateUtils';
 
+import { useSelector } from 'react-redux';
 
 export default function SurveyList({ loop_lead_id, org_id }) {
   const navigate = useNavigate();
-
+  const user = useSelector((state) => state.auth.user);
   const [surveys, setSurveys] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
+
 
   useEffect(() => {
     if (org_id && loop_lead_id) {
       (async () => {
         try {
-          let data = await getSurveyById(loop_lead_id, org_id, searchTerm);
+          let data = await getSurveyById(org_id,loop_lead_id, searchTerm);
           console.log('data', data);
           if (Array.isArray(data) && data.length > 0) {
             setSurveys(data);

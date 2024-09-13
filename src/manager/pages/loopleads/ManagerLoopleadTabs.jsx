@@ -7,7 +7,7 @@ import ViewLoopLead from "./ViewLoopLead"
 import SurveyList from "./SurveyList"
 import { Button } from 'react-bootstrap';
 
-export default function LoopleadTabs() {
+export default function ManagerLoopleadTabs() {
   const navigate = useNavigate();
 
   const { userId, orgId } = useParams();

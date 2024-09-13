@@ -9,6 +9,7 @@ const { sixDayUpDateEmailToLead } = require('./templates/sixDayUpDateEmailToLead
 const { twoThreeMonthEmailToLead } = require('./templates/twoThreeMonthEmailToLead');
 const { reminderEmailToParticapated } = require('./templates/reminderEmailToParticapated');
 const { sendCredentialMail } = require('./templates/sendCredentialMail');
+const { sendSumaryReport } = require('./templates/sendSumaryReport');
 
 const sendEmail = (type, recipientDetails) => {
     let mailOptions = {};
@@ -40,9 +41,13 @@ const sendEmail = (type, recipientDetails) => {
         case 'reminderEmailToParticapated':
             mailOptions = reminderEmailToParticapated(recipientDetails);
             break;
-            case 'sendCredentialMail':
+        case 'sendCredentialMail':
             mailOptions = sendCredentialMail(recipientDetails);
             break;
+        case 'sendSumaryReport':
+            mailOptions = sendSumaryReport(recipientDetails);
+            break;
+
 
         default:
             throw new Error('Invalid email type');

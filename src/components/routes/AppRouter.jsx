@@ -48,6 +48,9 @@ import CreateEmail from "../../admin/pages/emails/CreateEmail";
 import ViewEmail from "../../admin/pages/emails/ViewEmail";
 import SurveyList from "../../manager/pages/surveys/SurveyList";
 import CreateSurvey from "../../manager/pages/surveys/CreateSurvey";
+import LoopLeadDashboard from "../../LoopLead/LoopLeadDashboard";
+import LoopLeads from "../../manager/pages/loopleads/LoopLeads";
+import ManagerLoopleadTabs from "../../manager/pages/loopleads/ManagerLoopleadTabs"
 
 const AppRouter = () => {
   const user = useSelector((state) => state.auth.user);
@@ -83,6 +86,13 @@ const AppRouter = () => {
       // Redirect based on userType after login
       if (user.role === "admin") {
         navigate('/organizations');
+      } else if (user.role === "manager") {
+        navigate('/manager/dashboard');
+
+      }
+      else if (user.role === "looped_lead") {
+        navigate('/loop-lead/dashboard');
+
       }
       // else {
       //   navigate('/organizations');
@@ -127,8 +137,12 @@ const AppRouter = () => {
           <Route path="/emails/:id" exact element={<CreateEmail />} />
           <Route path="/emails/detail/:id" exact element={<ViewEmail />} />
 
-          {/* <Route path="/manager/dashboard" exact element={<SurveyList />} />
-          <Route path="/manager/surveys/create" exact element={<CreateSurvey />} /> */}
+          <Route path="/manager/dashboard" exact element={<SurveyList />} />
+          <Route path="/manager/surveys/create" exact element={<CreateSurvey />} />
+          <Route path="/manager/loop-leads" exact element={<LoopLeads />} />
+          <Route path="/manager/view-loop_lead/:userId/:orgId" exact element={<ManagerLoopleadTabs/> } />
+
+          <Route path="/loop-lead/dashboard" exact element={<LoopLeadDashboard/> } />
 
 
 

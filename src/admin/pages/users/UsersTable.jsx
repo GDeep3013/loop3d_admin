@@ -26,7 +26,7 @@ export default function EmployeeTable({ }) {
     let result = await fetch(url);
     result = await result.json();
     if (result.status === 'success') {
-      console.log(result)
+      // console.log(result)
       setEmployee(result.users);
       setTotalPages(result.totalPages); // Set totalPages received from the backend
     }

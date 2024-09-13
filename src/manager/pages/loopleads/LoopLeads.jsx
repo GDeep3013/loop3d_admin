@@ -4,18 +4,20 @@ import { StatusIcon, MoreIcon,View ,Edit } from "../../../components/svg-icons/i
 import { Container, Dropdown, Row, Col } from 'react-bootstrap'
 import { Link } from "react-router-dom";
 import { fetchLoopLeads } from '../../../apis/UserApi';
-
-export default function LoopLeads({ organization }) {
+import { useSelector } from 'react-redux';
+import AuthLayout from '../../../layout/Auth';
+export default function LoopLeads({  }) {
     const navigate = useNavigate();
-
+    const user = useSelector((state) => state.auth.user);
     const [users, setUsers] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
+    let mgr_id = user?._id
     useEffect(() => {
-
-        if (organization.orgniation_id) {
+ 
+        if (mgr_id) {
             (async () => {
                 try {
-                    let data = await fetchLoopLeads(organization.orgniation_id, searchTerm);
+                    let data = await fetchLoopLeads(mgr_id, searchTerm);
                     if (Array.isArray(data.users) && data.users.length > 0) {
                         setUsers(data.users);
                     } else {
@@ -27,7 +29,7 @@ export default function LoopLeads({ organization }) {
                 }
             })();
         }
-    }, [organization.orgniation_id,searchTerm]);
+    }, [mgr_id,searchTerm]);
 
 
     const handleSearch = (e) => {
@@ -35,6 +37,7 @@ export default function LoopLeads({ organization }) {
     };
    
     return (<>
+        <AuthLayout title={"Loop Leads"} >
         <div className='table-inner'>
             <div className='content-outer'>
                 <div className='tabe-outer'>
@@ -92,18 +95,8 @@ export default function LoopLeads({ organization }) {
                                 <td>{user.role.type}</td>
                                 <td><span className='span-badge active-tag'>Active</span></td>
                                     <td>
-                                    <button className='action-btn' onClick={() => navigate(`/view-loop_lead/${user._id}/${organization.orgniation_id}`)}><View /></button>
-                                    {/* <button className='action-btn' onClick={() => navigate(`/add-user/${user._id}`)}><Edit /></button> */}
-                                    {/* <Dropdown className='custom-dropdown'>
-                                        <Dropdown.Toggle variant="success" id="dropdown-basic">
-                                            <MoreIcon />
-                                        </Dropdown.Toggle>
-                                            <Dropdown.Menu>
-                                            <Dropdown.Item onClick={() => navigate(`/view-loop_lead/${user._id}/${organization.orgniation_id}`)}>View</Dropdown.Item>
-
-                                            <Dropdown.Item onClick={() => navigate(`/add-user/${user._id}`)}>Edit</Dropdown.Item>
-                                        </Dropdown.Menu>
-                                    </Dropdown> */}
+                                    <button className='action-btn' onClick={() => navigate(`/manager/view-loop_lead/${user._id}/${mgr_id}`)}><View /></button>
+              
                                 </td>
                             </tr>
                         ))
@@ -111,7 +104,8 @@ export default function LoopLeads({ organization }) {
                 </tbody>
             </table>
             </div>
-        </div>
+            </div>
+            </AuthLayout>
     </>
     )
 }

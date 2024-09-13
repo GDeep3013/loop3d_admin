@@ -11,7 +11,7 @@ export default function ResetPassword() {
     const query = useQuery();
     const token = query.get('token');
 
-    console.log('token',token)
+    // console.log('token',token)
 
     const [showPassword, setShowPassword] = useState(false);
     const [formData, setFormData] = useState({
