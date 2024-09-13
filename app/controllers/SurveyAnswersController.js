@@ -137,9 +137,7 @@ exports.getSurveyAnswersBySurveyId = async (req, res) => {
 };
 
 exports.getTotalParticipantsInvited = async (req, res) => {
-    const {
-        survey_id
-    } = req.params; // Use req.query or req.params depending on route configuration
+    const { survey_id } = req.params;
 
     try {
         if (!survey_id) {
@@ -160,52 +158,50 @@ exports.getTotalParticipantsInvited = async (req, res) => {
             });
         }
 
-
         // Initialize totals and completed responses objects
         const participantTypes = ['Self', 'Direct Report', 'Teammate', 'Supervisor', 'Other'];
         const totals = {};
         const completedResponses = {};
+        const participantDetails = {};
 
-        // Count total participants invited by type
+        // Fetch all participants invited to the survey along with their names and types
+        const participants = await SurveyParticipant.find({ survey_id })
+            .select('p_first_name p_last_name p_email p_type survey_status')
+            .exec();
+
         for (const type of participantTypes) {
-            totals[type] = await SurveyParticipant.countDocuments({
-                p_type: type,
-                survey_id: survey_id
-            });
-
-            // Count completed responses by type
-            completedResponses[type] = await SurveyParticipant.countDocuments({
-                p_type: type,
-                survey_id: survey_id,
-                survey_status: 'completed'
-            });
+            // Filter participants by type and count them
+            const participantsOfType = participants.filter(participant => participant.p_type === type);
+            // Count total participants and completed responses by type
+            totals[type] = participantsOfType.length;
+            completedResponses[type] = participantsOfType.filter(participant => participant.survey_status === 'completed').length;
         }
 
         // Set default values for Self and Supervisor if no entries are found
         if (totals['Self'] === 0) {
             totals['Self'] = 1; // Default value if no 'Self' entries
-            completedResponses['Self'] = (survey.ll_survey_status == "no") ? 0 : 1;
+            completedResponses['Self'] = (survey.ll_survey_status === "no") ? 0 : 1;
         }
         if (totals['Supervisor'] === 0) {
             totals['Supervisor'] = 1; // Default value if no 'Supervisor' entries
-            completedResponses['Supervisor'] = (survey.mgr_survey_status=="no") ? 0 : 1; 
+            completedResponses['Supervisor'] = (survey.mgr_survey_status === "no") ? 0 : 1;
         }
 
         // Count total invited participants
-        const totalInvited = await SurveyParticipant.countDocuments({
-            survey_id: survey_id
-        });
+        const totalInvited = participants.length;
 
         // Calculate percentage of completed responses
         const totalCompleted = Object.values(completedResponses).reduce((a, b) => a + b, 0);
-        const percentageCompleted = totalInvited > 0 ?
-            ((totalCompleted / totalInvited) * 100).toFixed(2) :
-            0;
+        const percentageCompleted = totalInvited > 0
+            ? ((totalCompleted / totalInvited) * 100).toFixed(2)
+            : 0;
 
         return res.status(200).json({
             survey,
             totals,
-            completedResponses
+            completedResponses,
+            participants,  // Include participant details with names, types, and emails
+            percentageCompleted
         });
 
     } catch (error) {

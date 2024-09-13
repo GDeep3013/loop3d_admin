@@ -403,7 +403,7 @@ exports.generateSurveyReport = async (req, res) => {
         const { survey_id } = req.params;
 
         const survey = await Survey.findById(survey_id)
-            .populate('loop_lead', 'first_name last_name email')
+            .populate('loop_lead', 'first_name last_name email _id')
             .populate('manager', 'first_name last_name email')
             .populate('organization_id', 'name')
             .populate('competencies', '_id');
@@ -433,7 +433,7 @@ exports.generateSurveyReport = async (req, res) => {
 
         const report = {
             surveyDetails: {
-                id: survey._id,
+                id: survey?._id,
                 name: survey.name,
                 loop_lead: survey.loop_lead,
                 manager: survey.manager,
@@ -454,7 +454,7 @@ exports.generateSurveyReport = async (req, res) => {
         });
 
         // Process Loop Lead (Self)
-        const loopLeadAnswers = await SurveyAnswers.findOne({ participant_id: survey.loop_lead._id });
+        const loopLeadAnswers = await SurveyAnswers.findOne({ participant_id: survey?.loop_lead?._id });
         processParticipantAnswers(survey.loop_lead, loopLeadAnswers?.answers, 'Self', assignCompetencies, competencies, questions, report);
 
         // Process Manager (Supervisor)
@@ -490,12 +490,74 @@ exports.generateSurveyReport = async (req, res) => {
     }
 };
 
+const calculateCategoryAverages = (assignCompetencies, competencies, questions, participantAnswers) => {
+    let report = {};
+    let topStrength = '';
+    let developmentalOpportunity = '';
+    let maxAverage = -Infinity;
+    let minAverage = Infinity;
+
+    competencies.forEach((competency) => {
+        const competencyQuestions = questions.filter(q => 
+            assignCompetencies.some(ac => ac.category_id.equals(competency._id) && ac.question_id._id.equals(q._id))
+        );
+
+        let totalQuestions = 0;
+        let totalWeightage = 0;
+
+        competencyQuestions.forEach(question => {
+            // Find all participant answers for this question
+            const questionAnswers = participantAnswers
+                .map(pa => pa.answers.find(ans => ans?.questionId?.equals(question._id)))
+                .filter(Boolean);  // Filter out any undefined answers
+        
+            // Calculate the total weightage for the question
+            questionAnswers.forEach(answer => {
+                // Find the selected option in the question's options
+                const selectedOption = question.options.find(option => 
+                    option?._id?.toString() === answer?.optionId?.toString()
+                );
+        
+                // Get the weightage from the selected option or fallback to answer weightage
+                const weightage = selectedOption ? selectedOption.weightage : (answer?.weightage || 0);
+        
+                // Increment total questions and total weightage
+                if (!answer.answer) {
+                    
+                    totalQuestions += 1;
+                }
+                totalWeightage += weightage;
+            });
+        });
+
+        const averageWeightage = totalQuestions > 0 ? totalWeightage / totalQuestions : 0;
+
+        report[competency.category_name] = {
+            totalQuestions,
+            totalWeightage,
+            averageWeightage
+        };
+
+        if (averageWeightage > maxAverage) {
+            maxAverage = averageWeightage;
+            topStrength = competency.category_name;
+        }
+
+        if (averageWeightage < minAverage && totalQuestions > 0) {
+            minAverage = averageWeightage;
+            developmentalOpportunity = competency.category_name;
+        }
+    });
+
+    return { report, topStrength, developmentalOpportunity };
+};
+
 
 exports.generateCompetencyAverageReport = async (req, res) => {
     try {
         const { survey_id } = req.params;
 
-        // Fetch survey details with related data
+        // Fetch survey details and related data
         const survey = await Survey.findById(survey_id)
             .populate('loop_lead', 'first_name last_name email')
             .populate('manager', 'first_name last_name email')
@@ -506,8 +568,9 @@ exports.generateCompetencyAverageReport = async (req, res) => {
             return res.status(404).json({ error: 'Survey not found' });
         }
 
-        // Get competency categories related to survey
         const categoryIds = survey.competencies.map(comp => comp._id);
+        const competencies = await Category.find({ _id: { $in: categoryIds } });
+
         const assignCompetencies = await AssignCompetency.find({
             category_id: { $in: categoryIds },
             organization_id: null
@@ -520,90 +583,39 @@ exports.generateCompetencyAverageReport = async (req, res) => {
             }
         });
 
-        // Initialize the report structure
-        const report = {
-            surveyDetails: {
-                id: survey._id,
-                name: survey.name,
-                loop_lead: survey.loop_lead,
-                manager: survey.manager,
-                organization: survey.organization_id.name
-            },
-            categories: {}
-        };
+        if (!assignCompetencies || assignCompetencies.length === 0) {
+            return res.status(404).json({ error: 'No competencies found for the given survey' });
+        }
 
-        const competencies = await Category.find({ _id: { $in: categoryIds } });
-        
-        // Initialize categories in the report
-        competencies.forEach((category) => {
-            report.categories[category.category_name] = {};
-        });
+        // Fetch unique questions from assignCompetencies
+        const questionsArray = assignCompetencies.map(ac => ac.question_id);
+        const questions = Array.from(new Set(questionsArray.map(q => q._id)))
+            .map(id => questionsArray.find(q => q._id.equals(id)));
 
         // Fetch participants for the survey
         const participants = await SurveyParticipant.find({ survey_id });
 
-        // Iterate through participants
+        // Fetch answers for all participants
+        const participantAnswers = [];
+        // Process Manager (Supervisor)
+        const managerAnswers = await SurveyAnswers.findOne({ participant_id: survey.manager._id });
+        if (managerAnswers && managerAnswers.answers) {
+            participantAnswers.push({ answers: managerAnswers.answers });
+        }
         for (const participant of participants) {
-            // Skip the loop lead's own responses
-            if (participant._id.equals(survey.loop_lead._id)) {
-                continue;
+            const participantAnswer = await SurveyAnswers.findOne({ participant_id: participant._id });
+            if (participantAnswer && participantAnswer.answers) {
+                participantAnswers.push({ answers: participantAnswer.answers });
             }
-
-            const participantAnswers = await SurveyAnswers.findOne({ participant_id: participant._id });
-
-            if (!participantAnswers || !participantAnswers.answers || participantAnswers.answers.length === 0) {
-                continue;
-            }
-
-            // Classify participant by their type
-            const participantType = participant.p_type || 'Other';
-
-            // Iterate through the answers and organize them by category and question
-            participantAnswers.answers.forEach((answer) => {
-
-
-
-                const assignedCompetency = assignCompetencies.find(ac => ac.question_id.equals(answer.questionId));
-                
-                if (!assignedCompetency) {
-                    return; // Skip if no competency is found
-                }
-
-                const category = competencies.find(c => c._id.equals(assignedCompetency.category_id));
-                const categoryName = category.category_name;
-                const question = assignedCompetency.question_id;
-
-                // Initialize question response structure within the category
-                if (!report.categories[categoryName][question.questionText]) {
-                    report.categories[categoryName][question.questionText] = {
-                        self: { l: 0, m: 0, h: 0 },
-                        'Direct Report': { l: 0, m: 0, h: 0 },
-                        Teammate: { l: 0, m: 0, h: 0 },
-                        Supervisor: { l: 0, m: 0, h: 0 },
-                        Other: { l: 0, m: 0, h: 0 }
-                    };
-                }
-
-                // Aggregate the response by participant type
-                const responseCategory = report.categories[categoryName][question.questionText];
-                const weightage = answer.weightage; // Assume the weightage is provided in the answer
-
-                // Update the specific category for this question and participant type
-                if (weightage <= 3) {
-                    responseCategory[participantType].l++;
-                } else if (weightage <= 6) {
-                    responseCategory[participantType].m++;
-                } else {
-                    responseCategory[participantType].h++;
-                }
-            });
         }
 
-        return res.status(200).json({ report });
+        // Calculate category averages
+        const { report, topStrength, developmentalOpportunity } = calculateCategoryAverages(assignCompetencies, competencies, questions, participantAnswers);
+
+        return res.status(200).json({ report, topStrength, developmentalOpportunity });
 
     } catch (error) {
         console.error(error);
-        return res.status(500).json({ error: 'An error occurred while generating the competency average report' });
+        return res.status(500).json({ error: 'An error occurred while generating the report' });
     }
 };
-
