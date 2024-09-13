@@ -6,9 +6,22 @@ const AssignCompetency = require('../models/AssignCompetencyModel');
 const Category = require('../models/CategoryModel')
 const { sendEmail } = require('../../emails/sendEmail');
 const SurveyAnswers = require('../models/SurveyAnswers');
-
+const bcrypt = require('bcrypt');
 
 const { check, validationResult } = require('express-validator');
+
+
+const generateRandomPassword = (length = 10) => {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let password = '';
+
+    for (let i = 0; i < length; i++) {
+        const randomIndex = Math.floor(Math.random() * chars.length);
+        password += chars[randomIndex];
+    }
+
+    return password;
+};
 
 // Create Survey and Add Survey Members
 exports.createSurvey = async (req, res) => {
@@ -36,16 +49,19 @@ exports.createSurvey = async (req, res) => {
 
             // Check if the user already exists by email
             let user = await User.findOne({ email: email });
-
+            let password = generateRandomPassword(10);
+            const hashedPassword = await bcrypt.hash(password, 10);
             if (!user) {
                 // Create a new loop lead user
                 let role = await Role.findOne({ type: "looped_lead" });
-                
+               
                 // Create the user object
+                console.log(password, hashedPassword);
                 user = new User({
                     first_name:name, 
                     email,
                     role: role?._id,
+                    password: hashedPassword,
                     organization_id: manager?.organization_id || null,
                     created_by: surveyData.mgr_id
                 });
@@ -64,8 +80,13 @@ exports.createSurvey = async (req, res) => {
             });
 
             const savedSurvey = await survey.save();
-            let url = `${process.env.FRONT_END_URL}/lead-dashboard?token=` + savedSurvey?._id            
+            let admin_panel_url = `${process.env.ADMIN_PANEL}`;
+            let url = `${process.env.FRONT_END_URL}/lead-dashboard?token=` + savedSurvey?._id       
+            let first_name = name
+            let summary_url=`${process.env.FRONT_END_URL}/survey-summary?survey_id=`+ savedSurvey?._id
+            await sendEmail('sendCredentialMail', { first_name, email,password ,admin_panel_url }); 
             await sendEmail('sendLoopLeadLink', { name, email, url });
+            await sendEmail('sendSumaryReport', { name, email, summary_url });
                        
             savedSurveys.push(savedSurvey);
         }
@@ -215,9 +236,11 @@ exports.getSurveyById = async (req, res) => {
         // Build the query object based on the provided parameters
         let query = {};
         if (loop_lead_id && org_id) query = { loop_lead:loop_lead_id, organization_id: org_id };
-        if (mgr_id) query.mgr_id = mgr_id;
+        if (mgr_id) query.manager = mgr_id;
+        if (loop_lead_id && mgr_id) query = { loop_lead: loop_lead_id, manager: mgr_id };
+        
         if (survey_id) query._id = survey_id;
-
+  
         // Step 1: Find the survey(s) by the provided ID(s) and populate related fields
         const surveys = await Survey.find(query)
             .populate('loop_lead', 'first_name last_name email') // Populate loop_lead_id with name and email fields
@@ -276,6 +299,7 @@ exports.getSurveyById = async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 };
+
 
 
 exports.getSurveyParticipantsById = async (req, res) => {

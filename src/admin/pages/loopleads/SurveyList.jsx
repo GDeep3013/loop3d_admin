@@ -16,8 +16,8 @@ export default function SurveyList({ loop_lead_id, org_id }) {
     if (org_id && loop_lead_id) {
       (async () => {
         try {
-          let data = await getSurveyById(loop_lead_id, org_id, searchTerm);
-          console.log('data', data);
+          let data = await getSurveyById('',loop_lead_id, org_id, searchTerm);
+          // console.log('data', data);
           if (Array.isArray(data) && data.length > 0) {
             setSurveys(data);
           }

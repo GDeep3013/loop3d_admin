@@ -75,15 +75,27 @@ export default function LeftNav({isMenuOpen,setIsMenuOpen}) {
             </NavLink>
           </li>
         </> :
+        <>
           <li className={`sideNavItem`}>
           <NavLink
             to="/manager/dashboard"
             className={({ isActive }) => (isActive ? 'active' : '')}
-          >
+            >
             <DocomentIcon />
            Dashboard
+              </NavLink>
+            </li>
+            <li className={`sideNavItem`}>
+          <NavLink
+            to="/manager/loop-leads"
+            className={({ isActive }) => (isActive ? 'active' : '')}
+            >
+            <DocomentIcon />
+           Loop Lead
           </NavLink>
-        </li>
+          </li>
+           </>
+          
         }
         <li className="sideNavItem LogoutMenu">
           <NavLink to="#" className="dropdown-item" onClick={() => {
@@ -91,7 +103,7 @@ export default function LeftNav({isMenuOpen,setIsMenuOpen}) {
             localStorage.removeItem("userType");
             navigate('/login');
           }}><Logout /> Logout</NavLink>         
-        </li>
+        </li> 
       </ul>
       
     </nav>

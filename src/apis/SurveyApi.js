@@ -1,6 +1,6 @@
-export const getSurveyById = async (lead_id, org_id, searchTerm) => {
+export const getSurveyById = async (mgr_id,lead_id, org_id, searchTerm) => {
 
-    let url = `/api/surveys?loop_lead_id=${lead_id}&org_id=${org_id}`;
+    let url = `/api/surveys?mgr_id=${mgr_id}&loop_lead_id=${lead_id}&org_id=${org_id}`;
 
     if (searchTerm) {
         url += `&searchTerm=${encodeURIComponent(searchTerm)}`;
