@@ -48,10 +48,11 @@ import CreateEmail from "../../admin/pages/emails/CreateEmail";
 import ViewEmail from "../../admin/pages/emails/ViewEmail";
 import SurveyList from "../../manager/pages/surveys/SurveyList";
 import CreateSurvey from "../../manager/pages/surveys/CreateSurvey";
-import LoopLeadDashboard from "../../LoopLead/LoopLeadDashboard";
+import LoopLeadDashboard from "../../LoopLead/pages/LoopLeadDashboard";
+import CreateParticipants from "../../LoopLead/pages/CreateParticipants"
 import LoopLeads from "../../manager/pages/loopleads/LoopLeads";
 import ManagerLoopleadTabs from "../../manager/pages/loopleads/ManagerLoopleadTabs"
-
+import LoopLeadSurveyParticipantDetails from "../../LoopLead/pages/LoopLeadSurveyParticipantDetails"
 const AppRouter = () => {
   const user = useSelector((state) => state.auth.user);
   const dispatch = useDispatch();
@@ -142,7 +143,9 @@ const AppRouter = () => {
           <Route path="/manager/loop-leads" exact element={<LoopLeads />} />
           <Route path="/manager/view-loop_lead/:userId/:orgId" exact element={<ManagerLoopleadTabs/> } />
 
-          <Route path="/loop-lead/dashboard" exact element={<LoopLeadDashboard/> } />
+          <Route path="/loop-lead/dashboard" exact element={<LoopLeadDashboard />} />
+          <Route path="/loop-lead/participant/create/:id" exact element={<CreateParticipants/> } />
+          <Route path="/loop-lead/view-survey-participant/:id" exact element={<LoopLeadSurveyParticipantDetails/> } />
 
 
 

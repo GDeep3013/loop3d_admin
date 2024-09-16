@@ -75,7 +75,7 @@ export default function LeftNav({isMenuOpen,setIsMenuOpen}) {
             </NavLink>
           </li>
         </> :
-        <>
+       user.role =="manager"?  <>
           <li className={`sideNavItem`}>
           <NavLink
             to="/manager/dashboard"
@@ -94,7 +94,15 @@ export default function LeftNav({isMenuOpen,setIsMenuOpen}) {
            Loop Lead
           </NavLink>
           </li>
-           </>
+           </>:<li className={`sideNavItem`}>
+          <NavLink
+            to="/loop-lead/dashboard"
+            className={({ isActive }) => (isActive ? 'active' : '')}
+            >
+            <DocomentIcon />
+           Dashboard
+              </NavLink>
+            </li>
           
         }
         <li className="sideNavItem LogoutMenu">

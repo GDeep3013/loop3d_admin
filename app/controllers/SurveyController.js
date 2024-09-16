@@ -238,6 +238,9 @@ exports.getSurveyById = async (req, res) => {
         if (loop_lead_id && org_id) query = { loop_lead:loop_lead_id, organization_id: org_id };
         if (mgr_id) query.manager = mgr_id;
         if (loop_lead_id && mgr_id) query = { loop_lead: loop_lead_id, manager: mgr_id };
+
+        if (loop_lead_id) query = { loop_lead: loop_lead_id};
+
         
         if (survey_id) query._id = survey_id;
   
