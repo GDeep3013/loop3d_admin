@@ -148,11 +148,11 @@ const SurveySummary = () => {
     const totalCompleted = Participants.reduce((acc, Participant) => acc + (completedResponses[Participant] || 0), 0);
     return (
        <AuthLayout title={"Survey Summary"}>
-        <div className="survey-inner pt-[120px] pb-[17rem] md:pb-[24rem] lg:pb-[20px]">
+        <div className="survey-inner">
             {!loader && <Container>
                 {/* <CompetencyBar data={reportData} /> */}
-                <div className="survey-container p-6 md:p-10 lg:p-12 xl:p-[50px] m-auto rounded-[20px] lg:rounded-[30px] bg-[#F5F5F5] max-w-full">
-                    <h2 className="text-black text-2xl md:text-3xl lg:text-4xl font-frank text-center mb-4">
+                <div className="survey-container">
+                    <h2 className="font-frank text-center mb-4">
                         LOOP3D 360 Report
                     </h2>
                     <div className="participant-name-looped-360 mt-4">
@@ -168,14 +168,14 @@ const SurveySummary = () => {
                         <p className="text-sm md:text-base lg:text-lg mb-4 font-poppins">
                             <strong className="text-[#333] font-extrabold">About Your Report</strong>
                         </p>
-                        <h3 className="text-custom-color text-lg md:text-xl lg:text-2xl font-poppins font-extrabold">
+                        <h3 className="text-custom-color fw-semibold">
                             Total number of responses:
                         </h3>
                         {loader ? (
                             <p>Loading...</p>
                         ) : (
-                            <div className="overflow-x-auto">
-                                <table className="table-auto w-full text-sm md:text-[16px] border border-gray-300 border-collapse mt-6 mb-6">
+                            <div className="overflow-x-auto mt-3">
+                                <table className="w-100">
                                     <thead>
                                         <tr>
                                             <th className="bg-custom-color px-3 md:px-5 py-2 text-left font-poppins text-white font-normal border border-white">Relationship</th>
@@ -194,13 +194,13 @@ const SurveySummary = () => {
                                 </table>
                             </div>
                         )}
-                        <h3 className="text-custom-color text-lg sm:text-xl font-poppins font-extrabold">
+                        <h3 className="text-custom-color fw-semibold mt-3">
                             Here are the participants that you invited:
                         </h3>
 
                         <ul className="pl-4 sm:pl-6">
                             {participants?.map((participant) => (
-                                <li className="list-disc font-poppins text-gray-600" key={participant._id}>
+                                <li className="list-disc" key={participant._id}>
                                     {`${participant?.p_first_name} ${participant?.p_last_name} (${participant?.p_type})`}
                                 </li>
                             ))}
@@ -211,7 +211,7 @@ const SurveySummary = () => {
                         </p>
                         <ul className="pl-4 sm:pl-6">
                             {survey?.competencies?.map((competency) => (
-                                <li className="list-disc font-poppins text-gray-600" key={competency._id}>
+                                <li className="list-disc" key={competency._id}>
                                     {competency?.category_name}
                                 </li>
                             ))}
@@ -227,18 +227,18 @@ const SurveySummary = () => {
 
                         </div>
 
-                        <h3 className="text-custom-color text-lg sm:text-xl font-poppins font-extrabold">Top Strengths:</h3>
+                        <h3 className="text-custom-color fw-semibold">Top Strengths:</h3>
                         <p className="text-sm sm:text-base leading-relaxed text-gray-600 font-poppins mt-4 mb-4">
                             {competencyReport?.topStrength}
                         </p>
 
-                        <h3 className="text-custom-color text-lg sm:text-xl font-poppins font-extrabold">Top Developmental Opportunities:</h3>
+                        <h3 className="text-custom-color fw-semibold">Top Developmental Opportunities:</h3>
                         <p className="text-sm sm:text-base leading-relaxed text-gray-600 font-poppins mt-4 mb-4">
                             {competencyReport?.developmentalOpportunity}
 
                         </p>
 
-                        <h2 className="uppercase font-frank text-custom-color text-[24px] sm:text-[35px]">
+                        <h2 className="uppercase font-frank text-custom-color">
                             Summaries by Competency
                         </h2>
 
@@ -248,7 +248,7 @@ const SurveySummary = () => {
                         </div>
                         {/* graph box */}
                         <div className="graph-box mt-5 mb-5"></div>
-                        <h3 className="text-custom-color text-xl sm:text-2xl md:text-3xl font-poppins font-extrabold uppercase mt-6">
+                        <h3 className="text-custom-color fw-semibold uppercase">
                             Summary
                         </h3>
                         <p className="text-sm sm:text-base leading-relaxed text-gray-600 font-poppins mt-4 mb-4">

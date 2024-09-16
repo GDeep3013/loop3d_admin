@@ -85,7 +85,7 @@ const CreateParticipants = () => {
                                 <h2 className="text-dark fs-4 fs-lg-5 fw-bold mt-3 mt-lg-4">Competencies:</h2>
                                 <ul className="ps-3 ps-lg-4 mt-2">
                                     {survey?.competencies?.map((competency) => (
-                                        <li className="fs-6 lh-lg text-dark list-unstyled mt-2" key={competency._id}>
+                                        <li className="fs-6 lh-lg text-dark mt-2" key={competency._id}>
                                             {competency?.category_name}
                                         </li>
                                     ))}
