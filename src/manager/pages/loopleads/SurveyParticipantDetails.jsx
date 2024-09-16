@@ -6,6 +6,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import Swal from 'sweetalert2'
 import {Remove} from '../../../components/svg-icons/icons';
 import AuthLayout from "../../../layout/Auth";
+import { Link } from "react-router-dom";
 
 export default function SurveyParticipantDetails() {
     const navigate = useNavigate();
@@ -111,6 +112,8 @@ export default function SurveyParticipantDetails() {
                                                 className='form-control'
                                             />
                                         </form>
+                                        <Link to={`/survey-summary/${id}`} className='default-btn' >View Summary</Link>
+
                                     </Col>
 
                                 </Row>

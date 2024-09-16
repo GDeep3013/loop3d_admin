@@ -12,7 +12,7 @@ export default function ParticipantForm({ survey_id }) {
 
     const [participants, setParticipants] = useState(initialParticipants);
     const [errors, setErrors] = useState([]);
-
+    const [loader, setLoader] = useState(false);
     const handleInputChange = (index, field, value) => {
         const newParticipants = [...participants];
         newParticipants[index][field] = value;
@@ -56,8 +56,7 @@ export default function ParticipantForm({ survey_id }) {
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (validateForm()) {
-            console.log('participants', participants);
-         
+            setLoader(true)         
             try {
                 const response = await fetch(`/api/surveys/participants/create`, {
                     method: 'POST',
@@ -75,12 +74,14 @@ export default function ParticipantForm({ survey_id }) {
                 if (response.ok) {
                     console.log('Participants submitted successfully');
                     alert('Participants submitted successfully')
+                  
                     window.location.reload()
                     // handle success, e.g., redirect to another page or show a success message
                 } else {
                     console.error('Error submitting participants');
                     // handle error
                 }
+                setLoader(false)    
             } catch (error) {
                 console.error('Error submitting participants:', error);
             }
@@ -175,8 +176,8 @@ export default function ParticipantForm({ survey_id }) {
             <button type="button" onClick={addParticipant} className="mt-3 py-2 px-4 btn btn-primary">
                 Add Participant
             </button>
-            <button type="submit" className="mt-3 py-2 px-4 btn bg-custom-color ms-2 text-white submit_btn">
-                Submit
+                    <button type="submit" className="mt-3 py-2 px-4 btn bg-custom-color ms-2 text-white submit_btn" disabled={loader}>
+                    {loader? 'submitting':"Submit"}
             </button>
         </form>
     </Container>

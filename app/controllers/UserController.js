@@ -55,13 +55,13 @@ const UserController = {
                 if (response?._id) {
                     const role = await Role.findById(userType);
                     if (role?.type == "manager") {
-                        let url =   `${process.env.FRONT_END_URL}/start-survey?token=`+response?._id
-                        // let emailRes = await sendSurveyCreationEmail(response?.email, url,role?.type);
+                        let url =   `${process.env.ADMIN_PANEL}/start-survey?token=`+response?._id
                         let admin_panel_url = `${process.env.ADMIN_PANEL}/forget-password`;
 
                         let email = response?.email
 
-                        let roles=role?.type
+                        let roles = role?.type
+                        
                         let emailcred = await sendEmail('sendCredentialMail', { email, first_name,last_name,password,admin_panel_url})
                         let emailRes = await sendEmail('sendSurveyCreationEmail', { email, url,roles});
                     }

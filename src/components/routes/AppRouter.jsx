@@ -39,9 +39,10 @@ import CreateParticipants from "../../LoopLead/pages/CreateParticipants"
 import LoopLeads from "../../manager/pages/loopleads/LoopLeads";
 import ManagerLoopleadTabs from "../../manager/pages/loopleads/ManagerLoopleadTabs"
 import ChatGPTPage from "../../manager/ChatGPTPage";
-import SurveySummary from "../survey-summary/SurveySummary";
+
 
 import LoopLeadSurveyParticipantDetails from "../../LoopLead/pages/LoopLeadSurveyParticipantDetails"
+import SurveySummary from "../../components/survey-summary/SurveySummary"
 const AppRouter = () => {
   const user = useSelector((state) => state.auth.user);
   const dispatch = useDispatch();
@@ -135,7 +136,9 @@ const AppRouter = () => {
 
           <Route path="/loop-lead/dashboard" exact element={<LoopLeadDashboard />} />
           <Route path="/loop-lead/participant/create/:id" exact element={<CreateParticipants/> } />
-          <Route path="/loop-lead/view-survey-participant/:id" exact element={<LoopLeadSurveyParticipantDetails/> } />
+          <Route path="/loop-lead/view-survey-participant/:id" exact element={<LoopLeadSurveyParticipantDetails />} />
+          <Route path="/survey-summary/:id" exact element={<SurveySummary/> } />
+
 
           <Route path="/survey-summary" exact element={<SurveySummary /> } />
 

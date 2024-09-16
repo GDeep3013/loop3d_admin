@@ -81,9 +81,9 @@ exports.createSurvey = async (req, res) => {
 
             const savedSurvey = await survey.save();
             let admin_panel_url = `${process.env.ADMIN_PANEL}/forget-password`;
-            let url = `${process.env.FRONT_END_URL}/lead-dashboard?token=` + savedSurvey?._id       
+            let url = `${process.env.ADMIN_PANEL}/lead-dashboard?token=` + savedSurvey?._id       
             let first_name = name
-            let summary_url=`${process.env.FRONT_END_URL}/survey-summary?survey_id=`+ savedSurvey?._id
+            let summary_url=`${process.env.ADMIN_PANEL}/survey-summary?survey_id=`+ savedSurvey?._id
             await sendEmail('sendCredentialMail', { first_name, email,password ,admin_panel_url }); 
             await sendEmail('sendLoopLeadLink', { name, email, url });
             await sendEmail('sendSumaryReport', { name, email, summary_url });
@@ -124,7 +124,14 @@ exports.createSurveyParticipants = async (req, res) => {
     
 
         let savedParticipants = [];
-
+        let loop_lead_name = '';
+        let mrg_name = ''
+        let loop_lead_email = '';
+        let mrg_email = ''
+        let url = ''
+        let loop_lead_id = ''
+        let mrg_id=''
+        await sendEmail('sendMailToParticipant', { name, p_email, url });
         for (let participant of participants) {
             const { p_first_name, p_last_name, p_email,p_type } = participant;
 
@@ -144,12 +151,35 @@ exports.createSurveyParticipants = async (req, res) => {
             .populate('loop_lead', 'first_name last_name email');
             
             let name = survey?.loop_lead?.first_name;
+
+            loop_lead_name = survey?.loop_lead?.first_name;
+            mrg_name = survey?.manager?.first_name;
+
+            loop_lead_email = survey?.loop_lead?.email;
+            mrg_email = survey?.manager?.email;
+
+            loop_lead_id = survey?.loop_lead?._id;
+            mrg_id = survey?.manager?._id
+
             
             let url = `${process.env.FRONT_END_URL}/feedback-survey?survey_id=${survey_id}&participant_id=${savedParticipant?._id}`
             await sendEmail('sendMailToParticipant', { name, p_email, url });
               
             savedParticipants.push(savedParticipant);
         }
+
+        // send feedback form to loopLead
+       
+        p_email = loop_lead_email;
+        let name= loop_lead_name
+        url = `${process.env.FRONT_END_URL}/feedback-survey?survey_id=${survey_id}&participant_id=${loop_lead_id}`
+        await sendEmail('sendMailToParticipant', { name, p_email, url });
+
+           // send feedback form to Manger
+        p_email = mrg_email;
+        name= mrg_name
+        url = `${process.env.FRONT_END_URL}/feedback-survey?survey_id=${survey_id}&participant_id=${mrg_id}`
+        await sendEmail('sendMailToParticipant', { name, p_email, url });
 
         res.status(201).json({
             status: 'success',
@@ -266,12 +296,12 @@ exports.getSurveyById = async (req, res) => {
                 select: 'text weightage' // Select only text and weightage fields from Option
             }
         })
-        const questionsArray = assignCompetencies.map(ac => ac.question_id);
+        const questionsArray = assignCompetencies.map(ac => ac?.question_id);
 
-// Optionally remove duplicates if needed (e.g., if multiple entries for the same question)
-            const questions = Array.from(new Set(questionsArray.map(q => q._id)))
+        // Optionally remove duplicates if needed (e.g., if multiple entries for the same question)
+            const questions = Array.from(new Set(questionsArray.map(q => q?._id)))
                 .map(id => {
-                    return questionsArray.find(q => q._id.equals(id));
+                    return questionsArray.find(q => q?._id.equals(id));
                 });
         
           

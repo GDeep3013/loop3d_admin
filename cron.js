@@ -133,7 +133,7 @@ const processPendingSurveys = async () => {
     const LeadName = (survey?.loop_lead?.first_name) ? survey?.loop_lead?.first_name : 'Loop3D Lead'
     const email = survey?.loop_lead?.email
     const daysSinceCreated = calculateDaysSinceCreated(survey.createdAt);
-    const url = `${process.env.FRONT_END_URL}`
+    const url = `${process.env.ADMIN_PANEL}`
 
     if (email && daysSinceCreated === 3) {
       await sendEmail('thirdDayUpDateEmailToLead', { email, url, LeadName });    

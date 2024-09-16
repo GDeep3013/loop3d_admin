@@ -12,7 +12,6 @@ import { Link } from "react-router-dom";
 export default function LoopLeadSurveyParticipantDetails() {
     const navigate = useNavigate();
     const { id } = useParams();
-
     const [surveyParticipant, setSurveyParticipant] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
 
@@ -113,6 +112,8 @@ export default function LoopLeadSurveyParticipantDetails() {
                                                 className='form-control'
                                             />
                                             <Link to={`/loop-lead/participant/create/${id}`} className='default-btn' >Add Particpant <PLusIcon /> </Link>
+                                            <Link to={`/survey-summary/${id}`} className='default-btn' >View Summary</Link>
+
                                         </form>
                                     </Col>
 

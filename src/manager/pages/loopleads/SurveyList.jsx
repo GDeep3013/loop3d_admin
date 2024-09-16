@@ -15,10 +15,10 @@ export default function SurveyList({ loop_lead_id, org_id }) {
 
 
   useEffect(() => {
-    if (org_id && loop_lead_id) {
+    if (user?._id) {
       (async () => {
         try {
-          let data = await getSurveyById(org_id,loop_lead_id, searchTerm);
+          let data = await getSurveyById(user?._id,'','' ,searchTerm);
           console.log('data', data);
           if (Array.isArray(data) && data.length > 0) {
             setSurveys(data);
@@ -28,7 +28,7 @@ export default function SurveyList({ loop_lead_id, org_id }) {
         }
       })();
     }
-  }, [loop_lead_id, org_id, searchTerm]);
+  }, [user?._id, searchTerm]);
 
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
