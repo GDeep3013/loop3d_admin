@@ -223,6 +223,11 @@ table.table th:last-child, table.table td:last-child { text-align: right; }
 .survey-listings li input[type="checkbox"] { width: 20px; height: 20px; vertical-align: middle; margin-right: 12px; accent-color: var(--tab-active);}
 .default-btn{ min-width: 218px; min-height: 54px; line-height: 54px; background-color: var(--theme-color); color: #fff; padding: 0 10px; border-radius: 40px;}
 .survey-tabs ul.survey-listings label { cursor: pointer; }
+.heading-font{ font-family: var(--frank-font);  }
+.lunchpad form input.form-control { border-color: var(--theme-color); background-color: var(--bg-opacity); height: auto; line-height: 32px;}
+.lunchpad .teammate{ background-color: var(--bg-opacity); border-radius: 12px;}
+.bg-custom-color2{ background-color: var(--theme-color); }
+button.submit_btn:hover{ background-color: var(--secondary-color); }
  /* start responsive css */
 @media screen and (min-width: 1280px) and (max-width: 1440px) {
     .wrapper-outer .main-content{ padding: 40px 29px; }

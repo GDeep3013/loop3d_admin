@@ -75,7 +75,7 @@ export default function LeftNav({isMenuOpen,setIsMenuOpen}) {
             </NavLink>
           </li>
         </> :
-        <>
+       user.role =="manager"?  <>
           <li className={`sideNavItem`}>
           <NavLink
             to="/manager/dashboard"
@@ -94,7 +94,7 @@ export default function LeftNav({isMenuOpen,setIsMenuOpen}) {
            Loop Lead
           </NavLink>
             </li>
-            <li className={`sideNavItem`}>
+            {/* <li className={`sideNavItem`}>
           <NavLink
             to="/manager/Chat-bot"
             className={({ isActive }) => (isActive ? 'active' : '')}
@@ -102,9 +102,9 @@ export default function LeftNav({isMenuOpen,setIsMenuOpen}) {
             <DocomentIcon />
           ChatGpt
           </NavLink>
-            </li>
+            </li> */}
             
-            <li className={`sideNavItem`}>
+            {/* <li className={`sideNavItem`}>
           <NavLink
             to="/survey-summary"
             className={({ isActive }) => (isActive ? 'active' : '')}
@@ -112,8 +112,17 @@ export default function LeftNav({isMenuOpen,setIsMenuOpen}) {
             <DocomentIcon />
           Summary
           </NavLink>
-          </li>
-           </>
+          </li> */}
+          </>
+            : <li className={`sideNavItem`}>
+          <NavLink
+            to="/loop-lead/dashboard"
+            className={({ isActive }) => (isActive ? 'active' : '')}
+            >
+            <DocomentIcon />
+           Dashboard
+              </NavLink>
+            </li>
           
         }
         <li className="sideNavItem LogoutMenu">

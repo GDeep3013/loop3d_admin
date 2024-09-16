@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Route, Routes, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-
 import {  createUser } from "../../../store/slices/UserSlice";
-
-
 import Dashboard from "../../pages/Dashboard";
 import Home from "../../pages/Home";
 import ProjectOverview from "../../pages/ProjectOverview";
@@ -14,32 +11,21 @@ import Employees from "../../admin/pages/users/Users";
 import AddEmployee from "../../admin/pages/users/AddUser";
 import Projects from "../../admin/Projects";
 import AddProject from "../../admin/AddSurvey";
-
 import Category from "../../admin/pages/categories/Category";
 import AddCategory from "../../admin/pages/categories/AddCategory";
-
 import Question from "../../admin/pages/questions/Question";
 import AddQuestion from "../../admin/pages/questions/AddQuestion";
 import QuestionDetail from "../../admin/pages/questions/QuestionDetail";
-
-
-
-
 import { getUser } from "../../apis/UserApi";
-
 import ForgetPassword from "../../pages/ForgetPassword";
 import ResetPassword from "../../pages/ResetPassword";
-
 import Organization from "../../admin/pages/organizations/Organization";
 import ViewOrganization from "../../admin/pages/organizations/ViewOrganization";
 //import AssignCompetencies from "../../pages/organizations/AssignCompetencies";
-
 import OrganizationTabs from "../../admin/pages/organizations/OrganizationTabs"
 import CommingSoon from "../../pages/CommingSoon";
-
 import LoopleadTabs from "../../admin/pages/loopleads/LoopleadTabs"
 import SurveyParticipantDetails from "../../admin/pages/loopleads/SurveyParticipantDetails"
-
 import QuestionTabs from "../../admin/pages/questions/QuestionTabs";
 import CreateQuestion from "../../admin/pages/questions/CreateQuestion";
 import Survey from "../../admin/pages/surveys/survey";
@@ -48,12 +34,14 @@ import CreateEmail from "../../admin/pages/emails/CreateEmail";
 import ViewEmail from "../../admin/pages/emails/ViewEmail";
 import SurveyList from "../../manager/pages/surveys/SurveyList";
 import CreateSurvey from "../../manager/pages/surveys/CreateSurvey";
-import LoopLeadDashboard from "../../LoopLead/LoopLeadDashboard";
+import LoopLeadDashboard from "../../LoopLead/pages/LoopLeadDashboard";
+import CreateParticipants from "../../LoopLead/pages/CreateParticipants"
 import LoopLeads from "../../manager/pages/loopleads/LoopLeads";
 import ManagerLoopleadTabs from "../../manager/pages/loopleads/ManagerLoopleadTabs"
 import ChatGPTPage from "../../manager/ChatGPTPage";
 import SurveySummary from "../survey-summary/SurveySummary";
 
+import LoopLeadSurveyParticipantDetails from "../../LoopLead/pages/LoopLeadSurveyParticipantDetails"
 const AppRouter = () => {
   const user = useSelector((state) => state.auth.user);
   const dispatch = useDispatch();
@@ -145,17 +133,13 @@ const AppRouter = () => {
           <Route path="/manager/view-loop_lead/:userId/:orgId" exact element={<ManagerLoopleadTabs/> } />
           <Route path="/manager/chat-bot" exact element={<ChatGPTPage /> } />
 
-          <Route path="/loop-lead/dashboard" exact element={<LoopLeadDashboard/> } />
+          <Route path="/loop-lead/dashboard" exact element={<LoopLeadDashboard />} />
+          <Route path="/loop-lead/participant/create/:id" exact element={<CreateParticipants/> } />
+          <Route path="/loop-lead/view-survey-participant/:id" exact element={<LoopLeadSurveyParticipantDetails/> } />
 
           <Route path="/survey-summary" exact element={<SurveySummary /> } />
 
-
-
-
-
-
-
-        </>
+      </>
       ) : (
           <>
           {/* Public Routes */}
