@@ -51,6 +51,8 @@ import CreateSurvey from "../../manager/pages/surveys/CreateSurvey";
 import LoopLeadDashboard from "../../LoopLead/LoopLeadDashboard";
 import LoopLeads from "../../manager/pages/loopleads/LoopLeads";
 import ManagerLoopleadTabs from "../../manager/pages/loopleads/ManagerLoopleadTabs"
+import ChatGPTPage from "../../manager/ChatGPTPage";
+import SurveySummary from "../survey-summary/SurveySummary";
 
 const AppRouter = () => {
   const user = useSelector((state) => state.auth.user);
@@ -141,9 +143,11 @@ const AppRouter = () => {
           <Route path="/manager/surveys/create" exact element={<CreateSurvey />} />
           <Route path="/manager/loop-leads" exact element={<LoopLeads />} />
           <Route path="/manager/view-loop_lead/:userId/:orgId" exact element={<ManagerLoopleadTabs/> } />
+          <Route path="/manager/chat-bot" exact element={<ChatGPTPage /> } />
 
           <Route path="/loop-lead/dashboard" exact element={<LoopLeadDashboard/> } />
 
+          <Route path="/survey-summary" exact element={<SurveySummary /> } />
 
 
 
@@ -153,7 +157,7 @@ const AppRouter = () => {
 
         </>
       ) : (
-        <>
+          <>
           {/* Public Routes */}
           <Route path="/" element={<Login />} />
           <Route path="/login" element={<Login />} />

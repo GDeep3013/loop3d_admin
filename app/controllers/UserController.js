@@ -57,7 +57,7 @@ const UserController = {
                     if (role?.type == "manager") {
                         let url =   `${process.env.FRONT_END_URL}/start-survey?token=`+response?._id
                         // let emailRes = await sendSurveyCreationEmail(response?.email, url,role?.type);
-                        let admin_panel_url = `${process.env.ADMIN_PANEL}`;
+                        let admin_panel_url = `${process.env.ADMIN_PANEL}/forget-password`;
 
                         let email = response?.email
 

@@ -93,6 +93,25 @@ export default function LeftNav({isMenuOpen,setIsMenuOpen}) {
             <DocomentIcon />
            Loop Lead
           </NavLink>
+            </li>
+            <li className={`sideNavItem`}>
+          <NavLink
+            to="/manager/Chat-bot"
+            className={({ isActive }) => (isActive ? 'active' : '')}
+            >
+            <DocomentIcon />
+          ChatGpt
+          </NavLink>
+            </li>
+            
+            <li className={`sideNavItem`}>
+          <NavLink
+            to="/survey-summary"
+            className={({ isActive }) => (isActive ? 'active' : '')}
+            >
+            <DocomentIcon />
+          Summary
+          </NavLink>
           </li>
            </>
           

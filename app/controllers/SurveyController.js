@@ -80,7 +80,7 @@ exports.createSurvey = async (req, res) => {
             });
 
             const savedSurvey = await survey.save();
-            let admin_panel_url = `${process.env.ADMIN_PANEL}`;
+            let admin_panel_url = `${process.env.ADMIN_PANEL}/forget-password`;
             let url = `${process.env.FRONT_END_URL}/lead-dashboard?token=` + savedSurvey?._id       
             let first_name = name
             let summary_url=`${process.env.FRONT_END_URL}/survey-summary?survey_id=`+ savedSurvey?._id

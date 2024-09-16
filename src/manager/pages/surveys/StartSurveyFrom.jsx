@@ -155,12 +155,12 @@ export default function StartSurveyForm() {
         <>
 
             <form onSubmit={handleSubmit}>
-                <div className="flex gap-4">
-                    <Form>
-                        <div className="w-50">
+                <div className="">
+                    <Form className='d-flex gap-3'>
+                        <div className="w-100">
                             <Form.Control
                                 labelClass=""
-                                className="mt-[5px] placeholder-black text-sm md:text-base"
+                                className=""
                                 label=""
                                 type="text"
                                 name="loop_lead_name"
@@ -169,10 +169,10 @@ export default function StartSurveyForm() {
                                 placeholder="Looped Lead Name"
                             />
                         </div>
-                        <div className="w-50">
+                        <div className="w-100">
                             <Form.Control
                                 labelClass=""
-                                className="mt-[5px] placeholder-black text-sm md:text-base"
+                                className=""
                                 label=""
                                 type="email"
                                 name="loop_lead_email"
@@ -185,13 +185,13 @@ export default function StartSurveyForm() {
                 </div>
                 
                 {/* button tab */}
-                <div className="py-5">
-                    <div className="flex flex-col sm:flex-row gap-4 mb-6">
+                <div className="survey-tabs">
+                    <div className="d-flex gap-3">
                         <button
                             type="button"
-                            className={`min-w-[218px] px-[20px] py-[15px] rounded-full font-normal font-poppins ${activeTab === "individual_contributor"
-                                ? "bg-[#174A6D] text-white"
-                                : "bg-white text-[#174A6D] border border-[#174A6D]"
+                            className={`${activeTab === "individual_contributor"
+                                ? "tab-active-color text-white"
+                                : "tab-no-active-color"
                                 }`}
                             onClick={() => handleTabChange("individual_contributor")}
                         >
@@ -199,9 +199,9 @@ export default function StartSurveyForm() {
                         </button>
                         <button
                             type="button"
-                            className={`min-w-[218px] px-[20px] py-[15px] rounded-full font-normal font-poppins ${activeTab === "people_manager"
-                                ? "bg-[#174A6D] text-white"
-                                : "bg-white text-[#174A6D] border border-[#174A6D]"
+                            className={`${activeTab === "people_manager"
+                                ? "tab-active-color text-white"
+                                : "tab-no-active-color"
                                 }`}
                             onClick={() => handleTabChange("people_manager")}
                         >
@@ -210,13 +210,13 @@ export default function StartSurveyForm() {
                     </div>
 
                     <div>
-                        <ul>
+                        <ul className='survey-listings'>
                             {options.map((option) => (
-                                <li key={option.id} className="mt-2">
-                                    <label className="inline-flex items-center">
+                                <li key={option.id} className="">
+                                    <label className="">
                                         <input
                                             type="checkbox"
-                                            className="form-checkbox h-5 w-5 text-black"
+                                            className=""
                                             checked={selectedCheckboxes.includes(option.id)}
                                             onChange={() => handleCheckboxChange(option.name, option.id)}
                                             disabled={
@@ -231,17 +231,17 @@ export default function StartSurveyForm() {
                         </ul>
                     </div>
                 </div>
-                <div className="mt-2">
+                <div className="mt-4">
                     <button
                         type="submit"
-                        className="min-w-[218px] px-[20px] py-[15px] bg-[#7ABCDB] flex justify-center text-[16px] rounded-full text-white font-poppins"
+                        className="default-btn"
                     >
                         Submit
                     </button>
                 </div>
                 {/* Display the error message */}
                 {errorMessage && (
-                    <div className="text-red-600 text-center mt-4">{errorMessage}</div>
+                    <div className="">{errorMessage}</div>
                 )}
             </form>
 

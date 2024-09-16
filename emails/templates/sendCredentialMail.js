@@ -10,9 +10,9 @@ const sendCredentialMail = (recipientDetails) => {
                         <p><strong>Email:</strong> ${recipientDetails.email}</p>                       
                         <p><strong>Password:</strong> ${recipientDetails.password}</p>
 
-                        <p>It's been 2 months since you completed your Loop3D 360 Feedback Process, and we just wanted to check in on your progress. Remember, professional development is a journey, and now would be a good time to measure your progress by launching another Loop3D 360 Feedback Process. Gain insightful feedback critical to your leadership development by clicking the link below to access your dashboard:</p>
+                        <p>To continue, please reset your password and access your Loop3D dashboard by clicking the link below:</p>
                         <br />
-                        <a style="display: inline-block; text-decoration:none;padding: 12px 25px;color: #fff; background-color: #7abcdb; border-radius: 5px;" href="${recipientDetails.admin_panel_url}">LINK TO DASHBOARD</a>
+                        <a style="display: inline-block; text-decoration:none;padding: 12px 25px;color: #fff; background-color: #7abcdb; border-radius: 5px;" href="${recipientDetails.admin_panel_url}">RESET PASSWORD</a>
                         <br />
                         <p>Thanks!</p>
                         <p>The Loop3D Team</p>
