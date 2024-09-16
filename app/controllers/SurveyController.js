@@ -420,13 +420,13 @@ exports.deleteParticipant = async (req, res) => {
 const processParticipantAnswers = (participant, answers, participantType, assignCompetencies, competencies, questions, report) => {
     if (answers) {
         for (const answer of answers) {
-            const question = questions.find(q => q._id.equals(answer?.questionId));
+            const question = questions.find(q => q?._id.equals(answer?.questionId));
             if (question) {
-                const assignCompetency = assignCompetencies.find(ac => ac.question_id.equals(question._id));
+                const assignCompetency = assignCompetencies?.find(ac => ac?.question_id?.equals(question?._id));
                 if (assignCompetency) {
-                    const competency = competencies.find(c => c._id.equals(assignCompetency.category_id));
+                    const competency = competencies.find(c => c?._id.equals(assignCompetency?.category_id));
                     if (competency) {
-                        const categoryName = competency.category_name;
+                        const categoryName = competency?.category_name;
                         const selectedOption = question.options.find(option =>
                             option?._id?.toString() === answer?.optionId?.toString()
                         );
@@ -482,9 +482,9 @@ exports.generateSurveyReport = async (req, res) => {
             }
         });
 
-        const questionsArray = assignCompetencies.map(ac => ac.question_id);
-        const questions = Array.from(new Set(questionsArray.map(q => q._id)))
-            .map(id => questionsArray.find(q => q._id.equals(id)));
+        const questionsArray = assignCompetencies.map(ac => ac?.question_id);
+        const questions = Array.from(new Set(questionsArray.map(q => q?._id)))
+            .map(id => questionsArray.find(q => q?._id.equals(id)));
 
         const competencies = await Category.find({ _id: { $in: categoryIds } });
 
@@ -515,14 +515,14 @@ exports.generateSurveyReport = async (req, res) => {
         processParticipantAnswers(survey.loop_lead, loopLeadAnswers?.answers, 'Self', assignCompetencies, competencies, questions, report);
 
         // Process Manager (Supervisor)
-        const managerAnswers = await SurveyAnswers.findOne({ participant_id: survey.manager._id });
+        const managerAnswers = await SurveyAnswers.findOne({ participant_id: survey.manager?._id });
         processParticipantAnswers(survey.manager, managerAnswers?.answers, 'Supervisor', assignCompetencies, competencies, questions, report);
 
         // Process other participants (Direct Report, Teammate, Other)
         const participants = await SurveyParticipant.find({ survey_id });
         for (const participant of participants) {
             const participantType = participant.p_type || 'Other';
-            const participantAnswers = await SurveyAnswers.findOne({ participant_id: participant._id });
+            const participantAnswers = await SurveyAnswers.findOne({ participant_id: participant?._id });
             processParticipantAnswers(participant, participantAnswers?.answers, participantType, assignCompetencies, competencies, questions, report);
         }
 
@@ -554,9 +554,9 @@ const calculateCategoryAverages = (assignCompetencies, competencies, questions, 
     let maxAverage = -Infinity;
     let minAverage = Infinity;
 
-    competencies.forEach((competency) => {
-        const competencyQuestions = questions.filter(q => 
-            assignCompetencies.some(ac => ac.category_id.equals(competency._id) && ac.question_id._id.equals(q._id))
+    competencies?.forEach((competency) => {
+        const competencyQuestions = questions?.filter(q => 
+            assignCompetencies.some(ac => ac?.category_id.equals(competency._id) && ac?.question_id?._id.equals(q?._id))
         );
 
         let totalQuestions = 0;
@@ -565,7 +565,7 @@ const calculateCategoryAverages = (assignCompetencies, competencies, questions, 
         competencyQuestions.forEach(question => {
             // Find all participant answers for this question
             const questionAnswers = participantAnswers
-                .map(pa => pa.answers.find(ans => ans?.questionId?.equals(question._id)))
+                .map(pa => pa.answers.find(ans => ans?.questionId?.equals(question?._id)))
                 .filter(Boolean);  // Filter out any undefined answers
         
             // Calculate the total weightage for the question
@@ -645,9 +645,9 @@ exports.generateCompetencyAverageReport = async (req, res) => {
         }
 
         // Fetch unique questions from assignCompetencies
-        const questionsArray = assignCompetencies.map(ac => ac.question_id);
-        const questions = Array.from(new Set(questionsArray.map(q => q._id)))
-            .map(id => questionsArray.find(q => q._id.equals(id)));
+        const questionsArray = assignCompetencies.map(ac => ac?.question_id);
+        const questions = Array.from(new Set(questionsArray.map(q => q?._id)))
+            .map(id => questionsArray.find(q => q?._id.equals(id)));
 
         // Fetch participants for the survey
         const participants = await SurveyParticipant.find({ survey_id });

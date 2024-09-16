@@ -38,7 +38,7 @@ export default function StartSurveyForm() {
     // console.log(import.meta.env.VITE_PROXY_URL,'url')
     const getAssignments = async () => {
         try {
-            const url = `${import.meta.env.VITE_PROXY_URL}/competencies/assign?user_id=${user?._id}`;
+            const url = `/api/competencies/assign?user_id=${user?._id}`;
             const response = await fetch(url, {
                 headers: { 'x-api-key': import.meta.env.VITE_X_API_KEY }
             });
@@ -112,7 +112,7 @@ export default function StartSurveyForm() {
         };
 
         try {
-            const response = await fetch(`${import.meta.env.VITE_PROXY_URL}/surveys/create`, {
+            const response = await fetch(`/api/surveys/create`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
