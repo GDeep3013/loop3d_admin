@@ -85,3 +85,5 @@ h1,h2,h3,h4,h5,h6,p{ margin: 0;}
 .fs-7 {font-size: 14px;}
 .bg-custom-color{ background-color: var(--secondary-color); }
 .text-custom-color{ color: var(--secondary-color); }
+.font-frank{ font-family: var(--frank-font); }
+.uppercase{text-transform: uppercase;}
