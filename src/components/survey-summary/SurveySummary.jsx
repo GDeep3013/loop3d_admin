@@ -16,9 +16,28 @@ const SurveySummary = () => {
     const [survey, setSurvey] = useState();
     const [reportData, setReportData] = useState();
     const [participants, setParticipants] = useState();
-    const[competencyReport, setCompetencyReport]= useState();
+    const [competencyReport, setCompetencyReport] = useState();
+    const [summaryArray ,setSummaryArray ] = useState([]);
 
-
+    function createSummary(data) {
+        let  summaryArray = [];
+        
+        // Loop through each category
+        for (const category in data) {
+          if (data.hasOwnProperty(category)) {
+            const participantTypes = data[category];
+            for (const participantType in participantTypes) {
+              if (participantTypes.hasOwnProperty(participantType)) {
+                const participantData = participantTypes[participantType];
+                
+                summaryArray[participantType] = participantData?.textAnswers
+              }
+            }
+          }
+        }
+      
+        return summaryArray;
+      }
     const getSurvey = async (survey_id) => {
         try {
             const url = `/api/surveys?survey_id=${survey_id}`;
@@ -71,7 +90,9 @@ const SurveySummary = () => {
             if (response.ok) {
                 const data = await response.json();
                 // console.log('datadata',data?.report?.categories)
-                setReportData(data?.report?.categories|| {});
+                setReportData(data?.report?.categories || {});
+                let summaryArray = createSummary(data?.report?.categories || {});
+                setSummaryArray(summaryArray)
             } else {
                 console.error('Failed to fetch survey');
             }
@@ -108,6 +129,9 @@ const SurveySummary = () => {
             generateCompetencyAverageReport(id)
         }
     }, [id]);
+
+
+    console.log('summaryArray',summaryArray)
 
     const Participants = ['Self', 'Direct Report', 'Teammate', 'Supervisor', 'Other'];
 

@@ -435,17 +435,32 @@ const processParticipantAnswers = (participant, answers, participantType, assign
                         // Initialize category for each participant type
                         if (!report.categories[categoryName]) {
                             report.categories[categoryName] = {
-                                Self: { totalQuestions: 0, totalWeightage: 0 },
-                                'Direct Report': { totalQuestions: 0, totalWeightage: 0 },
-                                Teammate: { totalQuestions: 0, totalWeightage: 0 },
-                                Supervisor: { totalQuestions: 0, totalWeightage: 0 },
-                                Other: { totalQuestions: 0, totalWeightage: 0 }
+                                Self: { totalQuestions: 0, totalWeightage: 0, textAnswers: [] },
+                                'Direct Report': { totalQuestions: 0, totalWeightage: 0, textAnswers: [] },
+                                Teammate: { totalQuestions: 0, totalWeightage: 0, textAnswers: [] },
+                                Supervisor: { totalQuestions: 0, totalWeightage: 0, textAnswers: [] },
+                                Other: { totalQuestions: 0, totalWeightage: 0, textAnswers: [] }
                             };
                         }
 
                         // Increment totalQuestions and totalWeightage for the participantType
                         if (!answer.answer) {
                             report.categories[categoryName][participantType].totalQuestions += 1;
+                        } else {
+                            if (question?.questionType === 'Text') {
+                                // Handle text-based questions (free text answers)
+                                report.categories[categoryName][participantType].textAnswers.push({
+                                    id:question?._id,
+                                    questionText: question.questionText,
+                                    answerText: answer.answer,
+                                    participant: {
+                                        type: participantType,  // Participant type (Self, Direct Report, etc.)
+                                        id: participant.id,  // Assuming there's an ID for the participant
+                                        name: `${participant.p_first_name} ${participant.p_last_name}`,  // Assuming participant has first and last name
+                                        email: participant.p_email  // Assuming participant has an email
+                                    }
+                                });
+                            }
                         }
                         report.categories[categoryName][participantType].totalWeightage += weightage;
                     }
@@ -502,11 +517,11 @@ exports.generateSurveyReport = async (req, res) => {
         // Initialize categories for all competencies
         competencies.forEach((category) => {
             report.categories[category.category_name] = {
-                Self: { totalQuestions: 0, totalWeightage: 0 },
-                'Direct Report': { totalQuestions: 0, totalWeightage: 0 },
-                Teammate: { totalQuestions: 0, totalWeightage: 0 },
-                Supervisor: { totalQuestions: 0, totalWeightage: 0 },
-                Other: { totalQuestions: 0, totalWeightage: 0 }
+                Self: { totalQuestions: 0, totalWeightage: 0, textAnswers: [] },
+                'Direct Report': { totalQuestions: 0, totalWeightage: 0, textAnswers: [] },
+                Teammate: { totalQuestions: 0, totalWeightage: 0, textAnswers: [] },
+                Supervisor: { totalQuestions: 0, totalWeightage: 0, textAnswers: [] },
+                Other: { totalQuestions: 0, totalWeightage: 0, textAnswers: [] }
             };
         });
 
