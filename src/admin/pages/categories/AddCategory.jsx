@@ -112,10 +112,10 @@ export default function AddCategory() {
 
   return (
     <AuthLayout title={id ? "Edit Competency" : "Add Competency"}>
-      <div class="main-back-heading">
-      <div class="container">
-         <div class="row">
-            <div class="col-md-6 p-0">
+      <div className="main-back-heading">
+      <div className="container">
+         <div className="row">
+            <div className="col-md-6 p-0">
             <div className="profile-btns pt-0">
                 <Button className="default-btn cancel-btn ml-0" onClick={() => navigate(-1)}>
                     Back

@@ -5,6 +5,7 @@ import { Container, Dropdown, Row, Col, Pagination } from 'react-bootstrap';
 import { getSurveys } from '../../../apis/SurveyApi';
 import AuthLayout from '../../../layout/Auth';
 import { formatDateGB, formatDateUS } from '../../../utils/dateUtils';
+import Loading from '../../../components/Loading';
 
 export default function Survey() {
     const navigate = useNavigate();
@@ -67,7 +68,7 @@ export default function Survey() {
                         </div>
                     </div>
                 </div>
-                <div className='table-scroll  shadow-border-wrapper ml-8'>
+                <div className='table-scroll shadow-border-wrapper'>
                 <table className='table'>
                     <thead>
                         <tr>
@@ -87,7 +88,7 @@ export default function Survey() {
                         {loading ? (
                             <tr>
                                 <td colSpan="10" style={{ textAlign: 'center' }}>
-                                    Loading...
+                                    <Loading />
                                 </td>
                             </tr>
                         ) : surveys.length === 0 ? (

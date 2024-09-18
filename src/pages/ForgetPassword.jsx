@@ -80,7 +80,7 @@ export default function ForgetPassword() {
     <div className="loginOuter">
       <Container fluid>
         <Row className="gx-0">
-          <Col md={6}>
+          <Col className='login-hide-mobile' md={6}>
             <div className="loginContent">
               <img
                 src={"/images/logo.png"}
@@ -101,6 +101,13 @@ export default function ForgetPassword() {
           <Col md={6}>
             <div className="loginForm">
               <div className="verticalCenter">
+                <div className='mobile-logo-login'>
+                  <img
+                    src={"/images/logoheader.svg"}
+                    alt="Logo"
+                    className="logoImg"
+                  />
+                </div>
                 <h2 className="h2-style">Forget Password</h2>
                 <p className="p-style">
                 Enter your email and we'll send you a link to reset your password

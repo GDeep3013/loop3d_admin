@@ -97,7 +97,7 @@ export default function ResetPassword() {
         <div className="loginOuter">
             <Container fluid>
                 <Row className="gx-0">
-                    <Col md={6}>
+                    <Col className='login-hide-mobile' md={6}>
                         <div className="loginContent">
                             <img
                                 src={"/images/logo.png"}
@@ -118,6 +118,13 @@ export default function ResetPassword() {
                     <Col md={6}>
                         <div className="loginForm">
                             <div className="verticalCenter">
+                                <div className='mobile-logo-login'>
+                                    <img
+                                        src={"/images/logoheader.svg"}
+                                        alt="Logo"
+                                        className="logoImg"
+                                    />
+                                </div>
                                 <h2 className="h2-style">Reset Password</h2>
                                 <Form className="formOuter mt-4" >
                                     <Form.Group className="mb-3">

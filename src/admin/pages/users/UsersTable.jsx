@@ -3,18 +3,18 @@ import { useNavigate, useParams } from "react-router-dom";
 import { StatusIcon, PLusIcon, MoreIcon } from "../../../components/svg-icons/icons";
 import { Container, Dropdown, Pagination, Row, Col, } from 'react-bootstrap'
 import { Link } from "react-router-dom";
-import {Edit,Remove} from '../../../components/svg-icons/icons';
+import { Edit, Remove } from '../../../components/svg-icons/icons';
 import Swal from 'sweetalert2'
 export default function EmployeeTable({ }) {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const itemsPerPage = 10;
+
   const [Employe, setEmployee] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
-  const [previewImage, setPreviewImage] = useState(null);
-  useEffect(() => {
+  const [loading, setLoading] = useState(true);
 
+  useEffect(() => {
     getEmployee();
   }, [searchTerm, currentPage]);
 
@@ -30,7 +30,9 @@ export default function EmployeeTable({ }) {
       setEmployee(result.users);
       setTotalPages(result.totalPages); // Set totalPages received from the backend
     }
+    setLoading(false);
   }
+
   const handlePaginationClick = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
@@ -71,7 +73,7 @@ export default function EmployeeTable({ }) {
     }
   };
   return (<>
-    <div className='table-inner main-wrapper '>
+    <div className='table-inner main-wrapper'>
       <div className='content-outer mt-3'>
         <div className='tabe-outer'>
           <div className='table-heading'>
@@ -92,54 +94,67 @@ export default function EmployeeTable({ }) {
         </div>
       </div>
       <div className='table-scroll shadow-border-wrapper'>
-      <table className='table'>
-        <thead>
-          <tr>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>Email address</th>
-            <th>Role</th>
-            <th>Orgnization</th>
-            <th>Status <StatusIcon /> </th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {Employe.length === 0 ? (
+        <table className='table'>
+          <thead>
             <tr>
-              <td colSpan="12" style={{ textAlign: 'center' }}>
-                <h4>No User Found</h4>
-              </td>
+              <th>Serial No.</th>
+              <th>First Name</th>
+              <th>Last Name</th>
+              <th>Email address</th>
+              <th>Role</th>
+              <th>Orgnization</th>
+              <th>Status <StatusIcon /> </th>
+              <th>Action</th>
             </tr>
-          ) : (
-              Employe.map(user => (
-              
-                user?.role?.type !="admin" && <tr key={user._id}>
-                <td>
-                  <div className="user-profile d-flex align-items-center">
-                    <div className='user-name'>{user.first_name}</div>
-                  </div>
+          </thead>
+          <tbody>
+
+            {loading && (
+              <tr>
+                <td colSpan="12" style={{ textAlign: 'center' }}>
+                  <h4>loading...</h4>
                 </td>
-                <td>
-                  <div className="user-profile d-flex align-items-center">
-                    <div className='user-name'>{user.last_name}</div>
-                  </div>
+              </tr>)
+            }
+
+            {!loading && Employe.length === 0 && (
+              <tr>
+                <td colSpan="12" style={{ textAlign: 'center' }}>
+                  <h4>No User Found</h4>
                 </td>
-                <td>{user.email}</td>
-                <td>{user.role.type}</td>
-                <td>{user.organization_id?.name}</td>
-               <td><span className='span-badge active-tag'>Active</span></td>
-                <td>
-                {/* <button className='action-btn' onClick={() => navigate(`/add-user/${user._id}`)}><Edit /></button> */}
-                 <button className='action-btn' onClick={() => handleDelete(user._id)}><Remove /></button>
-                 
-                </td>
-              </tr>
-            ))
-          )}
-        </tbody>
-      </table>
-</div>
+              </tr>)
+            }
+            {
+            !loading && Employe.length > 0 && Employe.map((user, ind) => (
+
+                user?.role?.type != "admin" && <tr key={user._id}>
+                  <td>{ind + 1}</td>
+                  <td>
+                    <div className="user-profile d-flex align-items-center">
+                      <div className='user-name'>{user.first_name}</div>
+                    </div>
+                  </td>
+                  <td>
+                    <div className="user-profile d-flex align-items-center">
+                      <div className='user-name'>{user.last_name}</div>
+                    </div>
+                  </td>
+                  <td className='text-lowercase'> <Link href="#" > {user.email} </Link></td>
+                  <td>{user.role.type}</td>
+                  <td>{user.organization?.name}</td>
+                  <td><span className='span-badge active-tag'>Active</span></td>
+                  <td>
+                    {/* <button className='action-btn' onClick={() => navigate(`/add-user/${user._id}`)}><Edit /></button> */}
+                    <button className='action-btn' onClick={() => handleDelete(user._id)}><Remove /></button>
+
+                  </td>
+                </tr>
+              ))
+            }
+
+          </tbody>
+        </table>
+      </div>
     </div>
     {totalPages > 1 && (
       <Pagination className='justify-content-center pagination-outer'>

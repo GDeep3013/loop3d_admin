@@ -5,7 +5,7 @@ import Swal from 'sweetalert2';
 import AssignCompeteny from '../../../components/AssignCompeteny'; // Import the AssignCompetency component
 import { useSelector } from 'react-redux';
 
-import { getAssignmentsByUserAndOrg ,deleteAssignCompetency } from "../../../apis/assignCompetencyApi"; // Update to your actual API import
+import { getAssignmentsByUserAndOrg, deleteAssignCompetency } from "../../../apis/assignCompetencyApi"; // Update to your actual API import
 
 export default function AssignCompetencies({ data, type }) {
     const [currentPage, setCurrentPage] = useState(1);
@@ -25,8 +25,8 @@ export default function AssignCompetencies({ data, type }) {
         setLoading(true);
         try {
             // Call the API with appropriate parameters
-            const result = await getAssignmentsByUserAndOrg(user?._id,data?.ref_id, type);
-            setCompetencies(result.assignments?result.assignments:[]); // Adjust based on the API response structure
+            const result = await getAssignmentsByUserAndOrg(user?._id, data?.ref_id, type);
+            setCompetencies(result.assignments ? result.assignments : []); // Adjust based on the API response structure
             setTotalPages(result.totalPages); // Adjust based on the API response structure
             setLoading(false);
         } catch (error) {
@@ -38,7 +38,7 @@ export default function AssignCompetencies({ data, type }) {
         setCurrentPage(pageNumber);
     };
 
-    const handleDelete = async (id,category_id) => {
+    const handleDelete = async (id, category_id) => {
         try {
             const confirmResult = await Swal.fire({
                 title: "Are you sure?",
@@ -77,6 +77,10 @@ export default function AssignCompetencies({ data, type }) {
         setShowAssignCompetencyModal(false);
     };
 
+    const remove_from_string = (str) => {
+        return str.replace(/_/g, ' ');  // Replace underscores with spaces
+    };
+
     return (
         <div>
             <div className='table-inner'>
@@ -89,7 +93,7 @@ export default function AssignCompetencies({ data, type }) {
                                     </Col>
                                     <Col md={6} className='text-end'>
                                         <Button onClick={handleShowAssignCompetencyModal} className='default-btn'>
-                                        Assign Competency <PLusIcon />
+                                            Assign Competency <PLusIcon />
                                         </Button>
                                     </Col>
                                 </Row>
@@ -98,40 +102,42 @@ export default function AssignCompetencies({ data, type }) {
                     </div>
                 </div>
                 <div className='table-scroll table-pd'>
-                <table className='table'>
-                    <thead>
-                        <tr>
-                            <th>Competency</th>
-                            <th>Competency Type</th>
-                            <th>User Name</th>
-                            <th>Status <StatusIcon /></th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {!loading && competencies.length === 0 &&
+                    <table className='table'>
+                        <thead>
                             <tr>
-                                <td colSpan="4" style={{ textAlign: 'center' }}>
-                                    <h4>No Competencies Found</h4>
-                                </td>
+                                <th>Serial No.</th>
+                                <th>Competency</th>
+                                <th>Competency Type</th>
+                                <th>User Name</th>
+                                <th>Status <StatusIcon /></th>
+                                <th>Action</th>
                             </tr>
-                        }
+                        </thead>
+                        <tbody>
+                            {!loading && competencies.length === 0 &&
+                                <tr>
+                                    <td colSpan="4" style={{ textAlign: 'center' }}>
+                                        <h4>No Competencies Found</h4>
+                                    </td>
+                                </tr>
+                            }
 
-                        {!loading && competencies.length > 0 && competencies.map(cat => (
-                            
-                                    <tr>
-                                <td>{cat.category_id?.category_name}</td>
-                                <td>{cat.category_id?.competency_type}</td>
-                                        <td>{cat.user_id?.first_name} {cat.user_id?.last_name}</td>
-                                        <td><span className='span-badge active-tag'>Active</span></td>
-                                        <td>
+                            {!loading && competencies.length > 0 && competencies.map((cat,ind) => (
+
+                                <tr>
+                                    <td>{ind+1}</td>
+                                    <td>{cat.category_id?.category_name}</td>
+                                    <td>{remove_from_string(cat.category_id?.competency_type)}</td>
+                                    <td>{cat.user_id?.first_name} {cat.user_id?.last_name}</td>
+                                    <td><span className='span-badge active-tag'>Active</span></td>
+                                    <td>
                                         <button className='action-btn' onClick={() => handleDelete(cat._id)}><Remove /></button>
-                                        </td>
-                                    </tr>
-                                
-                        ))}
-                    </tbody>
-                </table>
+                                    </td>
+                                </tr>
+
+                            ))}
+                        </tbody>
+                    </table>
                 </div>
             </div>
 
@@ -150,7 +156,7 @@ export default function AssignCompetencies({ data, type }) {
                 show={showAssignCompetencyModal}
                 handleClose={handleCloseAssignCompetencyModal}
                 getCategory={getCategory}
-            /> }
+            />}
 
         </div>
     );

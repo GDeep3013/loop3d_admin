@@ -6,6 +6,7 @@ import { Container, Dropdown, Pagination, Row, Col, } from 'react-bootstrap'
 import { Link } from "react-router-dom";
 import Swal from 'sweetalert2'
 import { Edit, Remove } from '../../../components/svg-icons/icons';
+import Loading from '../../../components/Loading';
 
 export default function Category() {
 
@@ -66,7 +67,6 @@ export default function Category() {
                     method: 'DELETE',
                     headers: { "x-api-key": import.meta.env.VITE_X_API_KEY }
                 });
-                console.log(response, 'response');
                 if (response.ok) {
                     await Swal.fire({
                         title: "Deleted!",
@@ -108,41 +108,52 @@ export default function Category() {
                     </div>
                 </div>
                 <div className='table-scroll  shadow-border-wrapper ml-8'>
-                <table className='table'>
-                    <thead>
-                        <tr>
-                            <th>Competency</th>
-                            <th>Competency Type</th>
-                            <th>Status <StatusIcon /> </th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {!loading && category.length === 0 &&
+                    <table className='table'>
+                        <thead>
                             <tr>
-                                <td colSpan="6" style={{ textAlign: 'center' }}>
-                                    <h4>No Category Found</h4>
-                                </td>
+                                <th>Serial No.</th>
+                                <th>Competency</th>
+                                <th>Competency Type</th>
+                                <th>Status <StatusIcon /> </th>
+                                <th>Action</th>
                             </tr>
-                        }
+                        </thead>
+                        <tbody>
 
-                        {!loading && category.length > 0 && category?.map(cat => (
-                            <tr key={cat._id}>
-                                <td>
-                                    {cat.category_name}
-                                </td>
-                                <td>
-                                    {cat?.competency_type && (
-                                        cat.competency_type === "individual_contributor" ? "Individual Contributor" :
-                                            cat.competency_type === "people_manager" ? "People Manager" :
-                                                null // Default or fallback value if needed
-                                    )}
-                                </td>
-                                <td><span className='span-badge active-tag'>Active</span></td>
-                                <td>
-                                    <button className='action-btn' onClick={() => navigate(`/competencies/${cat._id}`)}><Edit /></button>
-                                    <button className='action-btn' onClick={() => handleDelete(cat._id)}><Remove /></button>
-                                    {/* <Dropdown className='custom-dropdown'>
+                            {loading && (
+                                <tr>
+                                    <td colSpan="12" style={{ textAlign: 'center' }}>
+                                        <Loading />
+                                    </td>
+                                </tr>)
+                            }
+
+                            {!loading && category.length === 0 &&
+                                <tr>
+                                    <td colSpan="6" style={{ textAlign: 'center' }}>
+                                        <h4>No Category Found</h4>
+                                    </td>
+                                </tr>
+                            }
+
+                            {!loading && category.length > 0 && category?.map((cat, ind) => (
+                                <tr key={cat._id}>
+                                    <td>{ind + 1}</td>
+                                    <td>
+                                        {cat.category_name}
+                                    </td>
+                                    <td>
+                                        {cat?.competency_type && (
+                                            cat.competency_type === "individual_contributor" ? "Individual Contributor" :
+                                                cat.competency_type === "people_manager" ? "People Manager" :
+                                                    null // Default or fallback value if needed
+                                        )}
+                                    </td>
+                                    <td><span className='span-badge active-tag'>Active</span></td>
+                                    <td>
+                                        <button className='action-btn' onClick={() => navigate(`/competencies/${cat._id}`)}><Edit /></button>
+                                        <button className='action-btn' onClick={() => handleDelete(cat._id)}><Remove /></button>
+                                        {/* <Dropdown className='custom-dropdown'>
                                             <Dropdown.Toggle variant="success" id="dropdown-basic">
                                                 <MoreIcon />
                                             </Dropdown.Toggle>
@@ -151,13 +162,13 @@ export default function Category() {
                                             <Dropdown.Item onClick={() => handleDelete(cat._id)}>Delete</Dropdown.Item>
                                             </Dropdown.Menu>
                                         </Dropdown> */}
-                                </td>
-                            </tr>
-                        ))
-                        }
-                    </tbody>
-                </table>
-</div>
+                                    </td>
+                                </tr>
+                            ))
+                            }
+                        </tbody>
+                    </table>
+                </div>
             </div>
             {totalPages > 1 && (
                 <Pagination className='justify-content-center pagination-outer'>

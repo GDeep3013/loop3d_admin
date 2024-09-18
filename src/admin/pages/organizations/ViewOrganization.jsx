@@ -37,11 +37,11 @@ export default function ViewOrganization() {
 
     return (
         <AuthLayout title={id ? "Edit Organization" : "Add Organization"}>
-             <div class="tabe-outer">
-   <div class="main-back-heading">
-      <div class="container">
-         <div class="row">
-            <div class="col-md-6 p-0">
+             <div className="tabe-outer">
+   <div className="main-back-heading">
+      <div className="container">
+         <div className="row">
+            <div className="col-md-6 p-0">
             <div className="profile-btns pt-0">
                 <Button className="default-btn cancel-btn ml-0" onClick={() => navigate(-1)}>
                     Back
@@ -57,7 +57,7 @@ export default function ViewOrganization() {
                     <Container>
                         <Row>
                             <Col md={6}>
-                                <h2 class="orgname">{organization.name}</h2>
+                                <h2 className="orgname">{organization.name}</h2>
                             </Col>
                         </Row>
                     </Container>

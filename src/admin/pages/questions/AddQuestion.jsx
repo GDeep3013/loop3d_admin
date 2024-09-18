@@ -139,11 +139,11 @@ export default function AddQuestion({ id, savedData }) {
 
     return (
         <div>
-        {!id && <div class="tabe-outer">
-            <div class="main-back-heading">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-md-6 p-0">
+        {!id && <div className="tabe-outer">
+            <div className="main-back-heading">
+                <div className="container">
+                    <div className="row">
+                        <div className="col-md-6 p-0">
                             <div className="profile-btns pt-0">
                                 <Button className="default-btn cancel-btn ml-0" onClick={() => navigate(-1)}>
                                     Back
@@ -194,7 +194,7 @@ export default function AddQuestion({ id, savedData }) {
                         {formData.questionType === 'Radio' && (
                             <Col md={12}>
                                 <div className='question-contant'>
-                                    <h3 class="add-title">Answers</h3>
+                                    <h3 className="add-title">Answers</h3>
                                     <Button type="button" onClick={addOption} variant="primary">
                                         Add Option
                                     </Button>

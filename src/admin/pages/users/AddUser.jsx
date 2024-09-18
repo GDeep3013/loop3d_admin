@@ -17,7 +17,7 @@ export default function AddEmployee() {
     email: '',
     password: '',
     confirmPassword: '',
-    userType: '',
+    user_type: '',
     _method: '',
     organization_id: '',
     created_by: null
@@ -36,11 +36,6 @@ export default function AddEmployee() {
       setOrganizations(res.data);
     });
   }, []);
-
-  const isValidPhoneNumber = (phone) => {
-    // Simple phone number validation regex
-    return /^\+?[1-9]\d{1,14}$/.test(phone);
-  };
 
   const validateForm = (formData) => {
     let errors = {};
@@ -70,8 +65,8 @@ export default function AddEmployee() {
       }
     }
 
-    if (!formData.userType.trim()) {
-      errors.userType = 'User type is required';
+    if (!formData.user_type.trim()) {
+      errors.user_type = 'User type is required';
     }
     // if (file === '' && !previewImage) {
     //   errors.image = 'User image is required';
@@ -95,7 +90,7 @@ export default function AddEmployee() {
     // formDataToSend.append('phone', formData.phone ? formData.phone : '');
     // formDataToSend.append('password', formData.password ? formData.password : '');
     // formDataToSend.append('confirmPassword', formData.confirmPassword ? formData.confirmPassword : '');
-    // formDataToSend.append('userType', formData.userType ? formData.userType : '');
+    // formDataToSend.append('user_type', formData.user_type ? formData.user_type : '');
     // formDataToSend.append('organization_id', formData.organization_id ? formData.organization_id : null);
 
     let url = "/api/register";
@@ -134,10 +129,10 @@ export default function AddEmployee() {
       });
   };
 
-  console.log('errors', errors)
+
   const fetchRoles = async () => {
     try {
-      const response = await fetch('/api/get-role');
+      const response = await fetch('/api/roles');
       if (!response.ok) {
         throw new Error('Failed to fetch roles');
       }
@@ -178,7 +173,7 @@ export default function AddEmployee() {
             email: userData.email ? userData.email : '',
             phone: userData.phone ? userData.phone : '',
             designation: userData.designation ? userData.designation : '',
-            userType: userData.role?._id ? userData.role?._id : '',
+            user_type: userData.role?._id ? userData.role?._id : '',
             organization_id: userData.organization_id ? userData.organization_id : '',
             _method: 'PUT',
           });
@@ -197,124 +192,110 @@ export default function AddEmployee() {
 
   return (
     <AuthLayout title={id ? 'Edit User' : "Add User"}>
-       <div class="tabe-outer">
-   <div class="main-back-heading">
-      <div class="container">
-         <div class="row">
-            <div class="col-md-6 p-0">
-            <div className="profile-btns pt-0">
-                <Button className="default-btn cancel-btn ml-0" onClick={() => navigate(-1)}>
+
+      <div className="tabe-outer">
+        <div className="main-back-heading">
+          <div className="container">
+            <div className="row">
+              <div className="col-md-6 p-0">
+                <div className="profile-btns pt-0">
+                  <Button className="default-btn cancel-btn ml-0" onClick={() => navigate(-1)}>
                     Back
-                </Button>
-            </div>                  
-            </div>
-         </div>
-      </div>
-   </div>
-</div>   
-      <div className="content-outer main-wrapper p-c-3 bg-white ml-8 shadow-border-wrapper">
-     
-      <div className="content-outer main-wrapper pd-2 bg-white">
-        <div class="tabe-outer">
-          <div class="main-back-heading">
-            <div class="container">
-              <div class="row">
-                <div class="col-md-6 p-0">
-                  <div className="profile-btns pt-0">
-                    <Button className="default-btn cancel-btn ml-0" onClick={() => navigate(-1)}>
-                      Back
-                    </Button>
-                  </div>
+                  </Button>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <Form className="profile-form">
-          <div className="employee-outer d-flex">
+      </div>
 
-            <div className="employee-content">
+      <div className="content-outer main-wrapper p-c-3 bg-white ml-8 shadow-border-wrapper">
+        <div className="content-outer main-wrapper pd-2 bg-white">
+          <Form className="profile-form">
+            <div className="employee-outer d-flex">
 
-              <Container>
-                <Row>
-                  <Col md={4}>
-                    <Form.Group
-                      className="mb-4">
-                      <Form.Label>First Name</Form.Label>
-                      <Form.Control
-                        type="text"
-                        name="first_name"
-                        placeholder="First Name"
-                        value={formData.first_name}
-                        onChange={(e) => { handleChange(e) }}
-                      />
-                      {errors?.first_name && <small className="text-danger">{errors?.first_name}</small>}
-                    </Form.Group>
-                  </Col>
-                  <Col md={4}>
-                    <Form.Group
-                      className="mb-4">
-                      <Form.Label>Last Name</Form.Label>
-                      <Form.Control
-                        type="text"
-                        name="last_name"
-                        placeholder="Last Name"
-                        value={formData.last_name}
-                        onChange={(e) => { handleChange(e) }}
-                      />
-                      {errors?.last_name && <small className="text-danger">{errors?.last_name}</small>}
-                    </Form.Group>
-                  </Col>
-                  <Col md={4}>
-                    <Form.Group
-                      className="mb-4">
-                      <Form.Label>Email Address</Form.Label>
-                      <Form.Control
-                        type="email"
-                        name="email"
-                        value={formData.email}
-                        onChange={(e) => { handleChange(e) }}
-                        placeholder="hello@gmail.com"
-                      />
-                      {errors?.email && <small className="text-danger">{errors?.email}</small>}
-                    </Form.Group>
-                  </Col>
-                  <Col md={4}>
-                    <Form.Group
-                      className="mb-4">
-                      <Form.Label>User Type</Form.Label>
-                      <Form.Select aria-label="Default select example" name="userType" value={formData.userType} onChange={handleChange}>
-                        <option>Open this select menu</option>
-                        {roles.map(option => (
-                          <option key={option.value} value={option.value} style={{ textTransform: "capitalize" }}>
-                            {option.label.replace(/_/g, " ")}
-                          </option>
-                        ))}
+              <div className="employee-content">
 
-                      </Form.Select>
-                      {errors?.userType && <small className="text-danger">{errors?.userType}</small>}
+                <Container>
+                  <Row>
+                    <Col md={4}>
+                      <Form.Group
+                        className="mb-4">
+                        <Form.Label>First Name</Form.Label>
+                        <Form.Control
+                          type="text"
+                          name="first_name"
+                          placeholder="First Name"
+                          value={formData.first_name}
+                          onChange={(e) => { handleChange(e) }}
+                        />
+                        {errors?.first_name && <small className="text-danger">{errors?.first_name}</small>}
+                      </Form.Group>
+                    </Col>
+                    <Col md={4}>
+                      <Form.Group
+                        className="mb-4">
+                        <Form.Label>Last Name</Form.Label>
+                        <Form.Control
+                          type="text"
+                          name="last_name"
+                          placeholder="Last Name"
+                          value={formData.last_name}
+                          onChange={(e) => { handleChange(e) }}
+                        />
+                        {errors?.last_name && <small className="text-danger">{errors?.last_name}</small>}
+                      </Form.Group>
+                    </Col>
+                    <Col md={4}>
+                      <Form.Group
+                        className="mb-4">
+                        <Form.Label>Email Address</Form.Label>
+                        <Form.Control
+                          type="email"
+                          name="email"
+                          value={formData.email}
+                          onChange={(e) => { handleChange(e) }}
+                          placeholder="hello@gmail.com"
+                        />
+                        {errors?.email && <small className="text-danger">{errors?.email}</small>}
+                      </Form.Group>
+                    </Col>
+                    <Col md={4}>
+                      <Form.Group
+                        className="mb-4">
+                        <Form.Label>User Type</Form.Label>
+                        <Form.Select aria-label="Default select example" name="user_type" value={formData.user_type} onChange={handleChange}>
+                          <option>Open this select menu</option>
+                          {roles.map(option => (
+                            <option key={option.value} value={option.value} style={{ textTransform: "capitalize" }}>
+                              {option.label.replace(/_/g, " ")}
+                            </option>
+                          ))}
 
-                    </Form.Group>
-                  </Col>
-                  <Col md={4}>
-                    <Form.Group className="mb-4">
-                      <Form.Label>Organization</Form.Label>
-                      <Form.Select
-                        name="organization_id"
-                        value={formData.organization_id}
-                        onChange={handleChange}
-                      >
-                        <option value="">Select Organization (optional)</option>
-                        {organizations.length > 0 && organizations.map((org) => (
-                          <option key={org._id} value={org._id}>
-                            {org.name}
-                          </option>
-                        ))}
-                      </Form.Select>
-                      {errors?.organization_id && <small className="text-danger">{errors?.organization_id}</small>}
-                    </Form.Group>
-                  </Col>
-                  {/* <Col md={6}>
+                        </Form.Select>
+                        {errors?.user_type && <small className="text-danger">{errors?.user_type}</small>}
+
+                      </Form.Group>
+                    </Col>
+                    <Col md={4}>
+                      <Form.Group className="mb-4">
+                        <Form.Label>Organization</Form.Label>
+                        <Form.Select
+                          name="organization_id"
+                          value={formData.organization_id}
+                          onChange={handleChange}
+                        >
+                          <option value="">Select Organization (optional)</option>
+                          {organizations.length > 0 && organizations.map((org) => (
+                            <option key={org._id} value={org._id}>
+                              {org.name}
+                            </option>
+                          ))}
+                        </Form.Select>
+                        {errors?.organization_id && <small className="text-danger">{errors?.organization_id}</small>}
+                      </Form.Group>
+                    </Col>
+                    {/* <Col md={6}>
                     <Form.Group
                       className="mb-4">
                       <Form.Label>Designation</Form.Label>
@@ -329,37 +310,37 @@ export default function AddEmployee() {
 
                     </Form.Group>
                   </Col> */}
-                  {!id && (
-                    <>
-                      <Col md={4}>
-                        <Form.Group className="mb-4">
-                          <Form.Label>Password</Form.Label>
-                          <Form.Control
-                            type="password"
-                            name="password"
-                            value={formData.password}
-                            onChange={(e) => { handleChange(e) }}
-                            placeholder="Password"
-                          />
-                          {errors?.password && <small className="text-danger">{errors?.password}</small>}
-                        </Form.Group>
-                      </Col>
-                      <Col md={4}>
-                        <Form.Group className="mb-4">
-                          <Form.Label>Confirm Password</Form.Label>
-                          <Form.Control
-                            type="password"
-                            name="confirmPassword"
-                            value={formData?.confirmPassword}
-                            onChange={(e) => { handleChange(e) }}
-                            placeholder="Confirm Password"
-                          />
-                          {errors?.confirmPassword && <small className="text-danger">{errors?.confirmPassword}</small>}
-                        </Form.Group>
-                      </Col>
-                    </>
-                  )}
-                  {/* <Col md={6}>
+                    {!id && (
+                      <>
+                        <Col md={4}>
+                          <Form.Group className="mb-4">
+                            <Form.Label>Password</Form.Label>
+                            <Form.Control
+                              type="password"
+                              name="password"
+                              value={formData.password}
+                              onChange={(e) => { handleChange(e) }}
+                              placeholder="Password"
+                            />
+                            {errors?.password && <small className="text-danger">{errors?.password}</small>}
+                          </Form.Group>
+                        </Col>
+                        <Col md={4}>
+                          <Form.Group className="mb-4">
+                            <Form.Label>Confirm Password</Form.Label>
+                            <Form.Control
+                              type="password"
+                              name="confirmPassword"
+                              value={formData?.confirmPassword}
+                              onChange={(e) => { handleChange(e) }}
+                              placeholder="Confirm Password"
+                            />
+                            {errors?.confirmPassword && <small className="text-danger">{errors?.confirmPassword}</small>}
+                          </Form.Group>
+                        </Col>
+                      </>
+                    )}
+                    {/* <Col md={6}>
                     <Form.Group
                       className="mb-4">
                       <Form.Label>Skills</Form.Label>
@@ -381,19 +362,19 @@ export default function AddEmployee() {
                   </Col> */}
 
 
-                  <Col md={12}>
-                    <div className="profile-btns pt-0">
-                      <Button className="default-btn" onClick={handleSubmit}>{id ? "Update" : "Save"}</Button>
-                      <Button className="default-btn cancel-btn">Cancel</Button>
-                    </div>
-                  </Col>
-                </Row>
-              </Container>
+                    <Col md={12}>
+                      <div className="profile-btns pt-0">
+                        <Button className="default-btn" onClick={handleSubmit}>{id ? "Update" : "Save"}</Button>
+                        <Button className="default-btn cancel-btn" onClick={() => navigate(-1)}>Cancel</Button>
+                      </div>
+                    </Col>
+                  </Row>
+                </Container>
 
+              </div>
             </div>
-          </div>
-        </Form>
-      </div>
+          </Form>
+        </div>
       </div>
     </AuthLayout>
   );

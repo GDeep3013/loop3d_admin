@@ -75,11 +75,11 @@ export default function CreateOrganization({ id, savedData }) {
     return (
         <div className="content-outer pd-2 bg-white  bt-0">
 
-            {/* {!id && <div class="tabe-outer">
-                <div class="main-back-heading">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-md-6 p-0">
+            {/* {!id && <div className="tabe-outer">
+                <div className="main-back-heading">
+                    <div className="container">
+                        <div className="row">
+                            <div className="col-md-6 p-0">
                                 <div className="profile-btns pt-0">
                                     <Button className="default-btn cancel-btn ml-0" onClick={() => navigate(-1)}>
                                         Back

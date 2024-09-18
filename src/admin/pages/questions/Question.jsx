@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import AuthLayout from '../../../layout/Auth';
 import { useNavigate } from "react-router-dom";
-import { StatusIcon, PLusIcon, MoreIcon } from "../../../components/svg-icons/icons";
-import { Container, Dropdown, Pagination, Row, Col } from 'react-bootstrap';
+import { StatusIcon, PLusIcon } from "../../../components/svg-icons/icons";
+import { Container, Pagination, Row, Col } from 'react-bootstrap';
 import { Link } from "react-router-dom";
 import Swal from 'sweetalert2';
 import {View,Edit,Remove} from '../../../components/svg-icons/icons';
-import QuestionStatusUpdate from './QuestionStatusUpdate';
+import Loading from '../../../components/Loading';
 
 export default function Question() {
   const navigate = useNavigate();
@@ -108,6 +108,7 @@ export default function Question() {
         <table className='table'>
           <thead>
             <tr>
+              <th>Serial No.</th>
               <th>Question</th>
               <th>Type</th>
               <th>Status <StatusIcon /> </th>
@@ -115,6 +116,15 @@ export default function Question() {
             </tr>
           </thead>
           <tbody>
+
+            {loading && (
+                <tr>
+                  <td colSpan="12" style={{ textAlign: 'center' }}>
+                    <Loading />
+                  </td>
+                </tr>)
+            }
+
             {!loading && questions.length === 0 &&
               <tr>
                 <td colSpan="6" style={{ textAlign: 'center' }}>
@@ -123,8 +133,9 @@ export default function Question() {
               </tr>
             }
 
-            {!loading && questions.length > 0 && questions?.map(question => (
+            {!loading && questions.length > 0 && questions?.map((question, inx) => (
               <tr key={question._id}>
+                <td>{inx+1}</td>
                 <td>
                   {question.questionText}
                 </td>

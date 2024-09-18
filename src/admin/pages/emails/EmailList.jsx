@@ -102,7 +102,7 @@ export default function EmailList() {
             </div>
           </div>
         </div>
-        <div class="table-scroll  shadow-border-wrapper ml-8">
+        <div className="table-scroll  shadow-border-wrapper ml-8">
         <table className='table'>
           <thead>
             <tr>

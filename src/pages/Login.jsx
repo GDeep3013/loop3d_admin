@@ -111,7 +111,7 @@ export default function Login() {
     <div className="loginOuter">
     <Container fluid>
       <Row className="gx-0">
-        <Col md={6}>
+        <Col className='login-hide-mobile' md={6}>
           <div className="loginContent">
             <img
               src={"/images/logoheader.svg"}
@@ -133,6 +133,13 @@ export default function Login() {
         <Col md={6}>
           <div className="loginForm">
             <div className="verticalCenter">
+                <div className='mobile-logo-login'>
+                  <img
+                    src={"/images/logoheader.svg"}
+                    alt="Logo"
+                    className="logoImg"
+                  />
+                </div>
               <h2 className="h2-style">Sign In to your Account</h2>
               <p className="p-style">
                 Welcome back! please enter your detail
@@ -175,8 +182,7 @@ export default function Login() {
                       onChange={handleInputChange}
                       required
                       />
-                       {errors.password && <small className="text-danger">{errors.password}</small>}
-                      {!errors.password && <small id="passwordError" className="text-danger"></small>}
+                     
                     <img
                       src={showPassword ?"/images/eye-open.svg":"/images/eye.svg"}
                       width={"20"}
@@ -187,7 +193,8 @@ export default function Login() {
                      style={{ cursor: 'pointer' }}
                     />
                   </div>
-
+                    {errors.password && <small className="text-danger">{errors.password}</small>}
+                    {!errors.password && <small id="passwordError" className="text-danger"></small>}
                 </Form.Group>
                 <Form.Group className="mb-4">
                   <label className="checkbox">
