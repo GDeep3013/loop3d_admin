@@ -305,8 +305,7 @@ const UserController = {
                     { phone: { $regex: searchTerm, $options: 'i' } },      // Case-insensitive search by phone
                 ];
             }
-    
-            
+
             
             // Fetch users based on the constructed query and pagination parameters
             const users = await User.find(query)
