@@ -24,9 +24,6 @@ const surveyRoutes = require('./routes/surveyRoutes');// Adjust path as necessar
 const emailRoutes = require('./routes/emailRoutes');// Adjust path as necessary
 
 
-
-
-
 const app = express();
 
 app.use(express.json());

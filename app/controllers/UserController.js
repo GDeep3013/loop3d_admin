@@ -3,18 +3,13 @@ const Role = require('../models/Role.js');
 const bcrypt = require('bcrypt');
 const { check, validationResult } = require('express-validator');
 
-const expressFileupload = require('express-fileupload')
 const path = require('path');
 const { v4: uuidv4 } = require('uuid');
-const uploadPath = path.join(__dirname, 'profile-pics');
 const fs = require('fs');
-const encryption = require("../utility/encryption");
 const { sendResetEmail } = require('../../emailService');
 
 const { sendEmail } = require('../../emails/sendEmail');
 const crypto = require('crypto');
-
-
 
 const UserController = {
     registerUser: [
@@ -22,7 +17,7 @@ const UserController = {
         check('first_name').not().isEmpty().withMessage('Name is required'),
         check('email').isEmail().withMessage('Invalid email'),
         check('password').isLength({ min: 8 }).withMessage('Password must be at least 8 characters long'),
-        check('userType').not().isEmpty().withMessage('User type is required'),
+        check('user_type').not().isEmpty().withMessage('User type is required'),
         // Controller logic
         async (req, res) => {
             // Validate incoming request
@@ -32,56 +27,63 @@ const UserController = {
             }
 
             try {
-                const { first_name, last_name, password, email, designation, userType, organization_id,created_by=null } = req.body;
+
+                const { first_name, last_name, password, email, designation, user_type, organization_id, created_by = null } = req.body;
 
                 // Hash the password
                 const hashedPassword = await bcrypt.hash(password, 10);
 
                 // Create the user object
-                const user = new User({
+                const obj = {
                     first_name: first_name,
                     last_name: last_name,
                     email: email,
                     password: hashedPassword,
                     designation: designation,
-                    role: userType,
-                    created_by:created_by,
-                    organization: (organization) ? organization : null
-                });
+                    role: user_type,
+                    created_by: created_by,
+                    organization: (organization_id) ? organization_id : null
+                };
 
-                // Save the user to the database
-                let response = await user.save();
+                try {
 
-                if (response?._id) {
-                    const role = await Role.findById(userType);
-                    if (role?.type == "manager") {
-                        let url =   `${process.env.ADMIN_PANEL}/start-survey?token=`+response?._id
-                        let admin_panel_url = `${process.env.ADMIN_PANEL}/forget-password`;
+                    const user = new User(obj);
 
-                        let email = response?.email
+                    // Save the user to the database
+                    let response = await user.save();
 
-                        let roles = role?.type
+                    if (response?._id) {
+
+                        const role = await Role.findById(user_type);
+
+                        if (role?.type == "manager") {
+                            let url =   `${process.env.ADMIN_PANEL}/start-survey?token=`+response?._id
+                            let admin_panel_url = `${process.env.ADMIN_PANEL}/forget-password`;
+
+                            let email = response?.email
+
+                            let roles = role?.type
+                            
+                            sendEmail('sendCredentialMail', { email, first_name,last_name,password,admin_panel_url})
+                            sendEmail('sendSurveyCreationEmail', { email, url,roles});
+                        }
                         
-                        let emailcred = await sendEmail('sendCredentialMail', { email, first_name,last_name,password,admin_panel_url})
-                        let emailRes = await sendEmail('sendSurveyCreationEmail', { email, url,roles});
                     }
+                    return res.status(201).json({
+                        user: response,
+                        message: 'User registered successfully',
+                    });
                     
+                } catch (err) {
+                    if (err.code === 11000) {
+                        if (err.keyPattern && err.keyPattern.email) {
+                            return res.status(400).json({ errors: { email: 'Email already exists' } });
+                        }
+                    }
+                    return res.status(500).json({ error: 'Internal Server Error', "errors": err });
                 }
-                return res.status(201).json({
-                    user: response,
-                    message: 'User registered successfully',
-                });
 
             } catch (error) {
-                // Handle duplicate email/phone error
-                if (error.code === 11000) {
-                    if (error.keyPattern && error.keyPattern.email) {
-                        return res.status(400).json({ errors:{ email: 'Email already exists' } });
-                    } else if (error.keyPattern && error.keyPattern.phone) {
-                        return res.status(400).json({ errors:{ phone: 'Phone number already exists' } });
-                    }
-                }
-
                 // Handle any other errors
                 return res.status(500).json({ error: 'Internal Server Error', "errors": error });
             }
@@ -147,7 +149,6 @@ const UserController = {
                     { first_name: { $regex: searchTerm, $options: 'i' } }, // Case-insensitive search by username
                     { last_name: { $regex: searchTerm, $options: 'i' } }, // Case-insensitive search by username
                     { email: { $regex: searchTerm, $options: 'i' } }, // Case-insensitive search by email
-                    { phone: { $regex: searchTerm, $options: 'i' } }, // Case-insensitive search by email
                 ];
             }
 
@@ -215,13 +216,12 @@ const UserController = {
             const role = await Role.findById(user.role);
 
             // Exclude sensitive fields like password from the response
-            const { _id, first_name,last_name, email, phone, organization, createdAt, updatedAt } = user;
+            const { _id, first_name,last_name, email, organization, createdAt, updatedAt } = user;
             res.status(200).json({
                 _id,
                 first_name,
                 last_name,
                 email,
-                phone,
                 role: role ? role.type : null,
                 organization,
                 createdAt,
@@ -234,8 +234,8 @@ const UserController = {
     },
     updateUser: async (req, res) => {
         const userId = req.params.id;
-        const { first_name, last_name, email, phone, userType, organization } = req.body;
-        var uniqueFilename = '';
+        const { first_name, last_name, email, user_type, organization_id } = req.body;
+        //var uniqueFilename = '';
         try {
             // Find the user by ID
             const user = await User.findById(userId);
@@ -243,7 +243,7 @@ const UserController = {
             if (!user) {
                 return res.status(404).json({ error: 'User not found' });
             }
-            if (req.files && req.files.length > 0) {
+            /*if (req.files && req.files.length > 0) {
                 if (user.image) {
                     const prevImagePath = path.join(__dirname, '../../public/employee-pics', user.image);
                     fs.unlink(prevImagePath, (unlinkErr) => {
@@ -254,27 +254,28 @@ const UserController = {
                 }
                 const uploadedFile = req.files;
                 uniqueFilename = uuidv4() + path.extname(uploadedFile[0].originalname);
-                console.log(uploadedFile[0].buffer, uploadedFile[0].originalname);
                 fs.writeFile(path.join(__dirname, '../../public/employee-pics', uniqueFilename), uploadedFile[0].buffer, (err) => {
                     if (err) {
                         console.error('Error writing file:', err);
                         return res.status(500).json({ message: err });
                     }
                 });
+
             } else {
                 if (user.image) {
                     uniqueFilename = user.image;
                 }
-            }
+            }*/
+
             user.first_name = first_name;
             user.last_name = last_name;
-            user.email = email;
-            user.phone = phone;
-            user.organization = (organization) ? organization : null;
-            user.role = userType;
+            // user.email = email;
+            user.organization = (organization_id) ? organization_id : null;
+            user.role = user_type;
             await user.save();
 
             res.status(200).json({ message: 'User updated successfully' });
+
         } catch (error) {
             // Handle errors
             console.error('Error updating user:', error);
@@ -302,7 +303,6 @@ const UserController = {
                     { first_name: { $regex: searchTerm, $options: 'i' } }, // Case-insensitive search by first_name
                     { last_name: { $regex: searchTerm, $options: 'i' } },  // Case-insensitive search by last_name
                     { email: { $regex: searchTerm, $options: 'i' } },      // Case-insensitive search by email
-                    { phone: { $regex: searchTerm, $options: 'i' } },      // Case-insensitive search by phone
                 ];
             }
 
@@ -314,7 +314,7 @@ const UserController = {
                     select: 'name', // Exclude the __v field from the populated organization documents
                 })
                 .populate('role', 'type')
-                .populate('created_by', 'first_name last_name email phone') // Populate the role field as well
+                .populate('created_by', 'first_name last_name email') // Populate the role field as well
                 // Populate the role field as well
                 .sort({ createdAt: -1 }); // Sort by creation date in descending order
               
@@ -334,11 +334,6 @@ const UserController = {
             // Extract search parameters and pagination parameters from request
             const { user_id ,org_id} = req.params;
 
-            // const query = {
-    
-            //     organization_id: org_id,
-            // };
-
             const query = {
                 $or: [
                   { organization_id: org_id },
@@ -355,7 +350,7 @@ const UserController = {
                     select: 'name', // Exclude the __v field from the populated organization documents
                 })
                 .populate('role', 'type')
-                .populate('created_by', 'first_name last_name email phone') // Populate the role field as well
+                .populate('created_by', 'first_name last_name email') // Populate the role field as well
                 .sort({ createdAt: -1 }); // Sort by creation date in descending order
               
 
@@ -365,7 +360,7 @@ const UserController = {
             });
 
         } catch (error) {
-            console.error('Error fetching users:', error);
+        
             res.status(500).json({ error: 'Internal Server Error' });
         }
         

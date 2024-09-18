@@ -20,8 +20,8 @@ router.get('/show-user/:id', UserController.showUser);
 router.post('/update-user/:id', upload.array("files", 5),UserController.updateUser);
 
 //Role Routes
-router.post('/create_role', RoleController.createRole);
-router.get('/get-role', RoleController.fetchRole);
+router.post('/roles', RoleController.createRole);
+router.get('/roles', RoleController.fetchRole);
 
 
 //Project controller Routes
