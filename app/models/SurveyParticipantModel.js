@@ -25,7 +25,7 @@ const SurveyParticipantSchema = new mongoose.Schema({
     },
     p_type: {
         type: String,
-        enum: ['pending', 'in_progress', 'completed'],
+        
         default: 'pending'
     },
     survey_id: {

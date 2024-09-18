@@ -10,8 +10,8 @@ const uploadPath = path.join(__dirname, 'profile-pics');
 const fs = require('fs');
 const encryption = require("../utility/encryption");
 const { sendResetEmail } = require('../../emailService');
-const { sendSurveyCreationEmail } = require('../../emails/sendCreateSurveyLink');
 
+const { sendEmail } = require('../../emails/sendEmail');
 const crypto = require('crypto');
 
 
@@ -55,9 +55,15 @@ const UserController = {
                 if (response?._id) {
                     const role = await Role.findById(userType);
                     if (role?.type == "manager") {
-                        let url = "http://localhost:3000/start-survey?token="+response?._id
-                        let emailRes = await sendSurveyCreationEmail(response?.email, url);
+                        let url =   `${process.env.ADMIN_PANEL}/start-survey?token=`+response?._id
+                        let admin_panel_url = `${process.env.ADMIN_PANEL}/forget-password`;
 
+                        let email = response?.email
+
+                        let roles = role?.type
+                        
+                        let emailcred = await sendEmail('sendCredentialMail', { email, first_name,last_name,password,admin_panel_url})
+                        let emailRes = await sendEmail('sendSurveyCreationEmail', { email, url,roles});
                     }
                     
                 }
@@ -283,7 +289,13 @@ const UserController = {
             // Construct the query object for User.find() based on search term
             const role = await Role.findOne({ type: type });
       
-            const query = { organization : req.params.org_id, role: role._id};
+            const query = {
+                $or: [
+                  { organization_id: req.params.org_id },
+                  { created_by: req.params.org_id }
+                ],
+                role: role._id
+              };
       
             if (searchTerm) {
                 query.$or = [
@@ -295,7 +307,7 @@ const UserController = {
             }
     
             
-
+            
             // Fetch users based on the constructed query and pagination parameters
             const users = await User.find(query)
                 .populate({
@@ -323,12 +335,19 @@ const UserController = {
             // Extract search parameters and pagination parameters from request
             const { user_id ,org_id} = req.params;
 
-            const query = {
-                _id:user_id,
-                organization: org_id,
-            };
+            // const query = {
+    
+            //     organization_id: org_id,
+            // };
 
-            
+            const query = {
+                $or: [
+                  { organization_id: org_id },
+                  { created_by: org_id }
+                ],
+                _id:user_id,
+              };
+                     
 
             // Fetch users based on the constructed query and pagination parameters
             const user = await User.findOne(query)

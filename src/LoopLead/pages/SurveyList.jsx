@@ -1,24 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
-import { MoreIcon,View } from "../../../components/svg-icons/icons";
+import { MoreIcon,View } from "../../components/svg-icons/icons";
 import { Container, Dropdown, Row, Col } from 'react-bootstrap';
-import { getSurveyById } from '../../../apis/SurveyApi';
-import { formatDateGB, formatDateUS } from '../../../utils/dateUtils';
+import { getSurveyById } from '../../apis/SurveyApi';
+import { formatDateGB, formatDateUS } from '../../utils/dateUtils';
 
 import { useSelector } from 'react-redux';
 
-export default function SurveyList({ loop_lead_id, org_id }) {
+export default function SurveyList() {
   const navigate = useNavigate();
   const user = useSelector((state) => state.auth.user);
   const [surveys, setSurveys] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
 
 
+
   useEffect(() => {
     if (user?._id) {
       (async () => {
         try {
-          let data = await getSurveyById(user?._id,'','' ,searchTerm);
+          let data = await getSurveyById('', user?._id, '', searchTerm);
           console.log('data', data);
           if (Array.isArray(data) && data.length > 0) {
             setSurveys(data);
@@ -96,7 +97,7 @@ export default function SurveyList({ loop_lead_id, org_id }) {
                     : 'Never'}
                 </td>
                 <td>
-                <button className='action-btn' onClick={() => navigate(`/view-survey-participant/${survey._id}`)}><View /></button>
+                <button className='action-btn' onClick={() => navigate(`/loop-lead/view-survey-participant/${survey._id}`)}><View /></button>
 
                   {/* <Dropdown className='custom-dropdown'>
                     <Dropdown.Toggle variant="success" id="dropdown-basic">

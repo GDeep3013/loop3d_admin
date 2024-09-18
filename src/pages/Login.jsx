@@ -77,7 +77,19 @@ export default function Login() {
 
             dispatch(createUser({ user: data.user }));
           
-            role === 'admin' ? navigate("/organizations"):navigate("/users");
+            // role === 'admin' ? navigate("/organizations") : navigate("/users");
+            
+            // if (role === "admin") {
+            //   navigate('/organizations');
+            // } else if (role === "manager") {
+            //   navigate('/manager/dashboard');
+      
+            // }
+            // else if (role === "looped_lead") {
+            //   navigate('/loop-lead/dashboard');
+      
+            // }
+            window.location.reload();
 
           } else {
             document.getElementById('passwordError').innerText = data.error;

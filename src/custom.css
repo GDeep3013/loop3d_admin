@@ -210,6 +210,29 @@ table.table th:last-child, table.table td:last-child { text-align: right; }
 .headerSearch .dropdown-menu { padding: 0px; }
 .table-pd { padding: 0px 15px; }
 .email-box p { font-size: 14px; line-height: 21px; color: #6c6c6c; }
+/* start survey */
+.survey_box { box-shadow: rgba(0, 0, 0, 0.15) 0px 0px 10px 0px; padding: 40px; border-radius: 20px; margin-top: 30px; max-width: 1080px; background-color: #fff;}
+.survey_box .form-control { border-color: var(--theme-color); height: auto; line-height: 54px; padding: 0 12px; }
+.survey_box h1 { font-size: 48px; line-height: 72px; margin-bottom: 24px;}
+.survey_box .survey-tabs { margin-top: 20px; }
+.tab-active-color{ background-color: var(--tab-active); }
+.tab-no-active-color{background-color: var(--menu-bg); border-color: var(--tab-active); color: var(--tab-active); }
+.survey-tabs button { min-width: 218px; min-height: 56px; line-height: 56px; padding: 0 20px; border-radius: 60px; box-shadow: none; border: 1px solid var(--tab-active); outline: none; }
+.survey-tabs ul.survey-listings { margin-top: 19px; }
+.survey-listings li { margin-top: 10px; }
+.survey-listings li input[type="checkbox"] { width: 20px; height: 20px; vertical-align: middle; margin-right: 12px; accent-color: var(--tab-active);}
+.default-btn{ min-width: 218px; min-height: 54px; line-height: 54px; background-color: var(--theme-color); color: #fff; padding: 0 10px; border-radius: 40px;}
+.survey-tabs ul.survey-listings label { cursor: pointer; }
+.heading-font{ font-family: var(--frank-font);  }
+.lunchpad form input.form-control { border-color: var(--theme-color); background-color: var(--bg-opacity); height: auto; line-height: 32px;}
+.lunchpad .teammate{ background-color: var(--bg-opacity); border-radius: 12px;}
+.bg-custom-color2{ background-color: var(--theme-color); }
+button.submit_btn:hover{ background-color: var(--secondary-color); }
+.lunchpad  ul li { list-style: disc; }
+.survey-inner .survey-container { padding: 50px; background-color: #f5f5f5; border-radius: 30px; margin-top: 60px; }
+.survey-inner .survey-container h3 { font-size: 20px; }
+.survey-inner .survey-container ul { padding-left: 18px; }
+.survey-inner .survey-container ul li.list-disc { list-style: disc; color: #4b5563; margin: 6px 0 0 0; }
  /* start responsive css */
 @media screen and (min-width: 1280px) and (max-width: 1440px) {
     .wrapper-outer .main-content{ padding: 40px 29px; }
@@ -217,4 +240,20 @@ table.table th:last-child, table.table td:last-child { text-align: right; }
     .project___info .project_fullInfo { max-width: 84%; }
     .sideNavLogo img { max-width: 173px; }
     .mainContet-outer .project___info p{ font-size: 13px; }
+}
+@media screen and (min-width:768px) and (max-width:1024px) {
+    .survey_box{ padding: 20px; }
+    .survey_box h1 { font-size: 35px; line-height: 45px; }
+    .survey_box .form-control { line-height: 47px; }
+    .survey-tabs button { min-width: 185px; min-height: 47px; line-height: 47px; padding: 0 20px; font-size: 14px; }
+}
+@media screen and (max-width:767px) {
+    .survey_box { padding: 20px; }
+    .survey_box h1 { font-size: 31px; line-height: 60px; }
+    .survey_box .form-control { line-height: 44px; padding: 0 9px; }
+    .survey-tabs button { min-width: 145px; min-height: 43px; line-height: 43px; padding: 0 10px; font-size: 12px; }
+    .survey-tabs .gap-3 { gap: 6px !important; }
+    .default-btn { min-width: 138px; min-height: 46px; line-height: 46px; padding: 0 10px; }
+    .survey-tabs ul.survey-listings label{ font-size: 14px; }
+    .survey-inner .survey-container{ padding: 20px; }
 }

@@ -45,11 +45,30 @@
   font-style: normal;
   font-display: swap;
 }
+
+@font-face {
+  font-family: 'Frank Ruhl Libre';
+  src: url('../fonts/FrankRuhlLibre-Medium.eot');
+  src: url('../fonts/FrankRuhlLibre-Medium.eot?#iefix') format('embedded-opentype'),
+      url('../fonts/FrankRuhlLibre-Medium.woff2') format('woff2'),
+      url('../fonts/FrankRuhlLibre-Medium.woff') format('woff'),
+      url('../fonts/FrankRuhlLibre-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+
+
 :root{
   --theme-color:#7abcdb;
   --black-color:#000000;
-  --bg-color:#F7f7f7;
+  --secondary-color:#174a6d;
+  --bg-color:#ffffff;
   --menu-bg:#F7F7F9;
+  --tab-active:#174a6d;
+  --frank-font: 'Frank Ruhl Libre';
+  --bg-opacity: rgba(242 248 251 / 1);
 }
 body { background-color: var(--bg-color); -ms-overflow-style: block !important; scrollbar-width: none !important; line-height: normal; font-family: "Inter", sans-serif !important; box-sizing: border-box; color: var(--white); text-rendering: optimizeLegibility; -webkit-font-smoothing: subpixel-antialiased; }
 ul, li, a{ padding: 0; margin: 0; list-style: none; text-decoration: none; }
@@ -64,3 +83,7 @@ h1,h2,h3,h4,h5,h6,p{ margin: 0;}
 .default-btn:hover::after{ left: 100%; }
 .float-right { float: right; }
 .fs-7 {font-size: 14px;}
+.bg-custom-color{ background-color: var(--secondary-color); }
+.text-custom-color{ color: var(--secondary-color); }
+.font-frank{ font-family: var(--frank-font); }
+.uppercase{text-transform: uppercase;}

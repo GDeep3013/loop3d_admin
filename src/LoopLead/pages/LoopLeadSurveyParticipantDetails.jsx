@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { MoreIcon } from "../../../components/svg-icons/icons";
 import { Container, Dropdown, Row, Col, Button } from 'react-bootstrap';
-import { getSurveyParticipantsById } from '../../../apis/SurveyApi';
+import { getSurveyParticipantsById } from '../../apis/SurveyApi';
 import { useParams, useNavigate } from "react-router-dom";
 import Swal from 'sweetalert2'
-import { Remove } from '../../../components/svg-icons/icons';
-import AuthLayout from "../../../layout/Auth";
+import { Remove } from '../../components/svg-icons/icons';
+import { MoreIcon,View ,PLusIcon  } from "../../components/svg-icons/icons";
+
+import AuthLayout from "../../layout/Auth";
 import { Link } from "react-router-dom";
 
-export default function SurveyParticipantDetails() {
+export default function LoopLeadSurveyParticipantDetails() {
     const navigate = useNavigate();
     const { id } = useParams();
-
     const [surveyParticipant, setSurveyParticipant] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
 
@@ -57,7 +57,7 @@ export default function SurveyParticipantDetails() {
                     method: 'DELETE',
                     headers: { "x-api-key": import.meta.env.VITE_X_API_KEY }
                 });
-                // console.log(response, 'response');
+                console.log(response, 'response');
                 if (response.ok) {
                     await Swal.fire({
                         title: "Deleted!",
@@ -78,21 +78,21 @@ export default function SurveyParticipantDetails() {
 
     return (
         <AuthLayout title={"Survey participant details"}>
-            <div class="main-back-heading mb-0">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-md-6 p-0">
-                            <div className="profile-btns pt-0">
-                                <Button className="default-btn cancel-btn ml-0" onClick={() => navigate(-1)}>
-                                    Back
-                                </Button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+               <div class="main-back-heading mb-0">
+      <div class="container">
+         <div class="row">
+            <div class="col-md-6 p-0">
+            <div className="profile-btns pt-0">
+                <Button className="default-btn cancel-btn ml-0" onClick={() => navigate(-1)}>
+                    Back
+                </Button>
+            </div>                  
             </div>
+         </div>
+      </div>
+   </div>
             <div className='table-inner main-wrapper pd-2 bg-white shadow-border-wrapper ml-8'>
-
+         
                 <div className='content-outer'>
 
                     <div className='tabe-outer'>
@@ -111,6 +111,7 @@ export default function SurveyParticipantDetails() {
                                                 onChange={handleSearch}
                                                 className='form-control'
                                             />
+                                            <Link to={`/loop-lead/participant/create/${id}`} className='default-btn' >Add Particpant <PLusIcon /> </Link>
                                             <Link to={`/survey-summary/${id}`} className='default-btn' >View Summary</Link>
 
                                         </form>
@@ -121,39 +122,39 @@ export default function SurveyParticipantDetails() {
                         </div>
                     </div>
                 </div>
-
+              
                 <div className='table-scroll table-pd'>
-                    <table className='table'>
-                        <thead>
+                <table className='table'>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Participant First </th>
+                            <th>Participant Last </th>
+                            <th>Participant Email</th>
+                            <th>Participant Relationship</th>
+                            <th>Survey Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {surveyParticipant.length === 0 ? (
                             <tr>
-                                <th>#</th>
-                                <th>Participant First </th>
-                                <th>Participant Last </th>
-                                <th>Participant Email</th>
-                                <th>Participant Relationship</th>
-                                <th>Survey Status</th>
-                                <th>Action</th>
+                                <td colSpan="8" style={{ textAlign: 'center' }}>
+                                    <h4>No survey participant found</h4>
+                                </td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            {surveyParticipant.length === 0 ? (
-                                <tr>
-                                    <td colSpan="8" style={{ textAlign: 'center' }}>
-                                        <h4>No survey participant found</h4>
-                                    </td>
-                                </tr>
-                            ) : (
-                                surveyParticipant.map((participant, index) => (
-                                    <tr key={participant._id}>
-                                        <td>{index + 1}</td>
-                                        <td>{participant?.p_first_name}</td>
-                                        <td>{participant?.p_last_name}</td>
-                                        <td>{participant?.p_email}</td>
-                                        <td>{participant?.survey_id?.loop_lead?.first_name} {participant?.survey_id?.loop_lead?.last_name}</td>
-                                        <td>{participant.survey_status === 'completed' ? <span className='span-badge active-tag'>Completed</span> : <span className='span-badge inactive-tag'>Pending</span>}</td>
-                                        <td>
-                                            <button className='action-btn' onClick={() => handleDelete(participant._id)}><Remove /></button>
-                                            {/* <Dropdown className='custom-dropdown'>
+                        ) : (
+                            surveyParticipant.map((participant, index) => (
+                                <tr key={participant._id}>
+                                    <td>{index + 1}</td>
+                                    <td>{participant?.p_first_name}</td>
+                                    <td>{participant?.p_last_name}</td>
+                                    <td>{participant?.p_email}</td>
+                                    <td>{participant?.survey_id?.loop_lead?.first_name} {participant?.survey_id?.loop_lead?.last_name}</td>
+                                    <td>{participant.survey_status === 'completed' ? <span className='span-badge active-tag'>Completed</span> : <span className='span-badge inactive-tag'>Pending</span>}</td>
+                                    <td>
+                                    <button className='action-btn' onClick={() => handleDelete(participant._id)}><Remove /></button>
+                                        {/* <Dropdown className='custom-dropdown'>
                                             <Dropdown.Toggle variant="success" id="dropdown-basic">
                                                 <MoreIcon />
                                             </Dropdown.Toggle>
@@ -161,14 +162,14 @@ export default function SurveyParticipantDetails() {
                                                 <Dropdown.Item onClick={() => handleDelete(participant._id)}>Delete</Dropdown.Item>
                                             </Dropdown.Menu>
                                         </Dropdown> */}
-                                        </td>
-                                    </tr>
-                                ))
-                            )}
-                        </tbody>
-                    </table>
+                                    </td>
+                                </tr>
+                            ))
+                        )}
+                    </tbody>
+                </table>
                 </div>
-
+               
             </div>
         </AuthLayout>
     );

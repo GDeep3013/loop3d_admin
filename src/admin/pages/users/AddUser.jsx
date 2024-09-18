@@ -123,6 +123,8 @@ export default function AddEmployee() {
         if (error.response) {
           console.log('error.response', error.response);
           setErrors(error.response.data.errors?.[0]);
+          setErrors(error.response.data.errors);
+
         } else if (error.request) {
           console.log('No response received from the server');
         } else {
@@ -154,12 +156,12 @@ export default function AddEmployee() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    console.log(name, value);
+    // console.log(name, value);
     setFormData({ ...formData, [name]: value });
     setErrors({ ...errors, [name]: '' });
   };
 
-  console.log(formData);
+  // console.log(formData);
 
   useEffect(() => {
     if (id) {
@@ -246,7 +248,7 @@ export default function AddEmployee() {
                         value={formData.first_name}
                         onChange={(e) => { handleChange(e) }}
                       />
-                      {errors.first_name && <small className="text-danger">{errors.first_name}</small>}
+                      {errors?.first_name && <small className="text-danger">{errors?.first_name}</small>}
                     </Form.Group>
                   </Col>
                   <Col md={4}>
@@ -260,7 +262,7 @@ export default function AddEmployee() {
                         value={formData.last_name}
                         onChange={(e) => { handleChange(e) }}
                       />
-                      {errors.last_name && <small className="text-danger">{errors.last_name}</small>}
+                      {errors?.last_name && <small className="text-danger">{errors?.last_name}</small>}
                     </Form.Group>
                   </Col>
                   <Col md={4}>
@@ -274,7 +276,7 @@ export default function AddEmployee() {
                         onChange={(e) => { handleChange(e) }}
                         placeholder="hello@gmail.com"
                       />
-                      {errors.email && <small className="text-danger">{errors.email}</small>}
+                      {errors?.email && <small className="text-danger">{errors?.email}</small>}
                     </Form.Group>
                   </Col>
                   <Col md={4}>
@@ -290,7 +292,7 @@ export default function AddEmployee() {
                         ))}
 
                       </Form.Select>
-                      {errors.userType && <small className="text-danger">{errors.userType}</small>}
+                      {errors?.userType && <small className="text-danger">{errors?.userType}</small>}
 
                     </Form.Group>
                   </Col>
@@ -309,7 +311,7 @@ export default function AddEmployee() {
                           </option>
                         ))}
                       </Form.Select>
-                      {errors.organization_id && <small className="text-danger">{errors.organization_id}</small>}
+                      {errors?.organization_id && <small className="text-danger">{errors?.organization_id}</small>}
                     </Form.Group>
                   </Col>
                   {/* <Col md={6}>
@@ -339,7 +341,7 @@ export default function AddEmployee() {
                             onChange={(e) => { handleChange(e) }}
                             placeholder="Password"
                           />
-                          {errors.password && <small className="text-danger">{errors.password}</small>}
+                          {errors?.password && <small className="text-danger">{errors?.password}</small>}
                         </Form.Group>
                       </Col>
                       <Col md={4}>
@@ -348,11 +350,11 @@ export default function AddEmployee() {
                           <Form.Control
                             type="password"
                             name="confirmPassword"
-                            value={formData.confirmPassword}
+                            value={formData?.confirmPassword}
                             onChange={(e) => { handleChange(e) }}
                             placeholder="Confirm Password"
                           />
-                          {errors.confirmPassword && <small className="text-danger">{errors.confirmPassword}</small>}
+                          {errors?.confirmPassword && <small className="text-danger">{errors?.confirmPassword}</small>}
                         </Form.Group>
                       </Col>
                     </>

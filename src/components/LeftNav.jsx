@@ -68,22 +68,62 @@ export default function LeftNav({isMenuOpen,setIsMenuOpen}) {
               Questions
             </NavLink>
           </li>
-          <li className="sideNavItem">
+          {/* <li className="sideNavItem">
             <NavLink to="/emails">
               <EmailIcon />
               Emails
             </NavLink>
-          </li>
+          </li> */}
         </> :
+       user.role =="manager"?  <>
           <li className={`sideNavItem`}>
           <NavLink
             to="/manager/dashboard"
             className={({ isActive }) => (isActive ? 'active' : '')}
-          >
+            >
             <DocomentIcon />
            Dashboard
+              </NavLink>
+            </li>
+            <li className={`sideNavItem`}>
+          <NavLink
+            to="/manager/loop-leads"
+            className={({ isActive }) => (isActive ? 'active' : '')}
+            >
+            <DocomentIcon />
+           Loop Lead
           </NavLink>
-        </li>
+            </li>
+            {/* <li className={`sideNavItem`}>
+          <NavLink
+            to="/manager/Chat-bot"
+            className={({ isActive }) => (isActive ? 'active' : '')}
+            >
+            <DocomentIcon />
+          ChatGpt
+          </NavLink>
+            </li> */}
+            
+            {/* <li className={`sideNavItem`}>
+          <NavLink
+            to="/survey-summary"
+            className={({ isActive }) => (isActive ? 'active' : '')}
+            >
+            <DocomentIcon />
+          Summary
+          </NavLink>
+          </li> */}
+          </>
+            : <li className={`sideNavItem`}>
+          <NavLink
+            to="/loop-lead/dashboard"
+            className={({ isActive }) => (isActive ? 'active' : '')}
+            >
+            <DocomentIcon />
+           Dashboard
+              </NavLink>
+            </li>
+          
         }
         <li className="sideNavItem LogoutMenu">
           <NavLink to="#" className="dropdown-item" onClick={() => {
@@ -91,7 +131,7 @@ export default function LeftNav({isMenuOpen,setIsMenuOpen}) {
             localStorage.removeItem("userType");
             navigate('/login');
           }}><Logout /> Logout</NavLink>         
-        </li>
+        </li> 
       </ul>
       
     </nav>
