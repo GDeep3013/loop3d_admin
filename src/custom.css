@@ -233,7 +233,14 @@ button.submit_btn:hover{ background-color: var(--secondary-color); }
 .survey-inner .survey-container h3 { font-size: 20px; }
 .survey-inner .survey-container ul { padding-left: 18px; }
 .survey-inner .survey-container ul li.list-disc { list-style: disc; color: #4b5563; margin: 6px 0 0 0; }
+.chat-gpt-summary h1 { text-align: center; text-decoration: underline; }
+.chat-smart-goal h2 { text-decoration: underline; }
+.chat-smart-goal p strong { font-size: 20px; padding: 17px 0 8px 0; display: block; }
+.chat-smart-goal p { font-size: 20px; line-height: 22px; }
+.chat-smart-goal ul li {padding-top: 18px;font-size: 19px;}
+.chat-smart-goal ul li:last-child { padding-bottom: 20px; }
 .mobile-logo-login { display: none; }
+.chat-smart-goal p { padding-bottom: 20px; line-height: 30px; }
  /* start responsive css */
 @media screen and (min-width: 1280px) and (max-width: 1440px) {
     .wrapper-outer .main-content{ padding: 40px 29px; }

@@ -28,6 +28,7 @@
     "multer": "^1.4.5-lts.1",
     "node-cron": "^3.0.3",
     "nodemailer": "^6.9.14",
+    "openai": "^4.61.1",
     "profilo": "file:",
     "react": "^18.2.0",
     "react-bootstrap": "^2.10.1",

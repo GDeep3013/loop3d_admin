@@ -17,10 +17,7 @@ router.get('/answers/:survey_id', SurveyAnswersController.getSurveyAnswersBySurv
 router.get('/participants/invited/:survey_id', SurveyAnswersController.getTotalParticipantsInvited);
 router.get('/generate-report/:survey_id', surveyController.generateSurveyReport);
 router.get('/generate-competency-average/:survey_id', surveyController.generateCompetencyAverageReport);
-
-
-
-
+router.get('/smart-goals/:survey_id/:dev_opp/:top_str', surveyController.getSmartGoals);
 
 
 
