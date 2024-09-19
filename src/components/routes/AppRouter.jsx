@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Route, Routes, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import {  createUser } from "../../../store/slices/UserSlice";
-import Dashboard from "../../pages/Dashboard";
+import { createUser } from "../../../store/slices/UserSlice";
 import Home from "../../pages/Home";
 import ProjectOverview from "../../pages/ProjectOverview";
 import Login from "../../pages/Login";
@@ -14,18 +13,15 @@ import AddProject from "../../admin/AddSurvey";
 import Category from "../../admin/pages/categories/Category";
 import AddCategory from "../../admin/pages/categories/AddCategory";
 import Question from "../../admin/pages/questions/Question";
-import AddQuestion from "../../admin/pages/questions/AddQuestion";
 import QuestionDetail from "../../admin/pages/questions/QuestionDetail";
 import { getUser } from "../../apis/UserApi";
 import ForgetPassword from "../../pages/ForgetPassword";
 import ResetPassword from "../../pages/ResetPassword";
 import Organization from "../../admin/pages/organizations/Organization";
 import ViewOrganization from "../../admin/pages/organizations/ViewOrganization";
-//import AssignCompetencies from "../../pages/organizations/AssignCompetencies";
-import OrganizationTabs from "../../admin/pages/organizations/OrganizationTabs"
-import CommingSoon from "../../pages/CommingSoon";
-import LoopleadTabs from "../../admin/pages/loopleads/LoopleadTabs"
-import SurveyParticipantDetails from "../../admin/pages/loopleads/SurveyParticipantDetails"
+import OrganizationTabs from "../../admin/pages/organizations/OrganizationTabs";
+import LoopleadTabs from "../../admin/pages/loopleads/LoopleadTabs";
+import SurveyParticipantDetails from "../../admin/pages/loopleads/SurveyParticipantDetails";
 import QuestionTabs from "../../admin/pages/questions/QuestionTabs";
 import CreateQuestion from "../../admin/pages/questions/CreateQuestion";
 import Survey from "../../admin/pages/surveys/survey";
@@ -35,23 +31,22 @@ import ViewEmail from "../../admin/pages/emails/ViewEmail";
 import SurveyList from "../../manager/pages/surveys/SurveyList";
 import CreateSurvey from "../../manager/pages/surveys/CreateSurvey";
 import LoopLeadDashboard from "../../LoopLead/pages/LoopLeadDashboard";
-import CreateParticipants from "../../LoopLead/pages/CreateParticipants"
+import CreateParticipants from "../../LoopLead/pages/CreateParticipants";
 import LoopLeads from "../../manager/pages/loopleads/LoopLeads";
-import ManagerLoopleadTabs from "../../manager/pages/loopleads/ManagerLoopleadTabs"
+import ManagerLoopleadTabs from "../../manager/pages/loopleads/ManagerLoopleadTabs";
 import ChatGPTPage from "../../manager/ChatGPTPage";
 import Plans from "../../admin/pages/plan/Plans";
+import LoopLeadSurveyParticipantDetails from "../../LoopLead/pages/LoopLeadSurveyParticipantDetails";
+import SurveySummary from "../../components/survey-summary/SurveySummary";
 
-import LoopLeadSurveyParticipantDetails from "../../LoopLead/pages/LoopLeadSurveyParticipantDetails"
-import SurveySummary from "../../components/survey-summary/SurveySummary"
 const AppRouter = () => {
   const user = useSelector((state) => state.auth.user);
   const dispatch = useDispatch();
-
   const navigate = useNavigate();
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  const [loading, setLoading] = useState(true); // New state for loading spinner
 
   useEffect(() => {
-    // IIFE (Immediately Invoked Function Expression) for async operation
     (async () => {
       try {
         const _token = localStorage.getItem("_token");
@@ -61,38 +56,36 @@ const AppRouter = () => {
         }
       } catch (error) {
         console.error("Error validating token:", error);
+      } finally {
+        setLoading(false); // Stop loading after the user check is completed
       }
     })();
-  }, [navigate, user]);
+  }, [navigate, user, dispatch]);
 
-
-  useEffect(() => {
-
-
+  const loadingPage = async () => {
     const currentUrl = window.location.pathname;
-
     if (!user && currentUrl !== '/login' && currentUrl !== '/forget-password' && currentUrl !== '/reset-password') {
       navigate('/login'); // Redirect to login if not authenticated
-    }else if (user && (currentUrl === '/' || currentUrl === '/login')) {
-      // Redirect based on userType after login
+    } else if (user && (currentUrl === '/' || currentUrl === '/login')) {
+      // Redirect based on user role after login
       if (user.role === "admin") {
         navigate('/organizations');
       } else if (user.role === "manager") {
         navigate('/manager/dashboard');
-
-      }
-      else if (user.role === "looped_lead") {
+      } else if (user.role === "looped_lead") {
         navigate('/loop-lead/dashboard');
-
       }
-      // else {
-      //   navigate('/organizations');
-      // }
     }
+  };
 
+  useEffect(() => {
+    loadingPage();
   }, [navigate, user]);
 
-  console.log('user',user)
+  if (loading) {
+    // Display a loading spinner or message while loading
+    return <div>Loading...</div>;
+  }
 
   return (
     <Routes>
@@ -103,7 +96,6 @@ const AppRouter = () => {
           <Route path="/organizations/create" exact element={<OrganizationTabs />} />
           <Route path="/organizations/edit/:id" exact element={<OrganizationTabs />} />
           <Route path="/organizations/view/:id" exact element={<ViewOrganization />} />
-
           <Route path="/project-overview/:id" exact element={<ProjectOverview />} />
           <Route path="/home" exact element={<Home />} />
           <Route path="/admin-dashboard" exact element={<AdminDashboard />} />
@@ -127,25 +119,20 @@ const AppRouter = () => {
           <Route path="/emails/create" exact element={<CreateEmail />} />
           <Route path="/emails/:id" exact element={<CreateEmail />} />
           <Route path="/emails/detail/:id" exact element={<ViewEmail />} />
-
           <Route path="/manager/dashboard" exact element={<SurveyList />} />
           <Route path="/manager/surveys/create" exact element={<CreateSurvey />} />
           <Route path="/manager/loop-leads" exact element={<LoopLeads />} />
-          <Route path="/manager/view-loop_lead/:userId/:orgId" exact element={<ManagerLoopleadTabs/> } />
-          <Route path="/manager/chat-bot" exact element={<ChatGPTPage /> } />
-
+          <Route path="/manager/view-loop_lead/:userId/:orgId" exact element={<ManagerLoopleadTabs />} />
+          <Route path="/manager/chat-bot" exact element={<ChatGPTPage />} />
           <Route path="/loop-lead/dashboard" exact element={<LoopLeadDashboard />} />
-          <Route path="/loop-lead/participant/create/:id" exact element={<CreateParticipants/> } />
+          <Route path="/loop-lead/participant/create/:id" exact element={<CreateParticipants />} />
           <Route path="/loop-lead/view-survey-participant/:id" exact element={<LoopLeadSurveyParticipantDetails />} />
-          <Route path="/survey-summary/:id" exact element={<SurveySummary/> } />
-
-
+          <Route path="/survey-summary/:id" exact element={<SurveySummary />} />
           <Route path="/survey-summary" exact element={<SurveySummary />} />
           <Route path="/plans" exact element={<Plans />} />
-
-      </>
+        </>
       ) : (
-          <>
+        <>
           {/* Public Routes */}
           <Route path="/" element={<Login />} />
           <Route path="/login" element={<Login />} />
