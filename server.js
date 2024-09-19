@@ -22,6 +22,9 @@ const questionRoutes = require('./routes/questionRoutes');
 const assignCompetencyRoutes = require('./routes/assignCompetencyRoutes');
 const surveyRoutes = require('./routes/surveyRoutes');// Adjust path as necessary
 const emailRoutes = require('./routes/emailRoutes');// Adjust path as necessary
+const goalsRoutes = require('./routes/goalRoutes');
+
+
 
 
 const app = express();
@@ -62,6 +65,8 @@ app.use('/questions', authenticateHeaderKey, questionRoutes);
 app.use('/competencies', authenticateHeaderKey, assignCompetencyRoutes);
 app.use('/surveys', authenticateHeaderKey, surveyRoutes);
 app.use('/emails', authenticateHeaderKey, emailRoutes);
+app.use('/plans', authenticateHeaderKey, goalsRoutes);
+
 
 
 const port = process.env.PORT || 8080;

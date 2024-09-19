@@ -39,7 +39,7 @@ import CreateParticipants from "../../LoopLead/pages/CreateParticipants"
 import LoopLeads from "../../manager/pages/loopleads/LoopLeads";
 import ManagerLoopleadTabs from "../../manager/pages/loopleads/ManagerLoopleadTabs"
 import ChatGPTPage from "../../manager/ChatGPTPage";
-
+import Plans from "../../admin/pages/plan/Plans";
 
 import LoopLeadSurveyParticipantDetails from "../../LoopLead/pages/LoopLeadSurveyParticipantDetails"
 import SurveySummary from "../../components/survey-summary/SurveySummary"
@@ -140,7 +140,8 @@ const AppRouter = () => {
           <Route path="/survey-summary/:id" exact element={<SurveySummary/> } />
 
 
-          <Route path="/survey-summary" exact element={<SurveySummary /> } />
+          <Route path="/survey-summary" exact element={<SurveySummary />} />
+          <Route path="/plans" exact element={<Plans />} />
 
       </>
       ) : (

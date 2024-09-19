@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Col, Container, Row, Dropdown } from 'react-bootstrap'
 import { Link } from "react-router-dom";
 import Swal from 'sweetalert2';
-import {View,Edit,Remove} from '../../../components/svg-icons/icons';
+import { View, Edit, Remove } from '../../../components/svg-icons/icons';
 
 
 import AuthLayout from '../../../layout/Auth'
@@ -14,7 +14,7 @@ import Loading from '../../../components/Loading';
 export default function Organization() {
 
     const navigate = useNavigate();
-    
+
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const [loading, setLoading] = useState(true);
@@ -26,7 +26,7 @@ export default function Organization() {
 
     useEffect(() => {
         getOrganizations();
-    }, [searchTerm,     ]);
+    }, [searchTerm,]);
 
     async function getOrganizations() {
         let url = `/api/organizations?page=${currentPage}`; // Include currentPage in the URL
@@ -74,7 +74,7 @@ export default function Organization() {
                     method: 'DELETE',
                     headers: { 'x-api-key': import.meta.env.VITE_X_API_KEY }
                 });
-           
+
                 if (response.ok) {
                     await Swal.fire({
                         title: "Deleted!",
@@ -100,75 +100,75 @@ export default function Organization() {
 
     return (
         <AuthLayout title={'Welcome to Organizations'} subTitle={'Organizations List'}>
-        <div className='content-outer'>
-                    <div className='tabe-outer'>
-                        <div className='table-heading pt-3'>
-                            <Container>
-                                <Row>
-                                    <Col md={6}>
-                                        {/* <span className='span-badge primary-tag'>12 members</span> */}
-                                    </Col>
-                                    <Col md={6} className='text-end p-0'>
-                                        <form className='d-flex justify-content-end'>
-                                            <input type='search' placeholder='Search...' value={searchTerm} onChange={handleSearch} className='form-control' />
-                                            <Link to="create" className='default-btn' >Add Organizations  <PLusIcon /> </Link>
-                                        </form>
-                                    </Col>
-                                </Row>
-                            </Container>
-                        </div>
+            <div className='content-outer'>
+                <div className='tabe-outer'>
+                    <div className='table-heading pt-3'>
+                        <Container>
+                            <Row>
+                                <Col md={6}>
+                                    {/* <span className='span-badge primary-tag'>12 members</span> */}
+                                </Col>
+                                <Col md={6} className='text-end p-0'>
+                                    <form className='d-flex justify-content-end'>
+                                        <input type='search' placeholder='Search...' value={searchTerm} onChange={handleSearch} className='form-control' />
+                                        <Link to="create" className='default-btn' >Add Organizations  <PLusIcon /> </Link>
+                                    </form>
+                                </Col>
+                            </Row>
+                        </Container>
                     </div>
                 </div>
+            </div>
             <div className='table-inner shadow-border-wrapper'>
                 <div className='table-scroll'>
-                <table className='table'>
-                    <thead>
-                        <tr>
-                            <th>Serial No.</th>
-                            <th>Organizations Name</th>
-                            <th>CreatedAt </th>
-                            <th>Status <StatusIcon /> </th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-
-                        {loading && (
+                    <table className='table'>
+                        <thead>
                             <tr>
-                                <td colSpan="12" style={{ textAlign: 'center' }}>
-                                    <Loading />
-                                </td>
-                            </tr>)
-                        }
-
-                        {!loading && Organizations.length === 0 && (
-                            <tr>
-                                <td colSpan="6" style={{ textAlign: 'center' }}>
-                                    <h4>No Organizations Found</h4>
-                                </td>
+                                <th>Serial No.</th>
+                                <th>Organizations Name</th>
+                                <th>CreatedAt </th>
+                                <th>Status <StatusIcon /> </th>
+                                <th>Action</th>
                             </tr>
-                        )} 
-                        
-                        {!loading && Organizations.length > 0  &&  (
-                            Organizations.map((org ,index) => (
-                                <tr key={org._id}>
-                                    <td>{index + 1}</td>
-                                    <td>
-                                        <div className="user-profile d-flex align-items-center">
-                                            <div className='user-name'>{org.name}</div>
-                                        </div>
+                        </thead>
+                        <tbody>
+
+                            {loading && (
+                                <tr>
+                                    <td colSpan="12" style={{ textAlign: 'center' }}>
+                                        <Loading />
                                     </td>
-                                    <td>{new Date(org.createdAt).toLocaleDateString('en-GB', {
-                                        day: '2-digit',
-                                        month: 'short',
-                                        year: 'numeric',
-                                    })}</td>
-                                    <td><span className='span-badge active-tag'>Active</span></td>
-                                    <td>
-                                        <button className='action-btn' onClick={() => navigate(`view/${org._id}`)}><View /></button>
-                                        <button className='action-btn' onClick={() => navigate(`edit/${org._id}`)}><Edit /></button>
-                                        <button className='action-btn' onClick={() => handleDelete(org._id)}><Remove /></button>
-                                        {/* <Dropdown className='custom-dropdown'>
+                                </tr>)
+                            }
+
+                            {!loading && Organizations.length === 0 && (
+                                <tr>
+                                    <td colSpan="6" style={{ textAlign: 'center' }}>
+                                        <h4>No Organizations Found</h4>
+                                    </td>
+                                </tr>
+                            )}
+
+                            {!loading && Organizations.length > 0 && (
+                                Organizations.map((org, index) => (
+                                    <tr key={org._id}>
+                                        <td>{index + 1}</td>
+                                        <td>
+                                            <div className="user-profile d-flex align-items-center">
+                                                <div className='user-name'>{org.name}</div>
+                                            </div>
+                                        </td>
+                                        <td>{new Date(org.createdAt).toLocaleDateString('en-GB', {
+                                            day: '2-digit',
+                                            month: 'short',
+                                            year: 'numeric',
+                                        })}</td>
+                                        <td><span className='span-badge active-tag'>Active</span></td>
+                                        <td>
+                                            <button className='action-btn' onClick={() => navigate(`view/${org._id}`)}><View /></button>
+                                            <button className='action-btn' onClick={() => navigate(`edit/${org._id}`)}><Edit /></button>
+                                            <button className='action-btn' onClick={() => handleDelete(org._id)}><Remove /></button>
+                                            {/* <Dropdown className='custom-dropdown'>
                                             <Dropdown.Toggle variant="success" id="dropdown-basic">
                                                 <MoreIcon />
                                             </Dropdown.Toggle>
@@ -178,14 +178,14 @@ export default function Organization() {
                                                 <Dropdown.Item key={"delete"}  onClick={() => handleDelete(org._id)}>Delete</Dropdown.Item>
                                             </Dropdown.Menu>
                                         </Dropdown> */}
-                                    </td>
-                            </tr>
-                            ))
-                        )}
-                    </tbody>
-                </table>
+                                        </td>
+                                    </tr>
+                                ))
+                            )}
+                        </tbody>
+                    </table>
 
-               </div>
+                </div>
             </div>
             {totalPages > 1 && (
                 <Pagination className='justify-content-center pagination-outer'>

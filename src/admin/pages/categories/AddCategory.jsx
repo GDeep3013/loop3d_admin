@@ -15,7 +15,7 @@ export default function AddCategory() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     category_name: '',
-    competency_type:'',
+    competency_type: '',
     created_by: user?._id,
   });
   const [categories, setCategories] = useState([]);  // For parent categories select box
@@ -37,7 +37,7 @@ export default function AddCategory() {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await axios.get('/api/categories',{
+        const response = await axios.get('/api/categories', {
           headers: { 'x-api-key': import.meta.env.VITE_X_API_KEY }
         });  // API endpoint to fetch categories
         // let json =  await response.json();
@@ -54,11 +54,11 @@ export default function AddCategory() {
     if (id) {
       const fetchCategoryDetails = async () => {
         try {
-          const response = await axios.get(`/api/categories/${id}`,{
+          const response = await axios.get(`/api/categories/${id}`, {
             headers: { 'x-api-key': import.meta.env.VITE_X_API_KEY }
           });
           const { category_name, competency_type } = response.data;
-          setFormData({ category_name, competency_type , created_by : user?.id });
+          setFormData({ category_name, competency_type, created_by: user?.id });
         } catch (error) {
           console.error("Error fetching category details:", error);
         }
@@ -75,7 +75,7 @@ export default function AddCategory() {
       setErrors(validationErrors);
       return;
     }
- 
+
     const url = id ? `/api/categories/${id}` : "/api/categories/create";
     const method = id ? "PUT" : "POST"; // Use PUT for editing and POST for creating
 
@@ -113,20 +113,20 @@ export default function AddCategory() {
   return (
     <AuthLayout title={id ? "Edit Competency" : "Add Competency"}>
       <div className="main-back-heading">
-      <div className="container">
-         <div className="row">
+        <div className="container">
+          <div className="row">
             <div className="col-md-6 p-0">
-            <div className="profile-btns pt-0">
+              <div className="profile-btns pt-0">
                 <Button className="default-btn cancel-btn ml-0" onClick={() => navigate(-1)}>
-                    Back
+                  Back
                 </Button>
-            </div>                  
+              </div>
             </div>
-         </div>
+          </div>
+        </div>
       </div>
-   </div>
       <div className="content-outer bg-white p-c-3 ml-8 shadow-border-wrapper">
-      
+
         <Form className="category-form">
           <Container>
             <Row>
@@ -154,7 +154,7 @@ export default function AddCategory() {
                     <option value="">Select Competency Type</option>
                     <option value="individual_contributor">Individual Contributor</option>
                     <option value="people_manager">People Manager</option>
-{/* 
+                    {/* 
 
 
                     {categories.length > 0 && categories.map((category) => (
