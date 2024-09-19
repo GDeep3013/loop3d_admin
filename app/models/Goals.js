@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const goalSehema = new mongoose.schema({
+const goalSehema = new mongoose.Schema({
     specific_goal: {
         type: String,
         required: true
@@ -31,6 +31,7 @@ const goalSehema = new mongoose.schema({
         type: String
     }
 }, { timestamps: true });
+
 const Goals = mongoose.model('Goals', goalSehema);
 
 module.exports = Goals;
