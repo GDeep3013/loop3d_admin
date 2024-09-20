@@ -292,11 +292,12 @@ const UserController = {
       
             const query = {
                 $or: [
-                  { organization_id: req.params.org_id },
+                  { organization: req.params.org_id },
                   { created_by: req.params.org_id }
                 ],
                 role: role._id
-              };
+            };
+    
       
             if (searchTerm) {
                 query.$or = [
@@ -336,7 +337,7 @@ const UserController = {
 
             const query = {
                 $or: [
-                  { organization_id: org_id },
+                  { organization: org_id },
                   { created_by: org_id }
                 ],
                 _id:user_id,
