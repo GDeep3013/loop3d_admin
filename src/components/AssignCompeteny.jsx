@@ -25,10 +25,14 @@ export default function AssignCompetency({ type, id, show, handleClose,getCatego
     setLoading(true);
     try {
       let result = await fetchCompetencies("AssignCompetency");
-      const categoryOptions = result.categories && result.categories.map((category) => ({
-        value: category._id,
-        label: category.category_name,
-      }));
+      const categoryOptions = result.categories 
+      ? result.categories
+          .filter(category => category.status !== 'inactive') // Filter out inactive categories
+          .map(category => ({
+            value: category._id,
+            label: category.category_name,
+          }))
+      : [];
       setCategories(categoryOptions);
       setLoading(false);
     } catch (error) {

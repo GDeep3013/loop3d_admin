@@ -149,7 +149,14 @@ export default function Category() {
                                                     null // Default or fallback value if needed
                                         )}
                                     </td>
-                                    <td><span className='span-badge active-tag'>Active</span></td>
+                                    <td>
+                                    {cat?.status && (
+                                            cat.status === "active" ? <span className='span-badge active-tag'>Active</span> :
+                                                cat.status === "inactive" ? <span className='span-badge inactive-tag'>Inactive</span> :
+                                                    null // Default or fallback value if needed
+                                        )}
+                                        {/* <span className='span-badge active-tag'>Active</span> */}
+                                    </td>
                                     <td>
                                         <button className='action-btn' onClick={() => navigate(`/competencies/${cat._id}`)}><Edit /></button>
                                         <button className='action-btn' onClick={() => handleDelete(cat._id)}><Remove /></button>

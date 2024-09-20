@@ -124,7 +124,7 @@ export default function AssignCompetencies({ data, type }) {
 
                             {!loading && competencies.length > 0 && competencies.map((cat,ind) => (
 
-                                <tr>
+                               cat.category_id?.status !=="inactive" &&<tr>
                                     <td>{ind+1}</td>
                                     <td>{cat.category_id?.category_name}</td>
                                     <td>{remove_from_string(cat.category_id?.competency_type)}</td>

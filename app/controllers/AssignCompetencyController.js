@@ -70,7 +70,7 @@ exports.getAllAssignments = async (req, res) => {
             .populate('user_id', 'first_name last_name') // Adjust fields as needed
             .populate('organization_id', 'name')
             .populate('question_id', 'text')
-            .populate('category_id', 'name');
+            .populate('category_id', 'name category_name status');
         res.status(200).json(assignments);
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -84,7 +84,7 @@ exports.getAssignmentById = async (req, res) => {
             .populate('user_id', 'first_name last_name')
             .populate('organization_id', 'name')
             .populate('question_id', 'text')
-            .populate('category_id', 'category_name competency_type');
+            .populate('category_id', 'category_name competency_type status');
         if (!assignment) {
             return res.status(404).json({ message: 'Assignment not found' });
         }
@@ -156,7 +156,7 @@ exports.getAssignmentsByUserAndOrg = async (req, res) => {
         })
         .populate('user_id', 'first_name last_name')
         .populate('question_id', 'questionText')
-        .populate('category_id', 'category_name competency_type',);
+        .populate('category_id', 'category_name competency_type status',);
 
         if (assignments.length === 0) {
             return res.status(404).json({ message: 'No assignments found for the given user and organization' });
@@ -186,13 +186,13 @@ exports.getAssignmentsByUserId = async (req, res) => {
         }
 
         // Fetch assignments based on user_id and organization_id
-        let assignments = await AssignCompetency.find({ organization_id: user.organization_id })
+        let assignments = await AssignCompetency.find({ organization_id: user.organization })
             .populate({
                 path: 'organization_id',
                 select: 'name', // Include the organization name only
             })
             .populate('question_id', 'questionText')
-            .populate('category_id', 'category_name competency_type');
+            .populate('category_id', 'category_name competency_type status');
 
         // Filter assignments by competency_type if search parameter is provided
         if (search) {

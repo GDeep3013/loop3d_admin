@@ -49,7 +49,7 @@ export default function StartSurveyForm() {
                     people_manager: []
                 };
                 data?.assignments.forEach((assignment) => {
-                    if (assignment?.category_id?.competency_type in categorizedAssignments) {
+                    if (assignment?.category_id?.status !== "inactive"&&assignment?.category_id?.competency_type in categorizedAssignments) {
                         categorizedAssignments[assignment?.category_id?.competency_type].push({
                             name: assignment?.category_id?.category_name,
                             id: assignment?.category_id?._id

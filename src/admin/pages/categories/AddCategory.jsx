@@ -16,6 +16,7 @@ export default function AddCategory() {
   const [formData, setFormData] = useState({
     category_name: '',
     competency_type: '',
+    status:'active',
     created_by: user?._id,
   });
   const [categories, setCategories] = useState([]);  // For parent categories select box
@@ -57,8 +58,8 @@ export default function AddCategory() {
           const response = await axios.get(`/api/categories/${id}`, {
             headers: { 'x-api-key': import.meta.env.VITE_X_API_KEY }
           });
-          const { category_name, competency_type } = response.data;
-          setFormData({ category_name, competency_type, created_by: user?.id });
+          const { category_name, competency_type ,status} = response.data;
+          setFormData({ category_name, competency_type, created_by: user?.id ,status:status});
         } catch (error) {
           console.error("Error fetching category details:", error);
         }
@@ -164,6 +165,28 @@ export default function AddCategory() {
                     ))} */}
                   </Form.Select>
                   {errors.competency_type && <small className="text-danger">{errors.competency_type}</small>}
+                </Form.Group>
+              </Col>
+              <Col md={6}>
+                <Form.Group className="mb-4">
+                  <Form.Label>Status</Form.Label>
+                  <Form.Select
+                    name="status"
+                    value={formData.status}
+                    onChange={handleChange}
+                  >
+                    <option value="active">Active</option>
+                    <option value="inactive">Inactive</option>
+                    {/* 
+
+
+                    {categories.length > 0 && categories.map((category) => (
+                      category.parent_id == null && <option key={category._id} value={category._id}>
+                        {category.category_name}
+                      </option>
+                    ))} */}
+                  </Form.Select>
+                  {errors.status && <small className="text-danger">{errors.competency_type}</small>}
                 </Form.Group>
               </Col>
               <Col md={12}>
