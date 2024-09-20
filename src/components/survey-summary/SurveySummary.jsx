@@ -86,8 +86,8 @@ const SurveySummary = () => {
             if (response.ok) {
                 const data = await response.json();
                 setReportData(data.reports?.categories || {});
-                let summaryValue = removeSpacesFromKeys(data.summary)
-                setSummaryArray(summaryValue);
+                let summaryValue = removeSpacesFromKeys(data.summary.response_Data)
+                setSummaryArray(data.summary);
             } else {
                 console.error('Failed to fetch survey');
             }
@@ -188,7 +188,7 @@ const SurveySummary = () => {
         // 
     };
 
-    console.log('samrtGoals', samrtGoals)
+    console.log('summaryArray', summaryArray)
     const totalInvited = Participants.reduce((acc, Participant) => acc + (totals[Participant] || 0), 0);
     const totalCompleted = Participants.reduce((acc, Participant) => acc + (completedResponses[Participant] || 0), 0);
     return (
@@ -300,49 +300,70 @@ const SurveySummary = () => {
                                 Here are the competencies that your manager selected as the most important to your role...
                             </p>
                             <div className="chat-gpt-summary">
-                                {summaryArray && summaryArray.length > 0 && summaryArray.map((summary, index) => (
-                                    <div key={index} className="summary-item">
-                                        <h2>Q{index + 1}.  {summary.Question}</h2>
-                                        <p><strong>Total Summary:</strong> {summary.TotalSummary}</p>
-                                        <p><strong>Self:</strong> {summary.Self}</p>
-                                        <p><strong>Direct Report:</strong> {summary.DirectReport}</p>
-                                        <p><strong>Teammate:</strong> {summary.Teammate}</p>
-                                        <p><strong>Supervisor:</strong> {summary.Supervisor}</p>
-                                    </div>
-                                ))}
+                                {summaryArray && (
+                                    <>
+                                        {/* Strengths and Skills */}
+                                        <div className="summary-item">
+                                            <h2>Q1. What are the strengths and skills that make this person most effective?</h2>
+                                            <p><strong>Total Summary:</strong> Example summary.</p>
+                                            {summaryArray?.question_summary?.strengthsAndSkills?.map((item, index) => (
+                                                <p key={index}><strong>{item.role}:</strong> {item.summary}</p>
+                                            ))}
+                                        </div>
+
+                                        {/* Suggestions for Improvement */}
+                                        <div className="summary-item">
+                                            <h2>Q2. What suggestions do you have to make this person a stronger performer and more effective?</h2>
+                                            <p><strong>Total Summary:</strong> Example summary.</p>
+                                            {summaryArray?.question_summary?.suggestionsForImprovement?.map((item, index) => (
+                                                <p key={index}><strong>{item.role}:</strong> {item.summary}</p>
+                                            ))}
+                                        </div>
+
+                                        {/* Other Comments */}
+                                        <div className="summary-item">
+                                            <h2>Q3. Other comments?</h2>
+                                            <p><strong>Total Summary:</strong> Example summary.</p>
+                                            {summaryArray?.question_summary?.otherComments?.map((item, index) => (
+                                                <p key={index}><strong>{item.role}:</strong> {item.summary}</p>
+                                            ))}
+                                        </div>
+
+                                       
+                                    </>
+                                )}
                             </div>
-                            {samrtGoals && <div className="chat-gpt-summary chat-smart-goal">
-                                <h1>LOOP3D SMART PLAN</h1>
+                            {summaryArray &&  <div className="summary-item chat-smart-goal">
+                                            <h2>LOOP3D SMART PLAN</h2>
 
-                                {/* Strength Section */}
-                                {samrtGoals?.strength && (
-                                    <>
-                                        <h2>STRENGTHS</h2>
-                                        <p><strong>Summary:</strong> {samrtGoals?.strength?.summary}</p>
-                                        <p><strong>SMART Plan:</strong></p>
-                                        {samrtGoals?.strength?.SMART_Plan?.map((plan, index) => (
-                                            <div key={index}>
-                                                <p>{index + 1}. {plan.Specific} {plan.Measurable} {plan.Achievable} {plan.Relevant} {plan["Time-bound"]}</p>
+                                            <div className="summary-section">
+                                                <h3>STRENGTHS</h3>
+                                                <p><strong>Summary:</strong> Based on your results, your coworkers particularly appreciate the following strengths in you and the value it adds to the workplace.</p>
+
+                                                <h4>SMART Plan:</h4>
+                                                {summaryArray?.smart_plan?.map((plan, index) => (
+                                                    <p key={index}>{plan}</p>
+                                                ))}
                                             </div>
-                                        ))}
-                                    </>
-                                )}
 
-                                {/* Development Opportunity Section */}
-                                {samrtGoals?.development_opportunity && (
-                                    <>
-                                        <h2>DEVELOPMENT OPPORTUNITIES</h2>
-                                        <p><strong>Summary:</strong> {samrtGoals?.development_opportunity?.summary}</p>
-                                        <p><strong>SMART Plan:</strong></p>
-                                        {samrtGoals?.development_opportunity?.SMART_Plan?.map((plan, index) => (
-                                            <div key={index}>
-                                                <p> {index + 1}. {plan.Specific} {plan.Measurable} {plan.Achievable} {plan.Relevant} {plan["Time-bound"]}</p>
+                                            <div className="summary-section summary-inner-text">
+                                                <h3>DEVELOPMENT OPPORTUNITIES</h3>
+                                                <p><strong>Summary:</strong> Based on your results, your coworkers have identified potential areas for development to further enhance your skills.</p>
 
+                                                <h4>SMART Plan:</h4>
+                                                {summaryArray?.smart_plan_opportunities?.map((plan, index) => {
+                                                    // Split the plan string by points (e.g., "1.", "2.", etc.)
+                                                    const splitPlan = plan?.split(/(?=\d\.\s)/); // Use regex to split on numbers followed by a period and space
+                                                    return (
+                                                        <div key={index}>
+                                                            {splitPlan.map((point, idx) => (
+                                                                <p key={idx}>{point.trim()}</p> // Trim whitespace from each point
+                                                            ))}
+                                                        </div>
+                                                    );
+                                                })}
                                             </div>
-                                        ))}
-                                    </>
-                                )}
-                            </div>}
+                                        </div>}
                         </div>
                     </div>
                 </Container>}

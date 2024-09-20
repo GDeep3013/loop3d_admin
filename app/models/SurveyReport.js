@@ -3,7 +3,8 @@ const { Schema } = mongoose;
 const SurveyReportSchema = new mongoose.Schema({
     survey_id: { type: String, unique: true, required: true },
     response_Data: { type: Schema.Types.Mixed, required: true },
-    samrtgoals: { type: Schema.Types.Mixed }
+    samrtgoals: { type: Schema.Types.Mixed },
+    question_summary:{type: Schema.Types.Mixed }
 
 },
  {
