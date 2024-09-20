@@ -39,6 +39,8 @@ import Plans from "../../admin/pages/plan/Plans";
 import LoopLeadSurveyParticipantDetails from "../../LoopLead/pages/LoopLeadSurveyParticipantDetails";
 import SurveySummary from "../../components/survey-summary/SurveySummary";
 
+import Loading from "../../components/Loading";
+
 const AppRouter = () => {
   const user = useSelector((state) => state.auth.user);
   const dispatch = useDispatch();
@@ -84,7 +86,7 @@ const AppRouter = () => {
 
   if (loading) {
     // Display a loading spinner or message while loading
-    return <div>Loading...</div>;
+    return <Loading parentClas="page-loader d-flex justify-content-center align-items-center vh-100" />;
   }
 
   return (

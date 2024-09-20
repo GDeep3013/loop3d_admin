@@ -1,4 +1,7 @@
-
+.page-loader img {
+    filter: invert(1);
+    animation: pulse 1.5s infinite ease-in-out;
+}
 .filterBox .dropdown button { width: 100%; background: transparent;text-transform: capitalize; color: #747474; font-size: 14px; border: unset; max-width: 213px; font-weight: 400; padding: 0; }
 .top-header .input-group svg {width: 22px;}
 .input-group input:focus {box-shadow: unset;outline: unset;}
@@ -234,6 +237,37 @@ button.submit_btn:hover{ background-color: var(--secondary-color); }
 .survey-inner .survey-container ul { padding-left: 18px; }
 .survey-inner .survey-container ul li.list-disc { list-style: disc; color: #4b5563; margin: 6px 0 0 0; }
 .mobile-logo-login { display: none; }
+.table-loader {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    background-color: transparent;
+    padding: 20px;
+}
+
+.table-loader img {
+    animation: pulse 2s infinite ease-in-out;
+    width: 50px;
+    height: 50px;
+    filter: invert(1);
+}
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.2);
+        /* Slightly increase size */
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
  /* start responsive css */
 @media screen and (min-width: 1280px) and (max-width: 1440px) {
     .wrapper-outer .main-content{ padding: 40px 29px; }
