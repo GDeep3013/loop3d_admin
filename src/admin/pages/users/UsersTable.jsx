@@ -5,6 +5,9 @@ import { Container, Dropdown, Pagination, Row, Col, } from 'react-bootstrap'
 import { Link } from "react-router-dom";
 import { Edit, Remove } from '../../../components/svg-icons/icons';
 import Swal from 'sweetalert2'
+
+import Loading from '../../../components/Loading';
+
 export default function EmployeeTable({ }) {
   // const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
@@ -112,7 +115,7 @@ export default function EmployeeTable({ }) {
             {loading && (
               <tr>
                 <td colSpan="12" style={{ textAlign: 'center' }}>
-                  <h4>loading...</h4>
+                  <Loading />
                 </td>
               </tr>)
             }

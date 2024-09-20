@@ -104,7 +104,7 @@ export default function Question() {
             </div>
           </div>
         </div>
-        <div className='table-scroll  shadow-border-wrapper ml-8'>
+        <div className='table-scroll  shadow-border-wrapper'>
         <table className='table'>
           <thead>
             <tr>
