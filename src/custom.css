@@ -278,6 +278,9 @@ button.submit_btn:hover{ background-color: var(--secondary-color); }
 .summary-inner-text h4 { padding-bottom: 12px; }
 .summary-section h4 { text-decoration: underline; padding-bottom: 15px; }
 table.goal-list-contant td { padding: 20px; }
+table.goal-list-contant td .div-specific_goal {position: 'absolute'; top: 0; right: 0;width: '50%' }
+
+table.goal-list-contant td p { overflow: hidden; width: 100%; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
 
 .plan_content .card-body { min-height: 277px; }
 .plan_content .card-body .card-text { font-size: 16px; font-weight: 600; margin: 0 0 14px 0; }

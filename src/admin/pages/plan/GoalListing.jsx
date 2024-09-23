@@ -64,8 +64,8 @@ const GoalListing = ({ goals ,getGoals}) => {
                 <tbody>
                     {goals.length > 0 && goals.map((goal, index) => (
                         <tr key={goal._id || index}>
-                            <td style={{ position: 'relative' }}>
-                                <div  style={{ position: 'absolute', top: 0, right: 0, width: '50%'  }}>
+                            <td style={{ position: 'relative' , width: '30%'}}>
+                                <div  className='div-specific_goal' style={{ position: 'absolute', top: 0, right: 0 }}>
                                     <Button variant="outline-dark" className="p-0">Edit</Button>
                                     <Button variant="outline-dark" className="p-0" style={{ color: 'red' }}  onClick={(e) => handleDelete(e, goal._id)}>X</Button>
                                 </div>
