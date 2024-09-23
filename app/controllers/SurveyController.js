@@ -762,60 +762,7 @@ exports.generateSurveyReport = async (req, res) => {
                     category[participantType].averageWeightage = 0; // Avoid division by zero
                 }
             });
-        }
-        // const summary =
-        // {
-        //     "results": [
-        //       {
-        //         "question": "Q1: In what ways has this individual demonstrated effective leadership in your team or organization?",
-        //         "Total Summary": "The individual is perceived to be an effective leader by most groups. They consistently demonstrate strong decision-making skills and the ability to motivate their team. However, while the individual views themselves as highly approachable, direct reports feel there is room for improvement in communication.",
-        //         "Self": "The individual believes they have shown effective leadership through decisive actions and maintaining a motivated team environment.",
-        //         "Direct Report": "Direct reports acknowledge the effective decision-making and motivation but suggest improvements in communication could enhance their leadership.",
-        //         "Teammate": "Teammates note strong leadership qualities, particularly in motivating the team, aligning with the self-assessment but do not mention communication issues.",
-        //         "Supervisor": "The supervisor supports the individual's self-assessment, highlighting their decisiveness and ability to motivate the team, without mentioning the communication gap."
-        //       },
-        //       {
-        //         "question": "Q2: How well does this individual collaborate with peers?",
-        //         "Total Summary": "Overall, the individual's collaboration skills are well-regarded. They are seen as cooperative and supportive by teammates and supervisors alike. However, while they perceive themselves as a facilitator in group settings, some teammates feel they occasionally dominate discussions.",
-        //         "Self": "The individual sees themselves as a key facilitator in group collaborations fostering a cooperative environment.",
-        //         "Direct Report": "Direct reports do not provide direct feedback on peer collaboration, but generally support the notion of a cooperative leader.",
-        //         "Teammate": "Teammates recognize the individual's collaborative efforts but note that they can occasionally dominate discussions, contrasting with the self-assessment.",
-        //         "Supervisor": "The supervisor views the individual as cooperative and supportive, aligning with the self-assessment and not mentioning dominance in discussions."
-        //       },
-        //       {
-        //         "question": "Q3: What are areas for improvement for this individual?",
-        //         "Total Summary": "The areas for improvement identified across groups include enhancing communication skills and adopting a more inclusive approach during team discussions. The individual recognizes the need for better active listening, which matches feedback from teammates and direct reports.",
-        //         "Self": "The individual acknowledges the need to improve active listening and communication skills.",
-        //         "Direct Report": "Direct reports indicate that improved communication and inclusive decision-making would benefit the entire team.",
-        //         "Teammate": "Teammates agree with the need for better communication and suggest a more inclusive approach during team interactions.",
-        //         "Supervisor": "The supervisor emphasizes the importance of improving communication, aligning with the self-assessment and feedback from other groups."
-        //       },
-        //       {
-        //         "question": "Q4: How effectively does this individual handle conflict within the team?",
-        //         "Total Summary": "The individual is largely seen as effective in handling conflicts, often resolving issues swiftly and fairly. However, the self-assessment suggests they rarely encounter conflicts, while teammates and supervisors highlight that effective conflict resolution is an area of consistent strength.",
-        //         "Self": "The individual believes they handle conflicts well but note they rarely encounter such situations.",
-        //         "Direct Report": "Direct reports highlight the individual's ability to resolve conflicts fairly and quickly, generally aligning with the self-assessment.",
-        //         "Teammate": "Teammates appreciate the effective conflict resolution and see it as a consistent strength, noting occasional underestimation of conflict situations by the individual.",
-        //         "Supervisor": "The supervisor notes the individual handles conflicts effectively and recognizes their fair and swift resolution approach, aligning with team feedback rather than the self-assessment."
-        //       },
-        //       {
-        //         "question": "Q5: In what ways could this individual improve their contribution to the team or organization?",
-        //         "Total Summary": "The individual acknowledges the need to improve strategic thinking and long-term planning. This is echoed by direct reports and supervisors, suggesting a focus on broader organizational goals could enhance their contribution. Teammates emphasize a need for balancing strategic and tactical efforts.",
-        //         "Self": "The individual identifies areas for improvement in strategic thinking and long-term planning.",
-        //         "Direct Report": "Direct reports suggest a stronger focus on organizational goals and enhanced strategic planning would be beneficial.",
-        //         "Teammate": "Teammates emphasize the balance between strategic and tactical efforts, suggesting room for improvement in strategic contributions.",
-        //         "Supervisor": "The supervisor agrees with the need to improve long-term planning and strategic focus, aligning with the self-assessment and other feedback."
-        //       },
-        //       {
-        //         "question": "Q6: How does this individual contribute to fostering a positive team culture?",
-        //         "Total Summary": "The individual is recognized for fostering a positive team culture through encouragement and support. While they see themselves as a key driver of team morale, direct reports and teammates highlight the need for more consistent efforts in recognizing and celebrating team achievements.",
-        //         "Self": "The individual believes they significantly contribute to a positive team culture through encouragement and supportive actions.",
-        //         "Direct Report": "Direct reports feel that while the individual does foster positivity, more consistent recognition and celebration of team achievements would be beneficial.",
-        //         "Teammate": "Teammates appreciate the support and encouragement but echo the need for more consistent recognition of accomplishments.",
-        //         "Supervisor": "The supervisor highlights the individual's role in fostering a positive culture, agreeing with the self-assessment but not addressing the need for consistent recognition mentioned by other groups."
-        //       }
-        //     ]
-        //   }
+        }       
         return res.status(200).json({ "summary":summary,"reports":report});
 
     } catch (error) {
@@ -1048,48 +995,7 @@ const generateSummary = async (survey_id,report) => {
         }, []);
 
         try {
-            // let prompt5 = `Generate a 2-3 sentence summary from the open-ended question 1 looking for common themes. Add 2-3 additional sentences summarizing any gaps you notice in themes between the self (Looped Lead) and other participants/raters. 
-            // The JSON structure should be an array of objects like this:
-            // Question:
-            // Total Summary:
-            // Self:
-            // Direct Report:
-            // Teammate:
-            // Supervisor:
-            // Other: 
-            // Here is the data you need to summarize:
-            // ${JSON.stringify(formattedResult)}`;
-            
-            // let prompt5= `"Analyze the following survey results for each question:\n\n"` + JSON.stringify(formattedResult) + `"\n\n" .
-            //     "For each question, generate a 2-3 sentence summary of the feedback. Then add 2-3 additional sentences identifying any gaps between the self-assessment and feedback from other participants/raters from each respondent type (Self, Direct Report, Teammate, Supervisor, Other) and identify any gaps between the self-assessment and feedback from others. The responses should be structured as follows without any additional headings or formatting:\n\n" .
-            //     "1. What are the strengths and skills that make this person most effective?\n" .
-            //     "Self: [Self-assessment summary]\n" .
-            //     "Direct Report: [Direct Report summary]. Include any gaps between the perception of the self and direct reports.\n" .
-            //     "Teammate: [Teammate summary]. Include any gaps between the perception of the self and teammates.\n" .
-            //     "Supervisor: [Supervisor summary]. Include any gaps between the perception of the self and supervisor.\n" .
-            //     "Other: [Other summary]. Include any gaps between the perception of the self and other respondents.\n\n" .
-            //     "2. What suggestions do you have to make this person a stronger performer and more effective?\n" .
-            //     "Self: [Self-assessment summary, if available]\n" .
-            //     "Direct Report: [Direct Report summary, if available]. Include any gaps between the perception of the self and direct reports.\n" .
-            //     "Teammate: [Teammate summary, if available]. Include any gaps between the perception of the self and teammates.\n" .
-            //     "Supervisor: [Supervisor summary , if available]. Include any gaps between the perception of the self and supervisor.\n" .
-            //     "Other: [Other summary , if available]. Include any gaps between the perception of the self and other respondents.\n\n" .
-            //     "3. Other comments?\n" .
-            //     "Self: [Self-assessment summary , if available]\n" .
-            //     "Direct Report: [Direct Report summary , if available]. Include any gaps between the perception of the self and direct reports.\n" .
-            //     "Teammate: [Teammate summary , if available]. Include any gaps between the perception of the self and teammates.\n" .
-            //     "Supervisor: [Supervisor summary , if available]. Include any gaps between the perception of the self and supervisor.\n" .
-            //     "Other: [Other summary , if available]. Include any gaps between the perception of the self and other respondents.\n\n" .
-            //     "Ensure that the response is in plain text without extra headings, bullet points, or other formatting."`;
-            
-            // const response = await openai.chat.completions.create({
-            //   model: 'gpt-4o',
-            //     messages: [
-            //     {role: 'system', content:'You are an AI assistant that helps analyze survey results.'},
-            //     { role: 'user', content: prompt5 }
-            //   ]
-            // });
-            
+                        
             const resultsJson = JSON.stringify(formattedResult);
 
             // Create the different prompts

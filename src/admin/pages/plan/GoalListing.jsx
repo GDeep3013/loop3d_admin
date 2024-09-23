@@ -1,7 +1,50 @@
 import React from 'react'
 import { Table, Button } from 'react-bootstrap';
+import Swal from 'sweetalert2'
 
-const GoalListing = () => {
+const GoalListing = ({ goals ,getGoals}) => {
+
+    const formatDate = (dateString) => {
+        return new Date(dateString).toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric',
+        });
+    };   
+
+    const handleDelete = async (e,id) => {
+               try {
+            const confirmResult = await Swal.fire({
+                title: "Are you sure?",
+                text: "You won't be able to revert this!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#000",
+                cancelButtonColor: "#d26c6c",
+                confirmButtonText: "Yes, delete it!"
+            });
+            if (confirmResult.isConfirmed) {
+                const response = await fetch(`/api/plans/delete/${id}`, {
+                    method: 'DELETE',
+                    headers: { "x-api-key": import.meta.env.VITE_X_API_KEY }
+                });
+                if (response.ok) {
+                    await Swal.fire({
+                        title: "Deleted!",
+                        text: "Your file has been deleted.",
+                        icon: "success",
+                        confirmButtonColor: "#000",
+                    });
+                    getGoals()
+                } else {
+                    console.error('Failed to delete user');
+                }
+            }
+        } catch (error) {
+            console.error('Error deleting user:', error);
+        }
+    };
+
     return (
         <div className="mt-5">
             <Table striped bordered hover className='goal-list-outer goal-list-contant'>
@@ -19,36 +62,24 @@ const GoalListing = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td style={{ position: 'relative' }}>
-                            {/* <div style={{ position: 'absolute', top: 0, right: 0 }}>
-                                <Button variant="outline-dark" className="p-0">Edit</Button>
-                                <Button variant="outline-dark outline-cross" className="p-0" style={{ color: 'red' }}>X</Button>
-                            </div> */}
-                            Goal 1
-                        </td>
-                        <td>Complete project A</td>
-                        <td>In Progress</td>
-                        <td>How have you applied it 1</td>
-                        <td>What results have you seen from it 1</td>
-                        <td>Complete</td>
-                    </tr>
-                    <tr>
-                        <td>Goal 1</td>
-                        <td>Complete project 2</td>
-                        <td>In Progress 2</td>
-                        <td>How have you applied it 2</td>
-                        <td>What results have you seen from it 2</td>
-                        <td>Not Started</td>
-                    </tr>
-                    <tr>
-                        <td>Goal 3</td>
-                        <td>Complete project A 3</td>
-                        <td>In Progress 3</td>
-                        <td>How have you applied it 3</td>
-                        <td>What results have you seen from it 3</td>
-                        <td>Started</td>
-                    </tr>
+                    {goals.length > 0 && goals.map((goal, index) => (
+                        <tr key={goal._id || index}>
+                            <td style={{ position: 'relative' }}>
+                                <div style={{ position: 'absolute', top: 0, right: 0, width: '20%' }}>
+                                    <Button variant="outline-dark" className="p-0">Edit</Button>
+                                    <Button variant="outline-dark" className="p-0" style={{ color: 'red' }}  onClick={(e) => handleDelete(e, goal._id)}>X</Button>
+                                </div>
+                                {goal.specific_goal}
+                            </td>
+                            <td>{formatDate(goal.dead_line)}</td>
+                            <td>{goal.competency.category_name}</td>
+                            <td>{goal.goal_apply}</td>
+                            <td>{goal.goal_result_seen}</td>
+                            <td>{goal.status}</td>
+                        </tr>
+                    ))}
+
+
                 </tbody>
             </Table>
         </div>

@@ -131,7 +131,7 @@ const AppRouter = () => {
           <Route path="/loop-lead/view-survey-participant/:id" exact element={<LoopLeadSurveyParticipantDetails />} />
           <Route path="/survey-summary/:id" exact element={<SurveySummary />} />
           <Route path="/survey-summary" exact element={<SurveySummary />} />
-          <Route path="/plans" exact element={<Plans />} />
+          <Route path="/plans/:id" exact element={<Plans />} />
         </>
       ) : (
         <>
