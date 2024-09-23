@@ -18,6 +18,8 @@ export default function StartSurveyForm() {
         loop_lead_name: "",
         loop_lead_email: "",
     });
+    const [loader, setLoader] = useState(false);
+
     const [errorMessage, setErrorMessage] = useState("");
     const [isFormSubmitted, setIsFormSubmitted] = useState(false);
     const [assignments, setAssignments] = useState({
@@ -95,7 +97,7 @@ export default function StartSurveyForm() {
             setErrorMessage("Please fill out all required fields.");
             return;
         }
-
+        setLoader(true)
         // Prepare the payload
         const payload = {
             surveyData: {
@@ -120,6 +122,7 @@ export default function StartSurveyForm() {
                 },
                 body: JSON.stringify(payload)
             });
+            setLoader(false)
 
             if (response.ok) {
                 const data = await response.json();
@@ -235,8 +238,9 @@ export default function StartSurveyForm() {
                     <button
                         type="submit"
                         className="default-btn"
+                        disabled={loader}
                     >
-                        Submit
+                        {loader? 'submitting':"Submit"}
                     </button>
                 </div>
                 {/* Display the error message */}

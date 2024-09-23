@@ -26,7 +26,7 @@ export default function HeaderDashboard({title, subTitle}) {
                 <img src='/images/profile-img.png' alt="User Image" />
               </div>
               <div className="profileName">
-                  <h3>{user?.first_name + " " + user?.last_name}</h3>
+                      <h3>{user.first_name !==null?user.first_name:''}   {user.last_name !==null?user.last_name:''}</h3>
                   <p>{user?.role}</p>
               </div>
             </div>

@@ -21,6 +21,8 @@ export default function AddCategory() {
   });
   const [categories, setCategories] = useState([]);  // For parent categories select box
   const [errors, setErrors] = useState({});
+  const [loader, setLoader] = useState(false);
+
 
   // Form validation
   const validateForm = (formData) => {
@@ -76,7 +78,7 @@ export default function AddCategory() {
       setErrors(validationErrors);
       return;
     }
-
+    setLoader(true)     
     const url = id ? `/api/categories/${id}` : "/api/categories/create";
     const method = id ? "PUT" : "POST"; // Use PUT for editing and POST for creating
 
@@ -95,6 +97,8 @@ export default function AddCategory() {
           showConfirmButton: false,
           timer: 1500
         });
+        setLoader(false)     
+
         setTimeout(() => navigate('/competencies'), 1500);
       })
       .catch(error => {
@@ -191,7 +195,7 @@ export default function AddCategory() {
               </Col>
               <Col md={12}>
                 <div className="profile-btns pt-0">
-                  <Button className="default-btn" onClick={handleSubmit}>
+                  <Button className="default-btn" onClick={handleSubmit} disabled={loader}>
                     {id ? "Update" : "Save"}
                   </Button>
                   <Button className="default-btn cancel-btn" onClick={() => navigate('/competencies')}>

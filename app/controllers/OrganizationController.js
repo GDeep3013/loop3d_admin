@@ -1,5 +1,6 @@
 const Organization = require('../models/Organization');
 const { validationResult } = require('express-validator');
+const AssignCompetency = require('../models/AssignCompetencyModel');
 
 const OrganizationController = {
 
@@ -9,9 +10,37 @@ const OrganizationController = {
             return res.status(400).json({ errors: errors.array() });
         }
         try {
-            const { name } = req.body;
+            const { name ,selectedCompetency,user_id } = req.body;
             const organization = new Organization({ name });
             const savedOrganization = await organization.save();
+            if (savedOrganization?._id) {
+                for (let competency of selectedCompetency) {
+                    const newAssignments = [];
+    
+                    // Prepare the main category assignment
+                    newAssignments.push({
+                        user_id,
+                        organization_id: savedOrganization._id,
+                        category_id: competency.value, // Assuming value holds the category ID
+                        status: 'active', // Set default status
+                    });
+    
+                    // Check for existing assignments to avoid duplication
+                    const existingAssignments = await AssignCompetency.find({
+                        organization_id: savedOrganization._id,
+                        user_id,
+                        category_id: competency.value, // Match the selected competency's category ID
+                    });
+    
+                    // If there are existing assignments, skip to next competency
+                    if (existingAssignments.length > 0) {
+                        continue;
+                    }
+    
+                    // Save new assignment
+                    await AssignCompetency.insertMany(newAssignments);
+                }
+            }
             res.status(201).json(savedOrganization);
         } catch (error) {
             // Check for duplicate key error (code 11000)
