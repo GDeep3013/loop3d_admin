@@ -179,11 +179,7 @@ exports.createSurveyParticipants = async (req, res) => {
         let loop_lead_id = ''
         let mrg_id = ''
         let p_email = ''
-        await sendEmail('sendMailToParticipant', {
-            name,
-            p_email,
-            url
-        });
+      
         for (let participant of participants) {
             const {
                 p_first_name,

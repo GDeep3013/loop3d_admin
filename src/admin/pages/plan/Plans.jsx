@@ -26,9 +26,8 @@ const Plans = () => {
             <div className="content-outer shadow-border-wrapper">
                 <Container>
                     <Row>
-                        <Col><GoalCreator /></Col>
-                        <Col xs={5}><SuggestedGoal /></Col>
-                        <Col></Col>
+                        <Col xs={12} md={6}><GoalCreator /></Col>
+                        <Col xs={12} md={6}><SuggestedGoal /></Col>
                     </Row>
                     <Row>
                         <Col><GoalListing /></Col>

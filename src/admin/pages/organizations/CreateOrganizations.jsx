@@ -133,7 +133,7 @@ export default function CreateOrganization({ id, savedData }) {
                     </div>
                 </div>
             </div>}    */}
-            <Form className="organization-form">
+            <Form className="organization-form mt-5">
                 <Container>
                     <Row>
                         <Col md={6}>

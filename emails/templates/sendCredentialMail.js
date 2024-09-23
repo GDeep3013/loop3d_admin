@@ -1,9 +1,10 @@
 const emailHeaderFooter = require('./emailHeaderFooter');
 
 const sendCredentialMail = (recipientDetails) => {
+  let last_name = (recipientDetails.last_name != undefined  && recipientDetails.last_name != null )? recipientDetails.last_name:''
     const bodyContent=`<tr>
                      <td>
-                        <p>Hi ${recipientDetails.first_name}  ${recipientDetails.last_name},</p>
+                        <p>Hi ${recipientDetails.first_name}  ${last_name},</p>
                         <p>Welcome to Loop3D! Your account has been created, and you can now access your Loop3D 360 Dashboard. Below are your login credentials:</p>
                         <br />
                         

@@ -3,10 +3,11 @@ import { Container, Form, Button, Card  } from 'react-bootstrap';
 
 const GoalCreator = () => {
     return (
+        <div className='plan_content'>
         <Container className="mt-5">
             <Card style={{ margin: 'auto', border: '1px solid #ccc' }}>
                 <Card.Body>
-                    <Card.Text className="text-center">
+                    <Card.Text>
                         This is a description of the form.
                     </Card.Text>
                     <Form>
@@ -22,13 +23,14 @@ const GoalCreator = () => {
                             </Form.Control>
                         </Form.Group>
 
-                        <Button variant="primary" type="submit" className='w-100'>
+                        <Button variant="primary" type="submit">
                             Submit
                         </Button>
                     </Form>
                 </Card.Body>
             </Card>
-        </Container>
+            </Container>
+            </div>
     )
 }
 
