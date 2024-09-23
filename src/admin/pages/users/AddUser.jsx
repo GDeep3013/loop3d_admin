@@ -11,6 +11,8 @@ export default function AddEmployee() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [roles, setRoles] = useState([]);
+  const [loader, setLoader] = useState(false);
+
   const [formData, setFormData] = useState({
     first_name: '',
     last_name: '',
@@ -92,6 +94,7 @@ export default function AddEmployee() {
     // formDataToSend.append('confirmPassword', formData.confirmPassword ? formData.confirmPassword : '');
     // formDataToSend.append('user_type', formData.user_type ? formData.user_type : '');
     // formDataToSend.append('organization_id', formData.organization_id ? formData.organization_id : null);
+    setLoader(true)         
 
     let url = "/api/register";
     if (id) {
@@ -112,6 +115,8 @@ export default function AddEmployee() {
           showConfirmButton: false,
           timer: 1500
         });
+        setLoader(false)         
+
         setTimeout(() => navigate('/users'), 1500);
       })
       .catch(error => {
@@ -119,6 +124,7 @@ export default function AddEmployee() {
           console.log('error.response', error.response);
           setErrors(error.response.data.errors?.[0]);
           setErrors(error.response.data.errors);
+          setLoader(false)         
 
         } else if (error.request) {
           console.log('No response received from the server');
@@ -364,7 +370,7 @@ export default function AddEmployee() {
 
                     <Col md={12}>
                       <div className="profile-btns pt-0">
-                        <Button className="default-btn" onClick={handleSubmit}>{id ? "Update" : "Save"}</Button>
+                        <Button className="default-btn" onClick={handleSubmit} disabled={loader}>{id ? "Update" : "Save"}</Button>
                         <Button className="default-btn cancel-btn" onClick={() => navigate(-1)}>Cancel</Button>
                       </div>
                     </Col>

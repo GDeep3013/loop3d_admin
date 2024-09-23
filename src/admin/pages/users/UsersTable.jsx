@@ -130,21 +130,21 @@ export default function EmployeeTable({ }) {
             {
             !loading && Employe.length > 0 && Employe.map((user, ind) => (
 
-                user?.role?.type != "admin" && <tr key={user._id}>
+                user?.role?.type != "admin" && <tr key={user?._id}>
                   <td>{ind + 1}</td>
                   <td>
                     <div className="user-profile d-flex align-items-center">
-                      <div className='user-name'>{user.first_name}</div>
+                      <div className='user-name'>{user?.first_name}</div>
                     </div>
                   </td>
                   <td>
                     <div className="user-profile d-flex align-items-center">
-                      <div className='user-name'>{user.last_name}</div>
+                      <div className='user-name'>{user.last_name !== null ? user.last_name:''}</div>
                     </div>
                   </td>
-                  <td className='text-lowercase'> <Link href="#" > {user.email} </Link></td>
-                  <td>{user.role.type}</td>
-                  <td>{user.organization?.name}</td>
+                  <td className='text-lowercase'> <Link href="#" > {user?.email} </Link></td>
+                  <td>{user?.role?.type}</td>
+                  <td>{user?.organization?.name}</td>
                   <td><span className='span-badge active-tag'>Active</span></td>
                   <td>
                     {/* <button className='action-btn' onClick={() => navigate(`/add-user/${user._id}`)}><Edit /></button> */}

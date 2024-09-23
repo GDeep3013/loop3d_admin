@@ -337,6 +337,7 @@ exports.savePlans = async (req, res) => {
             competency: categories[0]?._id,
             goal_apply: `I made 2 suggestions to my supervisor.`,
             goal_result_seen: "My supervisor has assigned me to better projects.",
+                
         });
         const savedGoals = await newGoals.save();
         res.status(201).json(savedGoals);

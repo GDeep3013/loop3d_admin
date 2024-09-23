@@ -6,6 +6,7 @@ const GoalCreator = ({ prompt, setPrompt, handleSubmit, selectedOption, setSelec
         setSelectedOption(e.target.value);     
     };
     return (
+        <div className='plan_content'>
         <Container className="mt-5">
             <Card style={{ margin: 'auto', border: '1px solid #ccc' }}>
                 <Card.Body>
@@ -41,13 +42,15 @@ const GoalCreator = ({ prompt, setPrompt, handleSubmit, selectedOption, setSelec
 
                             </Form.Control>
                         </Form.Group>
-                        <Button variant="primary" type="submit" className="w-100">
+
+                        <Button variant="primary" type="submit">
                             Submit
                         </Button>
                     </Form>
                 </Card.Body>
             </Card>
-        </Container>
+            </Container>
+            </div>
     )
 }
 

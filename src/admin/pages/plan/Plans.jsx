@@ -120,9 +120,11 @@ const Plans = () => {
             <div className="content-outer shadow-border-wrapper">
                 <Container>
                     <Row>
-                        <Col><GoalCreator prompt={prompt} setPrompt={setPrompt} handleSubmit={GernatePlans} selectedOption={selectedOption} setSelectedOption={setSelectedOption} categories={categories} /></Col>
-                        <Col xs={5}><SuggestedGoal chatResponse={chatResponse} loading={loading} regenerateResponse={GernatePlans} AddNewGoal={AddNewGoal} /></Col>
-                        <Col></Col>
+                        <Col xs={12} md={6}><GoalCreator prompt={prompt} setPrompt={setPrompt} handleSubmit={GernatePlans} selectedOption={selectedOption} setSelectedOption={setSelectedOption} categories={categories} /></Col>
+                        <Col xs={12} md={6}><SuggestedGoal chatResponse={chatResponse} loading={loading} regenerateResponse={GernatePlans} AddNewGoal={AddNewGoal} /></Col>
+                        {/* <Col></Col>
+                        <Col xs={12} md={6}><GoalCreator /></Col>
+                        <Col xs={12} md={6}><SuggestedGoal /></Col> */}
                     </Row>
                     <Row>
                         <Col><GoalListing goals={goals} getGoals={getGoals} /></Col>

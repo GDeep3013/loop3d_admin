@@ -3,6 +3,7 @@ import { Container, Form, Button, Card, } from 'react-bootstrap';
 const SuggestedGoal = ({ chatResponse, loading, regenerateResponse ,AddNewGoal}) => {
    
     return (
+        <div className='plan_content'>
         <Container className="mt-5">
             <Card style={{ margin: 'auto', border: '1px solid #ccc' }}>
                 <Card.Body>
@@ -22,8 +23,7 @@ const SuggestedGoal = ({ chatResponse, loading, regenerateResponse ,AddNewGoal})
 
                         <div className="d-flex">
                             <Button
-                                variant="primary"
-                                className="w-100 mr-0"
+                                variant="primary" className="me-2"
                                 disabled={loading} 
                                 onClick={(e) => { AddNewGoal(e) }}
                             >
@@ -36,12 +36,14 @@ const SuggestedGoal = ({ chatResponse, loading, regenerateResponse ,AddNewGoal})
                                 disabled={loading}
                             >
                                 {loading ? 'Generating...' : 'Make Goal More Specific'}
+                            
                             </Button>
                         </div>
                     </Form>
                 </Card.Body>
             </Card>
-        </Container>
+            </Container>
+            </div>
     )
 }
 

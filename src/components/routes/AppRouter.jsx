@@ -38,7 +38,7 @@ import ChatGPTPage from "../../manager/ChatGPTPage";
 import Plans from "../../admin/pages/plan/Plans";
 import LoopLeadSurveyParticipantDetails from "../../LoopLead/pages/LoopLeadSurveyParticipantDetails";
 import SurveySummary from "../../components/survey-summary/SurveySummary";
-
+import CreateFrom from "../../admin/pages/organizations/CreateFrom"
 import Loading from "../../components/Loading";
 
 const AppRouter = () => {
@@ -95,7 +95,7 @@ const AppRouter = () => {
         <>
           {/* Authenticated Routes */}
           <Route path="/organizations" exact element={<Organization />} />
-          <Route path="/organizations/create" exact element={<OrganizationTabs />} />
+          <Route path="/organizations/create" exact element={<CreateFrom />} />
           <Route path="/organizations/edit/:id" exact element={<OrganizationTabs />} />
           <Route path="/organizations/view/:id" exact element={<ViewOrganization />} />
           <Route path="/project-overview/:id" exact element={<ProjectOverview />} />

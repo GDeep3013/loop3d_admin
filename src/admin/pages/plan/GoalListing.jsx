@@ -65,11 +65,13 @@ const GoalListing = ({ goals ,getGoals}) => {
                     {goals.length > 0 && goals.map((goal, index) => (
                         <tr key={goal._id || index}>
                             <td style={{ position: 'relative' }}>
-                                <div style={{ position: 'absolute', top: 0, right: 0, width: '20%' }}>
+                                <div  style={{ position: 'absolute', top: 0, right: 0, width: '50%'  }}>
                                     <Button variant="outline-dark" className="p-0">Edit</Button>
                                     <Button variant="outline-dark" className="p-0" style={{ color: 'red' }}  onClick={(e) => handleDelete(e, goal._id)}>X</Button>
                                 </div>
-                                {goal.specific_goal}
+                                <p>{goal.specific_goal}
+                                </p>
+
                             </td>
                             <td>{formatDate(goal.dead_line)}</td>
                             <td>{goal.competency.category_name}</td>

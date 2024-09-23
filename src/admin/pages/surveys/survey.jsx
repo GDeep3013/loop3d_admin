@@ -43,7 +43,7 @@ export default function Survey() {
       };
 
     return (
-        <AuthLayout title={"surveys"}>
+        <AuthLayout title={"Surveys"}>
             <div className='table-inner main-wrapper '>
                 <div className='content-outer'>
                     <div className='tabe-outer'>
