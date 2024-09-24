@@ -68,12 +68,12 @@ export default function LeftNav({isMenuOpen,setIsMenuOpen}) {
               Questions
             </NavLink>
           </li>
-          <li className="sideNavItem">
+          {/* <li className="sideNavItem">
             <NavLink to="/plans">
               <FixedPrice />
               Plans
             </NavLink>
-          </li>
+          </li> */}
           {/* <li className="sideNavItem">
             <NavLink to="/emails">
               <EmailIcon />

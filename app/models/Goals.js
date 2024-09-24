@@ -9,16 +9,21 @@ const goalSehema = new mongoose.Schema({
         type: String,
         required: true
     },
+    survey_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Survey',
+        required: true,
+    },
     competency: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'CategoryModel', // Assuming you have a User model
+        ref: 'Category', // Assuming you have a User model
         required: true
-    },
-    goal_apply: {
+    },   
+    goal_apply: { // Add this field to the schema
         type: String,
         required: true
     },
-    goal_result: {
+    goal_result_seen: { // Add this field to the schema
         type: String,
         required: true
     },

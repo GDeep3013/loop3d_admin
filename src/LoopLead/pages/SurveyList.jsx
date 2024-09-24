@@ -36,14 +36,13 @@ export default function SurveyList() {
   };
 
   return (
-    <div className='table-inner'>
+    <div className='table-inner mt-5'>
       <div className='content-outer'>
         <div className='tabe-outer'>
           <div className='table-heading'>
             <Container>
               <Row>
-                <Col md={6} className='text-end'>
-                  
+                <Col md={6} className='text-end'>                  
                 </Col>
                 <Col md={6} className='text-end'>
                   <form className='d-flex justify-content-end'>

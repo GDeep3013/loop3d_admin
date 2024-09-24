@@ -111,6 +111,8 @@ export default function SurveyParticipantDetails() {
                                                 onChange={handleSearch}
                                                 className='form-control'
                                             />
+                                            {/* <Link to={`lo/plans/${id}`} className='default-btn' >View Plans</Link> */}
+
                                             <Link to={`/survey-summary/${id}`} className='default-btn' >View Summary</Link>
 
                                         </form>

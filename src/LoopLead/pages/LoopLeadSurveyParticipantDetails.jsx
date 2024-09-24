@@ -100,18 +100,20 @@ export default function LoopLeadSurveyParticipantDetails() {
                         <div className='table-heading'>
                             <Container>
                                 <Row>
-                                    <Col md={6} className='text-end'>
+                                    <Col md={3} className='text-end'>
                                     </Col>
-                                    <Col md={6} className='text-end pt-3'>
+                                    <Col md={9} className='text-end pt-3'>
                                         <form className='d-flex justify-content-end'>
                                             <input
                                                 type='search'
                                                 placeholder='Search...'
                                                 value={searchTerm}
                                                 onChange={handleSearch}
-                                                className='form-control'
+                                                className='form-control w-25'
                                             />
                                             <Link to={`/loop-lead/participant/create/${id}`} className='default-btn' >Add Particpant <PLusIcon /> </Link>
+                                            <Link to={`/plans/${id}`} className='default-btn' >View Smart Goals</Link>
+
                                             <Link to={`/survey-summary/${id}`} className='default-btn' >View Summary</Link>
 
                                         </form>
