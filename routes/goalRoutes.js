@@ -13,5 +13,6 @@ router.post('/save-plans', GoalController.savePlans)
 
 router.delete('/delete/:id',GoalController.deletePlans)
 
+router.put('/update/:id', GoalController.updateGoal);
 
 module.exports = router;

@@ -1,11 +1,11 @@
-import React, { useState, useCallback, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import AuthLayout from '../../../layout/Auth'
-import { Col, Row, Container, Form, Button } from "react-bootstrap";
-import { useNavigate, useParams } from "react-router-dom";
-import Swal from 'sweetalert2';
+import { Col, Row, Container, Button } from "react-bootstrap";
+import { useParams } from "react-router-dom";
 import GoalCreator from '../plan/GoalCreator';
 import SuggestedGoal from '../plan/SuggestedGoal';
 import GoalListing from '../plan/GoalListing';
+import CompletionManagement from '../plan/CompletionManagement';
 
 const Plans = () => {
     const { id } = useParams();
@@ -17,7 +17,9 @@ const Plans = () => {
     const [loading, setLoading] = useState(false);
     const [goals, setGoals] = useState([]);
 
-//Get get categories for the select box
+
+
+    //Get get categories for the select box
     async function getCategory() {
         try {
             let url = `/api/categories`;
@@ -32,7 +34,7 @@ const Plans = () => {
         }
     }
 
-//Get get goal for the select listing
+    //Get get goal for the select listing
     async function getGoals() {
         try {
             let url = `/api/plans/get-goal/${id}`;
@@ -64,6 +66,7 @@ const Plans = () => {
             });
             const data = await response.json();
             setChatResponse(data.content)
+            console.log(data, 'chat respose')
             setCompetencyFrom(data.competency)
             setLoading(false);
         } catch (error) {
@@ -77,7 +80,7 @@ const Plans = () => {
         getGoals();
     }, [])
 
-  // store gernated smart plans to database
+    // store gernated smart plans to database
     const AddNewGoal = async (e) => {
         e.preventDefault();
         try {
@@ -102,8 +105,9 @@ const Plans = () => {
         }
     }
 
+
     return (
-        <AuthLayout title={'Welcome to Plans'} subTitle={'Development Plan'}>
+        <AuthLayout title={'Welcome LOOP3D Development Plan '} subTitle={'Development Plan'}>
             <div className="main-back-heading">
                 <div className="container">
                     <div className="row">
@@ -117,20 +121,16 @@ const Plans = () => {
                     </div>
                 </div>
             </div>
-            <div className="content-outer shadow-border-wrapper">
-                <Container>
+            <div className="content-outer">
+                <Container>                 
                     <Row>
                         <Col xs={12} md={6}><GoalCreator prompt={prompt} setPrompt={setPrompt} handleSubmit={GernatePlans} selectedOption={selectedOption} setSelectedOption={setSelectedOption} categories={categories} /></Col>
-                        <Col xs={12} md={6}><SuggestedGoal chatResponse={chatResponse} loading={loading} regenerateResponse={GernatePlans} AddNewGoal={AddNewGoal} /></Col>
-                        {/* <Col></Col>
-                        <Col xs={12} md={6}><GoalCreator /></Col>
-                        <Col xs={12} md={6}><SuggestedGoal /></Col> */}
+                        <Col xs={12} md={6}><SuggestedGoal chatResponse={chatResponse} loading={loading} regenerateResponse={GernatePlans} AddNewGoal={AddNewGoal} setChatResponse={setChatResponse} /></Col>
                     </Row>
                     <Row>
-                        <Col><GoalListing goals={goals} getGoals={getGoals} /></Col>
+                        <Col><GoalListing goals={goals} getGoals={getGoals} categories={categories} setChatResponse={setChatResponse} setCompetencyFrom={setCompetencyFrom} /></Col>
                     </Row>
                 </Container>
-
             </div>
         </AuthLayout>
     )

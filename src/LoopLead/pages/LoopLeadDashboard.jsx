@@ -5,7 +5,7 @@ import SurveyList from './SurveyList'
 
 export default function LoopLeadDashboard() {
   return (
-<AuthLayout title={"Dashboard"} >
+       <AuthLayout title={"Dashboard"} >
        <SurveyList/>
        </AuthLayout>
   )

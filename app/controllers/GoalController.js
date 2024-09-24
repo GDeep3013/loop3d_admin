@@ -164,11 +164,8 @@ exports.gernatePlans = async (req, res) => {
             });
             processParticipantAnswers(participant, participantAnswers?.answers, participantType, assignCompetencies, competencies, questions, report);
         }
-
         const summary = await generateSummary(survey_id, report);
-        // summary = json_encode(summary)
-        console.log(summary);
-
+        
         const fullPrompt = "Based on the following survey results and developmental suggestions, generate one SMART plans for the competency " + option + " The response should be in plain text without extra headings, bullet points, or other formatting and 2 lines only .\n\n Survey Results:\n" + summary + "\n\n;"
         // Call the OpenAI GPT model
         const response = await openai.chat.completions.create({
@@ -359,8 +356,27 @@ exports.deletePlans = async(req, res)=> {
     }
 }
 
-
-
-
-
-
+exports.updateGoal = async (req, res) => {
+    const goalId = req.params.id;
+    const updatedData = req.body;
+  
+    try {
+      // Find the goal by its ID, update it with the new data, and return the updated document
+      let updatedGoal = await Goals.findByIdAndUpdate(goalId, updatedData, { new: true })
+                                   .populate('competency', 'category_name competency_type'); // Populate the competency field
+  
+      if (!updatedGoal) {
+        return res.status(404).json({ message: 'Goal not found' });
+      }
+  
+      // Send back the updated goal including the specific_goal and the populated competency data
+      return res.status(200).json({
+        message: 'Goal updated successfully',
+        specific_goal: updatedGoal.specific_goal,
+        competency: updatedGoal.competency, // Now includes category_name and competency_type
+      });
+    } catch (error) {
+      console.error('Error updating goal:', error);
+      return res.status(500).json({ message: 'Internal Server Error' });
+    }
+  };
