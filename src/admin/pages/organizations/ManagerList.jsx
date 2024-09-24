@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from "react-router-dom";
 import { StatusIcon, MoreIcon,View ,Edit } from "../../../components/svg-icons/icons";
@@ -5,7 +6,7 @@ import { Container, Dropdown, Row, Col } from 'react-bootstrap'
 import { Link } from "react-router-dom";
 import { fetchLoopLeads } from '../../../apis/UserApi';
 
-export default function LoopLeads({ organization }) {
+export default function ManagerList({ organization }) {
     const navigate = useNavigate();
 
     const [users, setUsers] = useState([]);
@@ -15,7 +16,7 @@ export default function LoopLeads({ organization }) {
         if (organization.orgniation_id) {
             (async () => {
                 try {
-                    let data = await fetchLoopLeads(organization.orgniation_id, searchTerm, "looped_lead");
+                    let data = await fetchLoopLeads(organization.orgniation_id, searchTerm, "manager");
                     if (Array.isArray(data.users) && data.users.length > 0) {
                         setUsers(data.users);
                     } else {
@@ -60,7 +61,6 @@ export default function LoopLeads({ organization }) {
                         <th>First Name</th>
                         <th>Last Name</th>
                         <th>Email address</th>
-                        <th>Supervisor</th>
                         <th>Role</th>
                         <th>Status <StatusIcon /> </th>
                         <th>Action</th>
@@ -87,7 +87,6 @@ export default function LoopLeads({ organization }) {
                                     </div>
                                 </td>
                                     <td>{user.email}</td>
-                                    <td>{user.created_by?.first_name} {user.created_by?.last_name}</td>
 
                                 <td>{user.role.type}</td>
                                 <td><span className='span-badge active-tag'>Active</span></td>

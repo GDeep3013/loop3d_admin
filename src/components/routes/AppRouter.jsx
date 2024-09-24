@@ -41,6 +41,8 @@ import SurveySummary from "../../components/survey-summary/SurveySummary";
 import CreateFrom from "../../admin/pages/organizations/CreateFrom"
 import Loading from "../../components/Loading";
 
+import CreatePassword from "../../pages/CreatePassword";
+
 const AppRouter = () => {
   const user = useSelector((state) => state.auth.user);
   const dispatch = useDispatch();
@@ -66,10 +68,20 @@ const AppRouter = () => {
 
   const loadingPage = async () => {
     const currentUrl = window.location.pathname;
-    if (!user && currentUrl !== '/login' && currentUrl !== '/forget-password' && currentUrl !== '/reset-password') {
-      navigate('/login'); // Redirect to login if not authenticated
-    } else if (user && (currentUrl === '/' || currentUrl === '/login')) {
-      // Redirect based on user role after login
+
+    // Define guest routes
+    const guestRoutes = ['/login', '/forget-password', '/reset-password','/create-password'];
+    if (user && currentUrl == '/reset-password') {
+      localStorage.removeItem("_token");
+      localStorage.removeItem("userType");
+      }
+    
+    // Check if user is authenticated
+    if (!user && !guestRoutes.includes(currentUrl)) {
+      // Redirect to login if not authenticated and current page is not a guest route
+      navigate('/login');
+    } else if (user && guestRoutes.includes(currentUrl)) {
+      // Redirect authenticated users based on their role if they are trying to access guest pages
       if (user.role === "admin") {
         navigate('/organizations');
       } else if (user.role === "manager") {
@@ -78,6 +90,8 @@ const AppRouter = () => {
         navigate('/loop-lead/dashboard');
       }
     }
+
+   
   };
 
   useEffect(() => {
@@ -139,7 +153,8 @@ const AppRouter = () => {
           <Route path="/" element={<Login />} />
           <Route path="/login" element={<Login />} />
           <Route path="/forget-password" element={<ForgetPassword />} />
-          <Route path="/reset-password" element={<ResetPassword />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
+            <Route path="create-password" element={<CreatePassword/>}/>
         </>
       )}
     </Routes>

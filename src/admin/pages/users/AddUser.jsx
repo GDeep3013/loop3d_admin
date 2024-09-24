@@ -17,8 +17,6 @@ export default function AddEmployee() {
     first_name: '',
     last_name: '',
     email: '',
-    password: '',
-    confirmPassword: '',
     user_type: '',
     _method: '',
     organization_id: '',
@@ -52,20 +50,6 @@ export default function AddEmployee() {
       errors.email = 'Invalid email address';
     }
 
-
-    if (!id) {
-      if (!formData.password.trim()) {
-        errors.password = 'Password is required';
-      } else if (formData.password.length < 8) {
-        errors.password = 'Password must be at least 8 characters long';
-      }
-
-      if (!formData.confirmPassword.trim()) {
-        errors.confirmPassword = 'Confirm password is required';
-      } else if (formData.password !== formData.confirmPassword) {
-        errors.confirmPassword = 'Passwords do not match';
-      }
-    }
 
     if (!formData.user_type.trim()) {
       errors.user_type = 'User type is required';
@@ -316,36 +300,7 @@ export default function AddEmployee() {
 
                     </Form.Group>
                   </Col> */}
-                    {!id && (
-                      <>
-                        <Col md={4}>
-                          <Form.Group className="mb-4">
-                            <Form.Label>Password</Form.Label>
-                            <Form.Control
-                              type="password"
-                              name="password"
-                              value={formData.password}
-                              onChange={(e) => { handleChange(e) }}
-                              placeholder="Password"
-                            />
-                            {errors?.password && <small className="text-danger">{errors?.password}</small>}
-                          </Form.Group>
-                        </Col>
-                        <Col md={4}>
-                          <Form.Group className="mb-4">
-                            <Form.Label>Confirm Password</Form.Label>
-                            <Form.Control
-                              type="password"
-                              name="confirmPassword"
-                              value={formData?.confirmPassword}
-                              onChange={(e) => { handleChange(e) }}
-                              placeholder="Confirm Password"
-                            />
-                            {errors?.confirmPassword && <small className="text-danger">{errors?.confirmPassword}</small>}
-                          </Form.Group>
-                        </Col>
-                      </>
-                    )}
+               
                     {/* <Col md={6}>
                     <Form.Group
                       className="mb-4">

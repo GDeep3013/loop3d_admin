@@ -34,6 +34,9 @@ router.delete('/delete-project/:id', ProjectController.deleteProject);
 router.post("/update-project/:id", upload.array("files", 5), ProjectController.updateProject);
 router.post('/forget_password', UserController.forgetPassword);
 router.post('/reset-password', UserController.resetPassword);
+router.post('/create-password', UserController.createPassword);
+
+
 
 
 //createCategory Routes

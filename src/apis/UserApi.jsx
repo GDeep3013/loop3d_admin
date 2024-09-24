@@ -18,9 +18,9 @@ export const getUser = async (id,token=false) => {
 };
 
 
-export const fetchLoopLeads = async (orgniation_id, searchTerm) => {
+export const fetchLoopLeads = async (orgniation_id, searchTerm,type) => {
 
-    let url = `/api/users/loop-leads/${orgniation_id}?type=looped_lead`;
+    let url = `/api/users/loop-leads/${orgniation_id}?type=${type}`;
 
     if (searchTerm) {
         url += `&searchTerm=${encodeURIComponent(searchTerm)}`;

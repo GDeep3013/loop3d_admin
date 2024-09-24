@@ -10,6 +10,7 @@ const { twoThreeMonthEmailToLead } = require('./templates/twoThreeMonthEmailToLe
 const { reminderEmailToParticapated } = require('./templates/reminderEmailToParticapated');
 const { sendCredentialMail } = require('./templates/sendCredentialMail');
 const { sendSumaryReport } = require('./templates/sendSumaryReport');
+const {createPasswordMail} =  require('./templates/createPasswordMail');
 
 const sendEmail = (type, recipientDetails) => {
     let mailOptions = {};
@@ -47,6 +48,9 @@ const sendEmail = (type, recipientDetails) => {
         case 'sendSumaryReport':
             mailOptions = sendSumaryReport(recipientDetails);
             break;
+        case 'createPasswordMail':
+            mailOptions = createPasswordMail(recipientDetails);
+            break; 
 
 
         default:

@@ -60,7 +60,7 @@ export default function CreateOrganization({ id, savedData }) {
         if (!formData?.name?.trim()) {
             errors.name = 'Organization name is required';
         }
-        if (!selectedCategory) {
+        if ( !id && !selectedCategory) {
             errors.competency = 'Competency is required';
         }
         return errors;
@@ -72,6 +72,7 @@ export default function CreateOrganization({ id, savedData }) {
     // Handle form submission for both Create and Edit
     const handleSubmit = async (event) => {
         event.preventDefault();
+        console.log('formData',formData)
         const validationErrors = validateForm(formData);
         if (Object.keys(validationErrors).length > 0) {
             setErrors(validationErrors);
@@ -83,7 +84,6 @@ export default function CreateOrganization({ id, savedData }) {
         const method = id ? "PUT" : "POST"; // Use PUT for editing and POST for creating
 
         try {
-            if (formData?.selectedCompetency?.length > 0) {
                 const response = await createOrgnizations(url, formData, method);
                 const { name } = response;
 
@@ -97,7 +97,7 @@ export default function CreateOrganization({ id, savedData }) {
                 setLoader(false)         
 
                 setTimeout(() => navigate('/organizations'), 1500);
-            }
+            
         } catch (error) {
             if (error.error) {
                 setLoader(false)         

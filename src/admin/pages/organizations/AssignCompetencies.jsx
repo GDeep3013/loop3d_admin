@@ -1,163 +1,159 @@
 import React, { useState, useEffect } from 'react';
-import { StatusIcon, PLusIcon, Remove } from "../../../components/svg-icons/icons";
-import { Container, Dropdown, Pagination, Row, Col, Button } from 'react-bootstrap';
+import { StatusIcon, PLusIcon } from "../../../components/svg-icons/icons";
+import { Container, Row, Col, Tab, Tabs } from 'react-bootstrap';
 import Swal from 'sweetalert2';
-import AssignCompeteny from '../../../components/AssignCompeteny'; // Import the AssignCompetency component
 import { useSelector } from 'react-redux';
-
-import { getAssignmentsByUserAndOrg, deleteAssignCompetency } from "../../../apis/assignCompetencyApi"; // Update to your actual API import
+import Loading from '../../../components/Loading';
+import { getAssignmentsByUserAndOrg, createAssignCompetency } from "../../../apis/assignCompetencyApi"; 
 
 export default function AssignCompetencies({ data, type }) {
+
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const [competencies, setCompetencies] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [showAssignCompetencyModal, setShowAssignCompetencyModal] = useState(false);
+    const [selectedCompetencies, setSelectedCompetencies] = useState([]);
     const user = useSelector((state) => state.auth.user);
+    const [category, setCategory] = useState([]);
+    const [searchTerm, setSearchTerm] = useState('');
 
     useEffect(() => {
         if (data?.ref_id) {
             getCategory();
+            getAllCategory();
         }
-    }, [currentPage, data?.ref_id]);
+    }, [currentPage, searchTerm, data?.ref_id]);
+
+    async function getAllCategory() {
+        setLoading(true);
+        try {
+            let url = `/api/categories`;
+            if (searchTerm) {
+                url += `?searchTerm=${encodeURIComponent(searchTerm)}`;
+            }
+            let result = await fetch(url, {
+                headers: { 'x-api-key': import.meta.env.VITE_X_API_KEY }
+            });
+            result = await result.json();
+            setCategory(result.categories);
+            setLoading(false);
+        } catch (error) {
+            console.error(error);
+            setLoading(false);
+        }
+    }
 
     async function getCategory() {
         setLoading(true);
         try {
-            // Call the API with appropriate parameters
             const result = await getAssignmentsByUserAndOrg(user?._id, data?.ref_id, type);
-            setCompetencies(result.assignments ? result.assignments : []); // Adjust based on the API response structure
-            setTotalPages(result.totalPages); // Adjust based on the API response structure
+            setCompetencies(result.assignments ? result.assignments : []); 
+            setTotalPages(result.totalPages); 
+            setSelectedCompetencies(result.assignments?.map(assignment => assignment?.category_id?._id)); 
             setLoading(false);
         } catch (error) {
             setLoading(false);
         }
     }
 
-    const handlePaginationClick = (pageNumber) => {
-        setCurrentPage(pageNumber);
-    };
-
-    const handleDelete = async (id, category_id) => {
+    const handleCheckboxChange = async (categoryId) => {
+        const isAssigned = selectedCompetencies.includes(categoryId);
+        const action = isAssigned ? 'unassign' : 'assign'; 
+    
         try {
-            const confirmResult = await Swal.fire({
-                title: "Are you sure?",
-                text: "You won't be able to revert this!",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#000",
-                cancelButtonColor: "#d26c6c",
-                confirmButtonText: "Yes, delete it!"
+            const response = await createAssignCompetency({
+                action,
+                type,
+                user_id: user?._id,
+                ref_id: data?.ref_id,
+                category_id: categoryId,
             });
-
-            if (confirmResult.isConfirmed) {
-                const response = await deleteAssignCompetency(id);
-                if (response.status) {
-                    await Swal.fire({
-                        title: "Deleted!",
-                        text: "The assignment has been deleted.",
-                        icon: "success",
-                        confirmButtonColor: "#000",
-                    });
-                    getCategory();
-                } else {
-                    console.error('Failed to delete assignment');
-                }
+    
+            if (response) {
+                Swal.fire({
+                    title: isAssigned ? "Unassigned!" : "Assigned!",
+                    text: `Competency ${isAssigned ? "unassigned" : "assigned"} successfully`,
+                    icon: "success",
+                    confirmButtonColor: "#000",
+                });
+    
+                setSelectedCompetencies(isAssigned
+                    ? selectedCompetencies.filter(id => id !== categoryId)
+                    : [...selectedCompetencies, categoryId]
+                );
+    
+                getCategory();
+            } else {
+                console.error(`Error ${isAssigned ? 'unassigning' : 'assigning'} competency`);
             }
         } catch (error) {
-            console.error('Error deleting assignment:', error);
+            console.error(`Error ${isAssigned ? 'unassigning' : 'assigning'} competency:`, error);
         }
     };
 
-    const handleShowAssignCompetencyModal = () => {
-        setShowAssignCompetencyModal(true);
+    const handleSearch = (e) => {
+        setSearchTerm(e.target.value);
     };
-
-    const handleCloseAssignCompetencyModal = () => {
-        setShowAssignCompetencyModal(false);
-    };
-
-    const remove_from_string = (str) => {
-        return str.replace(/_/g, ' ');  // Replace underscores with spaces
-    };
-
+ 
     return (
-        <div>
-            <div className='table-inner'>
-                <div className='content-outer'>
-                    <div className='tabe-outer'>
-                        <div className='table-heading'>
-                            <Container>
-                                <Row className='align-items-center'>
-                                    <Col md={6}>
-                                    </Col>
-                                    <Col md={6} className='text-end'>
-                                        <Button onClick={handleShowAssignCompetencyModal} className='default-btn'>
-                                            Assign Competency <PLusIcon />
-                                        </Button>
-                                    </Col>
-                                </Row>
-                            </Container>
+        <div className="content-outer pd-2 edit-org ">
+            <Tabs defaultActiveKey="individual_contributor"  id="competency-tabs" className="mb-3 custom-tabs">
+                <Tab eventKey="individual_contributor" className='custom-tabs' title="Individual Contributor">
+                    <div className='content-outer'>
+                   
+                        <div className='list-scroll'>
+                            <ul className='custom-tabs'>
+                                {loading && (
+                                    <li className='list-group-item text-center'>
+                                        <Loading />
+                                    </li>
+                                )}
+                                {!loading && category
+                                    .filter(cat => cat.competency_type === 'individual_contributor' && cat.status !== "inactive")
+                                    .map((cat, ind) => (
+                                        <li key={cat._id} className='list-group-item d-flex align-items-center'>
+                                            <input
+                                                type="checkbox"
+                                                checked={selectedCompetencies.includes(cat._id)}
+                                                onChange={() => handleCheckboxChange(cat._id)}
+                                            />
+                                            <span> {cat.category_name}</span>
+                                           
+                                        </li>
+                                    ))}
+                            </ul>
                         </div>
                     </div>
-                </div>
-                <div className='table-scroll table-pd'>
-                    <table className='table'>
-                        <thead>
-                            <tr>
-                                <th>Serial No.</th>
-                                <th>Competency</th>
-                                <th>Competency Type</th>
-                                <th>User Name</th>
-                                <th>Status <StatusIcon /></th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {!loading && competencies.length === 0 &&
-                                <tr>
-                                    <td colSpan="4" style={{ textAlign: 'center' }}>
-                                        <h4>No Competencies Found</h4>
-                                    </td>
-                                </tr>
-                            }
+                </Tab>
 
-                            {!loading && competencies.length > 0 && competencies.map((cat,ind) => (
-
-                               cat.category_id?.status !=="inactive" &&<tr>
-                                    <td>{ind+1}</td>
-                                    <td>{cat.category_id?.category_name}</td>
-                                    <td>{remove_from_string(cat.category_id?.competency_type)}</td>
-                                    <td>{cat.user_id?.first_name} {cat.user_id?.last_name}</td>
-                                    <td><span className='span-badge active-tag'>Active</span></td>
-                                    <td>
-                                        <button className='action-btn' onClick={() => handleDelete(cat._id)}><Remove /></button>
-                                    </td>
-                                </tr>
-
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            {totalPages > 1 && (
-                <Pagination className='justify-content-center pagination-outer'>
-                    <Pagination.First onClick={() => handlePaginationClick(1)} disabled={currentPage === 1} />
-                    <Pagination.Prev onClick={() => handlePaginationClick(currentPage - 1)} disabled={currentPage === 1} />
-                    <Pagination.Next onClick={() => handlePaginationClick(currentPage + 1)} disabled={currentPage === totalPages} />
-                    <Pagination.Last onClick={() => handlePaginationClick(totalPages)} disabled={currentPage === totalPages} />
-                </Pagination>
-            )}
-
-            {data && <AssignCompeteny
-                type={type}
-                id={data?.ref_id}
-                show={showAssignCompetencyModal}
-                handleClose={handleCloseAssignCompetencyModal}
-                getCategory={getCategory}
-            />}
-
+                <Tab eventKey="people_manager" title="People Manager">
+                    <div className='content-outer'>
+                   
+                        <div className='list-scroll'>
+                            <ul className='custom-tabs'>
+                                {loading && (
+                                    <li className='list-group-item text-center'>
+                                        <Loading />
+                                    </li>
+                                )}
+                                {!loading && category
+                                    .filter(cat => cat.competency_type === 'people_manager' && cat.status !== "inactive")
+                                    .map((cat, ind) => (
+                                        <li key={cat._id} className='list-group-item d-flex align-items-center'>
+                                            <input
+                                                type="checkbox"
+                                                checked={selectedCompetencies.includes(cat._id)}
+                                                onChange={() => handleCheckboxChange(cat._id)}
+                                            />
+                                            <span>{cat.category_name}</span>
+                                         
+                                        </li>
+                                    ))}
+                            </ul>
+                        </div>
+                    </div>
+                </Tab>
+            </Tabs>
         </div>
     );
 }

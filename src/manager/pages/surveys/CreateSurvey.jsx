@@ -4,7 +4,7 @@ import StartSurveyFrom from "./StartSurveyFrom";
 import AuthLayout from '../../../layout/Auth';
 const StartSurvey = () => {
   return (
-    <AuthLayout title={"surveys"}>
+    <AuthLayout title={"Surveys"}>
     <Container className="">
       <div className="survey_box">
         <h1 className="">Start Survey</h1>

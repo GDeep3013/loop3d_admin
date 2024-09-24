@@ -16,7 +16,6 @@ const UserController = {
         // Validation rules
         check('first_name').not().isEmpty().withMessage('Name is required'),
         check('email').isEmail().withMessage('Invalid email'),
-        check('password').isLength({ min: 8 }).withMessage('Password must be at least 8 characters long'),
         check('user_type').not().isEmpty().withMessage('User type is required'),
         // Controller logic
         async (req, res) => {
@@ -28,17 +27,15 @@ const UserController = {
 
             try {
 
-                const { first_name, last_name, password, email, designation, user_type, organization_id, created_by = null } = req.body;
+                const { first_name, last_name, email, designation, user_type, organization_id, created_by = null } = req.body;
 
                 // Hash the password
-                const hashedPassword = await bcrypt.hash(password, 10);
 
                 // Create the user object
                 const obj = {
                     first_name: first_name,
                     last_name: last_name,
                     email: email,
-                    password: hashedPassword,
                     designation: designation,
                     role: user_type,
                     created_by: created_by,
@@ -58,13 +55,14 @@ const UserController = {
 
                         if (role?.type == "manager") {
                             let url =   `${process.env.ADMIN_PANEL}/start-survey?token=`+response?._id
-                            let admin_panel_url = `${process.env.ADMIN_PANEL}/forget-password`;
+                            let admin_panel_url = `${process.env.ADMIN_PANEL}/create-password?token=${response?._id}`;
 
                             let email = response?.email
+                            let last_name = response?.last_name
+                            let first_name = response?.first_name
 
                             let roles = role?.type
-                            
-                            sendEmail('sendCredentialMail', { email, first_name,last_name,password,admin_panel_url})
+                            sendEmail('createPasswordMail', {email,first_name,last_name,admin_panel_url})
                             sendEmail('sendSurveyCreationEmail', { email, url,roles});
                         }
                         
@@ -413,7 +411,32 @@ const UserController = {
             console.error('Error resetting password:', error);
             res.status(500).json({ message: 'Internal Server Error' });
         }
+    },
+
+    createPassword: async (req, res) => {
+        const { token, newPassword } = req.body;
+
+        try {
+            const user = await User.findById(token);
+
+
+            if (!user) {
+                return res.status(400).json({ error: 'Invalid or expired token' });
+            }
+
+            user.password = await bcrypt.hash(newPassword, 10);
+            user.resetPasswordToken = undefined; // Clear the token
+            user.resetPasswordExpires = undefined; // Clear the expiry time
+
+            await user.save();
+
+            res.status(200).json({status:true, message: 'Password has been create successfull' });
+        } catch (error) {
+            console.error('Error resetting password:', error);
+            res.status(500).json({ message: 'Internal Server Error' });
+        }
     }
 };
+
 
 module.exports = UserController;

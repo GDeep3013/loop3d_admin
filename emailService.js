@@ -1,6 +1,6 @@
 // emailService.js
 const nodemailer = require('nodemailer');
-
+require('dotenv').config()
 const transporter = nodemailer.createTransport({
   service: 'Gmail',
   auth: {
@@ -10,7 +10,7 @@ const transporter = nodemailer.createTransport({
 });
 
 const sendResetEmail = (email, token) => {
-  const resetUrl = `https://marketer-ai.webziainfotech.com/reset-password?token=${token}`;
+  const resetUrl = `${process.env.ADMIN_PANEL}/reset-password?token=${token}`;
 
   const mailOptions = {
     from: 'yogeshrana.610weblab@gmail.com',

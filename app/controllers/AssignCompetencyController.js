@@ -5,62 +5,69 @@ const User = require('../models/User');
 // Create a new assignment
 exports.createAssignment = async (req, res) => {
     try {
-        const { type, ref_id, user_id, category_id, subcategories = [] } = req.body;
+        const { action, type, ref_id, user_id, category_id} = req.body;
         let referenceIdField = '';
+
+        // Determine the field for the reference ID based on the type
         if (type === 'question') {
             referenceIdField = 'question_id';
         } else if (type === 'organization') {
             referenceIdField = 'organization_id';
         }
+        let newAssignments = [];
+        if (action == 'assign') {
+            newAssignments.push({
+                type,
+                user_id,
+                [referenceIdField]: ref_id,
+                category_id: category_id,
+                status: 'active',
+            });
 
-        // Create an array to hold the new assignments
-        const newAssignments = [];
+            // Check for existing assignments to avoid duplication
+            const existingAssignments = await AssignCompetency.find({
+                [referenceIdField]: ref_id,
+                user_id,
+                category_id: { $in: category_id },
+            });
 
-        // Prepare the main category assignment
-        newAssignments.push({
-            type,
-            user_id,
-            [referenceIdField]: ref_id,
-            category_id, // Use provided category_id directly
-            status: 'active', // Default status or modify as needed
-        });
+            // Create a set of existing category IDs to filter out duplicates
+            const existingCategoryIds = new Set(existingAssignments.map(a => a.category_id.toString()));
 
-        // Add assignments for each subcategory
-        newAssignments.push(...subcategories.map(subcategoryId => ({
-            type,
-            user_id,
-            [referenceIdField]: ref_id,
-            category_id: subcategoryId, // Use subcategory ID as category_id
-            status: 'active', // Default status or modify as needed
-        })));
+            // Filter out assignments that already exist
+            const filteredAssignments = newAssignments.filter(a => !existingCategoryIds.has(a.category_id.toString()));
 
-        // Check for existing assignments to avoid duplication
-        const existingAssignments = await AssignCompetency.find({
-            [referenceIdField]: ref_id,
-            user_id,
-            category_id: { $in: [...subcategories, category_id] } // Check against all provided IDs
-        });
+            // If no new assignments to add, return success
+            if (filteredAssignments.length === 0) {
+                return res.status(200).json({ message: 'All provided categories are already assigned' });
+            }
 
-        // Create a set of existing IDs to avoid duplication
-        const existingCategoryIds = new Set(existingAssignments.map(a => a.category_id.toString()));
+            // Save all new assignments to the database
+            const savedAssignments = await AssignCompetency.insertMany(filteredAssignments);
 
-        // Filter out assignments that already exist
-        const filteredAssignments = newAssignments.filter(a => !existingCategoryIds.has(a.category_id.toString()));
+            return res.status(201).json(savedAssignments);
+        } else if (action == 'unassign') {
+            const result = await AssignCompetency.findOneAndDelete({
+                user_id,
+                [referenceIdField]: ref_id,
+                category_id: category_id,
+            });
 
-        // If no new assignments to add, return success
-        if (filteredAssignments.length === 0) {
-            return res.status(200).json({ message: 'All provided categories are already assigned' });
+            // Check if any documents were deleted
+            if (result) {
+                return res.status(200).json({ message: 'Competency unassigned successfully' });
+            } else {
+                return res.status(404).json({ message: 'No assignments found to remove' });
+            }
+        } else {
+            return res.status(400).json({ message: 'Invalid action. Use either "assign" or "unassign".' });
         }
-
-        // Save all new assignments to the database
-        const savedAssignments = await AssignCompetency.insertMany(filteredAssignments);
-
-        res.status(201).json(savedAssignments);
     } catch (error) {
-        console.error('Error creating assignments:', error);
+        console.error('Error handling assignment:', error);
         res.status(500).json({ error: error.message });
     }
 };
+
 
 
 // Get all assignments

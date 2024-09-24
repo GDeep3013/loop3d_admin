@@ -11,6 +11,7 @@ import axios from "axios";
 
 
 import { useParams, useNavigate } from "react-router-dom";
+import ManagerList from "./ManagerList"
 
 
 export default function OrganizationTabs() {
@@ -71,7 +72,10 @@ export default function OrganizationTabs() {
                 <Tab eventKey="contact" title="Loop Leads">
                     <LoopLeads organization={{ orgniation_id: id, name: formData.name }} />
                 </Tab>
-                </Tabs>
+                <Tab eventKey="managerList" title="Manager">
+                    <ManagerList  organization={{ orgniation_id: id, name: formData.name }}/>
+                </Tab>
+            </Tabs>
                 </div>
         </AuthLayout>
 
