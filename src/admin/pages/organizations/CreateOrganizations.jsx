@@ -1,31 +1,26 @@
 import React, { useState, useEffect } from "react";
-import AuthLayout from "../../../layout/Auth";
 import { Col, Row, Container, Form, Button } from "react-bootstrap";
-import { useParams, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Swal from 'sweetalert2';
-import Select from 'react-select';
 import { useSelector } from 'react-redux';
 
-import { fetchCompetencies, fetchSubcategories } from "../../../apis/CompentencyApi";
-import { createOrgnizations } from "../../../apis/OrgnizationApi"
+import { fetchCompetencies } from "../../../apis/CompentencyApi";
+import { createOrgnizations } from "../../../apis/OrgnizationApi";
 
 export default function CreateOrganization({ id, savedData }) {
     const user = useSelector((state) => state.auth.user);
-
-    // const { id } = useParams();  // Retrieve the organization ID from the URL parameters
     const navigate = useNavigate();
     const [errors, setErrors] = useState({});
     const [loader, setLoader] = useState(false);
-
-    const [selectedCategory, setSelectedCategory] = useState(null); // Selected category
+    const [selectedCompetencies, setSelectedCompetencies] = useState([]); // Stores selected competencies
     const [categories, setCategories] = useState([]);
-    const [formData, setFormData] = useState({selectedCompetency:[], user_id:user?._id});
+    const [formData, setFormData] = useState({ name: '', user_id: user?._id });
+
     useEffect(() => {
         getCategories(); // Fetch categories when modal is opened
     }, []);
 
-
-
+    // Fetch competencies (categories)
     async function getCategories() {
         try {
             let result = await fetchCompetencies("AssignCompetency");
@@ -37,15 +32,11 @@ export default function CreateOrganization({ id, savedData }) {
                         label: category.category_name,
                     }))
                 : [];
-            setCategories(categoryOptions);
+            setCategories(result.categories);
         } catch (error) {
             console.error(error);
         }
     }
-    const handleCategoryChange = (selected) => {
-        setSelectedCategory(selected);
-        setFormData({selectedCompetency:selectedCategory, user_id:user?._id });
-    };
 
     useEffect(() => {
         if (savedData?.name) {
@@ -53,55 +44,60 @@ export default function CreateOrganization({ id, savedData }) {
         }
     }, [savedData]);
 
-
     // Form validation
-    const validateForm = (formData) => {
+    const validateForm = (formData, selectedCompetencies) => {
         let errors = {};
         if (!formData?.name?.trim()) {
             errors.name = 'Organization name is required';
         }
-        if ( !id && !selectedCategory) {
-            errors.competency = 'Competency is required';
+        if (!id && selectedCompetencies.length === 0) {
+            errors.competency = 'At least one competency must be selected';
         }
         return errors;
     };
 
-    // Fetch organization details if editing
+    // Handle checkbox changes for competencies
+    const handleCheckboxChange = (categoryId) => {
+        const updatedSelectedCompetencies = selectedCompetencies.includes(categoryId)
+            ? selectedCompetencies.filter(id => id !== categoryId) // Remove if already selected
+            : [...selectedCompetencies, categoryId]; // Add if not selected
 
+        setSelectedCompetencies(updatedSelectedCompetencies);
+        setFormData({ ...formData, selectedCompetency: updatedSelectedCompetencies, user_id: user?._id });
+    };
 
     // Handle form submission for both Create and Edit
     const handleSubmit = async (event) => {
         event.preventDefault();
-        console.log('formData',formData)
-        const validationErrors = validateForm(formData);
+
+        // Validate form
+        const validationErrors = validateForm(formData, selectedCompetencies);
         if (Object.keys(validationErrors).length > 0) {
             setErrors(validationErrors);
             return;
         }
 
-        setLoader(true)         
+        setLoader(true);
         const url = id ? `/api/organizations/${id}` : "/api/organizations/create";
         const method = id ? "PUT" : "POST"; // Use PUT for editing and POST for creating
 
         try {
-                const response = await createOrgnizations(url, formData, method);
-                const { name } = response;
+            const response = await createOrgnizations(url, formData, method);
+            const { name } = response;
 
-                Swal.fire({
-                    position: "center",
-                    icon: "success",
-                    title: `Organization ${name} ${id ? "updated" : "created"} successfully!`,
-                    showConfirmButton: false,
-                    timer: 1500
-                });
-                setLoader(false)         
+            Swal.fire({
+                position: "center",
+                icon: "success",
+                title: `Organization ${name} ${id ? "updated" : "created"} successfully!`,
+                showConfirmButton: false,
+                timer: 1500
+            });
+            setLoader(false);
+            setTimeout(() => navigate('/organizations'), 1500);
 
-                setTimeout(() => navigate('/organizations'), 1500);
-            
         } catch (error) {
             if (error.error) {
-                setLoader(false)         
-
+                setLoader(false);
                 setErrors({ name: error.error });
             } else {
                 console.error('Unexpected error:', error);
@@ -116,23 +112,7 @@ export default function CreateOrganization({ id, savedData }) {
     };
 
     return (
-        <div className="content-outer pd-2 bg-white  bt-0">
-
-            {/* {!id && <div className="tabe-outer">
-                <div className="main-back-heading">
-                    <div className="container">
-                        <div className="row">
-                            <div className="col-md-6 p-0">
-                                <div className="profile-btns pt-0">
-                                    <Button className="default-btn cancel-btn ml-0" onClick={() => navigate(-1)}>
-                                        Back
-                                    </Button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>}    */}
+        <div className="content-outer pd-2 bg-white bt-0">
             <Form className="organization-form mt-5">
                 <Container>
                     <Row>
@@ -142,33 +122,64 @@ export default function CreateOrganization({ id, savedData }) {
                                 <Form.Control
                                     type="text"
                                     name="name"
-                                    value={formData?.name}
+                                    value={formData?.name || ''}
                                     onChange={handleChange}
                                     placeholder="Organization Name"
                                 />
                                 {errors.name && <small className="text-danger">{errors.name}</small>}
                             </Form.Group>
                         </Col>
-                        {!id && <Col md={6}>
-                            <Form.Group className="mb-4">
-                                <Form.Label>Select Competency</Form.Label>
-                                <Select
-                                    options={categories}
-                                    value={selectedCategory}
-                                    onChange={handleCategoryChange}
-                                    placeholder="Select Competency..."
-                                    isSearchable
-                                    isMulti
-                                    filterOption={(option, inputValue) =>
-                                        option.label.toLowerCase().includes(inputValue.toLowerCase())
-                                    }
-                                />
-                                {errors?.competency && <small className="text-danger">{errors?.competency}</small>}
-
-                            </Form.Group>
+                        {!id && <Col md={12}>
+                            <Row className='custom_tab_content'>
+                                <Col md={4}>
+                                    <div className='list-scroll'>
+                                        <h3>Individual Contributor</h3>
+                                        <ul className='custom-tabs'>
+                                            {categories && categories
+                                                .filter(cat => cat.competency_type === 'individual_contributor' && cat.status !== "inactive")
+                                                .map((cat) => (
+                                                    <li key={cat._id} className='list-group-item d-flex align-items-center'>
+                                                        <label>
+                                                            <input
+                                                                type="checkbox"
+                                                                checked={selectedCompetencies.includes(cat._id)}
+                                                                onChange={() => handleCheckboxChange(cat._id)}
+                                                            />
+                                                            <span> {cat.category_name}</span>
+                                                        </label>
+                                                    </li>
+                                                ))}
+                                        </ul>
+                                    </div>
+                                </Col>
+                                <Col md={4}>
+                                    <div className='list-scroll'>
+                                        <h3>People Manager</h3>
+                                        <ul className='custom-tabs'>
+                                            {categories && categories
+                                                .filter(cat => cat.competency_type === 'people_manager' && cat.status !== "inactive")
+                                                .map((cat) => (
+                                                    <li key={cat._id} className='list-group-item d-flex align-items-center'>
+                                                        <label>
+                                                            <input
+                                                                type="checkbox"
+                                                                checked={selectedCompetencies.includes(cat._id)}
+                                                                onChange={() => handleCheckboxChange(cat._id)}
+                                                            />
+                                                            <span>{cat.category_name}</span>
+                                                        </label>
+                                                    </li>
+                                                ))}
+                                        </ul>
+                                    </div>
+                                </Col>
+                            </Row>
+                        {errors.competency && <Col md={12}><small className="text-danger">{errors.competency}</small></Col>}
                         </Col>}
+
+
                         <Col md={12}>
-                            <div className="profile-btns pt-0">
+                            <div className="profile-btns pt-0 mt-3">
                                 <Button className="default-btn" onClick={handleSubmit} disabled={loader}>
                                     {id ? "Update" : "Save"}
                                 </Button>

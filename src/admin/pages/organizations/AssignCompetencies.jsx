@@ -57,7 +57,7 @@ export default function AssignCompetencies({ data, type }) {
     }
 
     const handleCheckboxChange = async (categoryId) => {
-        const isAssigned = selectedCompetencies.includes(categoryId);
+        const isAssigned = selectedCompetencies?.includes(categoryId);
         const action = isAssigned ? 'unassign' : 'assign'; 
     
         try {

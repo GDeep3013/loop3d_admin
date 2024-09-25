@@ -744,7 +744,7 @@ exports.generateSurveyReport = async (req, res) => {
         }
         const survey_report = await SurveyReport.findOne({ survey_id: survey_id })
         let summary=[]
-        if (!survey_report) {
+        if (!survey_report?.response_Data) {
              summary = await generateSummary(survey_id,report);     
         } else {
             summary = survey_report?.response_Data
@@ -1230,102 +1230,101 @@ exports.getSmartGoals = async (req, res) => {
     } = req.params;
     const surveyReport = await SurveyReport.findOne( { survey_id: survey_id } );
     console.log(surveyReport?.response_Data, dev_opp, top_str);
-    let prompt = `Write 2,2 SMART goals (make sure they are measurable with specific metrics, actually possible for the average person, and use specific dates or frequencies with a timeframe) for this employee to achieve in the next 30 days based on their top  strength and developmental opportunity.
-                format:
+    // let prompt = `Write 2,2 SMART goals (make sure they are measurable with specific metrics, actually possible for the average person, and use specific dates or frequencies with a timeframe) for this employee to achieve in the next 30 days based on their top  strength and developmental opportunity.
+    //             format:
                 
-                Strength: ${top_str}
+    //             Strength: ${top_str}
 
-                Summary: 
+    //             Summary: 
 
-                SMART Plan:
+    //             SMART Plan:
 
-                development_opportunities : ${dev_opp}
+    //             development_opportunities : ${dev_opp}
 
-                Summary: 
+    //             Summary: 
 
-                SMART Plan:
+    //             SMART Plan:
 
-                here the question answer sumarry
+    //             here the question answer sumarry
                 
-                ${JSON.stringify(surveyReport?.response_Data)}
+    //             ${JSON.stringify(surveyReport?.response_Data)}
                 
-                 give me the response in the json `;
+    //              give me the response in the json `;
              
     
-    if (!surveyReport?.samrtgoals) {
-        const response = await openai.chat.completions.create({
-            model: 'gpt-4o',
-            messages: [
-                { role: 'user', content: prompt }
-            ]
-        });
+    // if (!surveyReport?.samrtgoals) {
+    //     const response = await openai.chat.completions.create({
+    //         model: 'gpt-4o',
+    //         messages: [
+    //             { role: 'user', content: prompt }
+    //         ]
+    //     });
 
-        let samrtgoals = response.choices[0].message.content;
+    //     let samrtgoals = response.choices[0].message.content;
         
-        samrtgoals = extractJsonFromMarkdown(samrtgoals)
+    //     samrtgoals = extractJsonFromMarkdown(samrtgoals)
 
-        let parsedGoals1 = await saveOrUpdateSurveyReport(survey_id, samrtgoals, "samrtgoals")
-        return res.status(200).json({
-            'samrtgoals': samrtgoals,
+    //     let parsedGoals1 = await saveOrUpdateSurveyReport(survey_id, samrtgoals, "samrtgoals")
+    //     return res.status(200).json({
+    //         'samrtgoals': samrtgoals,
          
-        });
+    //     });
 
-    }else {
-        // return res.status(200).json({
-        //     'samrtgoals': surveyReport?.samrtgoals,
+    // }else {
+    //     // return res.status(200).json({
+    //     //     'samrtgoals': surveyReport?.samrtgoals,
          
-        // });
-        let samrtgoals = `{
-                "strength": {
-                "name": "Problem Solving",
-                "summary": "You excel at identifying issues, analyzing potential solutions, and implementing effective resolutions. Your ability to break down complex problems into manageable parts and use logical strategies ensures that challenges are overcome efficiently.",
-                "SMART_Plan": [
-                    {
-                    "Specific": "Improve verbal communication skills by leading three team meetings within the next 30 days.",
-                    "Measurable": "Collect feedback from team members after each meeting, aiming for a 10% improvement in clarity and engagement scores.",
-                    "Achievable": "Prepare thoroughly for each meeting and implement feedback from previous sessions.",
-                    "Relevant": "Enhances leadership and communication effectiveness.",
-                    "Time-bound": "Complete three meetings by the end of the 30-day period."
-                    },
-                    {
-                    "Specific": "Enhance written communication by crafting weekly summary reports of team activities and progress.",
-                    "Measurable": "Produce four reports in the next 30 days, with a focus on clear and concise information sharing.",
-                    "Achievable": "Allocate time each week specifically for report creation and review.",
-                    "Relevant": "Ensures the team is informed and aligned on progress and objectives.",
-                    "Time-bound": "First report to be completed within the first week and subsequently weekly thereafter."
-                    }
-                ]
-                },
-                "development_opportunity": {
-                "name": "Communication",
-                "summary": "Your current communication skills have room for improvement, particularly in areas such as articulating ideas clearly, active listening, and providing constructive feedback. Strengthening these skills will enhance overall team collaboration and productivity.",
-                "SMART_Plan": [
-                    {
-                    "Specific": "Focus on improving both verbal and written communication skills by engaging in active listening exercises, seeking opportunities for public speaking, and participating in writing workshops.",
-                    "Measurable": "Set a goal to receive at least three pieces of constructive feedback on your communication skills from peers or supervisors each month and track your progress and improvements.",
-                    "Achievable": "Identify a mentor who excels in communication to guide you and provide regular feedback. Additionally, consider enrolling in relevant courses or workshops.",
-                    "Relevant": "Improving communication skills will enhance your ability to work with colleagues and stakeholders, ultimately contributing to more effective teamwork and project success.",
-                    "Time-bound": "Aim to see measurable improvement in your communication skills within the next three months, with regular check-ins with your mentor or manager to assess progress."
-                    },
-                    {
-                    "Specific": "Review and edit emails before sending to ensure clear and concise messaging, aiming for a 20% reduction in word count.",
-                    "Measurable": "Compare word counts of emails sent over the next 30 days to previous emails.",
-                    "Achievable": "Use bullet points and simplify language to make communication clearer.",
-                    "Relevant": "Concise communication will lead to more efficient team interactions.",
-                    "Time-bound": "Achieve this goal within 30 days."
-                    }
-                ]
-                }
-            }`;
+    //     // });
+    //     let samrtgoals = `{
+    //             "strength": {
+    //             "name": "Problem Solving",
+    //             "summary": "You excel at identifying issues, analyzing potential solutions, and implementing effective resolutions. Your ability to break down complex problems into manageable parts and use logical strategies ensures that challenges are overcome efficiently.",
+    //             "SMART_Plan": [
+    //                 {
+    //                 "Specific": "Improve verbal communication skills by leading three team meetings within the next 30 days.",
+    //                 "Measurable": "Collect feedback from team members after each meeting, aiming for a 10% improvement in clarity and engagement scores.",
+    //                 "Achievable": "Prepare thoroughly for each meeting and implement feedback from previous sessions.",
+    //                 "Relevant": "Enhances leadership and communication effectiveness.",
+    //                 "Time-bound": "Complete three meetings by the end of the 30-day period."
+    //                 },
+    //                 {
+    //                 "Specific": "Enhance written communication by crafting weekly summary reports of team activities and progress.",
+    //                 "Measurable": "Produce four reports in the next 30 days, with a focus on clear and concise information sharing.",
+    //                 "Achievable": "Allocate time each week specifically for report creation and review.",
+    //                 "Relevant": "Ensures the team is informed and aligned on progress and objectives.",
+    //                 "Time-bound": "First report to be completed within the first week and subsequently weekly thereafter."
+    //                 }
+    //             ]
+    //             },
+    //             "development_opportunity": {
+    //             "name": "Communication",
+    //             "summary": "Your current communication skills have room for improvement, particularly in areas such as articulating ideas clearly, active listening, and providing constructive feedback. Strengthening these skills will enhance overall team collaboration and productivity.",
+    //             "SMART_Plan": [
+    //                 {
+    //                 "Specific": "Focus on improving both verbal and written communication skills by engaging in active listening exercises, seeking opportunities for public speaking, and participating in writing workshops.",
+    //                 "Measurable": "Set a goal to receive at least three pieces of constructive feedback on your communication skills from peers or supervisors each month and track your progress and improvements.",
+    //                 "Achievable": "Identify a mentor who excels in communication to guide you and provide regular feedback. Additionally, consider enrolling in relevant courses or workshops.",
+    //                 "Relevant": "Improving communication skills will enhance your ability to work with colleagues and stakeholders, ultimately contributing to more effective teamwork and project success.",
+    //                 "Time-bound": "Aim to see measurable improvement in your communication skills within the next three months, with regular check-ins with your mentor or manager to assess progress."
+    //                 },
+    //                 {
+    //                 "Specific": "Review and edit emails before sending to ensure clear and concise messaging, aiming for a 20% reduction in word count.",
+    //                 "Measurable": "Compare word counts of emails sent over the next 30 days to previous emails.",
+    //                 "Achievable": "Use bullet points and simplify language to make communication clearer.",
+    //                 "Relevant": "Concise communication will lead to more efficient team interactions.",
+    //                 "Time-bound": "Achieve this goal within 30 days."
+    //                 }
+    //             ]
+    //             }
+    //         }`;
               
-            let parsedGoals = JSON.parse(samrtgoals);
-            // let parsedGoals1 = await saveOrUpdateSurveyReport(survey_id, parsedGoals, "samrtgoals")
+    //         let parsedGoals = JSON.parse(samrtgoals);
         
-            return res.status(200).json({
-                'samrtgoals': parsedGoals,
+    //         return res.status(200).json({
+    //             'samrtgoals': parsedGoals,
              
-            });
-    }
+    //         });
+    // }
     
           
 

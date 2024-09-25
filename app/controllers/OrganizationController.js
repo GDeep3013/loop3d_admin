@@ -21,7 +21,7 @@ const OrganizationController = {
                     newAssignments.push({
                         user_id,
                         organization_id: savedOrganization._id,
-                        category_id: competency.value, // Assuming value holds the category ID
+                        category_id: competency, // Assuming value holds the category ID
                         status: 'active', // Set default status
                     });
     
@@ -29,7 +29,7 @@ const OrganizationController = {
                     const existingAssignments = await AssignCompetency.find({
                         organization_id: savedOrganization._id,
                         user_id,
-                        category_id: competency.value, // Match the selected competency's category ID
+                        category_id: competency, // Match the selected competency's category ID
                     });
     
                     // If there are existing assignments, skip to next competency
