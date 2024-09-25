@@ -70,13 +70,6 @@ export default function AssignCompetencies({ data, type }) {
             });
     
             if (response) {
-                Swal.fire({
-                    title: isAssigned ? "Unassigned!" : "Assigned!",
-                    text: `Competency ${isAssigned ? "unassigned" : "assigned"} successfully`,
-                    icon: "success",
-                    confirmButtonColor: "#000",
-                });
-    
                 setSelectedCompetencies(isAssigned
                     ? selectedCompetencies.filter(id => id !== categoryId)
                     : [...selectedCompetencies, categoryId]
@@ -97,63 +90,56 @@ export default function AssignCompetencies({ data, type }) {
  
     return (
         <div className="content-outer pd-2 edit-org ">
-            <Tabs defaultActiveKey="individual_contributor"  id="competency-tabs" className="mb-3 custom-tabs">
-                <Tab eventKey="individual_contributor" className='custom-tabs' title="Individual Contributor">
-                    <div className='content-outer'>
-                   
-                        <div className='list-scroll'>
+
+            <Row className='custom_tab_content'>
+                <Col md={4}>
+                
+                    <div className='list-scroll'>
+                        <h3>Individual Contributor</h3>
                             <ul className='custom-tabs'>
-                                {loading && (
-                                    <li className='list-group-item text-center'>
-                                        <Loading />
-                                    </li>
-                                )}
-                                {!loading && category
+                       
+                                {category && category
                                     .filter(cat => cat.competency_type === 'individual_contributor' && cat.status !== "inactive")
                                     .map((cat, ind) => (
                                         <li key={cat._id} className='list-group-item d-flex align-items-center'>
+                                            <label>
                                             <input
                                                 type="checkbox"
                                                 checked={selectedCompetencies.includes(cat._id)}
                                                 onChange={() => handleCheckboxChange(cat._id)}
                                             />
-                                            <span> {cat.category_name}</span>
+                                                <span> {cat.category_name}</span>
+                                                </label>
                                            
                                         </li>
                                     ))}
                             </ul>
                         </div>
-                    </div>
-                </Tab>
-
-                <Tab eventKey="people_manager" title="People Manager">
-                    <div className='content-outer'>
-                   
-                        <div className='list-scroll'>
+                </Col>
+                <Col md={4}>
+                    <div className='list-scroll'>
+                    <h3>People Manager</h3>
                             <ul className='custom-tabs'>
-                                {loading && (
-                                    <li className='list-group-item text-center'>
-                                        <Loading />
-                                    </li>
-                                )}
-                                {!loading && category
+                         
+                                {category && category
                                     .filter(cat => cat.competency_type === 'people_manager' && cat.status !== "inactive")
                                     .map((cat, ind) => (
                                         <li key={cat._id} className='list-group-item d-flex align-items-center'>
+                                            <label>
                                             <input
                                                 type="checkbox"
                                                 checked={selectedCompetencies.includes(cat._id)}
                                                 onChange={() => handleCheckboxChange(cat._id)}
                                             />
-                                            <span>{cat.category_name}</span>
+                                                <span>{cat.category_name}</span>
+                                                </label>
                                          
                                         </li>
                                     ))}
                             </ul>
                         </div>
-                    </div>
-                </Tab>
-            </Tabs>
+                </Col>
+            </Row>
         </div>
     );
 }
