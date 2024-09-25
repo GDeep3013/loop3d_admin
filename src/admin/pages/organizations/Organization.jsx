@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from "react-router-dom";
-import { Col, Container, Row, Dropdown } from 'react-bootstrap'
+import { Col, Container, Row, Dropdown,Pagination } from 'react-bootstrap'
 import { Link } from "react-router-dom";
 import Swal from 'sweetalert2';
 import { View, Edit, Remove } from '../../../components/svg-icons/icons';
