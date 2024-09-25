@@ -293,7 +293,7 @@ const UserController = {
                   { organization: req.params.org_id },
                   { created_by: req.params.org_id }
                 ],
-                role: role._id
+                role: role?._id
             };
     
       

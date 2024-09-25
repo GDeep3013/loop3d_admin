@@ -17,7 +17,7 @@ export default function LoopLeads({  }) {
         if (mgr_id) {
             (async () => {
                 try {
-                    let data = await fetchLoopLeads(mgr_id, searchTerm);
+                    let data = await fetchLoopLeads(mgr_id, searchTerm,"looped_lead");
                     if (Array.isArray(data.users) && data.users.length > 0) {
                         setUsers(data.users);
                     } else {
