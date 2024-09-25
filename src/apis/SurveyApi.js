@@ -37,7 +37,7 @@ export const getSurveys = async (searchTerm,currentPage) => {
 
     let url = `/api/surveys/all-survey`;
 
-    if (searchTerm) {
+    if (searchTerm ||currentPage) {
         url += `?page=${currentPage}&searchTerm=${encodeURIComponent(searchTerm)}`;
     }
     let result = await fetch(url, {

@@ -103,7 +103,7 @@ export default function Survey() {
                                     <td>{index + 1}</td>
                                     <td>{formatDateGB(survey.createdAt)}</td>
                                     <td>{survey?.loop_lead?.first_name} {survey?.loop_lead?.last_name}</td>
-                                    <td>{survey?.mgr_id?.first_name}  {survey?.mgr_id?.last_name}</td>
+                                    <td>{survey?.manager?.first_name}  {survey?.manager?.last_name}</td>
                                     <td>{survey.total_invites}</td>
                                     <td>{survey.completed_survey}</td>
                                     <td>{survey.ll_survey_status === 'yes' ? <span className='span-badge active-tag'>Yes</span> : <span className='span-badge inactive-tag'>No</span>}</td>

@@ -87,7 +87,8 @@ const SurveySummary = () => {
                 const data = await response.json();
                 setReportData(data.reports?.categories || {});
                 let summaryValue = removeSpacesFromKeys(data.summary.response_Data)
-                setSummaryArray(data.summary);
+                let newData = (data.summary.response_Data)?data.summary.response_Data : data.summary
+                setSummaryArray(newData);
             } else {
                 console.error('Failed to fetch survey');
             }

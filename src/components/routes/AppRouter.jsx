@@ -71,7 +71,7 @@ const AppRouter = () => {
 
     // Define guest routes
     const guestRoutes = ['/login', '/forget-password', '/reset-password','/create-password'];
-    if (user && currentUrl == '/reset-password') {
+    if (user && currentUrl == '/reset-password' || currentUrl == '/create-password' ) {
       localStorage.removeItem("_token");
       localStorage.removeItem("userType");
       }

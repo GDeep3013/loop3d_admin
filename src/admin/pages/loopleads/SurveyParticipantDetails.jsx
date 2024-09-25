@@ -13,6 +13,7 @@ export default function SurveyParticipantDetails() {
     const { id } = useParams();
 
     const [surveyParticipant, setSurveyParticipant] = useState([]);
+    const [survey, setSurvey ] = useState();
     const [searchTerm, setSearchTerm] = useState('');
 
     const getParticipants = async () => {
@@ -21,6 +22,7 @@ export default function SurveyParticipantDetails() {
             // console.log('data', data);
             if (Array.isArray(data) && data.length > 0) {
                 setSurveyParticipant(data);
+                setSurvey(data?.[0]?.survey_id)
             } else {
                 setSurveyParticipant([]);
 
@@ -37,6 +39,7 @@ export default function SurveyParticipantDetails() {
         }
     }, [id, searchTerm]);
 
+    console.log('survey',survey)
     const handleSearch = (e) => {
         setSearchTerm(e.target.value);
     };
@@ -113,7 +116,7 @@ export default function SurveyParticipantDetails() {
                                             />
                                             {/* <Link to={`lo/plans/${id}`} className='default-btn' >View Plans</Link> */}
 
-                                            <Link to={`/survey-summary/${id}`} className='default-btn' >View Summary</Link>
+                                            {survey?.survey_status == "completed" && <Link to={`/survey-summary/${id}`} className='default-btn' >View Summary</Link>}
 
                                         </form>
                                     </Col>

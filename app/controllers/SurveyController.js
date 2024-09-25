@@ -80,8 +80,6 @@ exports.createSurvey = async (req, res) => {
                     type: "looped_lead"
                 });
 
-                // Create the user object
-                console.log(password, hashedPassword);
                 user = new User({
                     first_name:name,
                     email,
@@ -101,7 +99,8 @@ exports.createSurvey = async (req, res) => {
                 manager: surveyData.mgr_id,
                 loop_lead: user._id,
                 organization: manager?.organization,
-                competencies: surveyData.competencies || []
+                competencies: surveyData.competencies || [],
+                total_invites: 2
             });
 
             const savedSurvey = await survey.save();
@@ -198,6 +197,12 @@ exports.createSurveyParticipants = async (req, res) => {
 
             const savedParticipant = await newParticipant.save();
 
+            if (savedParticipant) {
+                await Survey.updateOne(
+                    { _id: survey_id },                // Find the survey by ID
+                    { $inc: { total_invites: 1 } }      // Increment the total_invites by 1
+                );
+            }
             const survey = await Survey.findById(survey_id)
                 .populate('manager', 'first_name last_name email')
                 .populate('loop_lead', 'first_name last_name email');
@@ -303,6 +308,7 @@ exports.getAllSurvey = async (req, res) => {
             .populate('manager', 'first_name last_name email')
             .populate('loop_lead', 'first_name last_name email')
             .populate('organization', 'name')
+            .sort({ createdAt: -1 })
             .skip(skip)
             .limit(limit);
 
@@ -508,16 +514,14 @@ exports.getSurveyParticipantsById = async (req, res) => {
             if (participant_id) participantQuery._id = participant_id;
 
             let participants = await SurveyParticipant.find(participantQuery)
-                .populate('survey_id', 'name')
                 .populate({
                     path: 'survey_id',
-                    select: 'name',
+                    select: 'name survey_status total_invites',
                     populate: {
                         path: 'loop_lead',
                         select: 'first_name last_name'
                     }
                 })
-                .populate('p_mag_id', 'first_name last_name'); // Adjust according to your schema
 
             return res.status(200).json({
                 status: 'successssss',

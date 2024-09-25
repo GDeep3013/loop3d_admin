@@ -14,6 +14,7 @@ export default function LoopLeadSurveyParticipantDetails() {
     const { id } = useParams();
     const [surveyParticipant, setSurveyParticipant] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
+    const [survey, setSurvey ] = useState();
 
     const getParticipants = async () => {
         try {
@@ -21,6 +22,8 @@ export default function LoopLeadSurveyParticipantDetails() {
             // console.log('data', data);
             if (Array.isArray(data) && data.length > 0) {
                 setSurveyParticipant(data);
+                setSurvey(data?.[0]?.survey_id)
+
             } else {
                 setSurveyParticipant([]);
 
@@ -113,8 +116,8 @@ export default function LoopLeadSurveyParticipantDetails() {
                                             />
                                             <Link to={`/loop-lead/participant/create/${id}`} className='default-btn' >Add Particpant <PLusIcon /> </Link>
                                             <Link to={`/plans/${id}`} className='default-btn' >View Smart Goals</Link>
+                                            {survey?.survey_status == "completed" && <Link to={`/survey-summary/${id}`} className='default-btn' >View Summary</Link>}
 
-                                            <Link to={`/survey-summary/${id}`} className='default-btn' >View Summary</Link>
 
                                         </form>
                                     </Col>
