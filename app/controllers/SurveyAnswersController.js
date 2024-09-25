@@ -58,18 +58,26 @@ exports.saveSurveyAnswers = async (req, res) => {
         // Update participant's survey status to completed
         await SurveyParticipant.findByIdAndUpdate(participant_id, { survey_status: 'completed' }, { new: true });
 
-        // Check if all participants have completed the survey and if both loop lead and manager have completed
+   
+
         const allParticipants = await SurveyParticipant.find({ survey_id });
-        const allParticipantsCompleted = allParticipants.every(participant => participant.survey_status === 'completed');
 
-        const surveyUpdated = await Survey.findById(survey_id);
-        const isSurveyComplete = surveyUpdated.ll_survey_status === 'yes' && surveyUpdated.mgr_survey_status === 'yes';
+            // Filter participants with status 'completed'
+            const completedParticipants = allParticipants.filter(participant => participant.survey_status === 'completed');
 
-        if (allParticipantsCompleted && isSurveyComplete) {
-            await Survey.findByIdAndUpdate(survey_id, { survey_status: 'completed' });
-        }
+            // Check if the number of completed participants meets or exceeds the threshold (e.g., 5)
+            const requiredCompletedParticipants = 5;
+            const allParticipantsCompleted = completedParticipants.length >= requiredCompletedParticipants;
 
-        return res.status(existingAnswers ? 200 : 201).json({
+            // Check if survey conditions are met (e.g., both ll_survey_status and mgr_survey_status are 'yes')
+            const surveyUpdated = await Survey.findById(survey_id);
+            const isSurveyComplete = surveyUpdated.ll_survey_status === 'yes' && surveyUpdated.mgr_survey_status === 'yes';
+
+            // If the required number of participants have completed and survey is ready, update survey status
+            if (allParticipantsCompleted && isSurveyComplete) {
+                await Survey.findByIdAndUpdate(survey_id, { survey_status: 'completed' });
+            }
+                    return res.status(existingAnswers ? 200 : 201).json({
             message: existingAnswers ? 'Survey answers updated successfully!' : 'Survey answers saved successfully!'
         });
     } catch (error) {
