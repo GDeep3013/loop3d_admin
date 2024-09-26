@@ -54,6 +54,11 @@ export default function AddEmployee() {
     if (!formData.user_type.trim()) {
       errors.user_type = 'User type is required';
     }
+
+    if (!formData.organization_id) {
+      errors.organization_id = 'Organization is required';
+
+    }
     // if (file === '' && !previewImage) {
     //   errors.image = 'User image is required';
     // }
@@ -255,7 +260,7 @@ export default function AddEmployee() {
                         className="mb-4">
                         <Form.Label>User Type</Form.Label><sup style={{color:'red'}}>*</sup>
                         <Form.Select aria-label="Default select example" name="user_type" value={formData.user_type} onChange={handleChange}>
-                          <option>Open this select menu</option>
+                          <option>Select User Type</option>
                           {roles.map(option => (
                             <option key={option.value} value={option.value} style={{ textTransform: "capitalize" }}>
                               {option.label.replace(/_/g, " ")}
@@ -275,7 +280,7 @@ export default function AddEmployee() {
                           value={formData.organization_id}
                           onChange={handleChange}
                         >
-                          <option value="">Select Organization (optional)</option>
+                          <option value="">Select Organization</option>
                           {organizations.length > 0 && organizations.map((org) => (
                             <option key={org._id} value={org._id}>
                               {org.name}

@@ -49,9 +49,11 @@ export default function CreateOrganization({ id, savedData }) {
         let errors = {};
         if (!formData?.name?.trim()) {
             errors.name = 'Organization name is required';
+        } else if (formData.name.trim().length < 3) {
+            errors.name = 'Organization name must be at least 3 characters long';
         }
-        if (!id && selectedCompetencies.length === 0) {
-            errors.competency = 'At least one competency must be selected';
+        if (!id && selectedCompetencies.length < 3) {
+            errors.competency = 'At least 3 competencies must be selected';
         }
         return errors;
     };
@@ -176,7 +178,6 @@ export default function CreateOrganization({ id, savedData }) {
                             </Row>
                         {errors.competency && <Col md={12}><small className="text-danger">{errors.competency}</small></Col>}
                         </Col>}
-
 
                         <Col md={12}>
                             <div className="profile-btns pt-0 mt-3">

@@ -430,7 +430,7 @@ const UserController = {
 
             await user.save();
 
-            res.status(200).json({status:true, message: 'Password has been create successfull' });
+            res.status(200).json({status:true, message: 'Password has been created Successfully' });
         } catch (error) {
             console.error('Error resetting password:', error);
             res.status(500).json({ message: 'Internal Server Error' });

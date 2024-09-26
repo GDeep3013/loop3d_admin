@@ -1,17 +1,14 @@
-// require('dotenv').config();
 import React, { useEffect, useState } from 'react';
-// import InputField from "../common/InputField";
-import { useParams, useNavigate, } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Container, Form } from "react-bootstrap";
 import { useSelector } from 'react-redux';
-import AuthLayout from '../../../layout/Auth';
-// require('dotenv').config();
-export default function StartSurveyForm() {
-    const user = useSelector((state) => state.auth.user); // Assuming the slice is named "auth"
 
-    const router = useNavigate()
+export default function StartSurveyForm() {
+    const user = useSelector((state) => state.auth.user);
+    const router = useNavigate();
     const searchParams = useParams();
-    const token = user?._id
+    const token = user?._id;
+
     const [activeTab, setActiveTab] = useState("individual_contributor");
     const [selectedCheckboxes, setSelectedCheckboxes] = useState([]);
     const [formData, setFormData] = useState({
@@ -19,9 +16,12 @@ export default function StartSurveyForm() {
         loop_lead_email: "",
     });
     const [loader, setLoader] = useState(false);
+    const [errors, setErrors] = useState({
+        loop_lead_name: "",
+        loop_lead_email: "",
+        competencies: ""
+    });
 
-    const [errorMessage, setErrorMessage] = useState("");
-    const [isFormSubmitted, setIsFormSubmitted] = useState(false);
     const [assignments, setAssignments] = useState({
         individual_contributor: [],
         people_manager: []
@@ -37,7 +37,6 @@ export default function StartSurveyForm() {
         }
     };
 
-    // console.log(import.meta.env.VITE_PROXY_URL,'url')
     const getAssignments = async () => {
         try {
             const url = `/api/competencies/assign?user_id=${user?._id}`;
@@ -51,7 +50,7 @@ export default function StartSurveyForm() {
                     people_manager: []
                 };
                 data?.assignments.forEach((assignment) => {
-                    if (assignment?.category_id?.status !== "inactive"&&assignment?.category_id?.competency_type in categorizedAssignments) {
+                    if (assignment?.category_id?.status !== "inactive" && assignment?.category_id?.competency_type in categorizedAssignments) {
                         categorizedAssignments[assignment?.category_id?.competency_type].push({
                             name: assignment?.category_id?.category_name,
                             id: assignment?.category_id?._id
@@ -87,29 +86,59 @@ export default function StartSurveyForm() {
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
+        setErrors({ ...errors, [name]: "" }); // Clear error when input is changed
+    };
+
+    const validateForm = () => {
+        let formIsValid = true;
+        const newErrors = {};
+
+        // Validate Loop Lead Name
+        if (!formData.loop_lead_name.trim()) {
+            newErrors.loop_lead_name = "Loop lead name is required.";
+            formIsValid = false;
+        }
+
+        // Validate Loop Lead Email
+        if (!formData.loop_lead_email.trim()) {
+            newErrors.loop_lead_email = "Loop lead email is required.";
+            formIsValid = false;
+        } else if (!/\S+@\S+\.\S+/.test(formData.loop_lead_email)) {
+            newErrors.loop_lead_email = "Please enter a valid email address.";
+            formIsValid = false;
+        }
+
+        // Validate Competencies (min 3)
+        if (selectedCheckboxes.length < 3) {
+            newErrors.competencies = "Please select at least 3 competencies.";
+            formIsValid = false;
+        }
+
+        setErrors(newErrors);
+        return formIsValid;
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // Validation: Check if all fields are filled
-        if (!formData.loop_lead_name || !formData.loop_lead_email || selectedCheckboxes.length === 0) {
-            setErrorMessage("Please fill out all required fields.");
-            return;
+        if (!validateForm()) {
+            return; // If form is not valid, exit early
         }
-        setLoader(true)
+
+        setLoader(true);
+
         // Prepare the payload
         const payload = {
             surveyData: {
-                name: "Employee Satisfaction Survey", // Example name, you can update it as needed
+                name: "Employee Satisfaction Survey", 
                 loop_leads: [
                     {
                         name: formData.loop_lead_name,
                         email: formData.loop_lead_email
                     }
                 ],
-                competencies: selectedCheckboxes, // Use IDs directly
-                mgr_id: user?._id // Manager ID
+                competencies: selectedCheckboxes,
+                mgr_id: user?._id 
             }
         };
 
@@ -122,7 +151,7 @@ export default function StartSurveyForm() {
                 },
                 body: JSON.stringify(payload)
             });
-            setLoader(false)
+            setLoader(false);
 
             if (response.ok) {
                 const data = await response.json();
@@ -130,82 +159,65 @@ export default function StartSurveyForm() {
                 if (loopLeadId) {
                     router('/manager/dashboard');
                 }
-                // setIsFormSubmitted(true); // Mark the form as submitted to replace the component
             } else {
-                setErrorMessage("Failed to submit the form. Please try again.");
+                setErrors({ ...errors, form: "Failed to submit the form. Please try again." });
             }
         } catch (error) {
             console.error('Error submitting form:', error);
-            setErrorMessage("An error occurred while submitting the form. Please try again.");
+            setErrors({ ...errors, form: "An error occurred while submitting the form. Please try again." });
+            setLoader(false);
         }
     };
-
-    // Render the thank you message if the form is submitted
-    if (isFormSubmitted) {
-        return (
-            <Container className="my-[10rem]">
-                <div className="lg:max-w-[1080px] mx-auto bg-white rounded-[20px] p-[20px] md:p-[40px]" style={{ boxShadow: "0px 0px 10px 0px rgba(0, 0, 0, 0.15)" }}>
-                    <h1 className="text-[38px] md:text-[48px] mb-5 text-center font-frank">Thank You!</h1>
-                    <p className="text-center text-[16px] font-poppins">Your registration is successful.</p>
-                </div>
-            </Container>
-        );
-    }
 
     const options = assignments[activeTab] || [];
 
     return (
         <>
-
             <form onSubmit={handleSubmit}>
-                <div className="">
+                <div>
                     <Form className='d-flex gap-3'>
                         <div className="w-100">
                             <Form.Control
-                                labelClass=""
-                                className=""
-                                label=""
                                 type="text"
                                 name="loop_lead_name"
                                 value={formData.loop_lead_name}
                                 onChange={handleInputChange}
-                                placeholder="Looped Lead Name"
+                                placeholder="Loop Lead Name"
+                                isInvalid={!!errors.loop_lead_name} // Shows error state for input
                             />
+                            <Form.Control.Feedback type="invalid">
+                                {errors.loop_lead_name}
+                            </Form.Control.Feedback>
                         </div>
                         <div className="w-100">
                             <Form.Control
-                                labelClass=""
-                                className=""
-                                label=""
                                 type="email"
                                 name="loop_lead_email"
                                 value={formData.loop_lead_email}
                                 onChange={handleInputChange}
-                                placeholder="Looped Lead Email"
+                                placeholder="Loop Lead Email"
+                                isInvalid={!!errors.loop_lead_email} // Shows error state for input
                             />
+                            <Form.Control.Feedback type="invalid">
+                                {errors.loop_lead_email}
+                            </Form.Control.Feedback>
                         </div>
                     </Form>
                 </div>
-                
-                {/* button tab */}
+
+                {/* Competency Selection */}
                 <div className="survey-tabs">
                     <div className="d-flex gap-3">
                         <button
                             type="button"
-                            className={`${activeTab === "individual_contributor"
-                                ? "tab-active-color text-white"
-                                : "tab-no-active-color"
-                                }`}
+                            className={activeTab === "individual_contributor" ? "tab-active-color text-white" : "tab-no-active-color"}
                             onClick={() => handleTabChange("individual_contributor")}
                         >
                             Individual Contributor
                         </button>
                         <button
                             type="button"
-                            className={`${activeTab === "people_manager"
-                                ? "tab-active-color text-white"
-                                : "tab-no-active-color"
-                                }`}
+                            className={activeTab === "people_manager" ? "tab-active-color text-white" : "tab-no-active-color"}
                             onClick={() => handleTabChange("people_manager")}
                         >
                             People Manager
@@ -215,40 +227,37 @@ export default function StartSurveyForm() {
                     <div>
                         <ul className='survey-listings'>
                             {options.map((option) => (
-                                <li key={option.id} className="">
-                                    <label className="">
+                                <li key={option.id}>
+                                    <label>
                                         <input
                                             type="checkbox"
-                                            className=""
                                             checked={selectedCheckboxes.includes(option.id)}
                                             onChange={() => handleCheckboxChange(option.name, option.id)}
-                                            disabled={
-                                                !selectedCheckboxes.includes(option.id) &&
-                                                selectedCheckboxes.length >= 3
-                                            }
+                                            disabled={!selectedCheckboxes.includes(option.id) && selectedCheckboxes.length >= 3}
                                         />
-                                        <span className="ml-3 text-black font-poppins">{option.name}</span>
+                                        <span className="ml-3">{option.name}</span>
                                     </label>
                                 </li>
                             ))}
                         </ul>
                     </div>
+                    {errors.competencies && <div className="text-danger">{errors.competencies}</div>}
                 </div>
+
+                {/* Submit Button */}
                 <div className="mt-4">
                     <button
                         type="submit"
                         className="default-btn"
                         disabled={loader}
                     >
-                        {loader? 'submitting':"Submit"}
+                        {loader ? 'Submitting...' : 'Submit'}
                     </button>
                 </div>
-                {/* Display the error message */}
-                {errorMessage && (
-                    <div className="">{errorMessage}</div>
-                )}
-            </form>
 
+                {/* Display form error messages */}
+                {errors.form && <div className="text-danger mt-3">{errors.form}</div>}
+            </form>
         </>
     );
 }

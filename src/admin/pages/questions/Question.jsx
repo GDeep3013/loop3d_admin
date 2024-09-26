@@ -167,13 +167,23 @@ export default function Question() {
       </div>
       </div>
       {totalPages > 1 && (
-        <Pagination className='justify-content-center pagination-outer'>
-          <Pagination.First onClick={() => handlePaginationClick(1)} disabled={currentPage === 1} />
-          <Pagination.Prev onClick={() => handlePaginationClick(currentPage - 1)} disabled={currentPage === 1} />
-          <Pagination.Next onClick={() => handlePaginationClick(currentPage + 1)} disabled={currentPage === totalPages} />
-          <Pagination.Last onClick={() => handlePaginationClick(totalPages)} disabled={currentPage === totalPages} />
-        </Pagination>
-      )}
+      <Pagination className='justify-content-center pagination-outer'>
+        <Pagination.First onClick={() => handlePaginationClick(1)} disabled={currentPage === 1} />
+        <Pagination.Prev onClick={() => handlePaginationClick(currentPage - 1)} disabled={currentPage === 1} />
+        {[...Array(totalPages).keys()].map(page => (
+          <Pagination.Item
+            key={page + 1}
+            className='link-page'
+            active={page + 1 === currentPage}
+            onClick={() => handlePaginationClick(page + 1)}
+          >
+            {page + 1}
+          </Pagination.Item>
+        ))}
+        <Pagination.Next onClick={() => handlePaginationClick(currentPage + 1)} disabled={currentPage === totalPages} />
+        <Pagination.Last onClick={() => handlePaginationClick(totalPages)} disabled={currentPage === totalPages} />
+      </Pagination>
+    )}
     </AuthLayout>
   );
 }
