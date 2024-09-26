@@ -60,7 +60,12 @@ exports.createGoals = async (req, res) => {
 
 exports.gernatePlans = async (req, res) => {
     try {
-        const { prompt, option, survey_id } = req.body;
+        const { prompt=null,
+            option=null,
+            survey_id,
+            reGenerate = null,
+            chatResponse = null,
+            activeCompetency = null} = req.body;
 
         const survey = await Survey.findById(survey_id)
             .populate('loop_lead', 'first_name last_name email _id')
@@ -165,9 +170,17 @@ exports.gernatePlans = async (req, res) => {
             processParticipantAnswers(participant, participantAnswers?.answers, participantType, assignCompetencies, competencies, questions, report);
         }
         const summary = await generateSummary(survey_id, report);
-        
-        const fullPrompt = "Based on the following survey results and developmental suggestions, generate one SMART plans for the competency " + option + " The response should be in plain text without extra headings, bullet points, or other formatting and 2 lines only .\n\n Survey Results:\n" + summary + "\n\n;"
+
+        let fullPrompt= ''
+        if (reGenerate) {
+         fullPrompt = "Make the goal more specific and more measurable, ensuring it’s related to the chosen competency . The response should be in plain text without extra headings, bullet points, or other formatting and 2 lines only .\n\n smaty goal:\n" + chatResponse + "\n\n  competency :\n" + activeCompetency + ";"
+            
+        } else {
+            
+             fullPrompt = "Input Value : " + prompt + " . Based on the following survey results and developmental suggestions, generate one SMART plans for the competency " + option + " The response should be in plain text without extra headings, bullet points, or other formatting and 2 lines only .\n\n Survey Results:\n" + summary + "\n\n;"
+        }
         // Call the OpenAI GPT model
+    
         const response = await openai.chat.completions.create({
             model: 'gpt-4', // Correct model name
             messages: [
@@ -178,7 +191,7 @@ exports.gernatePlans = async (req, res) => {
 
         const content = response?.choices?.[0]?.message?.content;
 
-        res.json({ 'content': content, 'competency': option });
+        res.json({ 'content': content, 'competency': option?option:activeCompetency });
 
     } catch (error) {
         console.error(error);
@@ -332,9 +345,7 @@ exports.savePlans = async (req, res) => {
             survey_id: survey_id,
             dead_line: deadline,
             competency: categories[0]?._id,
-            goal_apply: `I made 2 suggestions to my supervisor.`,
-            goal_result_seen: "My supervisor has assigned me to better projects.",
-                
+
         });
         const savedGoals = await newGoals.save();
         res.status(201).json(savedGoals);
@@ -345,7 +356,7 @@ exports.savePlans = async (req, res) => {
 
 }
 
-exports.deletePlans = async(req, res)=> {
+exports.deletePlans = async (req, res) => {
     try {
         const { id } = req.params;
         await Goals.findByIdAndDelete(id); // Delete the goal from the database
@@ -359,24 +370,60 @@ exports.deletePlans = async(req, res)=> {
 exports.updateGoal = async (req, res) => {
     const goalId = req.params.id;
     const updatedData = req.body;
-  
+
     try {
-      // Find the goal by its ID, update it with the new data, and return the updated document
-      let updatedGoal = await Goals.findByIdAndUpdate(goalId, updatedData, { new: true })
-                                   .populate('competency', 'category_name competency_type'); // Populate the competency field
-  
-      if (!updatedGoal) {
-        return res.status(404).json({ message: 'Goal not found' });
-      }
-  
-      // Send back the updated goal including the specific_goal and the populated competency data
-      return res.status(200).json({
-        message: 'Goal updated successfully',
-        specific_goal: updatedGoal.specific_goal,
-        competency: updatedGoal.competency, // Now includes category_name and competency_type
-      });
+        // Find the goal by its ID, update it with the new data, and return the updated document
+        let updatedGoal = await Goals.findByIdAndUpdate(goalId, updatedData, { new: true })
+            .populate('competency', 'category_name competency_type'); // Populate the competency field
+
+        if (!updatedGoal) {
+            return res.status(404).json({ message: 'Goal not found' });
+        }
+
+        // Send back the updated goal including the specific_goal and the populated competency data
+        return res.status(200).json({
+            message: 'Goal updated successfully',
+            specific_goal: updatedGoal.specific_goal,
+            competency: updatedGoal.competency, // Now includes category_name and competency_type
+        });
     } catch (error) {
-      console.error('Error updating goal:', error);
-      return res.status(500).json({ message: 'Internal Server Error' });
+        console.error('Error updating goal:', error);
+        return res.status(500).json({ message: 'Internal Server Error' });
     }
-  };
+};
+
+
+exports.getCategoriesByOrg = async (req, res) => {
+
+    try {
+        const { surveyId } = req.params;
+
+        const survey = await Survey.findById(surveyId)
+            .populate('organization')  // Fetch organization details
+            .exec();
+
+        if (!survey) {
+            return res.status(404).json({ error: 'Survey not found' });
+        }
+
+        // Step 2: Fetch competencies (categories) assigned to the organization using AssignCompetency model
+        const assignedCompetencies = await AssignCompetency.find({
+            organization_id: survey.organization._id
+        }).populate('category_id'); // Populate categories
+
+        // Step 3: Extract the actual categories from the assignment records
+        const categories = assignedCompetencies.map(ac => ac.category_id);
+
+        // Step 4: Respond with the survey details and associated categories
+        res.status(200).json({
+            survey,
+            organization: survey.organization,
+            categories,  // Competency categories related to the organization
+        });
+
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+

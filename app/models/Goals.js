@@ -21,11 +21,11 @@ const goalSehema = new mongoose.Schema({
     },   
     goal_apply: { // Add this field to the schema
         type: String,
-        required: true
+      
     },
     goal_result_seen: { // Add this field to the schema
         type: String,
-        required: true
+      
     },
     status: {
         type: String,

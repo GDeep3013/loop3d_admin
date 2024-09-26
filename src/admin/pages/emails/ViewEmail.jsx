@@ -20,7 +20,7 @@ export default function CreateEmail() {
         try {
           const data = await getEmailById(id);
           setEmail(data)
-          console.log(data)
+          // console.log(data)
 
         } catch (error) {
           console.error("Error fetching email details:", error);

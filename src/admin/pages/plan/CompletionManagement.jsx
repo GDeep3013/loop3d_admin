@@ -2,7 +2,7 @@ import React from 'react'
 import { Modal, Button } from 'react-bootstrap'
 
 export default function CompletionManagement({ show, onHide, specificGoal, competency, setChatResponse, setCompetencyFrom }) {
-    console.log(specificGoal, 'specificGoal');
+    // console.log(specificGoal, 'specificGoal');
     return (
         <Modal show={show} onHide={onHide} className='completion-modal' dialogClassName="modal-dialog-centered">
             <Modal.Header closeButton>

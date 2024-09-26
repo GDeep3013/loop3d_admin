@@ -20,7 +20,7 @@ export default function SurveyList() {
       (async () => {
         try {
           let data = await getSurveyById('', user?._id, '', searchTerm);
-          console.log('data', data);
+          // console.log('data', data);
           if (Array.isArray(data) && data.length > 0) {
             setSurveys(data);
           }

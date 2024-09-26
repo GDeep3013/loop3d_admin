@@ -162,7 +162,7 @@ export default function AddQuestion({ id, savedData }) {
                     <Row>
                         <Col md={6}>
                             <Form.Group className="mb-4">
-                                <Form.Label>Question Text</Form.Label>
+                                <Form.Label>Question Text</Form.Label><sup style={{color:'red'}}>*</sup>
                                 <Form.Control
                                     type="text"
                                     name="questionText"
@@ -175,7 +175,7 @@ export default function AddQuestion({ id, savedData }) {
                         </Col>
                         <Col md={6}>
                             <Form.Group className="mb-4">
-                                <Form.Label>Answer Type</Form.Label>
+                                <Form.Label>Answer Type</Form.Label><sup style={{color:'red'}}>*</sup>
                                 <Form.Control
                                     as="select"
                                     name="questionType"

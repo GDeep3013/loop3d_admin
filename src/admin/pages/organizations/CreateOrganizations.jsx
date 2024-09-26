@@ -118,7 +118,7 @@ export default function CreateOrganization({ id, savedData }) {
                     <Row>
                         <Col md={6}>
                             <Form.Group className="mb-4">
-                                <Form.Label>Organization Name</Form.Label>
+                                <Form.Label>Organization Name</Form.Label><sup style={{color:'red'}}>*</sup>
                                 <Form.Control
                                     type="text"
                                     name="name"

@@ -1,6 +1,6 @@
 import React from 'react'
 import { Container, Form, Button, Card, } from 'react-bootstrap';
-const SuggestedGoal = ({ chatResponse, loading, regenerateResponse, AddNewGoal,setChatResponse }) => {
+const SuggestedGoal = ({ chatResponse, loading, regenerateResponse,AddNewGoal,setChatResponse }) => {
 
     return (
         <div className='plan_content suggest_goals'>
@@ -31,7 +31,7 @@ const SuggestedGoal = ({ chatResponse, loading, regenerateResponse, AddNewGoal,s
                                 <Button
                                     variant="secondary"
                                     className="w-50 ml-0"
-                                    onClick={regenerateResponse}
+                                    onClick={(e) => { regenerateResponse(true) }}
                                     disabled={loading}
                                 > {loading ? 'Generating...' : 'Make Goal More Specific'}
                                 </Button>

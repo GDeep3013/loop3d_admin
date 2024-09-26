@@ -275,7 +275,7 @@ select.form-control:focus{ outline: none; box-shadow: none; }
 .goal-list-contant thead th{ font-size: 14px; vertical-align: middle;}
 .goal-list-contant tbody td{ font-size: 14px; padding: 1rem;}
 
-.completion-modal .modal-dialog{ max-width: 750px; }
+.completion-modal .modal-dialog{ max-width: 800px; }
 .completion-modal .modal-content { width: 100%; padding: 11px 5px; }
 .completion-modal .modal-content .modal-body{ padding: 32px 40px; }
 .custom_tab_content h3 { font-size: 21px; font-weight: 600; padding: 9px 0 5px 0; }

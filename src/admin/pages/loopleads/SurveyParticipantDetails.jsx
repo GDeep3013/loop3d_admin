@@ -39,7 +39,6 @@ export default function SurveyParticipantDetails() {
         }
     }, [id, searchTerm]);
 
-    console.log('survey',survey)
     const handleSearch = (e) => {
         setSearchTerm(e.target.value);
     };
@@ -114,7 +113,7 @@ export default function SurveyParticipantDetails() {
                                                 onChange={handleSearch}
                                                 className='form-control'
                                             />
-                                            {/* <Link to={`lo/plans/${id}`} className='default-btn' >View Plans</Link> */}
+                                            {/* <Link to={`/plans/${id}`} className='default-btn' >View Plans</Link> */}
 
                                             {survey?.survey_status == "completed" && <Link to={`/survey-summary/${id}`} className='default-btn' >View Summary</Link>}
 

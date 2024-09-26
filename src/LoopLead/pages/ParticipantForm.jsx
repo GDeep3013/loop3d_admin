@@ -72,7 +72,6 @@ export default function ParticipantForm({ survey_id }) {
                 });
 
                 if (response.ok) {
-                    console.log('Participants submitted successfully');
                     alert('Participants submitted successfully')
                   
                     window.location.reload()

@@ -137,7 +137,7 @@ export default function AddCategory() {
             <Row>
               <Col md={6}>
                 <Form.Group className="mb-4">
-                  <Form.Label>Competency Name</Form.Label>
+                  <Form.Label>Competency Name</Form.Label> <sup style={{color:'red'}}>*</sup>
                   <Form.Control
                     type="text"
                     name="category_name"
@@ -150,7 +150,7 @@ export default function AddCategory() {
               </Col>
               <Col md={6}>
                 <Form.Group className="mb-4">
-                  <Form.Label>Competency Type</Form.Label>
+                  <Form.Label>Competency Type</Form.Label> <sup style={{color:'red'}}>*</sup>
                   <Form.Select
                     name="competency_type"
                     value={formData.competency_type}

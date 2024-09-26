@@ -60,7 +60,7 @@ export default function LoopLeadSurveyParticipantDetails() {
                     method: 'DELETE',
                     headers: { "x-api-key": import.meta.env.VITE_X_API_KEY }
                 });
-                console.log(response, 'response');
+                // console.log(response, 'response');
                 if (response.ok) {
                     await Swal.fire({
                         title: "Deleted!",

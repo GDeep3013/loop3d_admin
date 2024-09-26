@@ -16,9 +16,9 @@ const ChatGPTPage = () => {
             const response = await sendChatGptPrompt(prompt);
 
             if (response) {
-                console.log('ChatGPT response:', response.choices[0].message.content);
+                // console.log('ChatGPT response:', response.choices[0].message.content);
             } else {
-                console.log('Failed to get response from ChatGPT');
+                // console.log('Failed to get response from ChatGPT');
             }
             } catch (err) {
                 setError('Failed to connect to ChatGPT API.');

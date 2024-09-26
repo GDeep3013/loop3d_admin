@@ -68,7 +68,7 @@ export default function AssignCompetency({ type, id, show, handleClose,getCatego
         });
         getCategory();
 
-        console.log('Competency assigned successfully');
+        // console.log('Competency assigned successfully');
       } else {
         console.error('Error assigning competency');
       }

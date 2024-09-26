@@ -122,7 +122,7 @@ const SurveySummary = () => {
             // setLoader(true);
             const developmentalOpportunity = competencyReport?.developmentalOpportunity || 'nothing';
             const url = `/api/surveys/smart-goals/${survey_id}/${developmentalOpportunity}/${competencyReport?.topStrength}`;
-            console.log('test1', url)
+            // console.log('test1', url)
             const response = await fetch(url, {
                 headers: { 'x-api-key': import.meta.env.VITE_X_API_KEY }
             });
@@ -133,7 +133,7 @@ const SurveySummary = () => {
                 const data = await response.json();
                 if (data?.samrtgoals) {
                     setSamrtGoals(data?.samrtgoals)
-                    console.log(data)
+                    // console.log(data)
                 }
             } else {
                 console.error('Failed to fetch getSmartGoals');
@@ -189,7 +189,7 @@ const SurveySummary = () => {
         // 
     };
 
-    console.log('summaryArray', summaryArray)
+    // console.log('summaryArray', summaryArray)
     const totalInvited = Participants.reduce((acc, Participant) => acc + (totals[Participant] || 0), 0);
     const totalCompleted = Participants.reduce((acc, Participant) => acc + (completedResponses[Participant] || 0), 0);
     return (

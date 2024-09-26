@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import AuthLayout from '../../../layout/Auth'
 import { Col, Row, Container, Button } from "react-bootstrap";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import GoalCreator from '../plan/GoalCreator';
 import SuggestedGoal from '../plan/SuggestedGoal';
 import GoalListing from '../plan/GoalListing';
@@ -9,6 +9,7 @@ import CompletionManagement from '../plan/CompletionManagement';
 
 const Plans = () => {
     const { id } = useParams();
+    const navigate = useNavigate();
     const [prompt, setPrompt] = useState('');
     const [selectedOption, setSelectedOption] = useState('');
     const [categories, setCategories] = useState([]);
@@ -17,12 +18,13 @@ const Plans = () => {
     const [loading, setLoading] = useState(false);
     const [goals, setGoals] = useState([]);
 
+    const [reGenerate, setReGenerate] = useState(false);
 
 
     //Get get categories for the select box
     async function getCategory() {
         try {
-            let url = `/api/categories`;
+            let url = `/api/plans/get-category/${id}`;
             let result = await fetch(url, {
                 headers: { 'x-api-key': import.meta.env.VITE_X_API_KEY }
             });
@@ -34,6 +36,12 @@ const Plans = () => {
         }
     }
 
+    useEffect(() => {
+        if (reGenerate) {
+
+            GernatePlans()
+        }
+    }, [reGenerate])
     //Get get goal for the select listing
     async function getGoals() {
         try {
@@ -52,9 +60,8 @@ const Plans = () => {
     }
 
     // gernate plans for the smart goals
-    const GernatePlans = async (e) => {
-        e.preventDefault();
-        setLoading(true);
+    const GernatePlans = async () => {
+        setLoading(true)
         try {
             const response = await fetch('/api/plans/gerante-plans', {
                 method: 'POST',
@@ -62,16 +69,18 @@ const Plans = () => {
                     'Content-Type': 'application/json',
                     'x-api-key': import.meta.env.VITE_X_API_KEY
                 },
-                body: JSON.stringify({ prompt, option: selectedOption, survey_id: id }) // Send prompt in the body
+                body: JSON.stringify({ prompt, option: selectedOption, survey_id: id, reGenerate: reGenerate, chatResponse: chatResponse, activeCompetency: competencyFrom }) // Send prompt in the body
             });
             const data = await response.json();
             setChatResponse(data.content)
-            console.log(data, 'chat respose')
             setCompetencyFrom(data.competency)
             setLoading(false);
+            setReGenerate(false);
         } catch (error) {
             console.error('Error fetching categories:', error);
             setLoading(false);
+            setReGenerate(false);
+
         }
     };
 
@@ -105,7 +114,6 @@ const Plans = () => {
         }
     }
 
-
     return (
         <AuthLayout title={'Welcome LOOP3D Development Plan '} subTitle={'Development Plan'}>
             <div className="main-back-heading">
@@ -122,13 +130,14 @@ const Plans = () => {
                 </div>
             </div>
             <div className="content-outer">
-                <Container>                 
+                <Container>
                     <Row>
                         <Col xs={12} md={6}><GoalCreator prompt={prompt} setPrompt={setPrompt} handleSubmit={GernatePlans} selectedOption={selectedOption} setSelectedOption={setSelectedOption} categories={categories} /></Col>
-                        <Col xs={12} md={6}><SuggestedGoal chatResponse={chatResponse} loading={loading} regenerateResponse={GernatePlans} AddNewGoal={AddNewGoal} setChatResponse={setChatResponse} /></Col>
+                        <Col xs={12} md={6}><SuggestedGoal chatResponse={chatResponse} loading={loading} regenerateResponse={setReGenerate} setReGenerate={setReGenerate} AddNewGoal={AddNewGoal} setChatResponse={setChatResponse} /></Col>
                     </Row>
                     <Row>
-                        <Col><GoalListing goals={goals} getGoals={getGoals} categories={categories} setChatResponse={setChatResponse} setCompetencyFrom={setCompetencyFrom} /></Col>
+                        <Col>
+                            <GoalListing goals={goals} getGoals={getGoals} categories={categories} setChatResponse={setChatResponse} setCompetencyFrom={setCompetencyFrom} /></Col>
                     </Row>
                 </Container>
             </div>

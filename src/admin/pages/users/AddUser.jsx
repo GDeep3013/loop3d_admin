@@ -41,7 +41,7 @@ export default function AddEmployee() {
     let errors = {};
 
     if (!formData.first_name.trim()) {
-      errors.name = 'First name is required';
+      errors.first_name = 'First name is required';
     }
 
     if (!formData.email.trim()) {
@@ -211,7 +211,7 @@ export default function AddEmployee() {
                     <Col md={4}>
                       <Form.Group
                         className="mb-4">
-                        <Form.Label>First Name</Form.Label>
+                        <Form.Label>First Name</Form.Label><sup style={{color:'red'}}>*</sup>
                         <Form.Control
                           type="text"
                           name="first_name"
@@ -239,7 +239,7 @@ export default function AddEmployee() {
                     <Col md={4}>
                       <Form.Group
                         className="mb-4">
-                        <Form.Label>Email Address</Form.Label>
+                        <Form.Label>Email Address</Form.Label><sup style={{color:'red'}}>*</sup>
                         <Form.Control
                           type="email"
                           name="email"
@@ -253,7 +253,7 @@ export default function AddEmployee() {
                     <Col md={4}>
                       <Form.Group
                         className="mb-4">
-                        <Form.Label>User Type</Form.Label>
+                        <Form.Label>User Type</Form.Label><sup style={{color:'red'}}>*</sup>
                         <Form.Select aria-label="Default select example" name="user_type" value={formData.user_type} onChange={handleChange}>
                           <option>Open this select menu</option>
                           {roles.map(option => (
@@ -269,7 +269,7 @@ export default function AddEmployee() {
                     </Col>
                     <Col md={4}>
                       <Form.Group className="mb-4">
-                        <Form.Label>Organization</Form.Label>
+                        <Form.Label>Organization</Form.Label><sup style={{color:'red'}}>*</sup>
                         <Form.Select
                           name="organization_id"
                           value={formData.organization_id}

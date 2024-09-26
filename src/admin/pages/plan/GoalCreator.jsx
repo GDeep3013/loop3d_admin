@@ -1,5 +1,5 @@
 import React from 'react'
-import { Container, Form, Button, Card } from 'react-bootstrap';
+import {  Form, Button, Card } from 'react-bootstrap';
 
 const GoalCreator = ({ prompt, setPrompt, handleSubmit, selectedOption, setSelectedOption, categories }) => {
     const handleSelectChange = (e) => {
@@ -15,7 +15,7 @@ const GoalCreator = ({ prompt, setPrompt, handleSubmit, selectedOption, setSelec
                         <Card.Text className="text-center">
                             Goal Development Creator
                         </Card.Text>
-                        <Form onSubmit={handleSubmit}>
+                        <Form >
                             {/* Textarea for Prompt */}
                             <Form.Group controlId="exampleForm.ControlTextarea1">
                                 <Form.Control
@@ -42,7 +42,7 @@ const GoalCreator = ({ prompt, setPrompt, handleSubmit, selectedOption, setSelec
                                     ))}
                                 </Form.Control>
                             </Form.Group>
-                            <Button variant="primary" type="submit">
+                            <Button variant="primary" onClick={handleSubmit}>
                                 Submit
                             </Button>
                         </Form>

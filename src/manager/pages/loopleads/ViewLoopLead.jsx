@@ -14,7 +14,7 @@ export default function ViewLoopLead({ user_id, org_id }) {
                         headers: { 'x-api-key': import.meta.env.VITE_X_API_KEY }
                     });
                  
-                 console.log(response)
+                //  console.log(response)
                     if (response.data.status) {
                   
                         setLeadUser(response.data.user)

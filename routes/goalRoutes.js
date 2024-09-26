@@ -15,4 +15,6 @@ router.delete('/delete/:id',GoalController.deletePlans)
 
 router.put('/update/:id', GoalController.updateGoal);
 
+router.get('/get-category/:surveyId', GoalController.getCategoriesByOrg);
+
 module.exports = router;

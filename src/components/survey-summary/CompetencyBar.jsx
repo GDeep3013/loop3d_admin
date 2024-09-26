@@ -24,7 +24,7 @@ const CompetencyBar = ({ data }) => {
     // Extract competency names as labels
     const labels = Object.keys(data); // Competencies like 'Communication', 'Leadership', 'Problem Solving'
 
-    console.log(labels);
+    // console.log(labels);
     // Create datasets for each rater category using 'averageWeightage'
     const chartData = {
         labels, // Competency names on the y-axis

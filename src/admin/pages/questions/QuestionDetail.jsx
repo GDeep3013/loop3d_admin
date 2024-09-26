@@ -14,7 +14,6 @@ export default function QuestionDetail() {
         fetchQuestionDetails();
     }, [questionId]);
 
-    console.log(`Question`, questionId);
 
     async function fetchQuestionDetails() {
         setLoading(true);
