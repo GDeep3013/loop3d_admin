@@ -27,9 +27,12 @@ export default function AddCategory() {
   // Form validation
   const validateForm = (formData) => {
     let errors = {};
+    const namePattern = /^[A-Za-z0-9\s]+$/;
     if (!formData.category_name.trim()) {
       errors.category_name = 'Competency name is required';
-    }
+    }else if (!namePattern.test(formData.category_name.trim())) {
+      errors.category_name = 'Competency name can only contain letters and numbers';
+  }
     if (!formData.competency_type.trim()) {
       errors.competency_type = 'Competency type is required';
     }

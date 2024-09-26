@@ -34,7 +34,7 @@ const CategoryController = {
     getCategories: async (req, res) => {
         try {
             // Extract query parameters for pagination
-            let { page = 1, limit =10, getType = null, searchTerm } = req.query;
+            let { page = 1, limit =50, getType = null, searchTerm } = req.query;
             const query = {};
             if (searchTerm) {
                 query.$or = [

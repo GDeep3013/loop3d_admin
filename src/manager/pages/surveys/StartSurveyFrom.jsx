@@ -112,6 +112,9 @@ export default function StartSurveyForm() {
         if (selectedCheckboxes.length < 3) {
             newErrors.competencies = "Please select at least 3 competencies.";
             formIsValid = false;
+        } else {
+            newErrors.competencies = "";
+
         }
 
         setErrors(newErrors);

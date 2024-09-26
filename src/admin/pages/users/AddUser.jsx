@@ -39,11 +39,17 @@ export default function AddEmployee() {
 
   const validateForm = (formData) => {
     let errors = {};
-
+    const namePattern = /^[A-Za-z\s]+$/;
     if (!formData.first_name.trim()) {
       errors.first_name = 'First name is required';
-    }
-
+    }else if (formData.first_name.trim().length < 3) {
+      errors.first_name = 'First name must be at least 3 characters long';
+  } else if (!namePattern.test(formData.first_name.trim())) {
+      errors.first_name = 'First name can only contain letters';
+  }
+  if (!namePattern.test(formData.last_name.trim())) {
+      errors.last_name = 'Last name can only contain letters';
+  }
     if (!formData.email.trim()) {
       errors.email = 'Email is required';
     } else if (!isValidEmail(formData.email)) {
@@ -59,10 +65,7 @@ export default function AddEmployee() {
       errors.organization_id = 'Organization is required';
 
     }
-    // if (file === '' && !previewImage) {
-    //   errors.image = 'User image is required';
-    // }
-    console.log(errors)
+
     return errors;
   };
 
