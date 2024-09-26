@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import AuthLayout from '../../../layout/Auth'
 import { useNavigate } from "react-router-dom";
 import { StatusIcon, PLusIcon } from "../../../components/svg-icons/icons";
-import { Container,Button, Row, Col, Tab, Tabs } from 'react-bootstrap'
+import { Container,Button, Row, Col, Tab, Tabs,Pagination  } from 'react-bootstrap'
 import { Link } from "react-router-dom";
 import Swal from 'sweetalert2'
 import { Edit, Remove } from '../../../components/svg-icons/icons';
@@ -15,9 +15,11 @@ export default function Category() {
     const [searchTerm, setSearchTerm] = useState('');
     const [loading, setLoading] = useState(true);
 
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
     useEffect(() => {
         getCategory();
-    }, [searchTerm]);
+    }, [searchTerm,currentPage]);
 
     async function getCategory() {
         setLoading(true);
@@ -31,6 +33,8 @@ export default function Category() {
             });
             result = await result.json();
             setCategory(result.categories);
+            setTotalPages(result.meta.totalPages);
+
             setLoading(false);
         } catch (error) {
             console.error(error);
@@ -75,6 +79,9 @@ export default function Category() {
             console.error('Error deleting user:', error);
         }
     };
+    const handlePaginationClick = (pageNumber) => {
+        setCurrentPage(pageNumber);
+    };
 
     return (
         <AuthLayout title={'Welcome to Competency'} subTitle={'Competency'}>
@@ -84,9 +91,9 @@ export default function Category() {
                         <div className="row">
                             <div className="col-md-6 p-0">
                                 <div className="profile-btns pt-0">
-                                    <Button className="default-btn cancel-btn ml-0" onClick={() => navigate(-1)}>
+                                    {/* <Button className="default-btn cancel-btn ml-0" onClick={() => navigate(-1)}>
                                         Back
-                                    </Button>
+                                    </Button> */}
                                 </div>
                             </div>
                         </div>
@@ -151,7 +158,25 @@ export default function Category() {
                                     ))}
                                 </tbody>
                             </table>
-                        </div>
+                            </div>
+                            {totalPages > 1 && (
+                            <Pagination className='justify-content-center pagination-outer'>
+                                <Pagination.First onClick={() => handlePaginationClick(1)} disabled={currentPage === 1} />
+                                <Pagination.Prev onClick={() => handlePaginationClick(currentPage - 1)} disabled={currentPage === 1} />
+                                {[...Array(totalPages).keys()].map(page => (
+                                    <Pagination.Item
+                                        key={page + 1}
+                                        className='link-page'
+                                        active={page + 1 === currentPage}
+                                        onClick={() => handlePaginationClick(page + 1)}
+                                    >
+                                        {page + 1}
+                                    </Pagination.Item>
+                                ))}
+                                <Pagination.Next onClick={() => handlePaginationClick(currentPage + 1)} disabled={currentPage === totalPages} />
+                                <Pagination.Last onClick={() => handlePaginationClick(totalPages)} disabled={currentPage === totalPages} />
+                            </Pagination>
+                        )}
                 </div>
                     </Tab>
 
@@ -208,7 +233,25 @@ export default function Category() {
                                     ))}
                                 </tbody>
                             </table>
-                        </div>
+                            </div>
+                            {totalPages > 1 && (
+                            <Pagination className='justify-content-center pagination-outer'>
+                                <Pagination.First onClick={() => handlePaginationClick(1)} disabled={currentPage === 1} />
+                                <Pagination.Prev onClick={() => handlePaginationClick(currentPage - 1)} disabled={currentPage === 1} />
+                                {[...Array(totalPages).keys()].map(page => (
+                                    <Pagination.Item
+                                        key={page + 1}
+                                        className='link-page'
+                                        active={page + 1 === currentPage}
+                                        onClick={() => handlePaginationClick(page + 1)}
+                                    >
+                                        {page + 1}
+                                    </Pagination.Item>
+                                ))}
+                                <Pagination.Next onClick={() => handlePaginationClick(currentPage + 1)} disabled={currentPage === totalPages} />
+                                <Pagination.Last onClick={() => handlePaginationClick(totalPages)} disabled={currentPage === totalPages} />
+                            </Pagination>
+                        )}
                         </div>
                     </Tab>
                 </Tabs>

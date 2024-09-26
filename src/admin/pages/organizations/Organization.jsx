@@ -26,7 +26,7 @@ export default function Organization() {
 
     useEffect(() => {
         getOrganizations();
-    }, [searchTerm,]);
+    }, [searchTerm,currentPage]);
 
     async function getOrganizations() {
         let url = `/api/organizations?page=${currentPage}`; // Include currentPage in the URL

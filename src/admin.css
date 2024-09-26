@@ -55,7 +55,7 @@ button.MenuOpen {
 .profile-btns .default-btn.cancel-btn { background-color: #fff; color: #000; margin-left: 8px; }
 .profile-btns .default-btn.cancel-btn:hover{ background-color: var(--theme-color); color: #fff; }
 .employee-content .profile-form { margin-top: 57px; }
-.profile-form .form-control, .profile-form .form-select { min-height: 46px; padding: 0 15px;}
+.profile-form .form-control, .profile-form .form-select { min-height: 46px; padding: 0 15px; text-transform: capitalize;}
 .skills-outer .select__control { min-height: 50px; border-color: #dee2e6; border-radius: 6px;}
 .skills-outer .select__control .select__multi-value { background-color: var(--theme-color); padding: 3px; position: relative; min-width: 43px;}
 .skills-outer .select__control .select__multi-value .select__multi-value__label { color: #fff; font-size: 12px;}

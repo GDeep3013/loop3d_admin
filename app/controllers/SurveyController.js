@@ -100,7 +100,6 @@ exports.createSurvey = async (req, res) => {
                 loop_lead: user._id,
                 organization: manager?.organization,
                 competencies: surveyData.competencies || [],
-                total_invites: 2
             });
 
             const savedSurvey = await survey.save();
@@ -118,11 +117,7 @@ exports.createSurvey = async (req, res) => {
                 email,
                 url
             });
-            await sendEmail('sendSumaryReport', {
-                name,
-                email,
-                summary_url
-            });
+          
 
             savedSurveys.push(savedSurvey);
         }
@@ -1213,6 +1208,26 @@ const saveOrUpdateSurveyReport=async (surveyId, responseData,type) =>{
           {response_Data:responseData},
             options // Options
         );
+        if (updatedReport) {
+            await Survey.updateOne(
+                { _id: surveyId },           
+                {$set: { report_gen_date: Date.now() }}
+            );
+            const survey = await Survey.findById(surveyId)
+            .populate('loop_lead', 'first_name last_name email') // Populate loop_lead_id with name and email fields
+            .populate('manager', 'first_name last_name email') // Populate mgr_id with name and email fields
+            .populate('organization', 'name') // Populate organization_id with name
+            .populate('competencies', '_id');
+            let summary_url = `${process.env.ADMIN_PANEL}/survey-summary?survey_id=` + survey?._id
+            let name = survey?.loop_lead?.first_name
+            let email = survey?.loop_lead?.email
+
+            await sendEmail('sendSumaryReport', {
+                name,
+                email,
+                summary_url
+            });
+        }
 
         return updatedReport;
     } catch (error) {
