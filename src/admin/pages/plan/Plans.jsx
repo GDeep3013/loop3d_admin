@@ -38,8 +38,7 @@ const Plans = () => {
 
     useEffect(() => {
         if (reGenerate) {
-
-            GernatePlans()
+            GeneratePlans()
         }
     }, [reGenerate])
     //Get get goal for the select listing
@@ -60,10 +59,10 @@ const Plans = () => {
     }
 
     // gernate plans for the smart goals
-    const GernatePlans = async () => {
+    const GeneratePlans = async () => {
         setLoading(true)
         try {
-            const response = await fetch('/api/plans/gerante-plans', {
+            const response = await fetch('/api/plans/generate-plans', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -132,7 +131,7 @@ const Plans = () => {
             <div className="content-outer">
                 <Container>
                     <Row>
-                        <Col xs={12} md={6}><GoalCreator prompt={prompt} setPrompt={setPrompt} handleSubmit={GernatePlans} selectedOption={selectedOption} setSelectedOption={setSelectedOption} categories={categories} /></Col>
+                        <Col xs={12} md={6}><GoalCreator prompt={prompt} setPrompt={setPrompt} handleSubmit={GeneratePlans} selectedOption={selectedOption} setSelectedOption={setSelectedOption} categories={categories} /></Col>
                         <Col xs={12} md={6}><SuggestedGoal chatResponse={chatResponse} loading={loading} regenerateResponse={setReGenerate} setReGenerate={setReGenerate} AddNewGoal={AddNewGoal} setChatResponse={setChatResponse} /></Col>
                     </Row>
                     <Row>

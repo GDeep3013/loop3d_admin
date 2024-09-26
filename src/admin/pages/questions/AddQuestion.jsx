@@ -51,7 +51,7 @@ export default function AddQuestion({ id, savedData }) {
         }
 
         if (!data.questionType) {
-            validationErrors.questionType = 'Question type is required';
+            validationErrors.questionType = 'Answer type is required';
         }
 
         if (data.questionType === 'Radio') {

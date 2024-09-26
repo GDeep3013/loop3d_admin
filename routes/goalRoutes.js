@@ -7,7 +7,7 @@ router.post('/create', GoalController.createGoals);
 
 router.get('/get-goal/:survey_id', GoalController.getAllGoals);
 
-router.post('/gerante-plans', GoalController.gernatePlans)
+router.post('/generate-plans', GoalController.generatePlans)
 
 router.post('/save-plans', GoalController.savePlans)
 

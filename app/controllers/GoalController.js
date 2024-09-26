@@ -58,7 +58,7 @@ exports.createGoals = async (req, res) => {
         }
     };
 
-exports.gernatePlans = async (req, res) => {
+exports.generatePlans = async (req, res) => {
     try {
         const { prompt=null,
             option=null,

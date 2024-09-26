@@ -31,7 +31,7 @@ export default function AddCategory() {
       errors.category_name = 'Competency name is required';
     }
     if (!formData.competency_type.trim()) {
-      errors.competency_type = 'competency_type name is required';
+      errors.competency_type = 'Competency type is required';
     }
     return errors;
   };
