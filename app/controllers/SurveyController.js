@@ -193,10 +193,15 @@ exports.createSurveyParticipants = async (req, res) => {
             const savedParticipant = await newParticipant.save();
 
             if (savedParticipant) {
-                await Survey.updateOne(
-                    { _id: survey_id },                // Find the survey by ID
-                    { $inc: { total_invites: 1 } }      // Increment the total_invites by 1
-                );
+                const survey1 = await Survey.findById(survey_id);
+                if (survey1) {
+                    // Ensure total_invites is a number
+                    if (survey1.total_invites === null || typeof survey1.total_invites !== 'number') {
+                        survey1.total_invites = 0;
+                    }
+                    survey1.total_invites += 1;
+                    await survey1.save();
+                }
             }
             const survey = await Survey.findById(survey_id)
                 .populate('manager', 'first_name last_name email')
@@ -380,7 +385,7 @@ exports.getSurveyById = async (req, res) => {
         if (survey_id) query._id = survey_id;
 
         // Step 1: Find the survey(s) by the provided ID(s) and populate related fields
-        const surveys = await Survey.find(query)
+        const surveys = await Survey.find(query).sort({ createdAt: -1 })
             .populate('loop_lead', 'first_name last_name email') // Populate loop_lead_id with name and email fields
             .populate('manager', 'first_name last_name email') // Populate mgr_id with name and email fields
             .populate('organization', 'name') // Populate organization_id with name
@@ -489,7 +494,7 @@ exports.getSurveyParticipantsById = async (req, res) => {
 
         // Fetch surveys based on the constructed query
         if (surveyQuery && Object.keys(surveyQuery).length > 0) {
-            let surveys = await Survey.find(surveyQuery)
+            let surveys = await Survey.find(surveyQuery).sort({ createdAt: -1 })
                 .populate('loop_lead', 'first_name last_name email')
                 .populate('manager', 'first_name last_name email')
                 .exec();
@@ -508,7 +513,7 @@ exports.getSurveyParticipantsById = async (req, res) => {
             if (survey_id) participantQuery.survey_id = survey_id;
             if (participant_id) participantQuery._id = participant_id;
 
-            let participants = await SurveyParticipant.find(participantQuery)
+            let participants = await SurveyParticipant.find(participantQuery).sort({ createdAt: -1 })
                 .populate({
                     path: 'survey_id',
                     select: 'name survey_status total_invites',
@@ -540,12 +545,34 @@ exports.getSurveyParticipantsById = async (req, res) => {
 
 exports.deleteParticipant = async (req, res) => {
     try {
-        const Participant = await SurveyParticipant.findByIdAndDelete(req.params.id);
-        if (!Participant) {
+        // Find the participant by ID first
+        const participant = await SurveyParticipant.findById(req.params.id);
+
+        if (!participant) {
             return res.status(404).json({
                 error: "Survey Participant not found"
             });
         }
+
+        // Retrieve the survey ID from the participant
+        const survey_id = participant.survey_id; // Assuming the participant has a reference to the survey
+
+        // Decrement the total_invites count in the survey
+        const survey = await Survey.findById(survey_id);
+        if (survey) {
+            // Ensure total_invites is a number and not null
+            if (survey.total_invites === null || typeof survey.total_invites !== 'number') {
+                survey.total_invites = 0;
+            }
+
+            // Decrement total_invites, but ensure it doesn't go below 0
+            survey.total_invites = Math.max(0, survey.total_invites - 1);
+            await survey.save();
+        }
+
+        // Delete the participant
+        await SurveyParticipant.findByIdAndDelete(req.params.id);
+
         res.status(200).json({
             message: "Survey Participant deleted successfully"
         });
@@ -554,7 +581,7 @@ exports.deleteParticipant = async (req, res) => {
             error: error.message
         });
     }
-}
+};
 
 const processParticipantAnswers = (participant, answers, participantType, assignCompetencies, competencies, questions, report) => {
     if (answers) {

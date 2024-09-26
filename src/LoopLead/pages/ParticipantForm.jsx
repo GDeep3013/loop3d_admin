@@ -72,7 +72,6 @@ export default function ParticipantForm({ survey_id }) {
                 });
 
                 if (response.ok) {
-                    alert('Participants submitted successfully')
                   
                     window.location.reload()
                     // handle success, e.g., redirect to another page or show a success message
@@ -159,7 +158,6 @@ export default function ParticipantForm({ survey_id }) {
                                 <option value="">Select</option>
                                 <option value="Direct Report">Direct Report</option>
                                 <option value="Teammate">Teammate</option>
-                                <option value="Supervisor">Supervisor</option>
                                 <option value="Other">Other</option>
                             </select>
                             {errors[index]?.p_type && <p className="text-danger">{errors[index].p_type}</p>}

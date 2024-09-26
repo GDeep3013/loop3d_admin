@@ -24,7 +24,7 @@ const SurveySchema = new mongoose.Schema({
     },
     total_invites: {
         type: Number,
-        default: null
+        default: 0
     },
     survey_status: {
         type: String,
