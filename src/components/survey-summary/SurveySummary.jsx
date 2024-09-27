@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from "react";
-import { Container, Dropdown, Row, Col } from 'react-bootstrap';
+import React, { useState,useRef, useEffect } from "react";
+import { Container, Dropdown, Row, Col, Button } from 'react-bootstrap';
 import { formatDateGB } from '../../utils/dateUtils'
 import ChartBar from "./ChartBar"
 import CompetencyBar from "./CompetencyBar"
 import { useParams, useNavigate } from "react-router-dom";
 import AuthLayout from "../../layout/Auth";
-
-
+import Loading from "../Loading";
+import html2pdf from 'html2pdf.js';
 const SurveySummary = () => {
     const { id } = useParams();
 
@@ -19,7 +19,7 @@ const SurveySummary = () => {
     const [competencyReport, setCompetencyReport] = useState();
     const [summaryArray, setSummaryArray] = useState([]);
     const [samrtGoals, setSamrtGoals] = useState();
-
+    const reportRef = useRef(null);
 
     const removeSpacesFromKeys = (obj) => {
         if (Array.isArray(obj)) {
@@ -43,21 +43,16 @@ const SurveySummary = () => {
             if (response.ok) {
                 const data = await response.json();
                 setSurvey(data?.data?.[0]);
-                setLoader(false)
             } else {
                 console.error('Failed to fetch survey');
-                setLoader(false)
-
             }
         } catch (error) {
             console.error('Error fetching survey:', error);
-            setLoader(false)
 
         }
     };
     const getTotalParticipantsInvited = async (survey_id) => {
         try {
-            setLoader(true);
 
             const url = `/api/surveys/participants/invited/${survey_id}`;
             const response = await fetch(url, {
@@ -75,11 +70,10 @@ const SurveySummary = () => {
             console.error('Error fetching survey:', error);
         }
     }
-    const generateSurveyReport = async (survey_id) => {
+    const generateSurveyReport = async (survey_id, action) => {
         try {
-            setLoader(true);
 
-            const url = `/api/surveys/generate-report/${survey_id}`;
+            const url = `/api/surveys/generate-report/${survey_id}?action=${action}`;
             const response = await fetch(url, {
                 headers: { 'x-api-key': import.meta.env.VITE_X_API_KEY }
             });
@@ -94,11 +88,12 @@ const SurveySummary = () => {
             }
         } catch (error) {
             console.error('Error fetching survey:', error);
+        } finally {
+            setLoader(false);
         }
     };
     const generateCompetencyAverageReport = async (survey_id) => {
         try {
-            setLoader(true);
 
             const url = `/api/surveys/generate-competency-average/${survey_id}`;
             const response = await fetch(url, {
@@ -113,7 +108,7 @@ const SurveySummary = () => {
         } catch (error) {
             console.error('Error fetching survey:', error);
         } finally {
-            setLoader(false);
+            // setLoader(false);
         }
     };
 
@@ -154,8 +149,8 @@ const SurveySummary = () => {
         if (id) {
             getTotalParticipantsInvited(id);
             getSurvey(id)
-            generateSurveyReport(id)
             generateCompetencyAverageReport(id)
+            generateSurveyReport(id,"Generate")
         }
     }, [id]);
 
@@ -189,15 +184,39 @@ const SurveySummary = () => {
         // 
     };
 
+    const ReGenerateReport = () => {
+        setLoader(true)
+        generateSurveyReport(id,"ReGenerate")
+
+    }
+   
+
+    const generatePdf = () => {
+        const element = reportRef.current; // Reference to the component you want to convert to PDF
+        const options = {
+            margin:       1,
+            filename:     'survey_report.pdf',
+            image:        { type: 'jpeg', quality: 0.98 },
+            html2canvas:  { scale: 2 }, // Use a higher scale for better quality
+            jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+        };
+    
+        // Generate PDF
+        html2pdf()
+            .from(element)
+            .set(options)
+            .save();
+    };
     // console.log('summaryArray', summaryArray)
     const totalInvited = Participants.reduce((acc, Participant) => acc + (totals[Participant] || 0), 0);
     const totalCompleted = Participants.reduce((acc, Participant) => acc + (completedResponses[Participant] || 0), 0);
     return (
         <AuthLayout title={"Survey Summary"}>
-            <div className="survey-inner">
-                {!loader && <Container>
+            <div className="survey-inner relative">
+                {!loader?<Container>
                     {/* <CompetencyBar data={reportData} /> */}
-                    <div className="survey-container">
+                        <Button className="survey-inner-btn absolute" onClick={()=>{ReGenerateReport()}}>Re-Generate</Button>
+                    <div className="survey-container" ref={reportRef}>
                         <h2 className="font-frank text-center mb-4">
                             LOOP3D 360 Report
                         </h2>
@@ -366,8 +385,10 @@ const SurveySummary = () => {
                                             </div>
                                         </div>}
                         </div>
+
                     </div>
-                </Container>}
+                        <Button className="generate-btn" onClick={() => generatePdf()}>Download as PDF</Button>
+                </Container>:<div style={{textAlign: "center", marginTop: "15%"}}><Loading/></div>}
             </div>
         </AuthLayout>
     );

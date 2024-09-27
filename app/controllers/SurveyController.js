@@ -492,6 +492,17 @@ exports.getSurveyParticipantsById = async (req, res) => {
             ];
         }
 
+        if (participant_id && survey_id) {
+            surveyQuery._id = survey_id;
+            surveyQuery.$or = [{
+                    loop_lead: participant_id
+                },
+                {
+                    manager: participant_id
+                }
+            ];
+        }
+
         // Fetch surveys based on the constructed query
         if (surveyQuery && Object.keys(surveyQuery).length > 0) {
             let surveys = await Survey.find(surveyQuery).sort({ createdAt: -1 })
@@ -512,6 +523,10 @@ exports.getSurveyParticipantsById = async (req, res) => {
         if (survey_id || participant_id) {
             if (survey_id) participantQuery.survey_id = survey_id;
             if (participant_id) participantQuery._id = participant_id;
+            if (survey_id && participant_id) {
+                participantQuery.survey_id = survey_id;
+                participantQuery._id = participant_id;
+            }
 
             let participants = await SurveyParticipant.find(participantQuery).sort({ createdAt: -1 })
                 .populate({
@@ -766,7 +781,7 @@ exports.generateSurveyReport = async (req, res) => {
         }
         const survey_report = await SurveyReport.findOne({ survey_id: survey_id })
         let summary=[]
-        if (!survey_report?.response_Data) {
+        if (!survey_report?.response_Data || req?.query?.action == "ReGenerate") {
              summary = await generateSummary(survey_id,report);     
         } else {
             summary = survey_report?.response_Data

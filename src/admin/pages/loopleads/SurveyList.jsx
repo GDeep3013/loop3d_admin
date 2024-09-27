@@ -94,7 +94,10 @@ export default function SurveyList({ loop_lead_id, org_id }) {
                     : 'Never'}
                 </td>
                 <td>
-                <button className='action-btn' onClick={() => navigate(`/view-survey-participant/${survey._id}`)}><View /></button>
+                  <button className='action-btn' onClick={() => navigate(`/view-survey-participant/${survey._id}`)}><View /></button>
+                  <button className='action-btn' onClick={() => navigate(`/survey-summary/${survey._id}`)} disabled={survey?.survey_status != "completed" ? true : false}>
+                                             View Report
+                                        </button>
 
                   {/* <Dropdown className='custom-dropdown'>
                     <Dropdown.Toggle variant="success" id="dropdown-basic">

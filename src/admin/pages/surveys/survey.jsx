@@ -6,7 +6,7 @@ import { getSurveys } from '../../../apis/SurveyApi';
 import AuthLayout from '../../../layout/Auth';
 import { formatDateGB, formatDateUS } from '../../../utils/dateUtils';
 import Loading from '../../../components/Loading';
-
+import { Link } from "react-router-dom";
 export default function Survey() {
     const navigate = useNavigate();
 
@@ -114,7 +114,12 @@ export default function Survey() {
                                             : 'Never'}
                                     </td>
                                     <td>
-                                    <button className='action-btn' onClick={() => navigate(`/view-survey-participant/${survey._id}`)}><View /></button>
+                                        <button className='action-btn' onClick={() => navigate(`/view-survey-participant/${survey._id}`)}><View /></button>
+                                        <button className='action-btn' onClick={() => navigate(`/survey-summary/${survey._id}`)} disabled={survey?.survey_status != "completed" ? true : false}>
+                                             View Report
+                                        </button>
+
+                                    {/* {survey?.survey_status == "completed" && <Link to={`/survey-summary/${survey._id}`} className='default-btn' >View Summary</Link>} */}
 
                                         {/* <Dropdown className='custom-dropdown'>
                                             <Dropdown.Toggle variant="success" id="dropdown-basic">
