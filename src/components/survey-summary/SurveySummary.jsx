@@ -194,17 +194,28 @@ const SurveySummary = () => {
     const generatePdf = () => {
         const element = reportRef.current; // Reference to the component you want to convert to PDF
         const options = {
-            margin:       1,
+            margin:       15,  // General margin for the document
             filename:     'survey_report.pdf',
             image:        { type: 'jpeg', quality: 0.98 },
-            html2canvas:  { scale: 2 }, // Use a higher scale for better quality
-            jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+            html2canvas:  { scale: 1, useCORS: true }, // High scale for better quality
+            jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' },
+            pagebreak:    { mode: ['avoid-all', 'css', 'legacy'] }, // Options for page breaks
         };
     
         // Generate PDF
         html2pdf()
             .from(element)
             .set(options)
+            .toPdf()
+            .get('pdf')
+            .then((pdf) => {
+                // Handle cases where content overflows and needs pagination
+                const totalPages = pdf.internal.getNumberOfPages();
+                for (let i = 1; i <= totalPages; i++) {
+                    pdf.setPage(i);
+                    pdf.setFontSize(10);
+                }
+            })
             .save();
     };
     // console.log('summaryArray', summaryArray)
@@ -216,7 +227,7 @@ const SurveySummary = () => {
                 {!loader?<Container>
                     {/* <CompetencyBar data={reportData} /> */}
                         <Button className="survey-inner-btn absolute" onClick={()=>{ReGenerateReport()}}>Re-Generate</Button>
-                    <div className="survey-container" ref={reportRef}>
+                    <div className="survey-container" ref={reportRef}  style={{ padding:'50px' }}>
                         <h2 className="font-frank text-center mb-4">
                             LOOP3D 360 Report
                         </h2>
@@ -309,10 +320,9 @@ const SurveySummary = () => {
 
 
                             {/* graph box */}
-                            <div className="graph-box mt-5 mb-5">{renderCharts()}
+                            <div className="graph-box mb-5">{renderCharts()}
                             </div>
-                            {/* graph box */}
-                            <div className="graph-box mt-5 mb-5"></div>
+                        
                             <h3 className="text-custom-color fw-semibold uppercase">
                                 Summary
                             </h3>
@@ -354,9 +364,10 @@ const SurveySummary = () => {
                                 )}
                             </div>
                             {summaryArray &&  <div className="summary-item chat-smart-goal">
-                                            <h2>LOOP3D SMART PLAN</h2>
 
-                                            <div className="summary-section">
+                                            <div className="summary-section summary-inner-text">
+                                                 <h3>LOOP3D SMART PLAN</h3>
+                                    
                                                 <h3>STRENGTHS</h3>
                                                 <p><strong>Summary:</strong> Based on your results, your coworkers particularly appreciate the following strengths in you and the value it adds to the workplace.</p>
 

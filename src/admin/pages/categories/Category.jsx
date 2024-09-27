@@ -114,7 +114,7 @@ export default function Category() {
                                     <Col md={6}>
                                     </Col>
                                     <Col md={6} className='text-end p-0'>
-                                        <form className='d-flex justify-content-end'>
+                                        <form className='d-flex justify-content-end mb-4'>
                                             <input type='search' placeholder='Search...' value={searchTerm} onChange={handleSearch} className='form-control' />
                                             <Link to="create" className='default-btn' >Add Competency <PLusIcon /> </Link>
                                         </form>

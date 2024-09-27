@@ -232,7 +232,7 @@ table.table th:last-child, table.table td:last-child { text-align: right; }
 .bg-custom-color2{ background-color: var(--theme-color); }
 button.submit_btn:hover{ background-color: var(--secondary-color); }
 .lunchpad  ul li { list-style: disc; }
-.survey-inner .survey-container { padding: 50px; background-color: #f5f5f5; border-radius: 30px; margin: 90px 0 40px 0; }
+.survey-inner .survey-container { background-color: #f5f5f5; border-radius: 30px; margin: 90px 0 40px 0; }
 .survey-inner .survey-container h3 { font-size: 20px; }
 .survey-inner .survey-container ul { padding-left: 18px; }
 .survey-inner .survey-container ul li.list-disc { list-style: disc; color: #4b5563; margin: 6px 0 0 0; }
@@ -280,8 +280,9 @@ select.form-control:focus{ outline: none; box-shadow: none; }
 .custom_tab_content h3 { font-size: 21px; font-weight: 600; padding: 9px 0 5px 0; }
 .custom_tab_content ul.custom-tabs li{ padding-left: 0; }
 .custom_tab_content ul.custom-tabs label{ cursor: pointer; }
-.survey-inner button.survey-inner-btn { top: -60px; right: 22px; background-color: var(--theme-color); border: none; min-width: 148px; min-height: 45px; }
-.generate-btn button.btn.btn-primary { display: table; margin: 0 auto; background-color: var(--theme-color); border: none; min-height: 45px; }
+.survey-inner { position: relative; }
+.survey-inner button.survey-inner-btn { position: absolute; top: -60px; right: 22px; background-color: var(--theme-color); border: none; min-width: 148px; min-height: 45px; }
+button.generate-btn { display: table; margin: 0 auto; background-color: var(--theme-color); border: none; min-height: 45px; }
  /* start responsive css */
 @media screen and (min-width: 1280px) and (max-width: 1440px) {
     .wrapper-outer .main-content{ padding: 40px 29px; }

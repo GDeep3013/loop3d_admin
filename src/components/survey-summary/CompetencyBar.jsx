@@ -32,7 +32,7 @@ const CompetencyBar = ({ data }) => {
             {
                 label: 'Self',
                 data: labels.map((competency) => data[competency]?.Self?.averageWeightage || 0),
-                backgroundColor: 'rgb(23,74,109)', 
+                backgroundColor: 'rgb(23,74,109)',
             },
             {
                 label: 'Direct Report',
@@ -61,6 +61,7 @@ const CompetencyBar = ({ data }) => {
     const options = {
         indexAxis: 'y', // Horizontal bars
         responsive: true,
+        maintainAspectRatio: false, // Disable aspect ratio to manage height manually
         scales: {
             x: {
                 beginAtZero: true, // Ensure the chart starts at 0
@@ -84,7 +85,7 @@ const CompetencyBar = ({ data }) => {
     };
 
     return (
-        <div>
+        <div style={{ height: '500px', width: '40%' }}>
             <Bar data={chartData} options={options} />
         </div>
     );

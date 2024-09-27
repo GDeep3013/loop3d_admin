@@ -65,7 +65,9 @@ const ChartBar = ({ competency, data }) => {
             <p className="text-sm sm:text-base leading-relaxed text-gray-600 font-poppins mt-4 mb-4">
             The {competency} competency is the proactive and empathetic approach leaders take to understand...
         </p>
+        <div style={{ width: '40%', }}>
             <Bar data={chartData} options={options} />
+            </div>
         </div>
     );
 };
