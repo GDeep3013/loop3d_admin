@@ -1,0 +1,98 @@
+/* start responsive css */
+@media screen and (min-width: 1280px) and (max-width: 1440px) {
+    .wrapper-outer .main-content{ padding: 40px 29px; }
+    .headerSearch .dropdown{ margin-left: 0; }
+    .project___info .project_fullInfo { max-width: 84%; }
+    .sideNavLogo img { max-width: 173px; }
+    .mainContet-outer .project___info p{ font-size: 13px; }
+}
+/* @media screen and (min-width:1025px) and (max-width:1280px) {
+    .graph-box .graph_inner { width: 100% !important; }
+    .graph-box .graph_inner.bottom_graph canvas{ width: 100% !important; height: 332px !important;}
+    
+} */
+@media screen and (min-width:768px) and (max-width:1024px) {
+    .survey_box{ padding: 20px; }
+    .survey_box h1 { font-size: 35px; line-height: 45px; }
+    .survey_box .form-control { line-height: 47px; }
+    .loginForm .verticalCenter { max-width: 90%; }
+    .loginContent .verticalCenter h2 { font-size: 24px; }
+    .survey-tabs button { min-width: 185px; min-height: 47px; line-height: 47px; padding: 0 20px; font-size: 14px; }
+    .table-scroll { overflow: hidden; overflow-x: auto; }
+    .table-scroll table.table { min-width: max-content; }
+    .graph_inner { width: 100% !important; }
+    .graph_inner canvas{ width: 100% !important; }
+    .graph-box .graph_inner.bottom_graph canvas{ height: 262px !important; }
+    .survey-inner .survey-container{ padding: 23px !important; }
+    .survey-inner .survey-container th { font-size: 13px; font-weight: 600; }
+    .chat-gpt-summary h2 { font-size: 20px; line-height: 29px; }
+    .chat-smart-goal p{ font-size: 16px; }
+    .survey-inner .survey-container h3 { font-size: 19px; margin-top: 25px; }
+}
+@media screen and (max-width:767px) {
+    nav.sideNavOuter.open .sideNavLogo img { display: block; } 
+    nav.sideNavOuter.open { width: 273px; }
+    nav.sideNavOuter.open ul.sideNavList { width: auto; min-height: calc(100vh - 106px); }
+    nav.sideNavOuter.open ul.sideNavList li.sideNavItem a { display: flex; font-size: 14px; line-height: 22px; max-width: 100%; padding: 13px 10px; }
+    nav.sideNavOuter.open .sideNavList li.sideNavItem svg { margin: 0 16px 0 0; }
+    nav.sideNavOuter.open .sideNavList li.LogoutMenu { width: 100%; left: 16px; } 
+    nav.sideNavOuter.open .sideNavList li.sideNavItem a.active::after{ background-color: var(--theme-color)!important; }
+    .side-nav.sidenavMobile { margin-left: -273px; } 
+    .wrapper-outer .side-nav { transition: all ease-in-out 0.5s; position: absolute; z-index: 9; }
+    button.MenuOpen { right: -27px; top: 0px; border-radius: 0px; } 
+    table.table { white-space: nowrap; } 
+    .tabe-outer .table-heading { padding: 9px 0px; }
+    table-scroll { overflow: scroll; }
+    .survey_box { padding: 20px; }
+    .survey_box h1 { font-size: 31px; line-height: 60px; }
+    .survey_box .form-control { line-height: 44px; padding: 0 9px; }
+    .survey-tabs button { min-width: 145px; min-height: 43px; line-height: 43px; padding: 0 10px; font-size: 12px; }
+    .survey-tabs .gap-3 { gap: 6px !important; }
+    .default-btn { min-width: 153px; font-size: 13px; min-height: 46px; line-height: 46px; padding: 0 10px; }
+    .survey-tabs ul.survey-listings label{ font-size: 14px; }
+    .survey-inner .survey-container{ padding: 20px !important; }
+    .login-hide-mobile{display: none;}
+    .loginOuter .loginForm {background: #7abcdb;}
+    .loginOuter .loginForm .default-btn { background: #fff; color: var(--theme-color); }
+    .loginForm .verticalCenter { max-width: 90%;}
+    .loginOuter .loginForm .h2-style, .loginOuter .loginForm .p-style { color: #fff; text-align: center;}
+    .mobile-logo-login {text-align: center;}
+    .loginForm .verticalCenter a.fw-bold, .formOuter label.checkbox {color: #fff !important;}
+    .loginForm .verticalCenter .checkbox input.form-check-input{width: 20px;height: 20px;}
+    .formOuter label.checkbox{padding-left: 27px;}
+    .formOuter label.checkbox {padding-left: 27px;line-height: 14px;}
+    .mobile-logo-login {display: block;}
+    .wrapper-outer .side-nav{ margin-left: -273px; }
+    .wrapper-outer .side-nav.sidenavMobile{ margin-left: 0; }
+    .table-heading form input[type="search"] { background-size: 16px; padding-left: 40px; font-size: 15px; }
+    .list-scroll .custom-tabs li{ font-size: 14px; }
+    .dashboard-header{ flex-direction: row; }
+    .top-header { padding: 23px 0 0 0; }
+    form.organization-form { margin-top: 1rem !important; }
+    .custom_tab_content h3{ font-size: 19px; }
+    .swal2-title{ font-size: 1.5em; }
+    .custom-tabs .nav-item .nav-link { font-size: 16px; padding: 0 10px; min-width: 96px; height: auto; min-height: 43px; }
+    table.table { white-space: nowrap; }
+    .tabe-outer .table-heading { padding: 9px 0px; }
+    .dashboard-header h1 { font-size: 16px; }
+    .dashboard-header p { margin-bottom: 15px; }
+    .table-scroll { overflow: auto; }
+    .headerSearch.text-end { text-align: center !important; }
+    .wrapper-outer .main-content { padding: 15px 10px; }
+    .participant-name-looped-360 table th { font-size: 13px; font-weight: 600; }
+    .participant-name-looped-360 table  td { font-size: 14px; }
+    .participant-name-looped-360 .graph-box .graph_inner { width: 100% !important; }
+    .chat-smart-goal p{ font-size: 14px; line-height: 24px; }
+    .chat-gpt-summary h2 { font-size: 19px; line-height: 25px; }
+    .survey-inner .survey-container h3{ font-size: 17px; }
+    ul.custom-tabs.nav.nav-tabs{ margin-bottom: 0 !important; }
+    .custom-tabs .nav-item .nav-link.active{ font-size: 14px; }
+    .chat-gpt-summary .summary-item p{ font-size: 14px; }
+    .survey-container h2 { font-size: 20px; margin-bottom: 10px; }
+    .survey-container .graph-box p { margin-top: 5px !important; font-size: 15px; }
+}
+
+@media screen and (max-width:480px) {
+    .default-btn{ padding: 0 5px; font-size: 11px; }
+    .custom-tabs .nav-item .nav-link { font-size: 14px; min-width: 69px; padding: 0 5px; height: auto; min-height: 36px; }
+}

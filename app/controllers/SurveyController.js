@@ -270,7 +270,9 @@ exports.getAllSurvey = async (req, res) => {
         let {
             searchTerm,
             page = 1,
-            limit = 10
+            limit = 10,
+            sortField,
+            sortOrder
         } = req.query;
         const query = {};
 
@@ -302,13 +304,17 @@ exports.getAllSurvey = async (req, res) => {
 
         // Calculate the number of documents to skip
         const skip = (page - 1) * limit;
-
+        let sortBy= { createdAt: -1 }
+         if (sortField && sortOrder) {
+             const order = sortOrder === 'asc' ? 1 : -1;
+            sortBy = { [sortField]: order }
+        }
         // Find the surveys with pagination and populate related fields
         const surveys = await Survey.find(query)
             .populate('manager', 'first_name last_name email')
             .populate('loop_lead', 'first_name last_name email')
             .populate('organization', 'name')
-            .sort({ createdAt: -1 })
+            .sort(sortBy)
             .skip(skip)
             .limit(limit);
 

@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Col, Container, Row, Dropdown,Pagination } from 'react-bootstrap'
 import { Link } from "react-router-dom";
 import Swal from 'sweetalert2';
-import { View, Edit, Remove } from '../../../components/svg-icons/icons';
+import { View, Edit, Remove, SortAscIcon, SortDescIcon } from '../../../components/svg-icons/icons';
 
 
 import AuthLayout from '../../../layout/Auth'
@@ -24,12 +24,14 @@ export default function Organization() {
     const [Organizations, setOrganizations] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
 
+    const [sortField, setSortField] = useState('');
+    const [sortOrder, setSortOrder] = useState('');
     useEffect(() => {
         getOrganizations();
-    }, [searchTerm,currentPage]);
+    }, [searchTerm,currentPage,sortField, sortOrder]);
 
     async function getOrganizations() {
-        let url = `/api/organizations?page=${currentPage}`; // Include currentPage in the URL
+        let url = `/api/organizations?page=${currentPage}&sortField=${sortField}&sortOrder=${sortOrder}`; // Include currentPage in the URL
         if (searchTerm) {
             url += `&searchTerm=${encodeURIComponent(searchTerm)}`;
         }
@@ -50,6 +52,19 @@ export default function Organization() {
     };
     const handleSearch = (e) => {
         setSearchTerm(e.target.value);
+    };
+
+    const handleSort = (field) => {
+        const newSortOrder = sortField === field && sortOrder === 'asc' ? 'desc' : 'asc';
+        setSortField(field);
+        setSortOrder(newSortOrder);
+    };
+
+    const renderSortIcon = (field) => {
+        if (sortField === field) {
+            return sortOrder === 'asc' ? <SortAscIcon /> : <SortDescIcon />;
+        }
+        return null;
     };
 
     /**
@@ -125,8 +140,8 @@ export default function Organization() {
                         <thead>
                             <tr>
                                 <th>Serial No.</th>
-                                <th>Organizations Name</th>
-                                <th>CreatedAt </th>
+                                <th onClick={() => handleSort('name')} >Organizations Name {renderSortIcon('name')}</th>
+                                <th onClick={() => handleSort('createdAt')} >CreatedAt {renderSortIcon('createdAt')}</th>
                                 <th>Status <StatusIcon /> </th>
                                 <th>Action</th>
                             </tr>

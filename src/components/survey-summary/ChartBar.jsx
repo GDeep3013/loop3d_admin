@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Bar } from 'react-chartjs-2';
 import {
     Chart as ChartJS,
@@ -57,6 +57,40 @@ const ChartBar = ({ competency, data }) => {
         },
     };
 
+    const [chartClassName, setChartClassName] = useState(''); 
+    const [chartWidth, setChartWidth] = useState(700); // Initialize chartWidth state
+    const [chartHeight, setChartHeight] = useState(400);
+    useEffect(() => {
+        const handleResize = () => {
+            // Calculate the new chart width based on screen size
+            const windowWidth = window.innerWidth;
+
+            if (windowWidth <= 768) {
+                // Apply mobile styling if screen width is less than or equal to 768 pixels
+                setChartClassName('mobile-chart');
+                setChartWidth(300); // Adjust as needed for mobile
+                setChartHeight(300); // Adjust as needed for mobile
+            } else {
+                // Use default styling for larger screens
+                setChartClassName('');
+                setChartWidth(700);
+                setChartHeight(400);; // Default height for larger screens
+            }
+        };
+
+
+              // Add an event listener to window resize
+              window.addEventListener('resize', handleResize);
+
+              // Call handleResize initially to set the initial dimensions
+              handleResize();
+      
+              // Remove the event listener when the component unmounts
+              return () => {
+                  window.removeEventListener('resize', handleResize);
+              };
+          }, []);
+
     return (
         <div>
             <h3 className="text-custom-color text-lg sm:text-xl font-poppins font-extrabold uppercase">
@@ -65,8 +99,8 @@ const ChartBar = ({ competency, data }) => {
             <p className="text-sm sm:text-base leading-relaxed text-gray-600 font-poppins mt-4 mb-4">
             The {competency} competency is the proactive and empathetic approach leaders take to understand...
         </p>
-        <div style={{ width: '40%', }}>
-            <Bar data={chartData} options={options} />
+        <div className={`graph_inner bottom_graph ${chartClassName}`} style={{ width: '40%', }}>
+            <Bar data={chartData} options={options}  width={chartWidth} height={chartHeight}/>
             </div>
         </div>
     );

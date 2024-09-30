@@ -2,6 +2,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 import './index.css';
 import './custom.css';
 import './admin.css';
+import './responsive.css';
 import { Provider } from 'react-redux';
 import { store } from '../store/Store';
 

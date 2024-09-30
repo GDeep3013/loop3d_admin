@@ -11,7 +11,8 @@ export default function SurveyList({ loop_lead_id, org_id }) {
 
   const [surveys, setSurveys] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
-
+  const [sortField, setSortField] = useState('');
+  const [sortOrder, setSortOrder] = useState('');
   useEffect(() => {
     if (org_id && loop_lead_id) {
       (async () => {

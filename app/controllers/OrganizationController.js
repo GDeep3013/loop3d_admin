@@ -66,7 +66,14 @@ const OrganizationController = {
                 ];
             }
             // Query the database with pagination
-            const organizations = await Organization.find(query).sort({ _id: -1 }).skip(skip).limit(limit);
+            let organizations = [];
+            if (req.query.sortField && req.query.sortOrder) {
+                
+                const order = req.query.sortOrder === 'asc' ? 1 : -1;
+                organizations = await Organization.find(query).sort({ [req.query.sortField]: order }).skip(skip).limit(limit);  
+            } else {
+                organizations = await Organization.find(query).sort({ _id: -1 }).skip(skip).limit(limit);
+            }
 
             // Get the total count of documents in the collection
             const totalOrganizations = await Organization.countDocuments();

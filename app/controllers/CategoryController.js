@@ -34,7 +34,7 @@ const CategoryController = {
     getCategories: async (req, res) => {
         try {
             // Extract query parameters for pagination
-            let { page = 1, limit =50, getType = null, searchTerm } = req.query;
+            let { page = 1, limit =50, getType = null, searchTerm ,sortField , sortOrder } = req.query;
             const query = {};
             if (searchTerm) {
                 query.$or = [
@@ -53,6 +53,10 @@ const CategoryController = {
             let categories = [];
             if (getType == "AssignCompetency") {
                 categories = await Category.find()
+            } else if (sortField && sortOrder) {
+                const order = sortOrder === 'asc' ? 1 : -1;
+                categories = await Category.find(query).sort({ [sortField]: order }).skip(skip).limit(limit);        
+
             } else {
                categories = await Category.find(query).sort({ _id: -1 }).skip(skip).limit(limit);        
 

@@ -36,13 +36,11 @@ export default function ViewLoopLead({ user_id, org_id }) {
           <div className='looplead-box-outer'>
           <div className='loop-contant'>
               <p><span>Email: <a href='mailto:RJones@y.com'>{leadUser?.email}</a></span></p>
-              <p><span>Phone: </span>{leadUser?.phone}</p>
               <p><span>Title:</span> Brand Manager</p>
           </div>
           <div className='loop-contant'>
               <p><span>Supervisor: </span>{leadUser?.created_by.first_name} {leadUser?.created_by.last_name}</p>
               <p><span>Supervisor Email: </span><a href='mailto:twilks@y.com'>{leadUser?.created_by.email}</a></p>
-              <p><span>Supervisor Phone: </span>{leadUser?.created_by.phone}</p>
           </div>
           </div>
     </div>

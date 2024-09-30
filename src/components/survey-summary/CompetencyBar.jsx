@@ -85,7 +85,7 @@ const CompetencyBar = ({ data }) => {
     };
 
     return (
-        <div style={{ height: '500px', width: '40%' }}>
+        <div className='graph_inner' style={{ height: '500px', width: '40%' }}>
             <Bar data={chartData} options={options} />
         </div>
     );

@@ -7,6 +7,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import AuthLayout from "../../layout/Auth";
 import Loading from "../Loading";
 import html2pdf from 'html2pdf.js';
+import { color } from "chart.js/helpers";
 const SurveySummary = () => {
     const { id } = useParams();
 
@@ -157,11 +158,11 @@ const SurveySummary = () => {
     const Participants = ['Self', 'Direct Report', 'Teammate', 'Supervisor', 'Other'];
 
     const renderTableRows = (data) => {
-        return Participants.map((Participant) => (
-            <tr key={Participant}>
-                <td className="px-3 md:px-5 py-2 font-poppins border border-gray-300">{Participant}</td>
-                <td className="px-3 md:px-5 py-2 font-poppins border border-gray-300">{data?.totals?.[Participant] || 0}</td>
-                <td className="px-3 md:px-5 py-2 font-poppins border border-gray-300">{data?.completedResponses?.[Participant] || 0}</td>
+        return Participants.map((Participant,index) => (
+            <tr key={Participant} style={{ backgroundColor: index % 2 === 0 ? '#F2F8FB' : '#ffffff' }}>
+                <td className="px-3 md:px-5 py-3 font-poppins">{Participant}</td>
+                <td className="px-3 md:px-5 py-3 font-poppins text-center">{data?.totals?.[Participant] || 0}</td>
+                <td className="px-3 md:px-5 py-3 font-poppins text-center">{data?.completedResponses?.[Participant] || 0}</td>
             </tr>
         ));
     };
@@ -228,48 +229,49 @@ const SurveySummary = () => {
                     {/* <CompetencyBar data={reportData} /> */}
                         <Button className="survey-inner-btn absolute" onClick={()=>{ReGenerateReport()}}>Re-Generate</Button>
                     <div className="survey-container" ref={reportRef}  style={{ padding:'50px' }}>
-                        <h2 className="font-frank text-center mb-4">
+                        <h2 className="font-frank mb-4" style={{color:'#174A6D', fontSize:'48px'}}>
                             LOOP3D 360 Report
                         </h2>
                         <div className="participant-name-looped-360 mt-4">
-                            <p className="text-sm md:text-base lg:text-lg mb-4 font-poppins">
-                                <strong className="text-[#333] font-extrabold">Participant Name:</strong> {survey?.loop_lead?.first_name}
+                            <p className="mb-4 font-poppins" style={{ fontSize:'25px', color:'#174A6D' }}>
+                                <strong className="fw-normal font-frank" style={{ color:'#000' }}>Participant Name:</strong> {survey?.loop_lead?.first_name}
                             </p>
-                            <p className="text-sm md:text-base lg:text-lg mb-4 font-poppins">
-                                <strong className="text-[#333] font-extrabold">Report Generation Date:</strong> {formatDateGB(survey?.createdAt)}
+                            <p className="mb-4 font-poppins" style={{ fontSize:'25px', color:'#174A6D' }}>
+                                <strong className="fw-normal font-frank" style={{ color:'#000' }}>Report Generation Date:</strong> {formatDateGB(survey?.createdAt)}
                             </p>
-                            <p className="text-sm md:text-base lg:text-lg leading-relaxed text-gray-600 font-poppins mt-4 mb-4">
+                            <p className="mt-4 mb-4">
                                 Welcome to your personalized 360° feedback report...
                             </p>
-                            <p className="text-sm md:text-base lg:text-lg mb-4 font-poppins">
-                                <strong className="text-[#333] font-extrabold">About Your Report</strong>
+                            <p className="mb-4">
+                                <strong className="fw-normal font-frank" style={{ fontSize:'48px', lineHeight:'50px', color:'#000'  }}>About Your Report</strong>
                             </p>
-                            <h3 className="text-custom-color fw-semibold">
+                            <h3 className="fw-normal font-frank" style={{ fontSize:'35px', lineHeight:'30px', color:'#000'  }}>
                                 Total number of responses:
                             </h3>
                             {loader ? (
                                 <p>Loading...</p>
                             ) : (
-                                <div className="overflow-x-auto mt-3">
+                                <div className="overflow-x-auto mt-4" style={{ boxShadow:'0 0 10px #ddd', borderRadius:'0 0 10px 10px' }}>
                                     <table className="w-100">
                                         <thead>
                                             <tr>
-                                                <th className="bg-custom-color px-3 md:px-5 py-2 text-left font-poppins text-white font-normal border border-white">Relationship</th>
-                                                <th className="bg-custom-color px-3 md:px-5 py-2 text-left font-poppins text-white font-normal border border-white">Participants Invited</th>
-                                                <th className="bg-custom-color px-3 md:px-5 py-2 text-left font-poppins text-white font-normal border border-white">Completed Responses</th>
+                                                <th className="bg-custom-color px-3 md:px-5 py-4 text-left font-poppins text-white" style={{ borderRadius:'10px 0 0 0'}}>Relationship</th>
+                                                <th className="bg-custom-color px-3 md:px-5 py-4 text-center font-poppins text-white font-normal border-none">Participants Invited</th>
+                                                <th className="bg-custom-color px-3 md:px-5 py-4 text-center font-poppins text-white font-normal border-none" style={{ borderRadius:'0 10px 0 0'}}>Completed Responses</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             {renderTableRows({ completedResponses, totals })}
                                             <tr>
-                                                <td className="px-3 md:px-5 py-2 font-poppins font-bold border border-gray-300">Total</td>
-                                                <td className="px-3 md:px-5 py-2 font-poppins font-bold border border-gray-300">{totalInvited}</td>
-                                                <td className="px-3 md:px-5 py-2 font-poppins font-bold border border-gray-300">{totalCompleted}</td>
+                                                <td className="px-3 md:px-5 py-4 font-poppins">Total</td>
+                                                <td className="px-3 md:px-5 py-4 font-poppins text-center">{totalInvited}</td>
+                                                <td className="px-3 md:px-5 py-4 font-poppins text-center">{totalCompleted}</td>
                                             </tr>
                                         </tbody>
                                     </table>
                                 </div>
                             )}
+                            <p className="font-poppins text-black" style={{ fontSize:'18px', lineHeight:'30px' }}>*Please note that we need a minimum of two respondents (other than self or manager) to maintain anonymity. If less than 2 is reported in any category, they will be combined with another category. </p>
                             <h3 className="text-custom-color fw-semibold mt-3">
                                 Here are the participants that you invited:
                             </h3>

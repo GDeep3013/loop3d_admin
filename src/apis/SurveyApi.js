@@ -33,12 +33,12 @@ export const getSurveyParticipantsById = async (id, searchTerm) => {
 };
 
 
-export const getSurveys = async (searchTerm,currentPage) => {
+export const getSurveys = async (searchTerm,currentPage,sortField,sortOrder) => {
 
     let url = `/api/surveys/all-survey`;
 
     if (searchTerm ||currentPage) {
-        url += `?page=${currentPage}&searchTerm=${encodeURIComponent(searchTerm)}`;
+        url += `?page=${currentPage}&searchTerm=${encodeURIComponent(searchTerm)}&sortField=${sortField}&sortOrder=${sortOrder}`;
     }
     let result = await fetch(url, {
         headers: { 'x-api-key': import.meta.env.VITE_X_API_KEY }

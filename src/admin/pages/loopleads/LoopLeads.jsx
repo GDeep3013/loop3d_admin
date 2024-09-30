@@ -58,7 +58,6 @@ export default function LoopLeads({ organization }) {
                 <thead>
                     <tr>
                         <th>First Name</th>
-                        <th>Last Name</th>
                         <th>Email address</th>
                         <th>Supervisor</th>
                         <th>Role</th>
@@ -81,11 +80,7 @@ export default function LoopLeads({ organization }) {
                                         <div className='user-name'>{user?.first_name}</div>
                                     </div>
                                 </td>
-                                <td>
-                                    <div className="user-profile d-flex align-items-center">
-                                        <div className='user-name'>{user?.last_name}</div>
-                                    </div>
-                                </td>
+                             
                                     <td>{user.email}</td>
                                     <td>{user.created_by?.first_name} {user.created_by?.last_name}</td>
 

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
-import { MoreIcon,View  } from "../../../components/svg-icons/icons";
+import { MoreIcon,View, SortAscIcon, SortDescIcon  } from "../../../components/svg-icons/icons";
 import { Container, Dropdown, Row, Col, Pagination } from 'react-bootstrap';
 import { getSurveys } from '../../../apis/SurveyApi';
 import AuthLayout from '../../../layout/Auth';
@@ -15,12 +15,13 @@ export default function Survey() {
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const [loading, setLoading] = useState(false);
-
+    const [sortField, setSortField] = useState('');
+    const [sortOrder, setSortOrder] = useState('');
     useEffect(() => {
         const fetchSurveys = async () => {
             setLoading(true);
             try {
-                const data = await getSurveys(searchTerm, currentPage);
+                const data = await getSurveys(searchTerm, currentPage,sortField,sortOrder);
                 setSurveys(data.surveys);
                 setTotalPages(data.meta.totalPages);
                 setLoading(false);
@@ -31,7 +32,7 @@ export default function Survey() {
         };
 
         fetchSurveys();
-    }, [searchTerm, currentPage]);
+    }, [searchTerm, currentPage,sortField, sortOrder]);
 
     const handleSearch = (e) => {
         setSearchTerm(e.target.value);
@@ -42,6 +43,19 @@ export default function Survey() {
         setCurrentPage(pageNumber);
       };
 
+    
+      const handleSort = (field) => {
+        const newSortOrder = sortField === field && sortOrder === 'asc' ? 'desc' : 'asc';
+        setSortField(field);
+        setSortOrder(newSortOrder);
+    };
+
+    const renderSortIcon = (field) => {
+        if (sortField === field) {
+            return sortOrder === 'asc' ? <SortAscIcon /> : <SortDescIcon />;
+        }
+        return null;
+    };
     return (
         <AuthLayout title={"Surveys"}>
             <div className='table-inner main-wrapper '>
@@ -73,14 +87,14 @@ export default function Survey() {
                     <thead>
                         <tr>
                             <th>Survey #</th>
-                            <th>Initiation Date</th>
+                            <th onClick={() => handleSort('createdAt')}>Initiation Date {renderSortIcon('createdAt')}</th>
                             <th>Loop Lead Name</th>
                             <th>Manager Name</th>
                             <th>Total Invitees</th>
                             <th>Completed Surveys</th>
                             <th>Loop Lead Completed Survey?</th>
                             <th>Manager Completed Survey?</th>
-                            <th>Report Generation Date</th>
+                            <th onClick={() => handleSort('report_gen_date')} >Report Generation Date {renderSortIcon('report_gen_date')}</th>
                             <th>Action</th>
                         </tr>
                     </thead>

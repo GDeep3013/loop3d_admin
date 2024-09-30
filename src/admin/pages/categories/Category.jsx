@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import AuthLayout from '../../../layout/Auth'
 import { useNavigate } from "react-router-dom";
-import { StatusIcon, PLusIcon } from "../../../components/svg-icons/icons";
+import { StatusIcon, PLusIcon, SortAscIcon, SortDescIcon } from "../../../components/svg-icons/icons";
 import { Container,Button, Row, Col, Tab, Tabs,Pagination  } from 'react-bootstrap'
 import { Link } from "react-router-dom";
 import Swal from 'sweetalert2'
@@ -17,16 +17,19 @@ export default function Category() {
 
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
+    const [sortField, setSortField] = useState('');
+    const [sortOrder, setSortOrder] = useState('');
+
     useEffect(() => {
         getCategory();
-    }, [searchTerm,currentPage]);
+    }, [searchTerm,currentPage,sortField, sortOrder]);
 
     async function getCategory() {
         setLoading(true);
         try {
-            let url = `/api/categories`;
+            let url = `/api/categories?sortField=${sortField}&sortOrder=${sortOrder}`;
             if (searchTerm) {
-                url += `?searchTerm=${encodeURIComponent(searchTerm)}`;
+                url += `&searchTerm=${encodeURIComponent(searchTerm)}`;
             }
             let result = await fetch(url, {
                 headers: { 'x-api-key': import.meta.env.VITE_X_API_KEY }
@@ -83,6 +86,19 @@ export default function Category() {
         setCurrentPage(pageNumber);
     };
 
+    const handleSort = (field) => {
+        const newSortOrder = sortField === field && sortOrder === 'asc' ? 'desc' : 'asc';
+        setSortField(field);
+        setSortOrder(newSortOrder);
+    };
+
+    const renderSortIcon = (field) => {
+        if (sortField === field) {
+            return sortOrder === 'asc' ? <SortAscIcon /> : <SortDescIcon />;
+        }
+        return null;
+    };
+
     return (
         <AuthLayout title={'Welcome to Competency'} subTitle={'Competency'}>
   <div className="tabe-outer">
@@ -128,8 +144,8 @@ export default function Category() {
                                 <thead>
                                     <tr>
                                         <th>Serial No.</th>
-                                        <th>Competency</th>
-                                        <th>Competency Type</th>
+                                        <th onClick={() => handleSort('category_name')} >Competency {renderSortIcon('category_name')}</th>
+                                        <th onClick={() => handleSort('competency_type')} >Competency Type</th>
 
                                         <th>Status <StatusIcon /> </th>
                                         <th>Action</th>
@@ -189,7 +205,7 @@ export default function Category() {
                                     <Col md={6}>
                                     </Col>
                                     <Col md={6} className='text-end p-0'>
-                                        <form className='d-flex justify-content-end'>
+                                        <form className='d-flex justify-content-end mb-4'>
                                             <input type='search' placeholder='Search...' value={searchTerm} onChange={handleSearch} className='form-control' />
                                             <Link to="create" className='default-btn' >Add Competency <PLusIcon /> </Link>
                                         </form>
@@ -203,8 +219,8 @@ export default function Category() {
                                 <thead>
                                     <tr>
                                         <th>Serial No.</th>
-                                        <th>Competency</th>
-                                        <th>Competency Type</th>
+                                        <th onClick={() => handleSort('category_name')}  >Competency {renderSortIcon('category_name')}</th>
+                                        <th onClick={() => handleSort('competency_type')} >Competency Type</th>
 
                                         <th>Status <StatusIcon /> </th>
                                         <th>Action</th>
