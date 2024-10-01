@@ -176,7 +176,7 @@ const SurveySummary = () => {
         if (!reportData) return null;
 
         return Object.entries(reportData).map(([competency, data]) => (
-            <ChartBar key={competency} competency={competency} data={data} reportData={reportData} pdf={pdf} />
+            <ChartBar key={competency} competency={competency} data={data} reportData={reportData} />
         ));
     };
 
@@ -185,7 +185,7 @@ const SurveySummary = () => {
         if (!reportData) {
             return null;
         } else {
-            return <CompetencyBar data={reportData} pdf={pdf} />
+            return <CompetencyBar data={reportData} />
         }
         // 
     };
@@ -285,7 +285,7 @@ const SurveySummary = () => {
                 {!loader ? (
                     <Container>
                         <Button className="survey-inner-btn absolute" onClick={() => { ReGenerateReport() }}>Re-Generate</Button>
-                        <div className="survey-container">
+                        <div className="survey-container" ref={reportRef}>
                             <h2 className="font-frank mb-4" style={{ color: '#174A6D', fontSize: '48px' }}>
                                 LOOP3D 360 Report
                             </h2>
@@ -490,7 +490,7 @@ const SurveySummary = () => {
                 </Container>
             ) :<div style={{textAlign: "center", marginTop: "15%"}}><Loading/></div>
         }
-    {pdf&&<SummaryPdf
+    {/* {pdf&&<SummaryPdf
         reportRef={reportRef}
             completedResponses={completedResponses}
             totals={totals}
@@ -503,7 +503,7 @@ const SurveySummary = () => {
             totalInvited={totalInvited}
             totalCompleted={totalCompleted}
             summaryArray={summaryArray}
-        />}
+        />} */}
       
         </div>
     </AuthLayout>
