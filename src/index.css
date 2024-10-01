@@ -57,8 +57,65 @@
   font-style: normal;
   font-display: swap;
 }
+@font-face {
+  font-family: 'Poppins';
+  src: url('../fonts/Poppins-Light.eot');
+  src: url('../fonts/Poppins-Light.eot?#iefix') format('embedded-opentype'),
+      url('../fonts/Poppins-Light.woff2') format('woff2'),
+      url('../fonts/Poppins-Light.woff') format('woff'),
+      url('../fonts/Poppins-Light.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
 
+@font-face {
+  font-family: 'Poppins';
+  src: url('../fonts/Poppins-Medium.eot');
+  src: url('../fonts/Poppins-Medium.eot?#iefix') format('embedded-opentype'),
+      url('../fonts/Poppins-Medium.woff2') format('woff2'),
+      url('../fonts/Poppins-Medium.woff') format('woff'),
+      url('../fonts/Poppins-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
 
+@font-face {
+  font-family: 'Poppins';
+  src: url('../fonts/Poppins-SemiBold.eot');
+  src: url('../fonts/Poppins-SemiBold.eot?#iefix') format('embedded-opentype'),
+      url('../fonts/Poppins-SemiBold.woff2') format('woff2'),
+      url('../fonts/Poppins-SemiBold.woff') format('woff'),
+      url('../fonts/Poppins-SemiBold.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Poppins';
+  src: url('../fonts/Poppins-Bold.eot');
+  src: url('../fonts/Poppins-Bold.eot?#iefix') format('embedded-opentype'),
+      url('../fonts/Poppins-Bold.woff2') format('woff2'),
+      url('../fonts/Poppins-Bold.woff') format('woff'),
+      url('../fonts/Poppins-Bold.ttf') format('truetype');
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Poppins';
+  src: url('../fonts/Poppins-Regular.eot');
+  src: url('../fonts/Poppins-Regular.eot?#iefix') format('embedded-opentype'),
+      url('../fonts/Poppins-Regular.woff2') format('woff2'),
+      url('../fonts/Poppins-Regular.woff') format('woff'),
+      url('../fonts/Poppins-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
 
 :root{
   --theme-color:#7abcdb;
@@ -69,6 +126,7 @@
   --tab-active:#174a6d;
   --frank-font: 'Frank Ruhl Libre';
   --bg-opacity: rgba(242 248 251 / 1);
+  --font-poppins: "Poppins", sans-serif;
 }
 body { background-color: var(--bg-color); -ms-overflow-style: block !important; scrollbar-width: none !important; line-height: normal; font-family: "Inter", sans-serif !important; box-sizing: border-box; color: var(--white); text-rendering: optimizeLegibility; -webkit-font-smoothing: subpixel-antialiased; }
 ul, li, a{ padding: 0; margin: 0; list-style: none; text-decoration: none; }
@@ -86,4 +144,5 @@ h1,h2,h3,h4,h5,h6,p{ margin: 0;}
 .bg-custom-color{ background-color: var(--secondary-color); }
 .text-custom-color{ color: var(--secondary-color); }
 .font-frank{ font-family: var(--frank-font); }
+.font-poppins{ font-family: var(--font-poppins); }
 .uppercase{text-transform: uppercase;}

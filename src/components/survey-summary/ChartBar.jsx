@@ -20,8 +20,8 @@ ChartJS.register(
     Legend
 );
 
-const ChartBar = ({ competency, data }) => {
-   
+const ChartBar = ({ competency, data,pdf=false }) => {
+
     const chartData = {
         labels: Object.keys(data),
         datasets: [
@@ -57,9 +57,10 @@ const ChartBar = ({ competency, data }) => {
         },
     };
 
-    const [chartClassName, setChartClassName] = useState(''); 
+    const [chartClassName, setChartClassName] = useState('');
     const [chartWidth, setChartWidth] = useState(700); // Initialize chartWidth state
     const [chartHeight, setChartHeight] = useState(400);
+   
     useEffect(() => {
         const handleResize = () => {
             // Calculate the new chart width based on screen size
@@ -73,34 +74,47 @@ const ChartBar = ({ competency, data }) => {
             } else {
                 // Use default styling for larger screens
                 setChartClassName('');
-                setChartWidth(700);
-                setChartHeight(400);; // Default height for larger screens
+                pdf?setChartWidth(300):setChartWidth(700);
+                pdf?setChartHeight(200):setChartHeight(400); // Default height for larger screens
             }
         };
 
 
-              // Add an event listener to window resize
-              window.addEventListener('resize', handleResize);
+        // Add an event listener to window resize
+        window.addEventListener('resize', handleResize);
 
-              // Call handleResize initially to set the initial dimensions
-              handleResize();
-      
-              // Remove the event listener when the component unmounts
-              return () => {
-                  window.removeEventListener('resize', handleResize);
-              };
-          }, []);
+        // Call handleResize initially to set the initial dimensions
+        handleResize();
+
+        // Remove the event listener when the component unmounts
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);
 
     return (
         <div>
-            <h3 className="text-custom-color text-lg sm:text-xl font-poppins font-extrabold uppercase">
-                            Competency: {competency}
+            <h3 className="text-white fw-normal font-frank mt-3" style={{ fontSize:'25px', lineHeight:'30px' }}>
+               <span>Competency:</span> {competency}
             </h3>
-            <p className="text-sm sm:text-base leading-relaxed text-gray-600 font-poppins mt-4 mb-4">
-            The {competency} competency is the proactive and empathetic approach leaders take to understand...
-        </p>
-        <div className={`graph_inner bottom_graph ${chartClassName}`} style={{ width: '40%', }}>
-            <Bar data={chartData} options={options}  width={chartWidth} height={chartHeight}/>
+            <p className="text-sm text-white font-poppins mt-1 mb-4">
+                The {competency} competency is the proactive and empathetic approach leaders take to understand...
+            </p>
+            <div className={`graph_inner bottom_graph ${chartClassName}`}>
+                <div className="row">
+                    <div className={pdf?"col-12":"col-lg-6"}>
+                        {/* graph box */}
+                        <div className="graph-box mb-3" style={{width:pdf?"100%":"", height:pdf?"500px":"", backgroundColor: '#fff', borderRadius: '10px', padding: '20px 30px' }}>
+                            <Bar data={chartData} options={options} width={pdf?"100%":chartWidth} height={pdf?"100%":chartHeight} />
+                        </div>
+                    </div>
+                    <div className={pdf?"col-12":"col-lg-6"}>
+                        <div className="graph-box mb-3" style={{ width:pdf?"100%":"", height:pdf?"500px":"", backgroundColor: '#fff', borderRadius: '10px', padding: '20px 30px' }}>
+                            <Bar data={chartData} options={options} width={pdf?"100%":chartWidth} height={pdf?"100%":chartHeight} />
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
     );

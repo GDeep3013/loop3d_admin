@@ -282,4 +282,5 @@ select.form-control:focus{ outline: none; box-shadow: none; }
 .custom_tab_content ul.custom-tabs label{ cursor: pointer; }
 .survey-inner { position: relative; }
 .survey-inner button.survey-inner-btn { position: absolute; top: -60px; right: 22px; background-color: var(--theme-color); border: none; min-width: 148px; min-height: 45px; }
-button.generate-btn { display: table; margin: 0 auto; background-color: var(--theme-color); border: none; min-height: 45px; }
+button.generate-btn { display: table; margin: 0 0 0 auto; background-color: var(--theme-color); border: none; min-height: 45px; line-height: 45px; min-width: 156px; padding: 0 10px;}
+button.generate-btn:hover{ background-color: var(--secondary-color); }

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState }  from 'react';
 import { Bar } from 'react-chartjs-2';
 import {
     Chart as ChartJS,
@@ -20,7 +20,7 @@ ChartJS.register(
     Legend
 );
 
-const CompetencyBar = ({ data }) => {
+const CompetencyBar = ({ data,pdf=false }) => {
     // Extract competency names as labels
     const labels = Object.keys(data); // Competencies like 'Communication', 'Leadership', 'Problem Solving'
 
@@ -84,9 +84,44 @@ const CompetencyBar = ({ data }) => {
         },
     };
 
+
+    const [chartClassName, setChartClassName] = useState(''); 
+    const [chartWidth, setChartWidth] = useState(700); // Initialize chartWidth state
+    const [chartHeight, setChartHeight] = useState(400);
+    useEffect(() => {
+        const handleResize = () => {
+            // Calculate the new chart width based on screen size
+            const windowWidth = window.innerWidth;
+
+            if (windowWidth <= 768) {
+                // Apply mobile styling if screen width is less than or equal to 768 pixels
+                setChartClassName('mobile-chart');
+                setChartWidth(300); // Adjust as needed for mobile
+                setChartHeight(300); // Adjust as needed for mobile
+            } else {
+                // Use default styling for larger screens
+                setChartClassName('');
+                setChartWidth(700);
+                setChartHeight(400);; // Default height for larger screens
+            }
+        };
+
+
+              // Add an event listener to window resize
+              window.addEventListener('resize', handleResize);
+
+              // Call handleResize initially to set the initial dimensions
+              handleResize();
+      
+              // Remove the event listener when the component unmounts
+              return () => {
+                  window.removeEventListener('resize', handleResize);
+              };
+    }, []);
+    
     return (
-        <div className='graph_inner' style={{ height: '500px', width: '40%' }}>
-            <Bar data={chartData} options={options} />
+        <div className={`graph_inner ${chartClassName}`} style={{ width: pdf ? "100%" : "", height: pdf ? "180px" : "" }}>
+            <Bar data={chartData} options={options} width={pdf?"100%":chartWidth} height={pdf?"100%":chartHeight}/>
         </div>
     );
 };
