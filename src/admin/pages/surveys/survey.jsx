@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
-import { MoreIcon,View, SortAscIcon, SortDescIcon  } from "../../../components/svg-icons/icons";
+import { MoreIcon,View, SortAscIcon, SortDescIcon,ViewReport  } from "../../../components/svg-icons/icons";
 import { Container, Dropdown, Row, Col, Pagination } from 'react-bootstrap';
 import { getSurveys } from '../../../apis/SurveyApi';
 import AuthLayout from '../../../layout/Auth';
@@ -128,9 +128,9 @@ export default function Survey() {
                                             : 'Never'}
                                     </td>
                                     <td>
-                                        <button className='action-btn' onClick={() => navigate(`/view-survey-participant/${survey._id}`)}><View /></button>
-                                        <button className='action-btn' onClick={() => navigate(`/survey-summary/${survey._id}`)} disabled={survey?.survey_status != "completed" ? true : false}>
-                                             View Report
+                                        <button className='action-btn' title='View Detail' onClick={() => navigate(`/view-survey-participant/${survey._id}`)}><View /></button>
+                                        <button className='action-btn' title='View Report' onClick={() => navigate(`/survey-summary/${survey._id}`)} disabled={survey?.survey_status != "completed" ? true : false}>
+                                            <ViewReport/>
                                         </button>
 
                                     {/* {survey?.survey_status == "completed" && <Link to={`/survey-summary/${survey._id}`} className='default-btn' >View Summary</Link>} */}

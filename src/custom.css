@@ -190,7 +190,8 @@ td.parent-category { font-weight: 600 !important; font-size: 17px !important; }
 .looplead-box .looplead-box-outer p a { color: #000; }
 .table-outer .table-heading { padding-bottom: 30px; }
 table.table { margin-bottom: 0px; }
-table.table th:last-child, table.table td:last-child { text-align: right; }
+table.table td:last-child { text-align: right; }
+table.table th:last-child{ text-align: center; }
 .ans-block .col-md-8 { padding-right: 0px; }
 .table-inner .table th { background: #edf9ff;font-weight: 600; font-size: 14px; border: 0px; }
 .ans-block { border: 1px solid #e1e1e1; border-radius: 5px; padding: 10px 10px 4px; background: #fbfbfb; }
@@ -232,7 +233,7 @@ table.table th:last-child, table.table td:last-child { text-align: right; }
 .bg-custom-color2{ background-color: var(--theme-color); }
 button.submit_btn:hover{ background-color: var(--secondary-color); }
 .lunchpad  ul li { list-style: disc; }
-.survey-inner .survey-container { margin: 90px 0 40px 0; }
+.survey-inner .survey-container { margin:0 0 40px 0; }
 .survey-inner .survey-container h3 { font-size: 20px; }
 .survey-inner .survey-container ul { padding-left: 18px; }
 .survey-inner .survey-container ul li.list-disc { list-style: disc; color: #4b5563; margin: 6px 0 0 0; }
@@ -281,6 +282,15 @@ select.form-control:focus{ outline: none; box-shadow: none; }
 .custom_tab_content ul.custom-tabs li{ padding-left: 0; }
 .custom_tab_content ul.custom-tabs label{ cursor: pointer; }
 .survey-inner { position: relative; }
-.survey-inner button.survey-inner-btn { position: absolute; top: -60px; right: 22px; background-color: var(--theme-color); border: none; min-width: 148px; min-height: 45px; }
-button.generate-btn { display: table; margin: 0 0 0 auto; background-color: var(--theme-color); border: none; min-height: 45px; line-height: 45px; min-width: 156px; padding: 0 10px;}
+.survey-inner button.survey-inner-btn { background-color: var(--theme-color); border: none; min-width: 148px; min-height: 45px; margin: 0 16px 0 0;}
+button.generate-btn { background-color: var(--theme-color); border: none; min-height: 45px; line-height: 45px; min-width: 156px; padding: 0 10px;}
 button.generate-btn:hover{ background-color: var(--secondary-color); }
+
+.main-wrapper .table .action-btn.btn { background-color: var(--theme-color); transform: none; color: #fff; }
+.participant .inner.border-custom-color2 { padding-right: 28px; }
+button.dlt_btn { border: none; background-color: transparent; position: absolute; right: 11px; }
+
+button.add_participant{ border:1px solid #fff; background-color: transparent; color: #fff; }
+button.add_participant:hover{ background-color: var(--secondary-color); color: #fff; border-color: var(--secondary-color); }
+
+.content-outer { padding: 0 15px; }

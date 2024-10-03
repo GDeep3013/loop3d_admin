@@ -42,6 +42,7 @@ import CreateFrom from "../../admin/pages/organizations/CreateFrom"
 import Loading from "../../components/Loading";
 
 import CreatePassword from "../../pages/CreatePassword";
+import SummaryPdf from "../survey-summary/SummaryPdf";
 
 const AppRouter = () => {
   const user = useSelector((state) => state.auth.user);
@@ -80,14 +81,20 @@ const AppRouter = () => {
     if (!user && !guestRoutes.includes(currentUrl)) {
       // Redirect to login if not authenticated and current page is not a guest route
       navigate('/login');
-    } else if (user && guestRoutes.includes(currentUrl)) {
-      // Redirect authenticated users based on their role if they are trying to access guest pages
+    } 
+    else if (user && guestRoutes.includes(currentUrl)) {
       if (user.role === "admin") {
-        navigate('/organizations');
+        if (currentUrl != "report-download") {
+          navigate('/organizations');     
+        }
       } else if (user.role === "manager") {
-        navigate('/manager/dashboard');
+        if (currentUrl != "report-download") {
+          navigate('/manager/dashboard');
+        }
       } else if (user.role === "looped_lead") {
-        navigate('/loop-lead/dashboard');
+        if (currentUrl != "report-download") {
+          navigate('/loop-lead/dashboard');
+        }
       }
     }
 
@@ -146,6 +153,7 @@ const AppRouter = () => {
           <Route path="/survey-summary/:id" exact element={<SurveySummary />} />
           <Route path="/survey-summary" exact element={<SurveySummary />} />
           <Route path="/plans/:id" exact element={<Plans />} />
+          <Route path="/report-download" component={<SummaryPdf/>} />
         </>
       ) : (
         <>
@@ -154,7 +162,9 @@ const AppRouter = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/forget-password" element={<ForgetPassword />} />
             <Route path="/reset-password" element={<ResetPassword />} />
-            <Route path="create-password" element={<CreatePassword/>}/>
+            <Route path="create-password" element={<CreatePassword />} />
+            {/* New route */}
+
         </>
       )}
     </Routes>

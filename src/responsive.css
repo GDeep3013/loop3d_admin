@@ -5,6 +5,8 @@
     .project___info .project_fullInfo { max-width: 84%; }
     .sideNavLogo img { max-width: 173px; }
     .mainContet-outer .project___info p{ font-size: 13px; }
+    .table-scroll { overflow: hidden; overflow-x: auto; }
+    .table-scroll table.table { min-width: max-content; }
 }
 /* @media screen and (min-width:1025px) and (max-width:1280px) {
     .graph-box .graph_inner { width: 100% !important; }
@@ -28,6 +30,7 @@
     .chat-gpt-summary h2 { font-size: 20px; line-height: 29px; }
     .chat-smart-goal p{ font-size: 16px; }
     .survey-inner .survey-container h3 { font-size: 19px; margin-top: 25px; }
+    .main-wrapper .table .action-btn.btn { padding: 4px 8px; font-size: 14px; }
 }
 @media screen and (max-width:767px) {
     nav.sideNavOuter.open .sideNavLogo img { display: block; } 

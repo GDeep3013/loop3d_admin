@@ -163,14 +163,14 @@ export default function ParticipantForm({ survey_id }) {
                             {errors[index]?.p_type && <p className="text-danger">{errors[index].p_type}</p>}
                         </div>
                         {index >= 10 && (
-                            <button type="button" className="text-danger text-sm mt-2 position-relative" onClick={() => removeParticipant(index)}>
-                                <img src="/images/remove.png" alt="delete icon" className="position-absolute top-50 end-0 translate-middle" style={{ width: '20px', height: '20px' }}/>
+                            <button type="button" className="text-danger dlt_btn" onClick={() => removeParticipant(index)}>
+                                <img src="/images/remove.png" alt="delete icon" className="" style={{ width: '20px', height: '20px' }}/>
                             </button>
                         )}
                     </div>
                 </div>
             ))}
-            <button type="button" onClick={addParticipant} className="mt-3 py-2 px-4 btn btn-primary">
+            <button type="button" onClick={addParticipant} className="mt-3 py-2 px-4 btn btn-primary add_participant">
                 Add Participant
             </button>
                     <button type="submit" className="mt-3 py-2 px-4 btn bg-custom-color ms-2 text-white submit_btn" disabled={loader}>

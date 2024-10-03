@@ -23,7 +23,7 @@
 .custom-dropdown .dropdown-menu { transform: translate(0px, 26px) !important; }
 .table-inner .user-profile .user-name { padding-left: 15px; }
 .table-inner tr:last-child td { border-bottom: none; }
-.action-btn svg {width: 17px;height: 17px;opacity: 0.6;}
+.action-btn svg {width: 23px;height: 23px; opacity: 0.7;}
 .action-btn {background: none;border: 0px;}
 button.MenuOpen {
   position: absolute;
@@ -91,8 +91,7 @@ label.form-label { font-size: 14px; }
 input.form-control { height: 40px; font-size: 14px; }
 .main-back-heading {padding: 14px 0px; }
 button.action-btn { transition: all ease-in-out 0.5s; transform: scale(1.0); }
-button.action-btn:hover { transform: scale(1.2); }
-button.action-btn:hover svg { opacity: 1; }
+button.action-btn:hover svg, button.action-btn:hover svg path { fill: var(--theme-color); }
 .orgname { font-size: 18px; }   
 select.form-select,select.form-control { height: 46px; font-size: 14px; }
 .edit-org .main-wrapper { border: 0px !important; box-shadow: none; }

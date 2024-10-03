@@ -1,4 +1,4 @@
-import React, { useEffect, useState }  from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Bar } from 'react-chartjs-2';
 import {
     Chart as ChartJS,
@@ -20,7 +20,10 @@ ChartJS.register(
     Legend
 );
 
-const CompetencyBar = ({ data,pdf=false }) => {
+const CompetencyBar = ({ data, pdf = false }) => {
+    const chartRef1 = useRef(null);
+    const [chartImage1, setChartImage1] = useState(null); // State for the first chart image
+
     // Extract competency names as labels
     const labels = Object.keys(data); // Competencies like 'Communication', 'Leadership', 'Problem Solving'
 
@@ -118,10 +121,24 @@ const CompetencyBar = ({ data,pdf=false }) => {
                   window.removeEventListener('resize', handleResize);
               };
     }, []);
-    
+    const generateChartImage = (chartRef, setChartImage) => {
+        if (chartRef.current) {
+            const chartInstance = chartRef.current;
+            const canvas = chartInstance.canvas;
+            const image = canvas.toDataURL('image/png');
+            setChartImage(image);
+        }
+    };
+
+    useEffect(() => {
+        generateChartImage(chartRef1, setChartImage1); // Generate image for the first chart
+    }, [data]);
     return (
-        <div className={`graph_inner ${chartClassName}`} style={{ width: pdf ? "100%" : "", height: pdf ? "180px" : "" }}>
-            <Bar data={chartData} options={options} width={pdf?"100%":chartWidth} height={pdf?"100%":chartHeight}/>
+        <div className={`graph_inner ${chartClassName}`}>
+            {!pdf && (<Bar data={chartData} ref={chartRef1} options={options} width={pdf ? "100%" : chartWidth} height={pdf ? "100%" : chartHeight} />)}
+            {(chartImage1 && pdf) && (
+                <img src={chartImage1} alt="First Chart as Image" style={{ maxWidth: '100%', width: '100%' }} />
+            )}
         </div>
     );
 };

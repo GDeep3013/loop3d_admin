@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
-import { MoreIcon,View ,PLusIcon  } from "../../../components/svg-icons/icons";
+import { MoreIcon,View ,PLusIcon,ViewReport  } from "../../../components/svg-icons/icons";
 import { Container, Dropdown, Row, Col, Pagination } from 'react-bootstrap';
 import { getSurveys , getSurveyById } from '../../../apis/SurveyApi';
 import AuthLayout from '../../../layout/Auth';
@@ -118,9 +118,10 @@ export default function SurveyList() {
                                     </td>
                                     <td>
                                     <button className='action-btn' onClick={() => navigate(`/view-survey-participant/${survey._id}`)}><View /></button>
-                                    <button className='action-btn' onClick={() => navigate(`/survey-summary/${survey._id}`)} disabled={survey?.survey_status != "completed" ? true : false}>
-                                             View Report
+                                    <button className='action-btn' title='View Report' onClick={() => navigate(`/survey-summary/${survey._id}`)} disabled={survey?.survey_status != "completed" ? true : false}>
+                                            <ViewReport/>
                                         </button>
+
                                         {/* <Dropdown className='custom-dropdown'>
                                             <Dropdown.Toggle variant="success" id="dropdown-basic">
                                                 <MoreIcon />

@@ -81,11 +81,11 @@ export default function LoopLeads({ organization }) {
                                     </div>
                                 </td>
                              
-                                    <td>{user.email}</td>
+                                    <td className='text-lowercase'>{user.email}</td>
                                     <td>{user.created_by?.first_name} {user.created_by?.last_name}</td>
 
-                                <td>{user.role.type}</td>
-                                <td><span className='span-badge active-tag'>Active</span></td>
+                                    <td>{user?.role?.type =="looped_lead"?"loop lead":user?.role?.type}</td>
+                                    <td><span className='span-badge active-tag'>Active</span></td>
                                     <td>
                                     <button className='action-btn' onClick={() => navigate(`/view-loop_lead/${user._id}/${organization.orgniation_id}`)}><View /></button>
                                     {/* <button className='action-btn' onClick={() => navigate(`/add-user/${user._id}`)}><Edit /></button> */}

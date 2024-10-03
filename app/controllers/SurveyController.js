@@ -605,6 +605,15 @@ exports.deleteParticipant = async (req, res) => {
 };
 
 const processParticipantAnswers = (participant, answers, participantType, assignCompetencies, competencies, questions, report) => {
+    // Initialize report categories if not already initialized
+    if (!report.categories) {
+        report.categories = {};
+    }
+
+    if (!report.resultArray) {
+        report.resultArray = {}; // Initialize resultArray if it doesn't exist
+    }
+
     if (answers) {
         for (const answer of answers) {
             const question = questions.find(q => q?._id.equals(answer?.questionId));
@@ -625,27 +634,32 @@ const processParticipantAnswers = (participant, answers, participantType, assign
                                 Self: {
                                     totalQuestions: 0,
                                     totalWeightage: 0,
-                                    textAnswers: []
+                                    textAnswers: [],
+                                    averageWeightage: 0
                                 },
                                 'Direct Report': {
                                     totalQuestions: 0,
                                     totalWeightage: 0,
-                                    textAnswers: []
+                                    textAnswers: [],
+                                    averageWeightage: 0
                                 },
                                 Teammate: {
                                     totalQuestions: 0,
                                     totalWeightage: 0,
-                                    textAnswers: []
+                                    textAnswers: [],
+                                    averageWeightage: 0
                                 },
                                 Supervisor: {
                                     totalQuestions: 0,
                                     totalWeightage: 0,
-                                    textAnswers: []
+                                    textAnswers: [],
+                                    averageWeightage: 0
                                 },
                                 Other: {
                                     totalQuestions: 0,
                                     totalWeightage: 0,
-                                    textAnswers: []
+                                    textAnswers: [],
+                                    averageWeightage: 0
                                 }
                             };
                         }
@@ -669,12 +683,56 @@ const processParticipantAnswers = (participant, answers, participantType, assign
                                 });
                             }
                         }
+
                         report.categories[categoryName][participantType].totalWeightage += weightage;
+
+                        // Initialize the result array for the category if it doesn't exist
+                        if (!report.resultArray[categoryName]) {
+                            report.resultArray[categoryName] = []; // Create an array for the category
+                        }
+
+                        // Prepare entry for the question
+                        const entry = report.resultArray[categoryName].find(e => e.question === question.questionText) || {
+                            question: question.questionText,
+                            self_average: 0,
+                            total_other_weightage: 0, // Placeholder for total weightage of others
+                            total_other_responses: 0 // To track total responses for others
+                        };
+
+                        if (!answer.answer) {
+                            if (participantType === 'Self') {
+                                entry.self_average += weightage; // Accumulate self average
+                            } else {
+                                entry.total_other_weightage += weightage; // Accumulate total weightage for others
+                                entry.total_other_responses += 1; // Count responses from others
+                            }
+
+                            // Add entry to the result array for the category
+                            if (!report.resultArray[categoryName].some(e => e.question === question.questionText)) {
+                                report.resultArray[categoryName].push(entry); // Add entry if it doesn't exist
+                            }
+                        }
                     }
                 }
             }
         }
+
+        // Calculate average for others in each entry
+        for (const category in report.resultArray) {
+            for (const entry of report.resultArray[category]) {
+                if (entry.total_other_responses > 0) {
+                    entry.other_average = entry.total_other_weightage / entry.total_other_responses; // Calculate average for others
+                } else {
+                    entry.other_average = 0; // No responses means average is zero
+                }
+            }
+        }
     }
+
+    // Optional: Sort the result array by category name if needed
+    Object.keys(report.resultArray).forEach(category => {
+        report.resultArray[category].sort((a, b) => a.question.localeCompare(b.question));
+    });
 };
 
 exports.generateSurveyReport = async (req, res) => {

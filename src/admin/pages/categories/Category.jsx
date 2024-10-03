@@ -119,7 +119,7 @@ export default function Category() {
             
 <div className="content-outer pd-2 edit-org ">
 
-                <Tabs defaultActiveKey="individual_contributor" id="competency-tabs" className="mb-3 custom-tabs">
+                <Tabs defaultActiveKey="individual_contributor" id="competency-tabs" className="custom-tabs">
 
                 <Tab eventKey="individual_contributor" title="Individual Contributor">
                 <div className='table-inner main-wrapper'>
