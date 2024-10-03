@@ -236,7 +236,7 @@ button.submit_btn:hover{ background-color: var(--secondary-color); }
 .survey-inner .survey-container { margin:0 0 40px 0; }
 .survey-inner .survey-container h3 { font-size: 20px; }
 .survey-inner .survey-container ul { padding-left: 18px; }
-.survey-inner .survey-container ul li.list-disc { list-style: disc; color: #4b5563; margin: 6px 0 0 0; }
+.survey-inner .survey-container ul li.list-disc { list-style: number; color: #4b5563; margin: 6px 0 0 0; }
 .chat-gpt-summary h1 { text-align: center; text-decoration: underline; }
 .chat-smart-goal h2 { text-decoration: underline; text-align: center; }
 .chat-smart-goal p strong { font-size: 20px; padding: 17px 0 8px 0; display: block; }

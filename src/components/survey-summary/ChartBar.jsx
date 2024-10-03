@@ -198,10 +198,10 @@ const ChartBar = ({ competency, data, chart2Data, pdf }) => {
 
     return (
         <div>
-            <h3 className="text-white fw-normal font-frank mt-3" style={{ fontSize: '25px', lineHeight: '30px' }}>
+            <h3 className="text-white fw-normal font-frank mt-3" style={{ fontSize: '19px', lineHeight: '30px' }}>
                 <span>Competency:</span> {competency}
             </h3>
-            <p className="text-sm text-white font-poppins mt-1" style={pdf ? { marginBottom: '15px' } : {marginBottom:'24px'}}>
+            <p className="text-sm text-white font-poppins mt-1" style={pdf ? { fontSize: '14px', marginBottom: '14px' } : { fontSize:'14px', marginBottom:'17px'}}>
                 The {competency} competency is the proactive and empathetic approach leaders take to understand...
             </p>
             <div className="graph_inner bottom_graph">
