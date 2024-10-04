@@ -138,7 +138,7 @@ const UserController = {
     fetchUsers: async (req, res) => {
         try {
             // Extract search parameters and pagination parameters from request
-            const { searchTerm, page = 1, pageSize = 8 } = req.query;
+            const { searchTerm, page = 1, pageSize = 10 } = req.query;
 
             // Construct the query object for User.find() based on search term
             const query = {};

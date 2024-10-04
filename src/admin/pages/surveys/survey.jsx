@@ -114,7 +114,7 @@ export default function Survey() {
                         ) : (
                             surveys.map((survey, index) => (
                                 <tr key={survey._id}>
-                                    <td>{index + 1}</td>
+                                    <td>{(currentPage - 1) * 10 + (index + 1)}</td>
                                     <td>{formatDateGB(survey.createdAt)}</td>
                                     <td>{survey?.loop_lead?.first_name} {survey?.loop_lead?.last_name}</td>
                                     <td>{survey?.manager?.first_name}  {survey?.manager?.last_name}</td>

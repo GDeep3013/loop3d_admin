@@ -43,6 +43,7 @@ import Loading from "../../components/Loading";
 
 import CreatePassword from "../../pages/CreatePassword";
 import SummaryPdf from "../survey-summary/SummaryPdf";
+import { useLocation } from 'react-router-dom';
 
 const AppRouter = () => {
   const user = useSelector((state) => state.auth.user);
@@ -50,6 +51,8 @@ const AppRouter = () => {
   const navigate = useNavigate();
 
   const [loading, setLoading] = useState(true); // New state for loading spinner
+  const location = useLocation();
+
 
   useEffect(() => {
     (async () => {
@@ -65,13 +68,23 @@ const AppRouter = () => {
         setLoading(false); // Stop loading after the user check is completed
       }
     })();
+
   }, [navigate, user, dispatch]);
 
+
+  const currentUrl = location.pathname;
+
+
   const loadingPage = async () => {
-    const currentUrl = window.location.pathname;
+    // const currentUrl = window.location.pathname;
+   
+    // const currentUrl = location.pathname;
+    console.log('currentUrl',currentUrl)
 
     // Define guest routes
-    const guestRoutes = ['/login', '/forget-password', '/reset-password','/create-password'];
+    const guestRoutes = ['/login', '/forget-password', '/reset-password', '/create-password'];
+    const loopLeadRoutes = ['/loop-lead/participant/create/','/loop-lead/view-survey-participant/', '/loop-lead/view-survey-participant/'];
+
     if (user && currentUrl == '/reset-password' || currentUrl == '/create-password' ) {
       localStorage.removeItem("_token");
       localStorage.removeItem("userType");
@@ -91,10 +104,9 @@ const AppRouter = () => {
         if (currentUrl != "report-download") {
           navigate('/manager/dashboard');
         }
-      } else if (user.role === "looped_lead") {
-        if (currentUrl != "report-download") {
+      } else if (user.role === "looped_lead" && !loopLeadRoutes.includes(currentUrl)) {
           navigate('/loop-lead/dashboard');
-        }
+        
       }
     }
 
@@ -102,13 +114,17 @@ const AppRouter = () => {
   };
 
   useEffect(() => {
-    loadingPage();
-  }, [navigate, user]);
+    if (!loading) {
+       loadingPage();
+    }
+  }, [navigate, user,loading]);
 
   if (loading) {
     // Display a loading spinner or message while loading
     return <Loading parentClas="page-loader d-flex justify-content-center align-items-center vh-100" />;
   }
+
+
 
   return (
     <Routes>

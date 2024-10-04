@@ -6,7 +6,7 @@ const sendSurveyCreationEmail = (recipientDetails) => {
                           
                           <p> In order to get the 360 feedback process started for <strong>${recipientDetails.roles}</strong>, we need you to click the following link and select the top 3 most relevant competencies for <strong>${recipientDetails.roles}</strong>'s role.</p>
 
-                          <a style="display: inline-block; text-decoration:none;padding: 12px 25px;color: #fff; background-color: #7abcdb; border-radius: 5px;" href="${recipientDetails.url}">Link</a>
+                          <a style="display: inline-block; text-decoration:none;padding: 12px 25px;color: #fff; background-color: #7abcdb; border-radius: 5px;" href="${recipientDetails.url}">Create Survey</a>
                           <br />
                           
                           <p>If you have any questions at all feel free to reach out to us.</p>

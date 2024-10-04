@@ -104,12 +104,13 @@ exports.createSurvey = async (req, res) => {
 
             const savedSurvey = await survey.save();
             let admin_panel_url = `${process.env.ADMIN_PANEL}/create-password?token=${user?._id}`;
-            let url = `${process.env.ADMIN_PANEL}/lead-dashboard?token=` + savedSurvey?._id
+            let url = `${process.env.ADMIN_PANEL}/loop-lead/participant/create/` + savedSurvey?._id
             let first_name = name
+            let last_name = ''
             let summary_url = `${process.env.ADMIN_PANEL}/survey-summary?survey_id=` + savedSurvey?._id
             
 
-            sendEmail('createPasswordMail', {email,first_name,admin_panel_url})
+            sendEmail('createPasswordMail', {email,first_name,last_name,admin_panel_url})
 
             
             await sendEmail('sendLoopLeadLink', {

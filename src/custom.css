@@ -191,7 +191,9 @@ td.parent-category { font-weight: 600 !important; font-size: 17px !important; }
 .table-outer .table-heading { padding-bottom: 30px; }
 table.table { margin-bottom: 0px; }
 table.table td:last-child { text-align: right; }
-table.table th:last-child{ text-align: center; }
+table.table th:last-child{ text-align: right; }
+.table-inner.questions-page table tr th:last-child, .table-inner.questions-page table tr td:last-child { text-align: center; }
+.organizations-page table tr th:last-child{ padding-right: 50px; }
 .ans-block .col-md-8 { padding-right: 0px; }
 .table-inner .table th { background: #edf9ff;font-weight: 600; font-size: 14px; border: 0px; }
 .ans-block { border: 1px solid #e1e1e1; border-radius: 5px; padding: 10px 10px 4px; background: #fbfbfb; }
@@ -297,3 +299,11 @@ button.add_participant:hover{ background-color: var(--secondary-color); color: #
 
 .table-scroll { overflow: hidden; overflow-x: auto; } 
 .table-scroll table.table { min-width: max-content; }
+[disabled] {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+.disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }

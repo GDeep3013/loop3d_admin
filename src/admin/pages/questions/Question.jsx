@@ -85,7 +85,7 @@ export default function Question() {
 
   return (
     <AuthLayout title={'Welcome to Questions'} subTitle={'Questions'}>
-      <div className='table-inner main-wrapper'>
+      <div className='table-inner main-wrapper questions-page'>
         <div className='content-outer'>
           <div className='tabe-outer'>
             <div className='table-heading mt-3'>
@@ -133,9 +133,9 @@ export default function Question() {
               </tr>
             }
 
-            {!loading && questions.length > 0 && questions?.map((question, inx) => (
+            {!loading && questions.length > 0 && questions?.map((question, ind) => (
               <tr key={question._id}>
-                <td>{inx+1}</td>
+                <td>{(currentPage - 1) * 10 + (ind + 1)}</td>
                 <td>
                   {question.questionText}
                 </td>

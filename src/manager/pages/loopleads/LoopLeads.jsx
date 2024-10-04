@@ -89,7 +89,7 @@ export default function LoopLeads({  }) {
                                         <div className='user-name'>{user.last_name}</div>
                                     </div>
                                 </td>
-                                    <td>{user.email}</td>
+                                    <td className='text-lowercase'>{user.email}</td>
                                     <td>{user.created_by?.first_name} {user.created_by?.last_name}</td>
 
                                     <td>{user?.role?.type =="looped_lead"?"loop lead":user?.role?.type}</td>

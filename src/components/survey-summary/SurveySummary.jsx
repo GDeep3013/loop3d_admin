@@ -362,7 +362,7 @@ const SurveySummary = () => {
                                     </h2>
                                     <div page-break>{renderCharts()}</div>
                                 </div >
-                                <h3 className={`text-custom-color font-frank fw-medium `} style={{ marginTop:pdf?'60px':'48px', fontSize: '25px', lineHeight: '40px' }}>
+                                <h3 className={`text-custom-color font-frank fw-medium `} style={{ marginTop:pdf?'150px':'48px', fontSize: '25px', lineHeight: '40px' }}>
                                     Open-Ended Comments
                                 </h3>
                                 <p className="font-poppins mb-2">
@@ -381,7 +381,7 @@ const SurveySummary = () => {
                                             </div>
 
                                             {/* Suggestions for Improvement */}
-                                            <div className="summary-item" style={{ backgroundColor: '#F2F8FB', padding: '30px 20px' }}>
+                                            <div className="summary-item page-break" style={{  marginTop:pdf?'260px':'',backgroundColor: '#F2F8FB', padding: '30px 20px' }}>
                                                 <h2 className="font-frank text-black" style={{ fontSize: '21px', lineHeight: '27px' }}>Q2. What suggestions do you have to make this person a stronger performer and more effective?</h2>
                                                 <p className="font-poppins" style={{ fontSize: '16px' }}> <strong className=" font-frank fw-normal" style={{ fontSize: '16px' }}>Total Summary:</strong> Example summary.</p>
                                                 {summaryArray?.question_summary?.suggestionsForImprovement?.map((item, index) => (
@@ -390,7 +390,7 @@ const SurveySummary = () => {
                                             </div>
 
                                             {/* Other Comments */}
-                                            <div className="summary-item" style={{ backgroundColor: '#F2F8FB', padding: '30px 20px' }}>
+                                            <div className="summary-item  page-break" style={{ marginTop:pdf?'260px':'', backgroundColor: '#F2F8FB', padding: '30px 20px' }}>
                                                 <h2 className="font-frank text-black" style={{ fontSize: '21px', lineHeight: '27px' }}>Q3. Other comments?</h2>
                                                 <p className="font-poppins" style={{ fontSize: '20px' }}> <strong className=" font-frank fw-normal" style={{ fontSize: '25px' }}>Total Summary:</strong> Example summary.</p>
                                                 {summaryArray?.question_summary?.otherComments?.map((item, index) => (
@@ -403,7 +403,7 @@ const SurveySummary = () => {
                                     )}
                                 </div>
                                 {summaryArray && (
-                                    <div className="summary-item chat-smart-goal" style={{ backgroundColor: '#F2F8FB', padding: '50px 20px' }}>
+                                    <div className="summary-item chat-smart-goal" style={{marginTop:pdf?'260px':'', backgroundColor: '#F2F8FB', padding: '50px 20px' }}>
                                         <div className="summary-section summary-inner-text">
                                             <h3 className="font-frank text-custom-color" style={{ fontSize: '25px', lineHeight: '40px' }}>
                                                 LOOP3D SMART Action Plan
@@ -412,7 +412,7 @@ const SurveySummary = () => {
                                                 This report is designed to highlight both strengths and developmental opportunities for you within your role.
                                             </p>
 
-                                            <div className="summary_inner_box" style={{ backgroundColor: '#fff', padding: '25px 30px', borderRadius: '10px' }}>
+                                            <div className="summary_inner_box page-break" style={{ backgroundColor: '#fff', padding: '25px 30px', borderRadius: '10px' }}>
                                                 <h3 className="font-frank text-black" style={{ fontSize: '25px', lineHeight: '40px' }}>Strengths</h3>
                                                 <p className="font-poppins" style={{ fontSize: '16px' }}>
                                                     <strong className="font-frank fw-normal" style={{ fontSize: '20px', paddingBottom:'0' }}>Summary:</strong> Based on your results, your coworkers particularly appreciate the following strengths in you and the value it adds to the workplace.
@@ -425,7 +425,7 @@ const SurveySummary = () => {
                                             </div>
                                         </div >
 
-                                        <div className="summary-section summary-inner-text mt-5" style={{ backgroundColor: '#fff', padding: '35px 30px', borderRadius: '10px' }}>
+                                        <div className="summary-section summary-inner-text" style={{marginTop:pdf?'400px':'48px', backgroundColor: '#fff', padding: '35px 30px', borderRadius: '10px' }}>
                                             <h3 className="font-frank text-black" style={{ fontSize: '25px', lineHeight: '40px', textTransform: 'capitalize' }}>Development Opportunities</h3>
                                             <p className="font-poppins" style={{ fontSize: '16px' }}>
                                                 <strong className="font-frank fw-normal" style={{ fontSize: '20px', paddingBottom:'0'}}>Summary:</strong> Based on your results, your coworkers have identified potential areas for development to further enhance your skills.

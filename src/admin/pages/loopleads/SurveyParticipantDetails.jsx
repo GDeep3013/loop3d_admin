@@ -152,7 +152,7 @@ export default function SurveyParticipantDetails() {
                                         <td>{index + 1}</td>
                                         <td>{participant?.p_first_name}</td>
                                         <td>{participant?.p_last_name}</td>
-                                        <td>{participant?.p_email}</td>
+                                        <td className='text-lowercase'>{participant?.p_email}</td>
                                         <td>{participant?.p_type}</td>
                                         <td>{participant.survey_status === 'completed' ? <span className='span-badge active-tag'>Completed</span> : <span className='span-badge inactive-tag'>Pending</span>}</td>
                                         <td>

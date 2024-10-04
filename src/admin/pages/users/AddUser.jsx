@@ -207,8 +207,8 @@ export default function AddEmployee() {
         </div>
       </div>
 
-      <div className="content-outer main-wrapper p-c-3 bg-white ml-8 shadow-border-wrapper">
-        <div className="content-outer main-wrapper pd-2 bg-white">
+      <div className="content-outer main-wrapper p-4 bg-white ml-8 shadow-border-wrapper">
+        <div className="content-outer main-wrapper bg-white">
           <Form className="profile-form">
             <div className="employee-outer d-flex">
 

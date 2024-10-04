@@ -11,7 +11,7 @@ const reminderEmailToParticapated = (recipientDetails) => {
                             <br />
 
                             <p> Please click on the following link to provide your responses:</p>
-                            <a style="display: inline-block; text-decoration:none;padding: 12px 25px;color: #fff; background-color: #7abcdb; border-radius: 5px;" href="${recipientDetails.url}">Link</a>
+                            <a style="display: inline-block; text-decoration:none;padding: 12px 25px;color: #fff; background-color: #7abcdb; border-radius: 5px;" href="${recipientDetails.url}">Create Feedback</a>
 
                             <br />
                             <p>Thanks!</p>

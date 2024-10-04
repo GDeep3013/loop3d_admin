@@ -134,7 +134,7 @@ export default function Organization() {
                     </div>
                 </div>
             </div>
-            <div className='table-inner shadow-border-wrapper'>
+            <div className='table-inner shadow-border-wrapper  organizations-page'>
                 <div className='table-scroll'>
                     <table className='table'>
                         <thead>
@@ -167,7 +167,7 @@ export default function Organization() {
                             {!loading && Organizations.length > 0 && (
                                 Organizations.map((org, index) => (
                                     <tr key={org._id}>
-                                        <td>{index + 1}</td>
+                                        <td>{(currentPage - 1) * 10 + (index + 1)}</td>
                                         <td>
                                             <div className="user-profile d-flex align-items-center">
                                                 <div className='user-name'>{org.name}</div>

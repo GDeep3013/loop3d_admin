@@ -38,7 +38,13 @@ const ChartBar = ({ competency, index, data, chart2Data, pdf }) => {
     };
 
     const chartData2 = {
-        labels: chart2Data?.map((item) => item?.question),
+        labels: chart2Data?.map((item) => {
+            const maxLabelLength = 15; // Set the maximum length for display
+            const truncatedLabel = item?.question.length > maxLabelLength 
+                ? item?.question.substring(0, maxLabelLength) + '...' 
+                : item?.question;
+            return truncatedLabel;
+        }),
         datasets: [
             {
                 label: 'Self',
@@ -67,30 +73,21 @@ const ChartBar = ({ competency, index, data, chart2Data, pdf }) => {
             },
         },
     };
-    function wrapLabel(label, maxWidth) {
-        const canvas = document.createElement('canvas');
-        const context = canvas.getContext('2d');
-        context.font = '14px Arial'; // Adjust font size and family to match your chart
-    
+    function wrapLabel(label, maxLineLength) {
         const words = label.split(' ');
-        let lines = [];
-        let currentLine = '';
+        let wrappedLabel = '';
+        let line = '';
     
-        words.forEach((word) => {
-            const testLine = currentLine + word + ' ';
-            const testWidth = context.measureText(testLine).width;
-    
-            // If the test line exceeds the max width, push the current line and start a new one
-            if (testWidth > maxWidth) {
-                lines.push(currentLine.trim());
-                currentLine = word + ' ';
-            } else {
-                currentLine = testLine;
+        words.forEach(word => {
+            if (line.length + word.length > maxLineLength) {
+                wrappedLabel += line.trim() + '\n'; // Start a new line
+                line = ''; // Reset the line
             }
+            line += word + ' ';
         });
     
-        lines.push(currentLine.trim()); // Push the last line
-        return lines.join('\n'); // Return the lines as a single string
+        wrappedLabel += line.trim(); // Add the last line
+        return wrappedLabel;
     }
     
     
@@ -124,6 +121,15 @@ const ChartBar = ({ competency, index, data, chart2Data, pdf }) => {
                     bottom: 20,
                 },
             },
+            tooltip: {
+                callbacks: {
+                    label: function (tooltipItem) {
+                        const questionIndex = tooltipItem.dataIndex;
+                        const fullQuestion = chart2Data[questionIndex]?.question;
+                        return fullQuestion; // Show the full question in the tooltip
+                    }
+                }
+            },
         },
         scales: {
             x: {
@@ -139,14 +145,11 @@ const ChartBar = ({ competency, index, data, chart2Data, pdf }) => {
                     color: '#555',
                     font: {
                         size: 14,
-                    },
-                    callback: function (value) {
-                        // Get the label for the current value
-                        const label = this.getLabelForValue(value);
-                        
-                        // Wrap the label to a specific width
-                        return wrapLabel(label, 100); // Adjust the width based on your needs
-                    },
+                    }
+                },
+                callback: function (value, index) {
+                    const question = chart2Data[index]?.question; // Get the full question
+                    return wrapLabel(question, 30); // Wrap the label (adjust the maxLineLength as needed)
                 },
             },
         },
@@ -197,7 +200,7 @@ const ChartBar = ({ competency, index, data, chart2Data, pdf }) => {
     }, [data, chart2Data]); // Run on data changes
 
     return (
-        <div style={(index > 0 && pdf) ? { marginTop:"60px",marginBottom:"10px"}:{}}>
+        <div style={(index == 1 &&  pdf) ? { marginTop:"80px",marginBottom:"10px"}:(index == 2 &&  pdf)?{ marginTop:"200px",marginBottom:"10px"}:{}}>
             <h3 className="text-white fw-normal font-frank mt-3" style={{ fontSize: '19px', lineHeight: '30px' }}>
                 <span>Competency:</span> {competency}
             </h3>
@@ -225,7 +228,7 @@ const ChartBar = ({ competency, index, data, chart2Data, pdf }) => {
                      {
                     (chartImage1 && pdf)&& (
                         <div className="col-12 mt-4 p-4 pt-4" style={chartImage1 && pdf ? { backgroundColor: '#ffffff', borderRadius: '10px' } : {}}>
-                                <img src={chartImage1} alt="First Chart as Image" style={{ maxWidth: '100%', width: '84%'}} />
+                                <img src={chartImage1} alt="First Chart as Image" style={{ maxWidth: '100%', width: '70%'}} />
                                 </div>
                     )
                     }
@@ -247,7 +250,7 @@ const ChartBar = ({ competency, index, data, chart2Data, pdf }) => {
                 
                     {(chartImage2 && pdf)&& (
                         <div className="col-12 mt-4 p-4 pt-4" style={chartImage2 && pdf ? { backgroundColor: '#ffffff', borderRadius: '10px' } : {}}>
-                            <img src={chartImage2} alt="Second Chart as Image"  style={{ maxWidth: '100%', width: '84%' }} />
+                            <img src={chartImage2} alt="Second Chart as Image"  style={{ maxWidth: '100%', width: '100%' }} />
                         </div>
                     )
                     }
