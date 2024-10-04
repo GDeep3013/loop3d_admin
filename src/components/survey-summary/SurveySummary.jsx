@@ -178,7 +178,7 @@ const SurveySummary = () => {
         if (!reportData) return null;
 
         return Object.entries(reportData).map(([competency, data], index) => (
-            <ChartBar key={competency} index={index} competency={competency} data={data} chart2Data={chart2Data[competency]} reportData={reportData} pdf={pdf} />
+            chart2Data[competency] && <ChartBar key={competency} index={index} competency={competency} data={data} chart2Data={chart2Data[competency]} reportData={reportData} pdf={pdf} />
         ));
     };
 
