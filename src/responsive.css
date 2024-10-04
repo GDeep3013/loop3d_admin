@@ -26,11 +26,21 @@
     .graph_inner canvas{ width: 100% !important; }
     .graph-box .graph_inner.bottom_graph canvas{ height: 262px !important; }
     .survey-inner .survey-container{ padding: 23px !important; }
-    .survey-inner .survey-container th { font-size: 13px; font-weight: 600; }
+    .survey-inner .survey-container th { font-size: 13px !important; font-weight: 600; padding: 9px !important;}
     .chat-gpt-summary h2 { font-size: 20px; line-height: 29px; }
     .chat-smart-goal p{ font-size: 16px; }
     .survey-inner .survey-container h3 { font-size: 19px; margin-top: 25px; }
     .main-wrapper .table .action-btn.btn { padding: 4px 8px; font-size: 14px; }
+    .survey-inner .survey-container  td { padding: 10px !important; font-size: 14px !important; }
+    .survey_pdf .survey-container { padding: 0 !important; }
+    .survey_pdf button.survey-inner-btn, .survey_pdf button.generate-btn { font-size: 14px; min-width: 123px; padding: 0 10px; height: auto; }
+    .survey_pdf .survey-container .participant-name-looped-360 p { font-size: 14px !IMPORTANT; line-height: 24px; }
+    .survey_pdf .survey-container .participants_bg { padding: 20px 30px; }
+    .survey_pdf .survey-container h3{ font-size: 18px !important; }
+    .wrapper-outer .side-nav { margin-left: -273px; }
+    nav.sideNavOuter button.toggleMenu { right: -27px; top: 0px; border-radius: 0px; }
+    .wrapper-outer .side-nav.sidenavMobile { margin-left: 0; }
+
 }
 @media screen and (max-width:767px) {
     nav.sideNavOuter.open .sideNavLogo img { display: block; } 
@@ -53,7 +63,7 @@
     .survey-tabs .gap-3 { gap: 6px !important; }
     .default-btn { min-width: 153px; font-size: 13px; min-height: 46px; line-height: 46px; padding: 0 10px; }
     .survey-tabs ul.survey-listings label{ font-size: 14px; }
-    .survey-inner .survey-container{ padding: 20px !important; }
+    .survey-inner .survey-container{ padding:20px 0 0 0 !important; }
     .login-hide-mobile{display: none;}
     .loginOuter .loginForm {background: #7abcdb;}
     .loginOuter .loginForm .default-btn { background: #fff; color: var(--theme-color); }
@@ -82,17 +92,40 @@
     .table-scroll { overflow: auto; }
     .headerSearch.text-end { text-align: center !important; }
     .wrapper-outer .main-content { padding: 15px 10px; }
-    .participant-name-looped-360 table th { font-size: 13px; font-weight: 600; }
-    .participant-name-looped-360 table  td { font-size: 14px; }
+    .participant-name-looped-360 table th { font-size: 12px; font-weight: 600; padding: 6px 10px !important;}
+    .participant-name-looped-360 table  td { font-size: 12px; padding: 6px 10px !important; }
     .participant-name-looped-360 .graph-box .graph_inner { width: 100% !important; }
     .chat-smart-goal p{ font-size: 14px; line-height: 24px; }
     .chat-gpt-summary h2 { font-size: 19px; line-height: 25px; }
-    .survey-inner .survey-container h3{ font-size: 17px; }
+    .survey-inner .survey-container h3{ font-size: 16px !important; }
     ul.custom-tabs.nav.nav-tabs{ margin-bottom: 0 !important; }
     .custom-tabs .nav-item .nav-link.active{ font-size: 14px; }
     .chat-gpt-summary .summary-item p{ font-size: 14px; }
-    .survey-container h2 { font-size: 20px; margin-bottom: 10px; }
+    .survey-container h2 { font-size: 19px !important; margin-bottom: 10px; }
     .survey-container .graph-box p { margin-top: 5px !important; font-size: 15px; }
+    .participant-name-looped-360 p { font-size: 14px !important; line-height: 26px; margin: 9px 0 !important; }
+    .participants_bg{ padding: 26px 20px !important; }
+    .participants_bg h3 { font-size: 16px !important; }
+    .summary_graph_top { padding: 10px 20px !important; }
+    .participant-name-looped-360 .participants_bg  p { font-size: 12px !important; line-height: 22px; }
+    .survey-container .chat-gpt-summary h2 { font-size: 16px !important; }
+    .survey-container .chat-gpt-summary p { font-size: 14px !important; }
+    .survey-container .chat-gpt-summary p strong { font-size: 17px !important; }
+    .summary-item.chat-smart-goal{ padding: 30px 20px !important; }
+    .summary-section.summary-inner-text .summary_inner_box p strong,
+    .summary-section.summary-inner-text p strong,
+    .summary-section.summary-inner-text .summary_inner_box h4.font-frank,
+    .summary-section.summary-inner-text h4.font-frank
+    { padding-top: 0; font-size: 15px !IMPORTANT; }
+    .summary-section.summary-inner-text .summary_inner_box p, .summary-section.summary-inner-text p { font-size: 13px !important; }
+    .summary-section.summary-inner-text p:empty { display: none; }
+    .summary-section.summary-inner-text .summary_inner_box { padding: 20px !important; }
+    .summary-item.chat-smart-goal .summary-section.summary-inner-text.mt-5 { padding: 20px !important; margin-top: 2rem !important; }
+    .survey-inner button.survey-inner-btn, button.generate-btn { min-width: 132px; min-height: 36px; font-size: 14px; }
+    .survey-inner .justify-content-end { justify-content: center !important; }
+    .survey-inner .survey-container .participants_bg ul li { font-size: 12px !important; line-height: 28px !important; }
+    .survey-inner .survey-container h3.margin_top { margin-top: 21px; }
+    .headerSearch .dropdown-menu{ padding: 6px 2px !important; right: 48px !important; }
 }
 
 @media screen and (max-width:480px) {

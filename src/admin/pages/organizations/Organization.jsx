@@ -120,10 +120,10 @@ export default function Organization() {
                     <div className='table-heading pt-3'>
                         <Container>
                             <Row>
-                                <Col md={6}>
+                                <Col md={4} lg={6}>
                                     {/* <span className='span-badge primary-tag'>12 members</span> */}
                                 </Col>
-                                <Col md={6} className='text-end p-0'>
+                                <Col md={8} lg={6} className='text-end p-0'>
                                     <form className='d-flex justify-content-end'>
                                         <input type='search' placeholder='Search...' value={searchTerm} onChange={handleSearch} className='form-control' />
                                         <Link to="create" className='default-btn' >Add Organizations  <PLusIcon /> </Link>

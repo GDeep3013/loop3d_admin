@@ -20,7 +20,7 @@ ChartJS.register(
     Legend
 );
 
-const ChartBar = ({ competency, data, chart2Data, pdf }) => {
+const ChartBar = ({ competency, index, data, chart2Data, pdf }) => {
     const chartRef1 = useRef(null); // Ref for the first chart
     const chartRef2 = useRef(null); // Ref for the second chart
     const [chartImage1, setChartImage1] = useState(null); // State for the first chart image
@@ -31,23 +31,23 @@ const ChartBar = ({ competency, data, chart2Data, pdf }) => {
         datasets: [
             {
                 label: 'Average Weightage',
-                data: Object.values(data).map((item) => item.averageWeightage),
+                data: Object.values(data)?.map((item) => item?.averageWeightage),
                 backgroundColor: 'rgb(23,74,109)',
             }
         ],
     };
 
     const chartData2 = {
-        labels: chart2Data.map((item) => item.question),
+        labels: chart2Data?.map((item) => item?.question),
         datasets: [
             {
                 label: 'Self',
-                data: Object.values(chart2Data).map((item) => item.self_average),
+                data: Object.values(chart2Data)?.map((item) => item?.self_average),
                 backgroundColor: 'rgb(23,74,109)',
             },
             {
                 label: 'Total others',
-                data: Object.values(chart2Data).map((item) => item.other_average),
+                data: Object.values(chart2Data)?.map((item) => item?.other_average),
                 backgroundColor: 'rgb(122,188,219)',
             }
         ],
@@ -140,7 +140,7 @@ const ChartBar = ({ competency, data, chart2Data, pdf }) => {
                     font: {
                         size: 14,
                     },
-                    callback: function(value) {
+                    callback: function (value) {
                         // Get the label for the current value
                         const label = this.getLabelForValue(value);
                         
@@ -197,14 +197,14 @@ const ChartBar = ({ competency, data, chart2Data, pdf }) => {
     }, [data, chart2Data]); // Run on data changes
 
     return (
-        <div className='page-break'>
-            <h3 className="text-white fw-normal font-frank mt-3" style={{ fontSize: '25px', lineHeight: '30px' }}>
+        <div style={(index > 0 && pdf) ? { marginTop:"60px",marginBottom:"10px"}:{}}>
+            <h3 className="text-white fw-normal font-frank mt-3" style={{ fontSize: '19px', lineHeight: '30px' }}>
                 <span>Competency:</span> {competency}
             </h3>
-            <p className="text-sm text-white font-poppins mt-1" style={pdf ? { marginBottom: '15px' } : {marginBottom:'24px'}}>
+            <p className="text-sm text-white font-poppins mt-1" style={pdf ? { fontSize: '14px', marginBottom: '14px' } : { fontSize:'14px', marginBottom:'17px'}}>
                 The {competency} competency is the proactive and empathetic approach leaders take to understand...
             </p>
-            <div className="graph_inner bottom_graph">
+            <div className="graph_inner bottom_graph ">
                 <div className="row">
                     {!pdf && <div className="col-12 col-lg-6">
                         {/* Chart.js Bar chart */}
@@ -224,8 +224,8 @@ const ChartBar = ({ competency, data, chart2Data, pdf }) => {
                  
                      {
                     (chartImage1 && pdf)&& (
-                        <div className="col-12 mt-4 p-4" style={chartImage1 && pdf ? { backgroundColor: '#ffffff', borderRadius: '10px' } : {}}>
-                                <img src={chartImage1} alt="First Chart as Image" style={{ maxWidth: '100%', width: '100%'}} />
+                        <div className="col-12 mt-4 p-4 pt-4" style={chartImage1 && pdf ? { backgroundColor: '#ffffff', borderRadius: '10px' } : {}}>
+                                <img src={chartImage1} alt="First Chart as Image" style={{ maxWidth: '100%', width: '84%'}} />
                                 </div>
                     )
                     }
@@ -246,8 +246,8 @@ const ChartBar = ({ competency, data, chart2Data, pdf }) => {
                     </div>}
                 
                     {(chartImage2 && pdf)&& (
-                        <div className="col-12 mt-4 p-4" style={chartImage2 && pdf ? { backgroundColor: '#ffffff', borderRadius: '10px' } : {}}>
-                            <img src={chartImage2} alt="Second Chart as Image" style={{ maxWidth: '100%', width: '100%' }} />
+                        <div className="col-12 mt-4 p-4 pt-4" style={chartImage2 && pdf ? { backgroundColor: '#ffffff', borderRadius: '10px' } : {}}>
+                            <img src={chartImage2} alt="Second Chart as Image"  style={{ maxWidth: '100%', width: '84%' }} />
                         </div>
                     )
                     }
