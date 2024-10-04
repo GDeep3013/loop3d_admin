@@ -197,7 +197,7 @@ const ChartBar = ({ competency, data, chart2Data, pdf }) => {
     }, [data, chart2Data]); // Run on data changes
 
     return (
-        <div>
+        <div className='page-break'>
             <h3 className="text-white fw-normal font-frank mt-3" style={{ fontSize: '25px', lineHeight: '30px' }}>
                 <span>Competency:</span> {competency}
             </h3>

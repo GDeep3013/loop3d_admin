@@ -211,7 +211,6 @@ const SurveySummary = () => {
             html2canvas: { scale: 2, useCORS: true },
             jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
             pagebreak: {
-                mode: ['avoid-all','css', 'legacy'],
                 before: 'page-break'
             }, // Adjust page break settings
         };
@@ -226,7 +225,7 @@ const SurveySummary = () => {
                 const totalPages = pdf.internal.getNumberOfPages();
                 for (let i = 1; i <= totalPages; i++) {
                     pdf.setPage(i);
-                    pdf.setFontSize(12);
+                    pdf.setFontSize(5);
                 }
             })
             .save()
@@ -355,19 +354,19 @@ const SurveySummary = () => {
                                     </p>
                                 </div>
 
-                                <div className="participants_bg" style={{ backgroundColor: '#174A6D', padding: "50px 30px" }}>
+                                <div className="participants_bg page-break" style={{ backgroundColor: '#174A6D', padding: "50px 30px" }}>
                                     <h2 className="text-white font-frank fw-normal">
                                         Summaries by Competency
                                     </h2>
                                     <div>{renderCharts()}</div>
                                 </div >
-                                <h3 c lassName="text-custom-color font-frank fw-medium mt-4" style={{ fontSize: '48px', lineHeight: '50px' }}>
+                                <h3 className=" page-break text-custom-color font-frank fw-medium mt-4 page-break" style={{ fontSize: '48px', lineHeight: '50px' }}>
                                     Open-Ended Comments
                                 </h3>
-                                <p c lassName="text-sm sm:text-base leading-relaxed text-gray-600 font-poppins mt-4 mb-4">
+                                <p className="text-sm sm:text-base leading-relaxed text-gray-600 font-poppins mt-4 mb-4">
                                     Here are the competencies that your manager selected as the most important to your role...
                                 </p>
-                                <di v className="chat-gpt-summary">
+                                <div className=" page-break chat-gpt-summary page-break">
                                     {summaryArray && (
                                         <>
                                             {/* Strengths and Skills */}
@@ -400,7 +399,7 @@ const SurveySummary = () => {
 
                                         </>
                                     )}
-                                </di>
+                                </div>
                                 {summaryArray && (
                                     <div className="summary-item chat-smart-goal" style={{ backgroundColor: '#F2F8FB', padding: '50px 20px' }}>
                                         <div className="summary-section summary-inner-text">
@@ -426,7 +425,7 @@ const SurveySummary = () => {
 
                                         <div className="summary-section summary-inner-text mt-5" style={{ backgroundColor: '#fff', padding: '35px 30px', borderRadius: '10px' }}>
                                             <h3 className="font-frank text-black" style={{ fontSize: '35px', lineHeight: '40px', textTransform: 'capitalize' }}>Development Opportunities</h3>
-                                            <p className="font-poppins" style={{ fontSize: '20px' }}>
+                                            <p className="font-poppins " style={{ fontSize: '20px' }}>
                                                 <strong className="font-frank fw-normal" style={{ fontSize: '20px' }}>Summary:</strong> Based on your results, your coworkers have identified potential areas for development to further enhance your skills.
                                             </p>
 
