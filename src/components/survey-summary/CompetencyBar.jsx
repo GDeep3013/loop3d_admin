@@ -125,7 +125,18 @@ const CompetencyBar = ({ data, pdf = false }) => {
         if (chartRef.current) {
             const chartInstance = chartRef.current;
             const canvas = chartInstance.canvas;
-            const image = canvas.toDataURL('image/png');
+    
+            // Create an offscreen canvas for backup rendering
+            const offscreenCanvas = document.createElement('canvas');
+            offscreenCanvas.width = canvas.width;
+            offscreenCanvas.height = canvas.height;
+    
+            // Copy content from the chart's canvas to the offscreen canvas
+            const context = offscreenCanvas.getContext('2d');
+            context.drawImage(canvas, 0, 0);
+    
+            // Generate image from the offscreen canvas
+            const image = offscreenCanvas.toDataURL('image/png');
             setChartImage(image);
         }
     };
