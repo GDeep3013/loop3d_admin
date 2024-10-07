@@ -9,6 +9,7 @@ import {
     Tooltip,
     Legend,
 } from 'chart.js';
+import axios from 'axios';
 
 // Register the necessary Chart.js components
 ChartJS.register(
@@ -20,7 +21,7 @@ ChartJS.register(
     Legend
 );
 
-const CompetencyBar = ({ data, pdf = false }) => {
+const CompetencyBar = ({ data, pdf = false ,survey_id}) => {
     const chartRef1 = useRef(null);
     const [chartImage1, setChartImage1] = useState(null); // State for the first chart image
 
@@ -121,29 +122,49 @@ const CompetencyBar = ({ data, pdf = false }) => {
                   window.removeEventListener('resize', handleResize);
               };
     }, []);
+
+    const saveChartImageToDB = async (chartImage, surveyId) => {
+        try {
+            const url = `/api/images/save-chart-image`;
+            const payload = {
+                survey_id: surveyId,  // Pass the survey ID
+                chart_image: chartImage,  // Base64 image data
+            };
+        
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'x-api-key': import.meta.env.VITE_X_API_KEY
+                },
+                body: JSON.stringify(payload)
+            });
+            if (response.ok) {
+                return await response.json();
+            } else {
+                console.error('Failed to create AssignCompetency');
+                return false;
+            }
+        } catch (error) {
+            console.error('Error creating AssignCompetency:', error);
+            return false;
+        }
+    };
+    
     const generateChartImage = (chartRef, setChartImage) => {
         if (chartRef.current) {
             const chartInstance = chartRef.current;
             const canvas = chartInstance.canvas;
-    
-            // Create an offscreen canvas for backup rendering
-            const offscreenCanvas = document.createElement('canvas');
-            offscreenCanvas.width = canvas.width;
-            offscreenCanvas.height = canvas.height;
-    
-            // Copy content from the chart's canvas to the offscreen canvas
-            const context = offscreenCanvas.getContext('2d');
-            context.drawImage(canvas, 0, 0);
-    
-            // Generate image from the offscreen canvas
-            const image = offscreenCanvas.toDataURL('image/png');
+            const image = canvas.toDataURL('image/png');
             setChartImage(image);
+            saveChartImageToDB(image, survey_id);
         }
     };
 
     useEffect(() => {
         generateChartImage(chartRef1, setChartImage1); // Generate image for the first chart
     }, [data]);
+
     return (
         <div className={`graph_inner ${chartClassName}`}>
             {!pdf && (<Bar data={chartData} ref={chartRef1} options={options} width={pdf ? "100%" : chartWidth} height={pdf ? "100%" : chartHeight} />)}

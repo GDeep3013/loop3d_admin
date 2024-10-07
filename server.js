@@ -23,6 +23,8 @@ const assignCompetencyRoutes = require('./routes/assignCompetencyRoutes');
 const surveyRoutes = require('./routes/surveyRoutes');// Adjust path as necessary
 const emailRoutes = require('./routes/emailRoutes');// Adjust path as necessary
 const goalsRoutes = require('./routes/goalRoutes');
+const imagesRoutes = require('./routes/surveyImageRoutes');
+
 
 
 
@@ -66,6 +68,8 @@ app.use('/competencies', authenticateHeaderKey, assignCompetencyRoutes);
 app.use('/surveys', authenticateHeaderKey, surveyRoutes);
 app.use('/emails', authenticateHeaderKey, emailRoutes);
 app.use('/plans', authenticateHeaderKey, goalsRoutes);
+app.use('/images', authenticateHeaderKey, imagesRoutes);
+
 
 
 

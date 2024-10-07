@@ -178,7 +178,7 @@ const SurveySummary = () => {
         if (!reportData) return null;
 
         return Object.entries(reportData).map(([competency, data], index) => (
-            chart2Data[competency] && <ChartBar key={competency} index={index} competency={competency} data={data} chart2Data={chart2Data[competency]} reportData={reportData} pdf={pdf} />
+            chart2Data[competency] && <ChartBar key={competency} survey_id={id} index={index} competency={competency} data={data} chart2Data={chart2Data[competency]} reportData={reportData} pdf={pdf} />
         ));
     };
 
@@ -187,7 +187,7 @@ const SurveySummary = () => {
         if (!reportData) {
             return null;
         } else {
-            return <CompetencyBar data={reportData} pdf={pdf} />
+            return <CompetencyBar data={reportData} pdf={pdf} survey_id={id} />
         }
         // 
     };
@@ -240,8 +240,10 @@ const SurveySummary = () => {
     // console.log('summaryArray', summaryArray)
 
     useEffect(() => {
-        renderCharts()
-        renderCharts2()
+        if (!loader) {
+            renderCharts()
+            renderCharts2()    
+        }
     }, [pdf])
 
 

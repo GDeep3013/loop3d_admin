@@ -20,7 +20,7 @@ ChartJS.register(
     Legend
 );
 
-const ChartBar = ({ competency, index, data, chart2Data, pdf }) => {
+const ChartBar = ({ competency, index, data, chart2Data, pdf,survey_id }) => {
     const chartRef1 = useRef(null); // Ref for the first chart
     const chartRef2 = useRef(null); // Ref for the second chart
     const [chartImage1, setChartImage1] = useState(null); // State for the first chart image
@@ -185,20 +185,57 @@ const ChartBar = ({ competency, index, data, chart2Data, pdf }) => {
     }, []);
 
     // Function to generate chart image from canvas
+    let images = [];
     const generateChartImage = (chartRef, setChartImage) => {
         if (chartRef.current) {
             const chartInstance = chartRef.current;
             const canvas = chartInstance.canvas;
             const image = canvas.toDataURL('image/png');
             setChartImage(image);
+            images.push(image)
         }
     };
 
     useEffect(() => {
         generateChartImage(chartRef1, setChartImage1); // Generate image for the first chart
         generateChartImage(chartRef2, setChartImage2); // Generate image for the second chart
-    }, [data, chart2Data]); // Run on data changes
+    }, [data, chart2Data]); 
 
+    const saveChartImageToDB = async (chartImage, surveyId) => {
+        try {
+            const url = `/api/images/save-chart-image`;
+            const payload = {
+                survey_id: surveyId,  // Pass the survey ID
+                summaries_by_competency: chartImage,  // Base64 image data
+            };
+        
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'x-api-key': import.meta.env.VITE_X_API_KEY
+                },
+                body: JSON.stringify(payload)
+            });
+            if (response.ok) {
+                return await response.json();
+            } else {
+                console.error('Failed to create AssignCompetency');
+                return false;
+            }
+        } catch (error) {
+            console.error('Error creating AssignCompetency:', error);
+            return false;
+        }
+    };
+
+    useEffect(() => {
+        if (images.length > 5) {
+            
+            saveChartImageToDB(images,survey_id)
+        }
+    }, [images]);
+    console.log('images',images)
     return (
         <div style={(index == 1 &&  pdf) ? { marginTop:"160px",marginBottom:"10px"}:(index == 2 &&  pdf)?{ marginTop:"300px",marginBottom:"10px"}:{}}>
             <h3 className="text-white fw-normal font-frank mt-3" style={{ fontSize: '19px', lineHeight: '30px' }}>
