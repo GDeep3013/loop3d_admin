@@ -200,7 +200,7 @@ const ChartBar = ({ competency, index, data, chart2Data, pdf }) => {
     }, [data, chart2Data]); // Run on data changes
 
     return (
-        <div style={(index == 1 &&  pdf) ? { marginTop:"80px",marginBottom:"10px"}:(index == 2 &&  pdf)?{ marginTop:"200px",marginBottom:"10px"}:{}}>
+        <div style={(index == 1 &&  pdf) ? { marginTop:"160px",marginBottom:"10px"}:(index == 2 &&  pdf)?{ marginTop:"300px",marginBottom:"10px"}:{}}>
             <h3 className="text-white fw-normal font-frank mt-3" style={{ fontSize: '19px', lineHeight: '30px' }}>
                 <span>Competency:</span> {competency}
             </h3>

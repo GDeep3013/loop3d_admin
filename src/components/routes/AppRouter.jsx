@@ -82,8 +82,10 @@ const AppRouter = () => {
     console.log('currentUrl',currentUrl)
 
     // Define guest routes
-    const guestRoutes = ['/login', '/forget-password', '/reset-password', '/create-password'];
-    const loopLeadRoutes = ['/loop-lead/participant/create/','/loop-lead/view-survey-participant/', '/loop-lead/view-survey-participant/'];
+    const guestRoutes = ['/','/login', '/forget-password', '/reset-password', '/create-password'];
+    const loopLeadRoutes = ['/loop-lead/participant/create/', '/loop-lead/view-survey-participant/', '/loop-lead/view-survey-participant/','survey-summary','/plans'];
+    const managerRoutes = ['/manager/surveys/create','/manager/view-loop_lead', '/manager/chat-bot','survey-summary'];
+
 
     if (user && currentUrl == '/reset-password' || currentUrl == '/create-password' ) {
       localStorage.removeItem("_token");
@@ -97,14 +99,10 @@ const AppRouter = () => {
     } 
     else if (user && guestRoutes.includes(currentUrl)) {
       if (user.role === "admin") {
-        if (currentUrl != "report-download") {
           navigate('/organizations');     
-        }
-      } else if (user.role === "manager") {
-        if (currentUrl != "report-download") {
+      } else if (user.role === "manager" && !loopLeadRoutes.includes(currentUrl)) {
           navigate('/manager/dashboard');
-        }
-      } else if (user.role === "looped_lead" && !loopLeadRoutes.includes(currentUrl)) {
+      } else if (user.role === "looped_lead" && !managerRoutes.includes(currentUrl)) {
           navigate('/loop-lead/dashboard');
         
       }
