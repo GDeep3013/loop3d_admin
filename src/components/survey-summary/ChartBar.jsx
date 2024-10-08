@@ -186,23 +186,24 @@ const ChartBar = ({ competency, index, data, chart2Data, pdf,survey_id ,images,s
     }, []);
 
   
-    const generateChartImage = (chartRef, setChartImage,type) => {
-        if (chartRef.current) {
-            const chartInstance = chartRef.current;
-            const canvas = chartInstance.canvas;
-            const image = canvas.toDataURL('image/png');
-            setChartImage(image);
-                images[type].push(image)    
-           
-        }
+    const generateChartImage = (chartRef, setChartImage, type) => {
+        setTimeout(() => {  // Introduce a slight delay to ensure the chart has fully rendered
+            if (chartRef.current) {
+                const chartInstance = chartRef.current;
+                const canvas = chartInstance.canvas;
+                const image = canvas.toDataURL('image/png');
+                setChartImage(image);
+                images[type].push(image);  
+            }
+        }, 500);  // Adjust the delay as necessary
     };
 
     useEffect(() => {
         if (data && chart2Data && chartRef1.current && chartRef2.current) {
-            generateChartImage(chartRef1, setChartImage1, "chartRef1"); // Generate image for the first chart
+            generateChartImage(chartRef1, setChartImage1, "chartRef1"); 
             generateChartImage(chartRef2, setChartImage2, "chartRef2");
-        }// Generate image for the second chart
-    }, [data ,chart2Data, chartRef1, chartRef2]); 
+        }
+    }, [data, chart2Data,chartRef1,chartRef2]); 
 
 
     const saveChartImageToDB = async (chartImage, surveyId) => {
