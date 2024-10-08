@@ -270,7 +270,7 @@ const ChartBar = ({ competency, index, data, chart2Data, pdf,survey_id ,images,s
                      {
                     (pdf)&& (
                         <div className="col-12 mt-4 p-4 pt-4" style={chartImage1 && pdf ? { backgroundColor: '#ffffff', borderRadius: '10px' } : {}}>
-                                <img src={`/public/uploads/${savedImages[0]['chartRef1'][index]}`} alt="First Chart as Image" style={{ maxWidth: '100%', width: '70%'}} />
+                                <img src={`/public/uploads/${savedImages?.[0]?.['chartRef1']?.[index]}`} alt="First Chart as Image" style={{ maxWidth: '100%', width: '70%'}} />
                                 </div>
                     )
                     }
@@ -292,7 +292,7 @@ const ChartBar = ({ competency, index, data, chart2Data, pdf,survey_id ,images,s
                 
                     {(pdf)&& (
                         <div className="col-12 mt-4 p-4 pt-4" style={chartImage2 && pdf ? { backgroundColor: '#ffffff', borderRadius: '10px' } : {}}>
-                            <img src={`/public/uploads/${savedImages[0]['chartRef2'][index]}`} alt="Second Chart as Image"  style={{ maxWidth: '100%', width: '100%' }} />
+                            <img src={`/public/uploads/${savedImages?.[0]?.['chartRef2']?.[index]}`} alt="Second Chart as Image"  style={{ maxWidth: '100%', width: '100%' }} />
                         </div>
                     )
                     }
