@@ -287,9 +287,9 @@ const ChartBar = ({ competency, index, data, chart2Data, pdf,survey_id ,images,s
                       
                     </div>}
                 
-                    {(chartImage2 && pdf)&& (
+                    {(pdf)&& (
                         <div className="col-12 mt-4 p-4 pt-4" style={chartImage2 && pdf ? { backgroundColor: '#ffffff', borderRadius: '10px' } : {}}>
-                            <img src={`/uploads/${savedImages[0]['chartRef2'][index]}`} alt="Second Chart as Image"  style={{ maxWidth: '100%', width: '100%' }} />
+                            <img src={`/public/uploads/${savedImages[0]['chartRef2'][index]}`} alt="Second Chart as Image"  style={{ maxWidth: '100%', width: '100%' }} />
                         </div>
                     )
                     }

@@ -158,6 +158,7 @@ const CompetencyBar = ({ data, pdf = false ,survey_id,savedImages}) => {
             const canvas = chartInstance.canvas;
             const image = canvas.toDataURL('image/png');
             setChartImage(image);
+            console.log(savedImages?.chart_image)
             if (savedImages?.chart_image == undefined) {
 
                 saveChartImageToDB(image, survey_id);
