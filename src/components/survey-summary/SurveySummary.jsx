@@ -13,7 +13,10 @@ import html2pdf from 'html2pdf.js';
 const SurveySummary = () => {
     const { id } = useParams();
     // const navigate = useNavigate()
-
+    let images = {
+        chartRef1: [],
+        chartRef2: []
+    };
     const [completedResponses, setCompletedResponses] = useState({});
     const [totals, setTotals] = useState({});
     const [loader, setLoader] = useState(true);
@@ -25,6 +28,7 @@ const SurveySummary = () => {
    // const [samrtGoals, setSamrtGoals] = useState();
     const [pdf, setPdf] = useState(false);
     const [chart2Data, setChart2Data] = useState();
+    const [savedImages,setSavedImages]= useState();
 
     const reportRef = useRef(null);
 
@@ -121,36 +125,28 @@ const SurveySummary = () => {
         }
     };
 
-    const getSmartGoals = async (survey_id, competencyReport) => {
+    const getChartImagesFromDB = async (surveyId) => {
         try {
-            // setLoader(true);
-            const developmentalOpportunity = competencyReport?.developmentalOpportunity || 'nothing';
-            const url = `/api/surveys/smart-goals/${survey_id}/${developmentalOpportunity}/${competencyReport?.topStrength}`;
-            // console.log('test1', url)
+            const url = `/api/images/chart-images/${surveyId}`; // Endpoint to get images
             const response = await fetch(url, {
-                headers: { 'x-api-key': import.meta.env.VITE_X_API_KEY }
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'x-api-key': import.meta.env.VITE_X_API_KEY
+                },
             });
-
             if (response.ok) {
-                const data = await response.json();
-                if (data?.samrtgoals) {
-                    //setSamrtGoals(data?.samrtgoals)
-                    // console.log(data)
-                }
+                const images = await response.json();
+                console.log
+                setSavedImages(images?.data); // Store the retrieved images in state
             } else {
-                console.error('Failed to fetch getSmartGoals');
+                console.error('Failed to retrieve chart images');
             }
         } catch (error) {
-            console.error('Error fetching getSmartGoals:', error);
-        } finally {
-            // setLoader(false);
+            console.error('Error retrieving chart images:', error);
         }
+    };
 
-    }
-
-    useEffect(() => {
-        getSmartGoals(id, competencyReport)
-    }, [competencyReport])
 
     useEffect(() => {
         if (id) {
@@ -158,6 +154,7 @@ const SurveySummary = () => {
             getSurvey(id)
             generateCompetencyAverageReport(id)
             generateSurveyReport(id, "Generate")
+            getChartImagesFromDB(id)
         }
     }, [id]);
 
@@ -178,7 +175,7 @@ const SurveySummary = () => {
         if (!reportData) return null;
 
         return Object.entries(reportData).map(([competency, data], index) => (
-            chart2Data[competency] && <ChartBar key={competency} survey_id={id} index={index} competency={competency} data={data} chart2Data={chart2Data[competency]} reportData={reportData} pdf={pdf} />
+            chart2Data[competency] && <ChartBar key={competency} savedImages={savedImages?.summaries_by_competency?.[0]} images={images} survey_id={id} index={index} competency={competency} data={data} chart2Data={chart2Data[competency]} reportData={reportData} pdf={pdf} />
         ));
     };
 
@@ -187,7 +184,7 @@ const SurveySummary = () => {
         if (!reportData) {
             return null;
         } else {
-            return <CompetencyBar data={reportData} pdf={pdf} survey_id={id} />
+            return <CompetencyBar data={reportData} pdf={pdf} savedImages={savedImages} survey_id={id} />
         }
         // 
     };
@@ -383,7 +380,7 @@ const SurveySummary = () => {
                                             </div>
 
                                             {/* Suggestions for Improvement */}
-                                            <div className="summary-item page-break" style={{  marginTop:pdf?'260px':'',backgroundColor: '#F2F8FB', padding: '30px 20px' }}>
+                                            <div className="summary-item" style={{  marginTop:pdf?'260px':'',backgroundColor: '#F2F8FB', padding: '30px 20px' }}>
                                                 <h2 className="font-frank text-black" style={{ fontSize: '21px', lineHeight: '27px' }}>Q2. What suggestions do you have to make this person a stronger performer and more effective?</h2>
                                                 <p className="font-poppins" style={{ fontSize: '16px' }}> <strong className=" font-frank fw-normal" style={{ fontSize: '16px' }}>Total Summary:</strong> Example summary.</p>
                                                 {summaryArray?.question_summary?.suggestionsForImprovement?.map((item, index) => (
@@ -392,7 +389,7 @@ const SurveySummary = () => {
                                             </div>
 
                                             {/* Other Comments */}
-                                            <div className="summary-item  page-break" style={{ marginTop:pdf?'260px':'', backgroundColor: '#F2F8FB', padding: '30px 20px' }}>
+                                            <div className="summary-item  page-break" style={{ marginTop:pdf?'370px':'', backgroundColor: '#F2F8FB', padding: '30px 20px' }}>
                                                 <h2 className="font-frank text-black" style={{ fontSize: '21px', lineHeight: '27px' }}>Q3. Other comments?</h2>
                                                 <p className="font-poppins" style={{ fontSize: '20px' }}> <strong className=" font-frank fw-normal" style={{ fontSize: '25px' }}>Total Summary:</strong> Example summary.</p>
                                                 {summaryArray?.question_summary?.otherComments?.map((item, index) => (
@@ -405,7 +402,7 @@ const SurveySummary = () => {
                                     )}
                                 </div>
                                 {summaryArray && (
-                                    <div className="summary-item chat-smart-goal" style={{marginTop:pdf?'260px':'', backgroundColor: '#F2F8FB', padding: '50px 20px' }}>
+                                    <div className="summary-item chat-smart-goal" style={{marginTop:pdf?'250px':'', backgroundColor: '#F2F8FB', padding: '50px 20px' }}>
                                         <div className="summary-section summary-inner-text">
                                             <h3 className="font-frank text-custom-color" style={{ fontSize: '25px', lineHeight: '40px' }}>
                                                 LOOP3D SMART Action Plan
@@ -427,7 +424,7 @@ const SurveySummary = () => {
                                             </div>
                                         </div >
 
-                                        <div className="summary-section summary-inner-text" style={{marginTop:pdf?'400px':'48px', backgroundColor: '#fff', padding: '35px 30px', borderRadius: '10px' }}>
+                                        <div className="summary-section summary-inner-text" style={{marginTop:pdf?'300px':'48px', backgroundColor: '#fff', padding: '35px 30px', borderRadius: '10px' }}>
                                             <h3 className="font-frank text-black" style={{ fontSize: '25px', lineHeight: '40px', textTransform: 'capitalize' }}>Development Opportunities</h3>
                                             <p className="font-poppins" style={{ fontSize: '16px' }}>
                                                 <strong className="font-frank fw-normal" style={{ fontSize: '20px', paddingBottom:'0'}}>Summary:</strong> Based on your results, your coworkers have identified potential areas for development to further enhance your skills.

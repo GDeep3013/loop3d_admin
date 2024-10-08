@@ -3,11 +3,14 @@ const bcrypt = require('bcrypt');
 const path = require('path');
 require('dotenv').config()
 
+const bodyParser = require('body-parser');
 
 // const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const cors = require('cors');
-
+const app = express();
+app.use(bodyParser.json({ limit: '50mb' }));  // Adjust '50mb' as needed
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 /**
  * Import Middleware
 */
@@ -29,7 +32,7 @@ const imagesRoutes = require('./routes/surveyImageRoutes');
 
 
 
-const app = express();
+
 
 app.use(express.json());
 // app.use(express.urlencoded({ extended: true }));

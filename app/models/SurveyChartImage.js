@@ -9,7 +9,7 @@ const SurveyImageSchema = new mongoose.Schema({
         type: String,
     },
     summaries_by_competency: {
-        type: [String],
+        type: [Array],
     },
     createdAt: {
         type: Date,

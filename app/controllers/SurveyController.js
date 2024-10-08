@@ -1351,7 +1351,6 @@ exports.getSmartGoals = async (req, res) => {
         dev_opp,top_str
     } = req.params;
     const surveyReport = await SurveyReport.findOne( { survey_id: survey_id } );
-    console.log(surveyReport?.response_Data, dev_opp, top_str);
     // let prompt = `Write 2,2 SMART goals (make sure they are measurable with specific metrics, actually possible for the average person, and use specific dates or frequencies with a timeframe) for this employee to achieve in the next 30 days based on their top  strength and developmental opportunity.
     //             format:
                 

@@ -20,12 +20,14 @@ ChartJS.register(
     Legend
 );
 
-const ChartBar = ({ competency, index, data, chart2Data, pdf,survey_id }) => {
+const ChartBar = ({ competency, index, data, chart2Data, pdf,survey_id ,images,savedImages}) => {
     const chartRef1 = useRef(null); // Ref for the first chart
     const chartRef2 = useRef(null); // Ref for the second chart
     const [chartImage1, setChartImage1] = useState(null); // State for the first chart image
-    const [chartImage2, setChartImage2] = useState(null); // State for the second chart image
-
+    const [chartImage2, setChartImage2] = useState(null);
+    
+    const [chartWidth, setChartWidth] = useState(700);
+    const [chartHeight, setChartHeight] = useState(400);
     const chartData = {
         labels: Object.keys(data),
         datasets: [
@@ -156,8 +158,7 @@ const ChartBar = ({ competency, index, data, chart2Data, pdf,survey_id }) => {
     };
 
 
-    const [chartWidth, setChartWidth] = useState(700);
-    const [chartHeight, setChartHeight] = useState(400);
+    
     useEffect(() => {
         const handleResize = () => {
             // Calculate the new chart width based on screen size
@@ -184,21 +185,21 @@ const ChartBar = ({ competency, index, data, chart2Data, pdf,survey_id }) => {
         };
     }, []);
 
-    // Function to generate chart image from canvas
-    let images = [];
-    const generateChartImage = (chartRef, setChartImage) => {
+  
+    const generateChartImage = (chartRef, setChartImage,type) => {
         if (chartRef.current) {
             const chartInstance = chartRef.current;
             const canvas = chartInstance.canvas;
             const image = canvas.toDataURL('image/png');
             setChartImage(image);
-            images.push(image)
+                images[type].push(image)    
+           
         }
     };
 
     useEffect(() => {
-        generateChartImage(chartRef1, setChartImage1); // Generate image for the first chart
-        generateChartImage(chartRef2, setChartImage2); // Generate image for the second chart
+        generateChartImage(chartRef1, setChartImage1,"chartRef1"); // Generate image for the first chart
+        generateChartImage(chartRef2, setChartImage2,"chartRef2"); // Generate image for the second chart
     }, [data, chart2Data]); 
 
     const saveChartImageToDB = async (chartImage, surveyId) => {
@@ -230,12 +231,13 @@ const ChartBar = ({ competency, index, data, chart2Data, pdf,survey_id }) => {
     };
 
     useEffect(() => {
-        if (images.length > 5) {
+        if (images.chartRef1.length > 2 && images.chartRef2.length > 2 && savedImages ==undefined) {
             
             saveChartImageToDB(images,survey_id)
         }
     }, [images]);
-    console.log('images',images)
+ 
+// console.log(savedImages[0]['chartRef2'][index])
     return (
         <div style={(index == 1 &&  pdf) ? { marginTop:"160px",marginBottom:"10px"}:(index == 2 &&  pdf)?{ marginTop:"300px",marginBottom:"10px"}:{}}>
             <h3 className="text-white fw-normal font-frank mt-3" style={{ fontSize: '19px', lineHeight: '30px' }}>
@@ -263,9 +265,9 @@ const ChartBar = ({ competency, index, data, chart2Data, pdf,survey_id }) => {
                     </div>}
                  
                      {
-                    (chartImage1 && pdf)&& (
+                    (pdf)&& (
                         <div className="col-12 mt-4 p-4 pt-4" style={chartImage1 && pdf ? { backgroundColor: '#ffffff', borderRadius: '10px' } : {}}>
-                                <img src={chartImage1} alt="First Chart as Image" style={{ maxWidth: '100%', width: '70%'}} />
+                                <img src={`/uploads/${savedImages[0]['chartRef1'][index]}`} alt="First Chart as Image" style={{ maxWidth: '100%', width: '70%'}} />
                                 </div>
                     )
                     }
@@ -287,7 +289,7 @@ const ChartBar = ({ competency, index, data, chart2Data, pdf,survey_id }) => {
                 
                     {(chartImage2 && pdf)&& (
                         <div className="col-12 mt-4 p-4 pt-4" style={chartImage2 && pdf ? { backgroundColor: '#ffffff', borderRadius: '10px' } : {}}>
-                            <img src={chartImage2} alt="Second Chart as Image"  style={{ maxWidth: '100%', width: '100%' }} />
+                            <img src={`/uploads/${savedImages[0]['chartRef2'][index]}`} alt="Second Chart as Image"  style={{ maxWidth: '100%', width: '100%' }} />
                         </div>
                     )
                     }

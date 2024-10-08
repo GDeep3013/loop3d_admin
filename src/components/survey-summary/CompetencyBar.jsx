@@ -21,7 +21,7 @@ ChartJS.register(
     Legend
 );
 
-const CompetencyBar = ({ data, pdf = false ,survey_id}) => {
+const CompetencyBar = ({ data, pdf = false ,survey_id,savedImages}) => {
     const chartRef1 = useRef(null);
     const [chartImage1, setChartImage1] = useState(null); // State for the first chart image
 
@@ -92,6 +92,7 @@ const CompetencyBar = ({ data, pdf = false ,survey_id}) => {
     const [chartClassName, setChartClassName] = useState(''); 
     const [chartWidth, setChartWidth] = useState(700); // Initialize chartWidth state
     const [chartHeight, setChartHeight] = useState(400);
+
     useEffect(() => {
         const handleResize = () => {
             // Calculate the new chart width based on screen size
@@ -157,19 +158,23 @@ const CompetencyBar = ({ data, pdf = false ,survey_id}) => {
             const canvas = chartInstance.canvas;
             const image = canvas.toDataURL('image/png');
             setChartImage(image);
-            saveChartImageToDB(image, survey_id);
+            if (savedImages?.chart_image == undefined) {
+
+                saveChartImageToDB(image, survey_id);
+            }
         }
     };
 
     useEffect(() => {
         generateChartImage(chartRef1, setChartImage1); // Generate image for the first chart
     }, [data]);
-
+   
+ 
     return (
         <div className={`graph_inner ${chartClassName}`}>
             {!pdf && (<Bar data={chartData} ref={chartRef1} options={options} width={pdf ? "100%" : chartWidth} height={pdf ? "100%" : chartHeight} />)}
             {(chartImage1 && pdf) && (
-                <img src={chartImage1} alt="First Chart as Image" style={{ maxWidth: '100%', width: '100%',height:"240px" }} />
+                <img src={`/uploads/${savedImages?.chart_image}`} alt="First Chart as Image" style={{ maxWidth: '100%', width: '100%',height:"240px" }} />
             )}
         </div>
     );
