@@ -187,7 +187,7 @@ const ChartBar = ({ competency, index, data, chart2Data, pdf,survey_id ,images,s
 
   
     const generateChartImage = (chartRef, setChartImage, type) => {
-        setTimeout(() => {  // Introduce a slight delay to ensure the chart has fully rendered
+
             if (chartRef.current) {
                 const chartInstance = chartRef.current;
                 const canvas = chartInstance.canvas;
@@ -195,7 +195,7 @@ const ChartBar = ({ competency, index, data, chart2Data, pdf,survey_id ,images,s
                 setChartImage(image);
                 images[type].push(image);  
             }
-        }, 500);  // Adjust the delay as necessary
+   
     };
 
     useEffect(() => {
