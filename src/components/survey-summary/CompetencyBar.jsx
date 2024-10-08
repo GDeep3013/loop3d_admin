@@ -175,7 +175,7 @@ const CompetencyBar = ({ data, pdf = false ,survey_id,savedImages}) => {
         <div className={`graph_inner ${chartClassName}`}>
             {!pdf && (<Bar data={chartData} ref={chartRef1} options={options} width={pdf ? "100%" : chartWidth} height={pdf ? "100%" : chartHeight} />)}
             {(chartImage1 && pdf) && (
-                <img src={`/uploads/${savedImages?.chart_image}`} alt="First Chart as Image" style={{ maxWidth: '100%', width: '100%',height:"240px" }} />
+                <img src={`/public/uploads/${savedImages?.chart_image}`} alt="First Chart as Image" style={{ maxWidth: '100%', width: '100%',height:"240px" }} />
             )}
         </div>
     );
