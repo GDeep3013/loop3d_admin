@@ -198,9 +198,12 @@ const ChartBar = ({ competency, index, data, chart2Data, pdf,survey_id ,images,s
     };
 
     useEffect(() => {
-        generateChartImage(chartRef1, setChartImage1,"chartRef1"); // Generate image for the first chart
-        generateChartImage(chartRef2, setChartImage2,"chartRef2"); // Generate image for the second chart
-    }, [data, chart2Data]); 
+        if (data && chart2Data && chartRef1.current && chartRef2.current) {
+            generateChartImage(chartRef1, setChartImage1, "chartRef1"); // Generate image for the first chart
+            generateChartImage(chartRef2, setChartImage2, "chartRef2");
+        }// Generate image for the second chart
+    }, [data ,chart2Data, chartRef1, chartRef2]); 
+
 
     const saveChartImageToDB = async (chartImage, surveyId) => {
         try {

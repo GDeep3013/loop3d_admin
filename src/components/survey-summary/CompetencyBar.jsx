@@ -156,20 +156,24 @@ const CompetencyBar = ({ data, pdf = false ,survey_id,savedImages}) => {
         if (chartRef.current) {
             const chartInstance = chartRef.current;
             const canvas = chartInstance.canvas;
-            const image = canvas.toDataURL('image/png');
-            setChartImage(image);
-            console.log(savedImages?.chart_image)
-            if (savedImages?.chart_image == undefined) {
-
-                saveChartImageToDB(image, survey_id);
-            }
+    
+            // Delay the generation slightly to ensure the chart has rendered
+            setTimeout(() => {
+                const image = canvas.toDataURL('image/png');
+                setChartImage(image);
+                console.log(savedImages?.chart_image);
+                if (!savedImages?.chart_image) {
+                    saveChartImageToDB(image, survey_id);
+                }
+            }, 500); // Delay for 500ms to ensure the chart is rendered
         }
     };
 
     useEffect(() => {
-        generateChartImage(chartRef1, setChartImage1); // Generate image for the first chart
-    }, [data]);
-   
+        if (data && chartRef1.current) {
+            generateChartImage(chartRef1, setChartImage1); // Generate image for the first chart
+        }
+    }, [data, chartRef1]);
  
     return (
         <div className={`graph_inner ${chartClassName}`}>
