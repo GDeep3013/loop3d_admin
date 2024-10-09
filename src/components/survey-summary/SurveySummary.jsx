@@ -187,7 +187,7 @@ const SurveySummary = () => {
             return false;
         }
     };
-    console.log('savedImages',savedImages)
+
     useEffect(() => {
         if (images.chartRef1.length > 2 && images.chartRef2.length > 2 && savedImages == undefined) {
             saveChartImageToDB(images, id)
@@ -275,12 +275,12 @@ const SurveySummary = () => {
     };
     // console.log('summaryArray', summaryArray)
 
-    // useEffect(() => {
-    //     if (!loader) {
-    //         renderCharts()
-    //         renderCharts2()    
-    //     }
-    // }, [pdf])
+    useEffect(() => {
+        if (!loader) {
+            renderCharts()
+            renderCharts2()    
+        }
+    }, [pdf])
 
 
     return (

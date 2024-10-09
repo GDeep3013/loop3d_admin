@@ -70,7 +70,7 @@ const ChartBar = ({ competency, index, data, chartRef1, chartRef2,chart2Data, pd
             },
             title: {
                 display: true,
-                text: 'Competency Chart',
+                text: competency,
             },
         },
     };
@@ -110,9 +110,9 @@ const ChartBar = ({ competency, index, data, chartRef1, chartRef2,chart2Data, pd
             },
             title: {
                 display: true,
-                text: 'Competency Chart',
+                text: competency + ` Survey Items`,
                 font: {
-                    size: 24,
+                    size: 14,
                     weight: 'bold',
                     family: 'Arial',
                     color: '#174A6D',
@@ -208,12 +208,13 @@ const ChartBar = ({ competency, index, data, chartRef1, chartRef2,chart2Data, pd
         if (data && chart2Data && chartRef1.current && chartRef2.current) {
             // Make sure the specific chart index exists in both references
             if (chartRef1.current[index] && chartRef2.current[index]) {
-                // Generate the chart images for both charts
-                generateChartImage(chartRef1.current[index], setChartImage1, "chartRef1");
-                generateChartImage(chartRef2.current[index], setChartImage2, "chartRef2");
+          
+                    generateChartImage(chartRef1.current[index], setChartImage1, "chartRef1");
+                    generateChartImage(chartRef2.current[index], setChartImage2, "chartRef2");
+
             }
         }
-    }, [data, chart2Data, index, chartRef1.current, chartRef2.current]);
+    }, [data, chart2Data, index]); // Only depend on data, chart2Data, and index
 
 
 
