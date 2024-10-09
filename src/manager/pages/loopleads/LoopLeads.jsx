@@ -56,7 +56,7 @@ export default function LoopLeads({  }) {
                     </div>
                 </div>
             </div>
-            <div className='table-scroll table-pd'>
+            <div className='table-scroll shadow-border-wrapper'>
             <table className='table'>
                 <thead>
                     <tr>

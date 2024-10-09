@@ -76,7 +76,7 @@ export default function EmployeeTable({ }) {
     }
   };
   return (<>
-    <div className='table-inner main-wrapper'>
+    <div className='table-inner main-wrapper action-right'>
       <div className='content-outer mt-3'>
         <div className='tabe-outer'>
           <div className='table-heading'>

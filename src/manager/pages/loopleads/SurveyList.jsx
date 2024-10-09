@@ -64,7 +64,7 @@ export default function SurveyList({ loop_lead_id, org_id }) {
       <table className='table'>
         <thead>
           <tr>
-            <th>Survey #</th>
+            <th>Survey</th>
             <th>Initiation Date</th>
             <th>Total Invitees</th>
             <th>Completed Surveys</th>

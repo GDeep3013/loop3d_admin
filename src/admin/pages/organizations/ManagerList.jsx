@@ -70,7 +70,7 @@ export default function ManagerList({ organization }) {
                     {users.length === 0 ? (
                         <tr>
                             <td colSpan="12" style={{ textAlign: 'center' }}>
-                                <h4>No Loop3D Lead Found</h4>
+                                <h4>No Loop3D Manager</h4>
                             </td>
                         </tr>
                     ) : (

@@ -219,7 +219,6 @@ const ChartBar = ({ competency, index, data,getChartImagesFromDB,chart2Data,surv
                         generateChartImage(chartRef2.current[index], setChartImage2, "chartRef2");
                     }
             }
-            console.log('images2',images)
         }, 1000);
     
         
@@ -253,11 +252,6 @@ const ChartBar = ({ competency, index, data,getChartImagesFromDB,chart2Data,surv
         }
     };
 
-
-
-
- 
-console.log('images',images)
     return (
         <div style={(index == 1 &&  pdf) ? { marginTop:"160px",marginBottom:"10px"}:(index == 2 &&  pdf)?{ marginTop:"300px",marginBottom:"10px"}:{}}>
             <h3 className="text-white fw-normal font-frank mt-3" style={{ fontSize: '19px', lineHeight: '30px' }}>

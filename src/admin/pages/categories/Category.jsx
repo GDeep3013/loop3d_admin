@@ -101,7 +101,7 @@ export default function Category() {
 
     return (
         <AuthLayout title={'Welcome to Competency'} subTitle={'Competency'}>
-  <div className="tabe-outer">
+            <div className="tabe-outer ">
                 <div className="main-back-heading">
                     <div className="container">
                         <div className="row">
@@ -117,12 +117,12 @@ export default function Category() {
                 </div>
             </div>
             
-<div className="content-outer pd-2 edit-org ">
+             <div className="content-outer pd-2 edit-org ">
 
                 <Tabs defaultActiveKey="individual_contributor" id="competency-tabs" className="custom-tabs">
 
                 <Tab eventKey="individual_contributor" title="Individual Contributor">
-                <div className='table-inner main-wrapper'>
+                <div className='table-inner main-wrapper action-right '>
                     <div className='content-outer'>
                         <div className='table-heading mt-3'>
                             <Container>
@@ -197,7 +197,7 @@ export default function Category() {
                     </Tab>
 
                 <Tab eventKey="people_manager" title="People Manager">
-                <div className='table-inner main-wrapper'>
+                <div className='table-inner main-wrapper action-right'>
                     <div className='content-outer'>
                         <div className='table-heading mt-3'>
                             <Container>

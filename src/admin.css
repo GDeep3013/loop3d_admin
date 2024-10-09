@@ -106,7 +106,7 @@ ul.custom-tabs.nav.nav-tabs { border-bottom: 1px solid #7abcdb; }
 .bt-0 { border-top: 0px !important; }
 .tab-content { background: #fff; box-shadow: rgba(145, 158, 171, 0.2) 0px 2px 1px -1px, rgba(145, 158, 171, 0.14) 0px 1px 1px 0px, rgba(145, 158, 171, 0.12) 0px 1px 3px 0px; border: 1px solid rgb(196, 205, 213) !important; margin-top: 0px; }
 .tab-content { padding: 15px 5px; border-top: 0px !important; }
-.tabe-outer .table-heading { padding: 0px 0px 15px; }
+/* .tabe-outer .table-heading { padding: 0px 0px 15px; } */
 
 /* summary css */
 .chat-gpt-summary h2 { margin-bottom: 20px; font-size: 28px; }

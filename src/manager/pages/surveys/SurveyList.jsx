@@ -75,7 +75,7 @@ export default function SurveyList() {
                 <table className='table'>
                     <thead>
                         <tr>
-                            <th>Survey #</th>
+                            <th>Survey</th>
                             <th>Initiation Date</th>
                             <th>Loop Lead Name</th>
                             <th>Manager Name</th>

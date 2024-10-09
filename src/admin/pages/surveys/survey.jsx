@@ -58,7 +58,7 @@ export default function Survey() {
     };
     return (
         <AuthLayout title={"Surveys"}>
-            <div className='table-inner main-wrapper '>
+            <div className='table-inner main-wrapper action-center'>
                 <div className='content-outer'>
                     <div className='tabe-outer'>
                         <div className='table-heading pt-3'>
@@ -86,7 +86,7 @@ export default function Survey() {
                 <table className='table'>
                     <thead>
                         <tr>
-                            <th>Survey #</th>
+                            <th>Survey</th>
                             <th onClick={() => handleSort('createdAt')}>Initiation Date {renderSortIcon('createdAt')}</th>
                             <th>Loop Lead Name</th>
                             <th>Manager Name</th>

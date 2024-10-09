@@ -7,6 +7,7 @@
     .mainContet-outer .project___info p{ font-size: 13px; }
     .table-scroll { overflow: hidden; overflow-x: auto; }
     .table-scroll table.table { min-width: max-content; }
+    .content-outer { padding: 8px !important; }
 }
 /* @media screen and (min-width:1025px) and (max-width:1280px) {
     .graph-box .graph_inner { width: 100% !important; }
@@ -126,6 +127,10 @@
     .survey-inner .survey-container .participants_bg ul li { font-size: 12px !important; line-height: 28px !important; }
     .survey-inner .survey-container h3.margin_top { margin-top: 21px; }
     .headerSearch .dropdown-menu{ padding: 6px 2px !important; right: 48px !important; }
+    .question-contant { width: 100%; }
+    .question-from .ans-block input.form-control { width: 96%; margin-bottom: 15px; }
+    .question-from .mb-3 { width: 100%; }
+    svg.action-icon path { fill: #fff !important; }
 }
 
 @media screen and (max-width:480px) {
