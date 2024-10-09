@@ -29,8 +29,7 @@ const SurveySummary = () => {
     const [pdf, setPdf] = useState(false);
     const [chart2Data, setChart2Data] = useState();
     const [savedImages, setSavedImages] = useState();
-    const chartRef1 = useRef([]); // Ref for the first chart
-    const chartRef2 = useRef([]); 
+
 
     const reportRef = useRef(null);
 
@@ -160,40 +159,9 @@ const SurveySummary = () => {
     }, [id]);
 
 
-    const saveChartImageToDB = async (chartImage, surveyId) => {
-        try {
-            const url = `/api/images/save-chart-image`;
-            const payload = {
-                survey_id: surveyId,  // Pass the survey ID
-                summaries_by_competency: chartImage,  // Base64 image data
-            };
-        
-            const response = await fetch(url, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'x-api-key': import.meta.env.VITE_X_API_KEY
-                },
-                body: JSON.stringify(payload)
-            });
-            if (response.ok) {
-                return await response.json(); 
-            } else {
-                console.error('Failed to create AssignCompetency');
-                return false;
-            }
-        } catch (error) {
-            console.error('Error creating AssignCompetency:', error);
-            return false;
-        }
-    };
+  
 
-    useEffect(() => {
-        if (images.chartRef1.length > 2 && images.chartRef2.length > 2 && savedImages == undefined) {
-            saveChartImageToDB(images, id)
-            getChartImagesFromDB(id)
-        }
-    }, [images]);
+  
 
     
 
@@ -214,7 +182,7 @@ const SurveySummary = () => {
         if (!reportData) return null;
 
         return Object.entries(reportData).map(([competency, data], index) => (
-            chart2Data[competency] && <ChartBar key={competency} chartRef1={chartRef1} chartRef2={chartRef2} getChartImagesFromDB={getChartImagesFromDB} savedImages={savedImages?.summaries_by_competency?.[0]} images={images} survey_id={id} index={index} competency={competency} data={data} chart2Data={chart2Data[competency]} reportData={reportData} pdf={pdf} />
+            chart2Data[competency] && <ChartBar key={competency} getChartImagesFromDB={getChartImagesFromDB} savedImages={savedImages?.summaries_by_competency?.[0]} images={images} survey_id={id} index={index} competency={competency} data={data} chart2Data={chart2Data[competency]} reportData={reportData} pdf={pdf} />
         ));
     };
 
@@ -441,7 +409,7 @@ const SurveySummary = () => {
                                     )}
                                 </div>
                                 {summaryArray && (
-                                    <div className="summary-item chat-smart-goal" style={{marginTop:pdf?'250px':'', backgroundColor: '#F2F8FB', padding: '50px 20px' }}>
+                                    <div className="summary-item chat-smart-goal" style={{marginTop:pdf?'270px':'', backgroundColor: '#F2F8FB', padding: '50px 20px' }}>
                                         <div className="summary-section summary-inner-text">
                                             <h3 className="font-frank text-custom-color" style={{ fontSize: '25px', lineHeight: '40px' }}>
                                                 LOOP3D SMART Action Plan

@@ -139,7 +139,7 @@ export default function AddQuestion({ id, savedData }) {
 
     return (
         <div>
-        {!id && <div className="tabe-outer">
+        {!id && <div className="tabe-outer ml-2" style={{marginLeft: "23px"}}>
             <div className="main-back-heading">
                 <div className="container">
                     <div className="row">

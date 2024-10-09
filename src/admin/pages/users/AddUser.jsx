@@ -254,6 +254,7 @@ export default function AddEmployee() {
                           value={formData.email}
                           onChange={(e) => { handleChange(e) }}
                           placeholder="hello@gmail.com"
+                          className='text-lowercase'
                         />
                         {errors?.email && <small className="text-danger">{errors?.email}</small>}
                       </Form.Group>

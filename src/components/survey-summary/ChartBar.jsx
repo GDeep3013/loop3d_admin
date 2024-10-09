@@ -20,13 +20,15 @@ ChartJS.register(
     Legend
 );
 
-const ChartBar = ({ competency, index, data, chartRef1, chartRef2,chart2Data, pdf,images,savedImages}) => {
+const ChartBar = ({ competency, index, data,getChartImagesFromDB,chart2Data,survey_id ,pdf,images,savedImages}) => {
  // Ref for the second chart
     const [chartImage1, setChartImage1] = useState(null); // State for the first chart image
     const [chartImage2, setChartImage2] = useState(null);
     
     const [chartWidth, setChartWidth] = useState(700);
     const [chartHeight, setChartHeight] = useState(400);
+    const chartRef1 = useRef([]); // Ref for the first chart
+    const chartRef2 = useRef([]); 
     const chartData = {
         labels: Object.keys(data),
         datasets: [
@@ -195,7 +197,11 @@ const ChartBar = ({ competency, index, data, chartRef1, chartRef2,chart2Data, pd
                 // Check if the image is not empty
                 if (image && image.length > 50) {  // Usually, a base64 image string will be much longer than 50 characters
                     setChartImage(image);
+
                     images[type].push(image);
+                    if (images.chartRef1.length > 2 && images.chartRef2.length > 2 && savedImages == undefined) {
+                        saveChartImageToDB(images, survey_id)
+                    }
                 } else {
                     console.error('Failed to generate a valid image');
                 }
@@ -204,23 +210,54 @@ const ChartBar = ({ competency, index, data, chartRef1, chartRef2,chart2Data, pd
     };
 
     useEffect(() => {
-        // Ensure data and chart refs are available before proceeding
-        if (data && chart2Data && chartRef1.current && chartRef2.current) {
-            // Make sure the specific chart index exists in both references
-            if (chartRef1.current[index] && chartRef2.current[index]) {
-          
-                    generateChartImage(chartRef1.current[index], setChartImage1, "chartRef1");
-                    generateChartImage(chartRef2.current[index], setChartImage2, "chartRef2");
-
+      
+        setTimeout(() => {
+            if (data && chart2Data && chartRef1.current && chartRef2.current) {
+                    if (chartRef1.current[index] && chartRef2.current[index]) {
+                        // Generate chart images after the charts have rendered
+                        generateChartImage(chartRef1.current[index], setChartImage1, "chartRef1");
+                        generateChartImage(chartRef2.current[index], setChartImage2, "chartRef2");
+                    }
             }
+            console.log('images2',images)
+        }, 1000);
+    
+        
+    }, [data, chart2Data, index]);
+    const saveChartImageToDB = async (chartImage, surveyId) => {
+        try {
+            const url = `/api/images/save-chart-image`;
+            const payload = {
+                survey_id: surveyId,  // Pass the survey ID
+                summaries_by_competency: chartImage,  // Base64 image data
+            };
+        
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'x-api-key': import.meta.env.VITE_X_API_KEY
+                },
+                body: JSON.stringify(payload)
+            });
+            if (response.ok) {
+                getChartImagesFromDB(surveyId);
+                return await response.json(); 
+            } else {
+                console.error('Failed to create AssignCompetency');
+                return false;
+            }
+        } catch (error) {
+            console.error('Error creating AssignCompetency:', error);
+            return false;
         }
-    }, [data, chart2Data, index]); // Only depend on data, chart2Data, and index
+    };
 
 
 
 
  
-// console.log(savedImages[0]['chartRef2'][index])
+console.log('images',images)
     return (
         <div style={(index == 1 &&  pdf) ? { marginTop:"160px",marginBottom:"10px"}:(index == 2 &&  pdf)?{ marginTop:"300px",marginBottom:"10px"}:{}}>
             <h3 className="text-white fw-normal font-frank mt-3" style={{ fontSize: '19px', lineHeight: '30px' }}>

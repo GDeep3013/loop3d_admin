@@ -53,7 +53,7 @@ export default function QuestionDetail() {
    </div>
 </div>  
          
-            <div className="content-outer bg-white shadow-border-wrapper  question-wrapper ml-8 p-c-3">
+            <div className="content-outer bg-white p-4 shadow-border-wrapper  question-wrapper ml-8 p-c-3">
            <Container>
                 <Row>
                     <Col md={{ span: 6 }}>

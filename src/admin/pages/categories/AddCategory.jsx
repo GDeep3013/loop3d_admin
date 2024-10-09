@@ -135,7 +135,7 @@ export default function AddCategory() {
           </div>
         </div>
       </div>
-      <div className="content-outer bg-white p-c-3 ml-8 shadow-border-wrapper">
+      <div className="content-outer p-4 bg-white p-c-3 ml-8 shadow-border-wrapper">
 
         <Form className="category-form">
           <Container>
