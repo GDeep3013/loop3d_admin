@@ -20,9 +20,8 @@ ChartJS.register(
     Legend
 );
 
-const ChartBar = ({ competency, index, data, chart2Data, pdf,survey_id ,images,savedImages}) => {
-    const chartRef1 = useRef(null); // Ref for the first chart
-    const chartRef2 = useRef(null); // Ref for the second chart
+const ChartBar = ({ competency, index, data, chartRef1, chartRef2,chart2Data, pdf,images,savedImages}) => {
+ // Ref for the second chart
     const [chartImage1, setChartImage1] = useState(null); // State for the first chart image
     const [chartImage2, setChartImage2] = useState(null);
     
@@ -188,58 +187,37 @@ const ChartBar = ({ competency, index, data, chart2Data, pdf,survey_id ,images,s
   
     const generateChartImage = (chartRef, setChartImage, type) => {
 
-            if (chartRef.current) {
-                const chartInstance = chartRef.current;
+            if (chartRef) {
+                const chartInstance = chartRef;
                 const canvas = chartInstance.canvas;
                 const image = canvas.toDataURL('image/png');
-                setChartImage(image);
-                images[type].push(image);  
+                
+                // Check if the image is not empty
+                if (image && image.length > 50) {  // Usually, a base64 image string will be much longer than 50 characters
+                    setChartImage(image);
+                    images[type].push(image);
+                } else {
+                    console.error('Failed to generate a valid image');
+                }
             }
    
     };
 
     useEffect(() => {
+        // Ensure data and chart refs are available before proceeding
         if (data && chart2Data && chartRef1.current && chartRef2.current) {
-            generateChartImage(chartRef1, setChartImage1, "chartRef1"); 
-            generateChartImage(chartRef2, setChartImage2, "chartRef2");
-        }
-    }, [data, chart2Data,chartRef1,chartRef2]); 
-
-
-    const saveChartImageToDB = async (chartImage, surveyId) => {
-        try {
-            const url = `/api/images/save-chart-image`;
-            const payload = {
-                survey_id: surveyId,  // Pass the survey ID
-                summaries_by_competency: chartImage,  // Base64 image data
-            };
-        
-            const response = await fetch(url, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'x-api-key': import.meta.env.VITE_X_API_KEY
-                },
-                body: JSON.stringify(payload)
-            });
-            if (response.ok) {
-                return await response.json();
-            } else {
-                console.error('Failed to create AssignCompetency');
-                return false;
+            // Make sure the specific chart index exists in both references
+            if (chartRef1.current[index] && chartRef2.current[index]) {
+                // Generate the chart images for both charts
+                generateChartImage(chartRef1.current[index], setChartImage1, "chartRef1");
+                generateChartImage(chartRef2.current[index], setChartImage2, "chartRef2");
             }
-        } catch (error) {
-            console.error('Error creating AssignCompetency:', error);
-            return false;
         }
-    };
+    }, [data, chart2Data, index, chartRef1.current, chartRef2.current]);
 
-    useEffect(() => {
-        if (images.chartRef1.length > 2 && images.chartRef2.length > 2 && savedImages ==undefined) {
-            
-            saveChartImageToDB(images,survey_id)
-        }
-    }, [images]);
+
+
+
  
 // console.log(savedImages[0]['chartRef2'][index])
     return (
@@ -257,7 +235,7 @@ const ChartBar = ({ competency, index, data, chart2Data, pdf,survey_id ,images,s
                         {!pdf && (
                             <div className="graph-box mb-3" style={{ width: '100%', height: '400px', backgroundColor: '#fff', borderRadius: '10px', padding: '20px 30px' }}>
                                 <Bar
-                                    ref={chartRef1} // Attach the ref for the first chart
+                                    ref={(el) => (chartRef1.current[index] = el)}
                                     data={chartData}
                                     options={options}
                                     width={chartWidth}
@@ -280,7 +258,7 @@ const ChartBar = ({ competency, index, data, chart2Data, pdf,survey_id ,images,s
                         {!pdf && (
                             <div className="graph-box mb-3" style={{ width: '100%', height: '400px', backgroundColor: '#fff', borderRadius: '10px', padding: '20px 30px' }}>
                                 <Bar
-                                    ref={chartRef2} // Attach the ref for the second chart
+                                    ref={(el) => (chartRef2.current[index] = el)} // Attach the ref for the second chart
                                     data={chartData2}
                                     options={options2}
                                     width={chartWidth}

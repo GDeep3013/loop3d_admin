@@ -21,7 +21,7 @@ ChartJS.register(
     Legend
 );
 
-const CompetencyBar = ({ data, pdf = false ,survey_id,savedImages}) => {
+const CompetencyBar = ({ data, pdf = false ,survey_id,savedImages,getChartImagesFromDB}) => {
     const chartRef1 = useRef(null);
     const [chartImage1, setChartImage1] = useState(null); // State for the first chart image
 
@@ -164,6 +164,7 @@ const CompetencyBar = ({ data, pdf = false ,survey_id,savedImages}) => {
                 console.log(savedImages?.chart_image);
                 if (!savedImages?.chart_image) {
                     saveChartImageToDB(image, survey_id);
+
                 }
             }, 500); // Delay for 500ms to ensure the chart is rendered
         }

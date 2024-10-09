@@ -28,7 +28,9 @@ const SurveySummary = () => {
    // const [samrtGoals, setSamrtGoals] = useState();
     const [pdf, setPdf] = useState(false);
     const [chart2Data, setChart2Data] = useState();
-    const [savedImages,setSavedImages]= useState();
+    const [savedImages, setSavedImages] = useState();
+    const chartRef1 = useRef([]); // Ref for the first chart
+    const chartRef2 = useRef([]); 
 
     const reportRef = useRef(null);
 
@@ -137,8 +139,7 @@ const SurveySummary = () => {
             });
             if (response.ok) {
                 const images = await response.json();
-                console.log
-                setSavedImages(images?.data); // Store the retrieved images in state
+                setSavedImages(images?.data);
             } else {
                 console.error('Failed to retrieve chart images');
             }
@@ -158,6 +159,44 @@ const SurveySummary = () => {
         }
     }, [id]);
 
+
+    const saveChartImageToDB = async (chartImage, surveyId) => {
+        try {
+            const url = `/api/images/save-chart-image`;
+            const payload = {
+                survey_id: surveyId,  // Pass the survey ID
+                summaries_by_competency: chartImage,  // Base64 image data
+            };
+        
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'x-api-key': import.meta.env.VITE_X_API_KEY
+                },
+                body: JSON.stringify(payload)
+            });
+            if (response.ok) {
+                return await response.json(); 
+            } else {
+                console.error('Failed to create AssignCompetency');
+                return false;
+            }
+        } catch (error) {
+            console.error('Error creating AssignCompetency:', error);
+            return false;
+        }
+    };
+    console.log('savedImages',savedImages)
+    useEffect(() => {
+        if (images.chartRef1.length > 2 && images.chartRef2.length > 2 && savedImages == undefined) {
+            saveChartImageToDB(images, id)
+            getChartImagesFromDB(id)
+        }
+    }, [images]);
+
+    
+
     const Participants = ['Self', 'Direct Report', 'Teammate', 'Supervisor', 'Other'];
 
     const renderTableRows = (data) => {
@@ -175,7 +214,7 @@ const SurveySummary = () => {
         if (!reportData) return null;
 
         return Object.entries(reportData).map(([competency, data], index) => (
-            chart2Data[competency] && <ChartBar key={competency} savedImages={savedImages?.summaries_by_competency?.[0]} images={images} survey_id={id} index={index} competency={competency} data={data} chart2Data={chart2Data[competency]} reportData={reportData} pdf={pdf} />
+            chart2Data[competency] && <ChartBar key={competency} chartRef1={chartRef1} chartRef2={chartRef2} getChartImagesFromDB={getChartImagesFromDB} savedImages={savedImages?.summaries_by_competency?.[0]} images={images} survey_id={id} index={index} competency={competency} data={data} chart2Data={chart2Data[competency]} reportData={reportData} pdf={pdf} />
         ));
     };
 
@@ -184,7 +223,7 @@ const SurveySummary = () => {
         if (!reportData) {
             return null;
         } else {
-            return <CompetencyBar data={reportData} pdf={pdf} savedImages={savedImages} survey_id={id} />
+            return <CompetencyBar data={reportData} getChartImagesFromDB={getChartImagesFromDB} pdf={pdf} savedImages={savedImages} survey_id={id} />
         }
         // 
     };
@@ -236,12 +275,12 @@ const SurveySummary = () => {
     };
     // console.log('summaryArray', summaryArray)
 
-    useEffect(() => {
-        if (!loader) {
-            renderCharts()
-            renderCharts2()    
-        }
-    }, [pdf])
+    // useEffect(() => {
+    //     if (!loader) {
+    //         renderCharts()
+    //         renderCharts2()    
+    //     }
+    // }, [pdf])
 
 
     return (

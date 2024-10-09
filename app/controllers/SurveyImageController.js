@@ -22,18 +22,42 @@ const saveMultipleImages = async (imagesArray, survey_id) => {
         chartRef1: [],
         chartRef2: []
     };
+
+    // Helper function to generate unique filenames with additional randomness
+    const generateUniqueFilename = (prefix, index) => {
+        const timestamp = Date.now();
+        const randomValue = Math.floor(Math.random() * 1000); // Add randomness to avoid duplicate names
+        return `${prefix}-${index + 1}-${timestamp}-${randomValue}.png`;
+    };
+
+    // Process chartRef1 images
     for (let i = 0; i < imagesArray.chartRef1.length; i++) {
         const base64Image = imagesArray?.chartRef1[i];
-        const filename = `${survey_id}-competency-${i + 1}-${Date.now()}.png`;
-        await saveBase64Image(base64Image, filename);
-        filenames['chartRef1'].push(filename);
+
+        // Check if the base64 image is valid (non-empty and has sufficient length)
+        if (base64Image && base64Image.length > 50) {
+            const filename = generateUniqueFilename(`${survey_id}-competency`, i);
+            await saveBase64Image(base64Image, filename);
+            filenames['chartRef1'].push(filename);
+        } else {
+            console.warn(`Skipping empty or invalid image for chartRef1 at index ${i}`);
+        }
     }
+
+    // Process chartRef2 images
     for (let i = 0; i < imagesArray.chartRef2.length; i++) {
         const base64Image = imagesArray?.chartRef2[i];
-        const filename = `${survey_id}-competency-${i + 1}-${Date.now()}.png`;
-        await saveBase64Image(base64Image, filename);
-        filenames['chartRef2'].push(filename);
+
+        // Check if the base64 image is valid (non-empty and has sufficient length)
+        if (base64Image && base64Image.length > 50) {
+            const filename = generateUniqueFilename(`${survey_id}-competency`, i);
+            await saveBase64Image(base64Image, filename);
+            filenames['chartRef2'].push(filename);
+        } else {
+            console.warn(`Skipping empty or invalid image for chartRef2 at index ${i}`);
+        }
     }
+
     return filenames;
 };
 
