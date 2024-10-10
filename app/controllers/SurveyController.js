@@ -5,6 +5,10 @@ const Role = require('../models/Role')
 const AssignCompetency = require('../models/AssignCompetencyModel');
 const Category = require('../models/CategoryModel')
 const SurveyReport = require('../models/SurveyReport')
+const SurveyImage = require('../models/SurveyChartImage');
+const fs = require('fs');
+const path = require('path');
+
 const axios = require('axios');
 
 const {
@@ -1039,10 +1043,29 @@ exports.generateCompetencyAverageReport = async (req, res) => {
         });
     }
 };
-
+const deleteImageFromFileSystem = (filename) => {
+    const filePath = path.join(__dirname, '../../public/uploads', filename);
+    if (fs.existsSync(filePath)) {
+        fs.unlinkSync(filePath);
+    }
+};
 const generateSummary = async (survey_id,report) => {
         try {
-            // Step 1: Collect all text answers
+            let existingSurveyImage = await SurveyImage.findOne({ survey_id });
+            if (existingSurveyImage) {
+                if (existingSurveyImage.chart_image) {
+                        
+                    deleteImageFromFileSystem(existingSurveyImage.chart_image);
+                }
+                existingSurveyImage.summaries_by_competency?.chartRef1?.forEach((filename) => {
+                    deleteImageFromFileSystem(filename);
+                });
+                existingSurveyImage.summaries_by_competency?.chartRef2?.forEach((filename) => {
+                    deleteImageFromFileSystem(filename);
+                });
+                await SurveyImage.findOneAndDelete({survey_id})
+            }
+            
         const combinedAnswers = [];
 
         Object.values(report?.categories || {}).forEach(category => {
