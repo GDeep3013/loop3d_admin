@@ -433,7 +433,7 @@ const SurveySummary = () => {
                             </div>
                             {summaryArray && (
                                 <div className="summary-item chat-smart-goal" style={{ backgroundColor: '#F2F8FB', padding: '50px 20px' }}>
-                                    {/* <div className="pdfContent page-break"> */}
+                                    <div className="pdfContent">
                                         <div className="summary-section summary-inner-text">
                                             <h3 className="font-frank text-custom-color" style={{ fontSize: '25px', lineHeight: '40px' }}>
                                                 LOOP3D SMART Action Plan
@@ -452,10 +452,10 @@ const SurveySummary = () => {
                                                 {summaryArray?.smart_plan?.map((plan, index) => (
                                                     <p key={index} style={{ fontSize: '16px' }}>{plan}</p>
                                                 ))}
-                                            {/* </div> */}
+                                            </div>
                                         </div>
                                     </div>
-                                    {/* <div className="pdfContent page-break"> */}
+                                    <div className="pdfContent page-break">
                                     <div className="summary-section summary-inner-text" style={{ backgroundColor: '#fff', padding: '35px 30px', borderRadius: '10px' }}>
                                         <h3 className="font-frank text-black" style={{ fontSize: '25px', lineHeight: '40px', textTransform: 'capitalize' }}>Development Opportunities</h3>
                                         <p className="font-poppins" style={{ fontSize: '16px' }}>
@@ -477,9 +477,10 @@ const SurveySummary = () => {
                                         })}
                                     </div>
                                     </div>
-                                // </div>
+                                </div>
                             )}
                         </div>
+
                     </Container>
                 ) : <div style={{ textAlign: "center", marginTop: "15%" }}><Loading /></div>
                 }
