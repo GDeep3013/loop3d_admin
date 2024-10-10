@@ -20,15 +20,15 @@ ChartJS.register(
     Legend
 );
 
-const ChartBar = ({ competency, index, data,getChartImagesFromDB,chart2Data,survey_id ,pdf,images,savedImages}) => {
- // Ref for the second chart
+const ChartBar = ({ competency, index, data, getChartImagesFromDB, chart2Data, survey_id, pdf, images, savedImages }) => {
+    // Ref for the second chart
     const [chartImage1, setChartImage1] = useState(null); // State for the first chart image
     const [chartImage2, setChartImage2] = useState(null);
     
     const [chartWidth, setChartWidth] = useState(700);
     const [chartHeight, setChartHeight] = useState(400);
     const chartRef1 = useRef([]); // Ref for the first chart
-    const chartRef2 = useRef([]); 
+    const chartRef2 = useRef([]);
     const chartData = {
         labels: Object.keys(data),
         datasets: [
@@ -43,8 +43,8 @@ const ChartBar = ({ competency, index, data,getChartImagesFromDB,chart2Data,surv
     const chartData2 = {
         labels: chart2Data?.map((item) => {
             const maxLabelLength = 15; // Set the maximum length for display
-            const truncatedLabel = item?.question.length > maxLabelLength 
-                ? item?.question.substring(0, maxLabelLength) + '...' 
+            const truncatedLabel = item?.question.length > maxLabelLength
+                ? item?.question.substring(0, maxLabelLength) + '...'
                 : item?.question;
             return truncatedLabel;
         }),
@@ -189,23 +189,23 @@ const ChartBar = ({ competency, index, data,getChartImagesFromDB,chart2Data,surv
   
     const generateChartImage = (chartRef, setChartImage, type) => {
 
-            if (chartRef) {
-                const chartInstance = chartRef;
-                const canvas = chartInstance.canvas;
-                const image = canvas.toDataURL('image/png');
+        if (chartRef) {
+            const chartInstance = chartRef;
+            const canvas = chartInstance.canvas;
+            const image = canvas.toDataURL('image/png');
                 
-                // Check if the image is not empty
-                if (image && image.length > 50) {  // Usually, a base64 image string will be much longer than 50 characters
-                    setChartImage(image);
+            // Check if the image is not empty
+            if (image && image.length > 50) {  // Usually, a base64 image string will be much longer than 50 characters
+                setChartImage(image);
 
-                    images[type].push(image);
-                    if (images.chartRef1.length > 2 && images.chartRef2.length > 2 && savedImages == undefined) {
-                        saveChartImageToDB(images, survey_id)
-                    }
-                } else {
-                    console.error('Failed to generate a valid image');
+                images[type].push(image);
+                if (images.chartRef1.length > 2 && images.chartRef2.length > 2 && savedImages == undefined) {
+                    saveChartImageToDB(images, survey_id)
                 }
+            } else {
+                console.error('Failed to generate a valid image');
             }
+        }
    
     };
 
@@ -213,11 +213,11 @@ const ChartBar = ({ competency, index, data,getChartImagesFromDB,chart2Data,surv
       
         setTimeout(() => {
             if (data && chart2Data && chartRef1.current && chartRef2.current) {
-                    if (chartRef1.current[index] && chartRef2.current[index]) {
-                        // Generate chart images after the charts have rendered
-                        generateChartImage(chartRef1.current[index], setChartImage1, "chartRef1");
-                        generateChartImage(chartRef2.current[index], setChartImage2, "chartRef2");
-                    }
+                if (chartRef1.current[index] && chartRef2.current[index]) {
+                    // Generate chart images after the charts have rendered
+                    generateChartImage(chartRef1.current[index], setChartImage1, "chartRef1");
+                    generateChartImage(chartRef2.current[index], setChartImage2, "chartRef2");
+                }
             }
         }, 1000);
     
@@ -241,7 +241,7 @@ const ChartBar = ({ competency, index, data,getChartImagesFromDB,chart2Data,surv
             });
             if (response.ok) {
                 getChartImagesFromDB(surveyId);
-                return await response.json(); 
+                return await response.json();
             } else {
                 console.error('Failed to create AssignCompetency');
                 return false;
@@ -253,7 +253,8 @@ const ChartBar = ({ competency, index, data,getChartImagesFromDB,chart2Data,surv
     };
 
     return (
-        <div style={(index == 1 &&  pdf) ? { marginTop:"160px",marginBottom:"10px"}:(index == 2 &&  pdf)?{ marginTop:"300px",marginBottom:"10px"}:{}}>
+        <div className={`pdfContent ${ (pdf && index != 2) &&'page-break'}`}>
+        <div>
             <h3 className="text-white fw-normal font-frank mt-3" style={{ fontSize: '19px', lineHeight: '30px' }}>
                 <span>Competency:</span> {competency}
             </h3>
@@ -309,7 +310,8 @@ const ChartBar = ({ competency, index, data,getChartImagesFromDB,chart2Data,surv
                     }
                 </div>
             </div>
-        </div>
+            </div>
+            </div>
     );
 };
 

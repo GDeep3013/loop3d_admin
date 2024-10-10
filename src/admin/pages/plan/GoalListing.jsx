@@ -206,6 +206,7 @@ const GoalListing = ({ goals, getGoals, categories, setCompetencyFrom, setChatRe
                                         name="goal_apply"
                                         value={formData.goal_apply}
                                         onChange={handleInputChange}
+                                        maxLength={100}
                                     />
                                 ) : (
                                     goal.goal_apply
@@ -218,6 +219,8 @@ const GoalListing = ({ goals, getGoals, categories, setCompetencyFrom, setChatRe
                                         name="goal_result_seen"
                                         value={formData.goal_result_seen}
                                         onChange={handleInputChange}
+                                        maxLength={100}
+
                                     />
                                 ) : (
                                     goal.goal_result_seen

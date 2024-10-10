@@ -25,7 +25,7 @@ const SurveySummary = () => {
     const [participants, setParticipants] = useState();
     const [competencyReport, setCompetencyReport] = useState();
     const [summaryArray, setSummaryArray] = useState([]);
-   // const [samrtGoals, setSamrtGoals] = useState();
+    // const [samrtGoals, setSamrtGoals] = useState();
     const [pdf, setPdf] = useState(false);
     const [chart2Data, setChart2Data] = useState();
     const [savedImages, setSavedImages] = useState();
@@ -93,7 +93,7 @@ const SurveySummary = () => {
                 const data = await response.json();
                 setReportData(data.reports?.categories || {});
                 setChart2Data(data.reports?.resultArray || {})
-               // let summaryValue = removeSpacesFromKeys(data.summary.response_Data)
+                // let summaryValue = removeSpacesFromKeys(data.summary.response_Data)
                 let newData = (data.summary.response_Data) ? data.summary.response_Data : data.summary
                 setSummaryArray(newData);
             } else {
@@ -159,11 +159,11 @@ const SurveySummary = () => {
     }, [id]);
 
 
-  
 
-  
 
-    
+
+
+
 
     const Participants = ['Self', 'Direct Report', 'Teammate', 'Supervisor', 'Other'];
 
@@ -206,39 +206,39 @@ const SurveySummary = () => {
     const generatePdf = () => {
         setPdf(true); // Set the state to indicate PDF generation is in progress
         const element = reportRef.current; // Reference to the component you want to convert to PDF
-
+    
         const options = {
-            margin: [20, 5, 5, 5], // Use smaller margins
+            margin: [5, 5, 5, 5], // Adjust margins as needed
             filename: 'survey_report.pdf',
             image: { type: 'jpeg', quality: 0.98 },
             html2canvas: { scale: 2, useCORS: true },
-            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait'},
+            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
             pagebreak: {
-                after: ['.page-break'],
-            }
+                after: ['.page-break'], // Ensure that content with this class starts on a new page
+            },
         };
-        // Generate PDF
+    
+        // Generate the PDF
         html2pdf()
             .from(element)
             .set(options)
             .toPdf()
             .get('pdf')
             .then((pdf) => {
-                // Handle cases where content overflows and needs pagination
                 const totalPages = pdf.internal.getNumberOfPages();
+                // Add any custom logic for page content here if needed
                 for (let i = 1; i <= totalPages; i++) {
                     pdf.setPage(i);
-                    pdf.setFontSize(5);
+                    pdf.setFontSize(10); // Adjust font size for pagination if needed
                 }
             })
             .save()
             .then(() => {
-                // Reset the PDF state after saving the PDF
-                setPdf(false);
+                setPdf(false); // Reset the PDF generation state after saving
             })
             .catch((error) => {
                 console.error("Error generating PDF:", error);
-                setPdf(false); // Ensure to reset the state in case of error
+                setPdf(false); // Reset state in case of error
             });
     };
     // console.log('summaryArray', summaryArray)
@@ -246,7 +246,7 @@ const SurveySummary = () => {
     useEffect(() => {
         if (!loader) {
             renderCharts()
-            renderCharts2()    
+            renderCharts2()
         }
     }, [pdf])
 
@@ -265,10 +265,10 @@ const SurveySummary = () => {
 
                         <div className="survey-container" ref={reportRef}>
 
-                            <h2 className="font-frank mb-2" style={{ color: '#174A6D', fontSize: '33px' }}>
-                                LOOP3D 360 Report
-                            </h2>
-                            <div className="participant-name-looped-360">
+                            <div className="pdfContent">
+                                <h2 className="font-frank mb-2" style={{ color: '#174A6D', fontSize: '33px' }}>
+                                    LOOP3D 360 Report
+                                </h2>
                                 <p className="font-poppins" style={{ fontSize: '20px', color: '#174A6D' }}>
                                     <strong className="fw-normal font-frank" style={{ color: '#000' }}>Participant Name:</strong> {survey?.loop_lead?.first_name}
                                 </p>
@@ -304,6 +304,9 @@ const SurveySummary = () => {
                                         </table>
                                     </div>
                                 )}
+                            </div>
+
+                            <div className="pdfContent page-break">
 
                                 <div className="participants_bg " style={{ backgroundColor: '#174A6D', padding: "50px 30px", marginTop: '25px' }}>
                                     <div className="row">
@@ -320,8 +323,8 @@ const SurveySummary = () => {
                                             </ul>
                                         </div>
                                         <div className="col-md-12 col-lg-6">
-                                        <h3 className="text-white font-frank fw-normal margin_top" style={{ fontSize: '20px' }}>
-                                        Here are the competencies that your manager selected as the most important to your role.
+                                            <h3 className="text-white font-frank fw-normal margin_top" style={{ fontSize: '20px' }}>
+                                                Here are the competencies that your manager selected as the most important to your role.
                                             </h3>
                                             <ul className="mt-3 pl-4 sm:pl-6">
                                                 {survey?.competencies?.map((competency) => (
@@ -336,14 +339,14 @@ const SurveySummary = () => {
 
                                 <div className="summary_graph_top page-break" style={{ backgroundColor: '#F5F5F5', padding: '10px 30px' }}>
 
-                                    
+
 
                                     <p className="font-frank mt-4" style={{ fontSize: '25px', lineHeight: '30px' }}>
                                         Summary of your results:
                                     </p>
 
                                     <div className="top-strengths">
-                                        <h3 className="text-custom-color fw-semibold mt-3" style={{ fontSize:'18px' }} >Top Strengths:</h3>
+                                        <h3 className="text-custom-color fw-semibold mt-3" style={{ fontSize: '18px' }} >Top Strengths:</h3>
                                         <p className="text-sm sm:text-base leading-relaxed text-gray-600 font-poppins mt-1 mb-2">
                                             {competencyReport?.topStrength}
                                         </p>
@@ -352,32 +355,46 @@ const SurveySummary = () => {
                                         <p className="text-sm sm:text-base leading-relaxed text-gray-600 font-poppins mt-1 mb-2">
                                             {competencyReport?.developmentalOpportunity}
                                         </p>
-                                  </div>
+                                    </div>
 
                                     {/* graph box */}
                                     <div className="graph-box mt-3 mb-4" style={{ backgroundColor: '#fff', borderRadius: '10px', padding: '20px 30px' }}>
                                         {renderCharts2()}
                                     </div>
 
-                                   
+
                                 </div>
 
+                            </div>
+
+
+                            <div className="participant-name-looped-360">
+
                                 <div className="participants_bg " style={{ backgroundColor: '#174A6D', padding: "20px 30px" }}>
-                                    <h2 className="text-white font-frank fw-normal" style={{ fontSize:'25px' }}>
+                                    <h2 className="text-white font-frank fw-normal" style={{ fontSize: '25px' }}>
                                         Summaries by Competency
                                     </h2>
                                     <div page-break>{renderCharts()}</div>
                                 </div >
-                                <h3 className={`text-custom-color font-frank fw-medium `} style={{ marginTop:pdf?'150px':'48px', fontSize: '25px', lineHeight: '40px' }}>
-                                    Open-Ended Comments
-                                </h3>
-                                <p className="font-poppins mb-2">
-                                    Here are the competencies that your manager selected as the most important to your role...
-                                </p>
-                                <div className="chat-gpt-summary">
-                                    {summaryArray && (
-                                        <>
-                                            {/* Strengths and Skills */}
+
+                            </div>
+
+                            <div className="chat-gpt-summary">
+
+
+
+                                {summaryArray && (
+                                    <>
+                                        {/* Strengths and Skills */}
+
+                                        <div className="pdfContent page-break">
+                                            <h3 className={`text-custom-color font-frank fw-medium `} style={{ marginTop: pdf ? '150px' : '48px', fontSize: '25px', lineHeight: '40px' }}>
+                                                Open-Ended Comments
+                                            </h3>
+                                            <p className="font-poppins mb-2">
+                                                Here are the competencies that your manager selected as the most important to your role...
+                                            </p>
+
                                             <div className="summary-item mt-4" style={{ backgroundColor: '#F2F8FB', padding: '30px 20px' }}>
                                                 <h2 className="font-frank text-black" style={{ fontSize: '21px', lineHeight: '27px' }}> Q1. What are the strengths and skills that make this person most effective?</h2>
                                                 <p className="font-poppins fw-normal" style={{ fontSize: '16px' }}><strong c lassName="font-frank fw-medium" style={{ fontSize: '16px' }}>Total Summary:</strong> Example summary.</p>
@@ -386,30 +403,37 @@ const SurveySummary = () => {
                                                 ))}
                                             </div>
 
+                                        </div>
+
+                                        <div className="pdfContent page-break">
                                             {/* Suggestions for Improvement */}
-                                            <div className="summary-item" style={{  marginTop:pdf?'260px':'',backgroundColor: '#F2F8FB', padding: '30px 20px' }}>
+                                            <div className="summary-item" style={{backgroundColor: '#F2F8FB', padding: '30px 20px' }}>
                                                 <h2 className="font-frank text-black" style={{ fontSize: '21px', lineHeight: '27px' }}>Q2. What suggestions do you have to make this person a stronger performer and more effective?</h2>
                                                 <p className="font-poppins" style={{ fontSize: '16px' }}> <strong className=" font-frank fw-normal" style={{ fontSize: '16px' }}>Total Summary:</strong> Example summary.</p>
                                                 {summaryArray?.question_summary?.suggestionsForImprovement?.map((item, index) => (
                                                     <p key={index}><strong className="font-frank fw-normal" style={{ fontSize: '18px' }}>{item.role}:</strong> {item.summary}</p>
                                                 ))}
                                             </div>
+                                        </div>
+
+                                        <div className="pdfContent">
 
                                             {/* Other Comments */}
-                                            <div className="summary-item  page-break" style={{ marginTop:pdf?'370px':'', backgroundColor: '#F2F8FB', padding: '30px 20px' }}>
+                                            <div className="summary-item  page-break" style={{backgroundColor: '#F2F8FB', padding: '30px 20px' }}>
                                                 <h2 className="font-frank text-black" style={{ fontSize: '21px', lineHeight: '27px' }}>Q3. Other comments?</h2>
                                                 <p className="font-poppins" style={{ fontSize: '20px' }}> <strong className=" font-frank fw-normal" style={{ fontSize: '25px' }}>Total Summary:</strong> Example summary.</p>
                                                 {summaryArray?.question_summary?.otherComments?.map((item, index) => (
                                                     <p key={index}><strong className="font-frank fw-normal" style={{ fontSize: '18px' }}>{item.role}:</strong> {item.summary}</p>
                                                 ))}
                                             </div>
+                                        </div>
 
-
-                                        </>
-                                    )}
-                                </div>
-                                {summaryArray && (
-                                    <div className="summary-item chat-smart-goal" style={{marginTop:pdf?'270px':'', backgroundColor: '#F2F8FB', padding: '50px 20px' }}>
+                                    </>
+                                )}
+                            </div>
+                            {summaryArray && (
+                                <div className="summary-item chat-smart-goal" style={{ backgroundColor: '#F2F8FB', padding: '50px 20px' }}>
+                                    {/* <div className="pdfContent page-break"> */}
                                         <div className="summary-section summary-inner-text">
                                             <h3 className="font-frank text-custom-color" style={{ fontSize: '25px', lineHeight: '40px' }}>
                                                 LOOP3D SMART Action Plan
@@ -421,41 +445,41 @@ const SurveySummary = () => {
                                             <div className="summary_inner_box page-break" style={{ backgroundColor: '#fff', padding: '25px 30px', borderRadius: '10px' }}>
                                                 <h3 className="font-frank text-black" style={{ fontSize: '25px', lineHeight: '40px' }}>Strengths</h3>
                                                 <p className="font-poppins" style={{ fontSize: '16px' }}>
-                                                    <strong className="font-frank fw-normal" style={{ fontSize: '20px', paddingBottom:'0' }}>Summary:</strong> Based on your results, your coworkers particularly appreciate the following strengths in you and the value it adds to the workplace.
+                                                    <strong className="font-frank fw-normal" style={{ fontSize: '20px', paddingBottom: '0' }}>Summary:</strong> Based on your results, your coworkers particularly appreciate the following strengths in you and the value it adds to the workplace.
                                                 </p>
 
                                                 <h4 className="font-frank fw-normal" style={{ fontSize: '20px' }}>SMART Plan:</h4>
                                                 {summaryArray?.smart_plan?.map((plan, index) => (
                                                     <p key={index} style={{ fontSize: '16px' }}>{plan}</p>
                                                 ))}
-                                            </div>
-                                        </div >
-
-                                        <div className="summary-section summary-inner-text" style={{marginTop:pdf?'300px':'48px', backgroundColor: '#fff', padding: '35px 30px', borderRadius: '10px' }}>
-                                            <h3 className="font-frank text-black" style={{ fontSize: '25px', lineHeight: '40px', textTransform: 'capitalize' }}>Development Opportunities</h3>
-                                            <p className="font-poppins" style={{ fontSize: '16px' }}>
-                                                <strong className="font-frank fw-normal" style={{ fontSize: '20px', paddingBottom:'0'}}>Summary:</strong> Based on your results, your coworkers have identified potential areas for development to further enhance your skills.
-                                            </p>
-
-                                            <h4 className="font-frank fw-normal" style={{ fontSize: '20px' }}>SMART Plan:</h4>
-                                            {summaryArray?.smart_plan_opportunities?.map((plan, index) => {
-                                                // Split the plan string by points (e.g., "1.", "2.", etc.)
-                                                const splitPlan = plan?.split(/(?=\d\.\s)/); // Use regex to split on numbers followed by a period and space
-                                                return (
-                                                    <div key={index}>
-                                                        {splitPlan.map((point, idx) => (
-                                                            <p key={idx} style={{ fontSize:'16px' }}>{point.trim()}</p> // Trim whitespace from each point
-                                                        ))}
-                                                    </div>
-
-                                                );
-                                            })}
+                                            {/* </div> */}
                                         </div>
                                     </div>
-                                )}
-                            </div>
-                        </div>
+                                    {/* <div className="pdfContent page-break"> */}
+                                    <div className="summary-section summary-inner-text" style={{ backgroundColor: '#fff', padding: '35px 30px', borderRadius: '10px' }}>
+                                        <h3 className="font-frank text-black" style={{ fontSize: '25px', lineHeight: '40px', textTransform: 'capitalize' }}>Development Opportunities</h3>
+                                        <p className="font-poppins" style={{ fontSize: '16px' }}>
+                                            <strong className="font-frank fw-normal" style={{ fontSize: '20px', paddingBottom: '0' }}>Summary:</strong> Based on your results, your coworkers have identified potential areas for development to further enhance your skills.
+                                        </p>
 
+                                        <h4 className="font-frank fw-normal" style={{ fontSize: '20px' }}>SMART Plan:</h4>
+                                        {summaryArray?.smart_plan_opportunities?.map((plan, index) => {
+                                            // Split the plan string by points (e.g., "1.", "2.", etc.)
+                                            const splitPlan = plan?.split(/(?=\d\.\s)/); // Use regex to split on numbers followed by a period and space
+                                            return (
+                                                <div key={index}>
+                                                    {splitPlan.map((point, idx) => (
+                                                        <p key={idx} style={{ fontSize: '16px' }}>{point.trim()}</p> // Trim whitespace from each point
+                                                    ))}
+                                                </div>
+
+                                            );
+                                        })}
+                                    </div>
+                                    </div>
+                                // </div>
+                            )}
+                        </div>
                     </Container>
                 ) : <div style={{ textAlign: "center", marginTop: "15%" }}><Loading /></div>
                 }
