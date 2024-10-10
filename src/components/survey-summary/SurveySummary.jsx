@@ -204,42 +204,35 @@ const SurveySummary = () => {
 
 
     const generatePdf = () => {
-        setPdf(true); // Set the state to indicate PDF generation is in progress
-        const element = reportRef.current; // Reference to the component you want to convert to PDF
+        setPdf(true);
+        setTimeout(() => {// Set the state to indicate PDF generation is in progress
+            const element = reportRef.current; // Reference to the component you want to convert to PDF
     
-        const options = {
-            margin: [5, 5, 5, 5], // Adjust margins as needed
-            filename: 'survey_report.pdf',
-            image: { type: 'jpeg', quality: 0.98 },
-            html2canvas: { scale: 2, useCORS: true },
-            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-            pagebreak: {
-                after: ['.page-break'], // Ensure that content with this class starts on a new page
-            },
-        };
+            const options = {
+                margin: [5, 5, 5, 5], // Adjust margins as needed
+                filename: 'survey_report.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2, useCORS: true },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+                pagebreak: { after: '.page-break' }
+            
+            };
     
-        // Generate the PDF
-        html2pdf()
-            .from(element)
-            .set(options)
-            .toPdf()
-            .get('pdf')
-            .then((pdf) => {
-                const totalPages = pdf.internal.getNumberOfPages();
-                // Add any custom logic for page content here if needed
-                for (let i = 1; i <= totalPages; i++) {
-                    pdf.setPage(i);
-                    pdf.setFontSize(10); // Adjust font size for pagination if needed
-                }
-            })
-            .save()
-            .then(() => {
-                setPdf(false); // Reset the PDF generation state after saving
-            })
-            .catch((error) => {
-                console.error("Error generating PDF:", error);
-                setPdf(false); // Reset state in case of error
-            });
+            // Generate the PDF
+            html2pdf()
+                .from(element)
+                .set(options)
+                .toPdf()
+                .get('pdf')
+                .save()
+                .then(() => {
+                    setPdf(false); // Reset the PDF generation state after saving
+                })
+                .catch((error) => {
+                    console.error("Error generating PDF:", error);
+                    setPdf(false); // Reset state in case of error
+                });
+        },500)
     };
     // console.log('summaryArray', summaryArray)
 
@@ -250,7 +243,7 @@ const SurveySummary = () => {
         }
     }, [pdf])
 
-
+    console.log(document.readyState)
     return (
         <AuthLayout title={"Survey Summary"}>
             <div className="survey-inner survey_pdf relative">
@@ -259,7 +252,7 @@ const SurveySummary = () => {
 
                         <div className="d-flex justify-content-end pt-4 pb-3">
                             <Button className="survey-inner-btn absolute" onClick={() => { ReGenerateReport() }}>Re-Generate</Button>
-                            < Button className="generate-btn" onClick={() => { generatePdf() }}>Download as PDF</Button>
+                            < Button className="generate-btn" disabled={document.readyState === 'complete'?false:true} onClick={() => { generatePdf() }}>Download as PDF</Button>
                         </div>
 
 
@@ -455,7 +448,7 @@ const SurveySummary = () => {
                                             </div>
                                         </div>
                                     </div>
-                                    <div className="pdfContent page-break">
+                                    <div className="pdfContent">
                                     <div className="summary-section summary-inner-text" style={{ backgroundColor: '#fff', padding: '35px 30px', borderRadius: '10px' }}>
                                         <h3 className="font-frank text-black" style={{ fontSize: '25px', lineHeight: '40px', textTransform: 'capitalize' }}>Development Opportunities</h3>
                                         <p className="font-poppins" style={{ fontSize: '16px' }}>

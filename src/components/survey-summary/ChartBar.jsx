@@ -253,7 +253,7 @@ const ChartBar = ({ competency, index, data, getChartImagesFromDB, chart2Data, s
     };
 
     return (
-        <div className={`pdfContent ${ (pdf && index != 2) &&'page-break'}`}>
+        <div className='pdfContent page-break'>
         <div>
             <h3 className="text-white fw-normal font-frank mt-3" style={{ fontSize: '19px', lineHeight: '30px' }}>
                 <span>Competency:</span> {competency}
