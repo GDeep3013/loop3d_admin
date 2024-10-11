@@ -128,7 +128,7 @@ const Plans = () => {
                     </div>
                 </div>
             </div>
-            <div className="content-outer">
+            <div className="content-outer content-text-edit">
                 <Container>
                     <Row>
                         <Col xs={12} md={6}><GoalCreator prompt={prompt} setPrompt={setPrompt} handleSubmit={GeneratePlans} selectedOption={selectedOption} setSelectedOption={setSelectedOption} categories={categories} /></Col>

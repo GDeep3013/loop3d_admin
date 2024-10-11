@@ -82,6 +82,28 @@ const SurveySummary = () => {
             console.error('Error fetching survey:', error);
         }
     }
+    const GeneratePlans = async (competencyReport) => {
+        try {
+           console.log('competencyReport',competencyReport)
+            const developmentalOpportunity = competencyReport?.developmentalOpportunity || 'nothing';
+            const url = `/api/surveys/smart-goals/${id}/${developmentalOpportunity}/${competencyReport?.topStrength}`;
+            // console.log('test1', url)
+            const response = await fetch(url, {
+                headers: { 'x-api-key': import.meta.env.VITE_X_API_KEY }
+            });
+
+
+            if (response.ok) {
+                const data = await response.json();
+            } else {
+                console.error('Failed to fetch getSmartGoals');
+            }
+        } catch (error) {
+            console.error('Error fetching getSmartGoals:', error);
+        } finally {
+            // setLoader(false);
+        }
+    };
     const generateSurveyReport = async (survey_id, action) => {
         try {
 
@@ -96,6 +118,7 @@ const SurveySummary = () => {
                 // let summaryValue = removeSpacesFromKeys(data.summary.response_Data)
                 let newData = (data.summary.response_Data) ? data.summary.response_Data : data.summary
                 setSummaryArray(newData);
+               
             } else {
                 console.error('Failed to fetch survey');
             }
@@ -155,11 +178,19 @@ const SurveySummary = () => {
             generateCompetencyAverageReport(id)
             generateSurveyReport(id, "Generate")
             getChartImagesFromDB(id)
+            setTimeout(() => {
+                GeneratePlans(competencyReport)           
+            },2000)
         }
     }, [id]);
+    useEffect(() => {
+        if (competencyReport) {
+             GeneratePlans(competencyReport)           
+        }
+    }, [competencyReport]);
 
 
-
+console.log('competencyReportggg',competencyReport)
 
 
 
@@ -243,7 +274,7 @@ const SurveySummary = () => {
         }
     }, [pdf])
 
-    console.log(document.readyState)
+
     return (
         <AuthLayout title={"Survey Summary"}>
             <div className="survey-inner survey_pdf relative">
@@ -443,9 +474,15 @@ const SurveySummary = () => {
 
                                                 <h4 className="font-frank fw-normal" style={{ fontSize: '20px' }}>SMART Plan:</h4>
                                                 {summaryArray?.smart_plan?.map((plan, index) => (
-                                                    <p key={index} style={{ fontSize: '16px' }}>{plan}</p>
-                                                ))}
-                                            </div>
+                                          plan?.split(/(?=\d+\.\s)/).map((part, partIndex) => (
+                                            part.trim() && !/^\d+$/.test(part.trim()) ? ( // Ensure the part is not just a number
+                                                <p key={`${index}-${partIndex}`} style={{ fontSize: '16px' }}>
+                                                    {part.trim()}
+                                                </p>
+                                            ) : null // Don't render if it's empty or just a number
+                                        ))
+                                                    ))}
+                                                </div>
                                         </div>
                                     </div>
                                     <div className="pdfContent">

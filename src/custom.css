@@ -310,3 +310,8 @@ button.add_participant:hover{ background-color: var(--secondary-color); color: #
   .headerSearch .show.dropdown .dropdown-menu { padding: 0; }
   .action-center table.table th:last-child { text-align: center; padding-left: 25px; }
   .action-right table.table th:last-child { text-align: right; padding-right: 28px; }
+  .goal-list-outer td:nth-child(5) { max-width: 400px; }
+  .goal-list-outer td:nth-child(6) { max-width: 400px; }
+  .goal-listing .completion-management .grp-btn button { max-width: 320px; margin-top: 20px; height: 60px !important; }
+  .goal-listing .table-scroll table.table { min-width: unset; }
+  .goal-listing table.table th:last-child { text-align: center; }

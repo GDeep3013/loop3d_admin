@@ -139,6 +139,7 @@ const GoalListing = ({ goals, getGoals, categories, setCompetencyFrom, setChatRe
 
     return (
         <div className="mt-5 plan_content goal-listing">
+            <div className='table-scroll'>
             <Table striped bordered hover className='goal-list-outer goal-list-contant'>
                 <thead>
                     <tr>
@@ -256,7 +257,14 @@ const GoalListing = ({ goals, getGoals, categories, setCompetencyFrom, setChatRe
                     ))}
                 </tbody>
             </Table>
-            {showModal && (
+            </div>
+            <div className='completion-management plan_content'>
+                <div className="grp-btn d-flex">
+                    <Button variant="primary" className="w-50 me-2 " disabled={!showModal}  onClick={() => { setCompetencyFrom(selectedGoal?.specific_goal); setChatResponse(selectedGoal?.specific_goal);}} > I want to keep working on {selectedGoal?.competency}</Button>
+                    <Button variant="secondary" className="w-50 ml-0" disabled={!showModal}>  I want to work on other competencies. </Button>
+                </div>
+            </div>
+            {/* {showModal && (
                 <CompletionManagement
                     show={showModal}
                     onHide={handleCloseModal}
@@ -265,7 +273,7 @@ const GoalListing = ({ goals, getGoals, categories, setCompetencyFrom, setChatRe
                     setChatResponse={setChatResponse}
                     setCompetencyFrom={setCompetencyFrom}
                 />
-            )}
+            )} */}
 
         </div>
     );

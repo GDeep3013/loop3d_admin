@@ -6,6 +6,8 @@ const AssignCompetency = require('../models/AssignCompetencyModel');
 const Category = require('../models/CategoryModel')
 const SurveyReport = require('../models/SurveyReport')
 const SurveyImage = require('../models/SurveyChartImage');
+const Goals = require('../models/Goals');
+
 const fs = require('fs');
 const path = require('path');
 
@@ -1176,8 +1178,8 @@ const generateSummary = async (survey_id,report) => {
             analysis['smart_plan'] = splitByNewLine(smartPlan1);
             analysis['strengths_prompt'] = splitByNewLine(strengthsPrompt1);
             analysis['smart_plan_opportunities'] = splitByNewLine(smartPlanOpportunities1);
- 
-        let parsedGoals1 = await saveOrUpdateSurveyReport(survey_id, analysis, "summaries")
+   
+            let parsedGoals1 = await saveOrUpdateSurveyReport(survey_id, analysis, "summaries")
 
             return  parsedGoals1;
         } catch (error) {
@@ -1193,6 +1195,85 @@ const generateSummary = async (survey_id,report) => {
         throw error;
     }
 };
+
+
+const processSmartPlanData = async (survey_id, smartPlanData) => {
+    try {
+        const smartPlan = smartPlanData?.response_Data?.smart_plan;
+        const smartPlanOpportunities = smartPlanData?.response_Data?.smart_plan_opportunities;
+        const strengthsPrompt = smartPlanData?.response_Data?.strengths_prompt[0];  // Assuming only one entry
+        // Parse strengths prompt to get the competencies
+        const competencies = strengthsPrompt.split(',').map(str => str.trim());
+        const query = {};
+
+        if (searchTerm) {
+            query.$or = [{
+                    survey_status: {
+                        $regex: searchTerm,
+                        $options: 'i'
+                    }
+                },
+                {
+                    ll_survey_status: {
+                        $regex: searchTerm,
+                        $options: 'i'
+                    }
+                },
+                {
+                    mgr_survey_status: {
+                        $regex: searchTerm,
+                        $options: 'i'
+                    }
+                }
+            ];
+        }
+        // Search for matching competencies in the database (Category collection)
+        const regexArray = competencies.map(competency => ({
+            category_name: {
+                $regex: competency,
+                $options: 'i'
+            }
+        }));
+
+        return regexArray
+        // Search for matching categories in the database using regex
+        const categories = await Category.find({
+            $or: regexArray  // Use $or to match any of the competencies
+        });
+        const deadline = new Date();
+        deadline.setDate(deadline.getDate() + 30);
+
+        // Function to save SMART plan or opportunities to the Goals collection
+        const saveGoal = async (goalText, competencyId) => {
+            const newGoal = new Goals({
+                specific_goal: goalText,
+                survey_id: survey_id,
+                dead_line: deadline,
+                competency: competencyId
+            });
+            return await newGoal.save();
+        };
+
+        // Loop through and save each SMART plan entry
+        for (let i = 0; i < smartPlan.length; i++) {
+            // Save each SMART plan under the first matching competency
+            await saveGoal(smartPlan[i], categories[0]?._id);
+        }
+
+        // Loop through and save each SMART plan opportunity
+        for (let i = 0; i < smartPlanOpportunities.length; i++) {
+            // Save each SMART opportunity under the second matching competency (if available)
+            await saveGoal(smartPlanOpportunities[i], categories[1]?._id || categories[0]?._id);
+        }
+
+        return { message: 'Goals and opportunities saved successfully' };
+
+    } catch (error) {
+        console.error('Error saving SMART plan data:', error);
+        throw error;
+    }
+};
+
 const splitByNewLine = (str) => {
    return typeof str === 'string' ? str.split('.\n') : '';
   
@@ -1369,107 +1450,73 @@ const saveOrUpdateSurveyReport=async (surveyId, responseData,type) =>{
 
 
 exports.getSmartGoals = async (req, res) => {
-    const {
-        survey_id,
-        dev_opp,top_str
-    } = req.params;
-    const surveyReport = await SurveyReport.findOne( { survey_id: survey_id } );
-    // let prompt = `Write 2,2 SMART goals (make sure they are measurable with specific metrics, actually possible for the average person, and use specific dates or frequencies with a timeframe) for this employee to achieve in the next 30 days based on their top  strength and developmental opportunity.
-    //             format:
-                
-    //             Strength: ${top_str}
+    const { survey_id, dev_opp, top_str } = req.params;
 
-    //             Summary: 
+    try {
+        // Find or create a survey report
+        const surveyReport = await SurveyReport.findOne({ survey_id: survey_id });
 
-    //             SMART Plan:
+        if (!surveyReport) {
+            return res.status(404).json({ message: 'Survey report not found' });
+        }
 
-    //             development_opportunities : ${dev_opp}
+        const smartPlan = surveyReport?.response_Data?.smart_plan;
+        const smartPlanOpportunities = surveyReport?.response_Data?.smart_plan_opportunities;
 
-    //             Summary: 
 
-    //             SMART Plan:
+        const regexArray = [
+            { category_name: { $regex: dev_opp, $options: 'i' } },
+            { category_name: { $regex: top_str, $options: 'i' } }
+        ];
 
-    //             here the question answer sumarry
-                
-    //             ${JSON.stringify(surveyReport?.response_Data)}
-                
-    //              give me the response in the json `;
-             
-    
-    // if (!surveyReport?.samrtgoals) {
-    //     const response = await openai.chat.completions.create({
-    //         model: 'gpt-4o',
-    //         messages: [
-    //             { role: 'user', content: prompt }
-    //         ]
-    //     });
+        const categories = await Category.find({ $or: regexArray });
 
-    //     let samrtgoals = response.choices[0].message.content;
+
+        const deadline = new Date();
+        deadline.setDate(deadline.getDate() + 30); // 30 days deadline for SMART goals
+
+        // Function to create or update SMART goals in the Goals collection
+        const saveOrUpdateGoal = async (goalText, competencyId, type) => {
+            const goal = await Goals.findOneAndUpdate(
+                { survey_id: survey_id, specific_goal: goalText },
+                { 
+                    specific_goal: goalText,
+                    dead_line: deadline,
+                    competency: competencyId,
+                    goal_type: type // New field to track if it's a SMART plan or opportunity
+                },
+                { upsert: true, new: true } // Create if it doesn't exist, update if it does
+            );
+            return goal;
+        };
+
+        // Loop through and save each SMART plan entry under the first matching category (Top Strength)
+        for (let i = 0; i < smartPlan.length; i++) {
+            const splitPlans = smartPlan[i].split(/(?=\d+\.\s)/); // Split based on numbered list
+            for (let part of splitPlans) {
+                const trimmedPart = part.trim(); // Trim spaces
+                if (trimmedPart.length > 50) {
+                    await saveOrUpdateGoal(trimmedPart, categories[1]?._id || categories[0]?._id, 'Strength');
+                }
+            }
+        }
         
-    //     samrtgoals = extractJsonFromMarkdown(samrtgoals)
+        // Loop through and save each SMART plan opportunity
+        for (let i = 0; i < smartPlanOpportunities.length; i++) {
+            const splitOpportunities = smartPlanOpportunities[i].split(/(?=\d+\.\s)/); // Split based on numbered list
+            for (let part of splitOpportunities) {
+                const trimmedPart = part.trim(); // Trim spaces
+                if (trimmedPart.length > 50) {
+                    await saveOrUpdateGoal(trimmedPart, categories[0]?._id, 'Opportunity');
+                }
+            }
+        }
 
-    //     let parsedGoals1 = await saveOrUpdateSurveyReport(survey_id, samrtgoals, "samrtgoals")
-    //     return res.status(200).json({
-    //         'samrtgoals': samrtgoals,
-         
-    //     });
+        res.status(200).json({ message: 'SMART goals saved/updated successfully' });
 
-    // }else {
-    //     // return res.status(200).json({
-    //     //     'samrtgoals': surveyReport?.samrtgoals,
-         
-    //     // });
-    //     let samrtgoals = `{
-    //             "strength": {
-    //             "name": "Problem Solving",
-    //             "summary": "You excel at identifying issues, analyzing potential solutions, and implementing effective resolutions. Your ability to break down complex problems into manageable parts and use logical strategies ensures that challenges are overcome efficiently.",
-    //             "SMART_Plan": [
-    //                 {
-    //                 "Specific": "Improve verbal communication skills by leading three team meetings within the next 30 days.",
-    //                 "Measurable": "Collect feedback from team members after each meeting, aiming for a 10% improvement in clarity and engagement scores.",
-    //                 "Achievable": "Prepare thoroughly for each meeting and implement feedback from previous sessions.",
-    //                 "Relevant": "Enhances leadership and communication effectiveness.",
-    //                 "Time-bound": "Complete three meetings by the end of the 30-day period."
-    //                 },
-    //                 {
-    //                 "Specific": "Enhance written communication by crafting weekly summary reports of team activities and progress.",
-    //                 "Measurable": "Produce four reports in the next 30 days, with a focus on clear and concise information sharing.",
-    //                 "Achievable": "Allocate time each week specifically for report creation and review.",
-    //                 "Relevant": "Ensures the team is informed and aligned on progress and objectives.",
-    //                 "Time-bound": "First report to be completed within the first week and subsequently weekly thereafter."
-    //                 }
-    //             ]
-    //             },
-    //             "development_opportunity": {
-    //             "name": "Communication",
-    //             "summary": "Your current communication skills have room for improvement, particularly in areas such as articulating ideas clearly, active listening, and providing constructive feedback. Strengthening these skills will enhance overall team collaboration and productivity.",
-    //             "SMART_Plan": [
-    //                 {
-    //                 "Specific": "Focus on improving both verbal and written communication skills by engaging in active listening exercises, seeking opportunities for public speaking, and participating in writing workshops.",
-    //                 "Measurable": "Set a goal to receive at least three pieces of constructive feedback on your communication skills from peers or supervisors each month and track your progress and improvements.",
-    //                 "Achievable": "Identify a mentor who excels in communication to guide you and provide regular feedback. Additionally, consider enrolling in relevant courses or workshops.",
-    //                 "Relevant": "Improving communication skills will enhance your ability to work with colleagues and stakeholders, ultimately contributing to more effective teamwork and project success.",
-    //                 "Time-bound": "Aim to see measurable improvement in your communication skills within the next three months, with regular check-ins with your mentor or manager to assess progress."
-    //                 },
-    //                 {
-    //                 "Specific": "Review and edit emails before sending to ensure clear and concise messaging, aiming for a 20% reduction in word count.",
-    //                 "Measurable": "Compare word counts of emails sent over the next 30 days to previous emails.",
-    //                 "Achievable": "Use bullet points and simplify language to make communication clearer.",
-    //                 "Relevant": "Concise communication will lead to more efficient team interactions.",
-    //                 "Time-bound": "Achieve this goal within 30 days."
-    //                 }
-    //             ]
-    //             }
-    //         }`;
-              
-    //         let parsedGoals = JSON.parse(samrtgoals);
-        
-    //         return res.status(200).json({
-    //             'samrtgoals': parsedGoals,
-             
-    //         });
-    // }
-    
-          
+    } catch (error) {
+        console.error('Error saving SMART plan data:', error);
+        res.status(500).json({ message: 'Error saving SMART plan data' });
+    }
+};   
 
-}
