@@ -312,6 +312,9 @@ button.add_participant:hover{ background-color: var(--secondary-color); color: #
   .action-right table.table th:last-child { text-align: right; padding-right: 28px; }
   .goal-list-outer td:nth-child(5) { max-width: 400px; }
   .goal-list-outer td:nth-child(6) { max-width: 400px; }
-  .goal-listing .completion-management .grp-btn button { max-width: 320px; margin-top: 20px; height: 60px !important; }
+  .goal-listing .completion-management .grp-btn button { max-width: 360px; height: 60px !important; margin: 0; }
   .goal-listing .table-scroll table.table { min-width: unset; }
   .goal-listing table.table th:last-child { text-align: center; }
+  .goal-listing .content-text-edit .d-flex { display: flex !important; align-items: center; margin-top: 25px; column-gap: 1%; }
+  .goal-listing .content-text-edit button { margin: 0 !important; }
+  .goal-listing .plan_content .grp-btn.d-flex { margin-top: 30px; }

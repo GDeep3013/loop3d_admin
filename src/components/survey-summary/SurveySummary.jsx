@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Container, Dropdown, Row, Col, Button } from 'react-bootstrap';
+import { Container, Dropdown, Row,Spinner, Col, Button } from 'react-bootstrap';
 import { formatDateGB } from '../../utils/dateUtils'
 import ChartBar from "./ChartBar"
 import CompetencyBar from "./CompetencyBar"
@@ -263,7 +263,7 @@ console.log('competencyReportggg',competencyReport)
                     console.error("Error generating PDF:", error);
                     setPdf(false); // Reset state in case of error
                 });
-        },500)
+        },2000)
     };
     // console.log('summaryArray', summaryArray)
 
@@ -282,8 +282,9 @@ console.log('competencyReportggg',competencyReport)
                     <Container>
 
                         <div className="d-flex justify-content-end pt-4 pb-3">
-                            <Button className="survey-inner-btn absolute" onClick={() => { ReGenerateReport() }}>Re-Generate</Button>
-                            < Button className="generate-btn" disabled={document.readyState === 'complete'?false:true} onClick={() => { generatePdf() }}>Download as PDF</Button>
+                            <Button className="survey-inner-btn absolute" onClick={() => { ReGenerateReport() }}>Re-Generate</Button> 
+                                {!pdf ? <Button className="generate-btn" disabled={document.readyState === 'complete'?false:true} onClick={() => { generatePdf() }}>Download as PDF</Button>:
+                                <Button className="survey-inner-btn absolute"><Spinner/></Button>}
                         </div>
 
 

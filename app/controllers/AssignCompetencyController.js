@@ -47,6 +47,17 @@ exports.createAssignment = async (req, res) => {
 
             return res.status(201).json(savedAssignments);
         } else if (action == 'unassign') {
+             // Check the count of assigned competencies for the user
+            const assignedCount = await AssignCompetency.countDocuments({
+                user_id,
+                [referenceIdField]: ref_id,
+            });
+
+            // Prevent unassignment if there are already less than 3 competencies assigned
+            if (assignedCount <= 3) {
+                return res.status(400).json({ message: 'You must keep at least 3 competencies assigned.' });
+            }
+
             const result = await AssignCompetency.findOneAndDelete({
                 user_id,
                 [referenceIdField]: ref_id,

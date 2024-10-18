@@ -13,9 +13,11 @@ export default function AssignCompetencies({ data, type }) {
     const [competencies, setCompetencies] = useState([]);
     const [loading, setLoading] = useState(true);
     const [selectedCompetencies, setSelectedCompetencies] = useState([]);
+    const [selectedCategory, setSelectedCategory] = useState([]);
     const user = useSelector((state) => state.auth.user);
     const [category, setCategory] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
+    const [error, setError] = useState("");
 
     useEffect(() => {
         if (data?.ref_id) {
@@ -49,7 +51,10 @@ export default function AssignCompetencies({ data, type }) {
             const result = await getAssignmentsByUserAndOrg(user?._id, data?.ref_id, type);
             setCompetencies(result.assignments ? result.assignments : []); 
             setTotalPages(result.totalPages); 
-            setSelectedCompetencies(result.assignments?.map(assignment => assignment?.category_id?._id)); 
+            setSelectedCompetencies(result.assignments?.map(assignment =>
+                assignment?.category_id?._id
+                
+            )); 
             setLoading(false);
         } catch (error) {
             setLoading(false);
@@ -59,7 +64,14 @@ export default function AssignCompetencies({ data, type }) {
     const handleCheckboxChange = async (categoryId) => {
         const isAssigned = selectedCompetencies?.includes(categoryId);
         const action = isAssigned ? 'unassign' : 'assign'; 
-    
+
+            if (isAssigned && selectedCompetencies.length <= 3) {
+                setError(`You must keep at least 3 competencies selected.`);
+                return; // Exit the function, don't proceed
+            } else {
+                setError("")
+            }
+
         try {
             const response = await createAssignCompetency({
                 action,
@@ -70,11 +82,8 @@ export default function AssignCompetencies({ data, type }) {
             });
     
             if (response) {
-                setSelectedCompetencies(isAssigned
-                    ? selectedCompetencies.filter(id => id !== categoryId)
-                    : [...selectedCompetencies, categoryId]
-                );
-    
+                !isAssigned && setSelectedCompetencies(...selectedCompetencies, categoryId);
+            ;
                 getCategory();
             } else {
                 console.error(`Error ${isAssigned ? 'unassigning' : 'assigning'} competency`);
@@ -105,8 +114,8 @@ export default function AssignCompetencies({ data, type }) {
                                             <label>
                                             <input
                                                 type="checkbox"
-                                                checked={selectedCompetencies?.includes(cat?._id)}
-                                                onChange={() => handleCheckboxChange(cat?._id)}
+                                                checked={selectedCompetencies.includes(cat._id)}
+                                                onChange={() => handleCheckboxChange(cat._id)}
                                             />
                                                 <span> {cat.category_name}</span>
                                                 </label>
@@ -128,8 +137,8 @@ export default function AssignCompetencies({ data, type }) {
                                             <label>
                                             <input
                                                 type="checkbox"
-                                                checked={selectedCompetencies?.includes(cat._id)}
-                                                onChange={() => handleCheckboxChange(cat._id)}
+                                                checked={selectedCompetencies?.includes(cat?._id)}
+                                                onChange={() => handleCheckboxChange(cat?._id)}
                                             />
                                                 <span>{cat.category_name}</span>
                                                 </label>
@@ -139,6 +148,7 @@ export default function AssignCompetencies({ data, type }) {
                             </ul>
                         </div>
                 </Col>
+                <span className='text-danger mt-3'>{error}</span>
             </Row>
         </div>
     );

@@ -131,11 +131,11 @@
     .question-from .ans-block input.form-control { width: 96%; margin-bottom: 15px; }
     .question-from .mb-3 { width: 100%; }
     svg.action-icon path { fill: #fff !important; }
-    .goal-listing .completion-management .grp-btn button { max-width: 100%; height: 60px !important; width: 100% !important; }
+    .goal-listing .completion-management .grp-btn button { max-width: 100%; height: 60px !important; width: 100% !important; margin-top: 20px; }
     .goal-listing .grp-btn { display: block !important; }
     .content-text-edit .card { margin-bottom: 25px !important; }
-    .content-text-edit .d-flex button { width: 100% !important; margin-bottom: 13px; }
-    .content-text-edit .d-flex button:last-child { margin-bottom: 0px; }
+    .content-text-edit .d-flex button { width: 100% !important; margin-bottom: 13px; margin: 0; }
+    .goal-listing .plan_content .grp-btn.d-flex { margin: 0; }
 }
 
 @media screen and (max-width:480px) {
