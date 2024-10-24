@@ -10,13 +10,15 @@ import CompletionManagement from '../plan/CompletionManagement';
 const Plans = () => {
     const { id } = useParams();
     const navigate = useNavigate();
-    const [prompt, setPrompt] = useState('');
+    const [promptResponse, setPromptResponse] = useState('');
     const [selectedOption, setSelectedOption] = useState('');
     const [categories, setCategories] = useState([]);
     const [chatResponse, setChatResponse] = useState('');
     const [competencyFrom, setCompetencyFrom] = useState('');
     const [loading, setLoading] = useState(false);
     const [goals, setGoals] = useState([]);
+    const [buttonClicked, setButtonClicked] = useState(false);
+    const [buttonText,setButtonText]=useState("I want to keep working on selected goals")
 
     const [reGenerate, setReGenerate] = useState(false);
 
@@ -61,6 +63,7 @@ const Plans = () => {
     // gernate plans for the smart goals
     const GeneratePlans = async () => {
         setLoading(true)
+        // console.log(promptResponse, competencyFrom, reGenerate);
         try {
             const response = await fetch('/api/plans/generate-plans', {
                 method: 'POST',
@@ -68,10 +71,10 @@ const Plans = () => {
                     'Content-Type': 'application/json',
                     'x-api-key': import.meta.env.VITE_X_API_KEY
                 },
-                body: JSON.stringify({ prompt, option: selectedOption, survey_id: id, reGenerate: reGenerate, chatResponse: chatResponse, activeCompetency: competencyFrom }) // Send prompt in the body
+                body: JSON.stringify({ promptResponse, option: selectedOption, survey_id: id, reGenerate: reGenerate, chatResponse: chatResponse, activeCompetency: competencyFrom }) // Send prompt in the body
             });
             const data = await response.json();
-            setChatResponse(data.content)
+            setPromptResponse(data.content)
             setCompetencyFrom(data.competency)
             setLoading(false);
             setReGenerate(false);
@@ -98,15 +101,18 @@ const Plans = () => {
                     'Content-Type': 'application/json',
                     'x-api-key': import.meta.env.VITE_X_API_KEY
                 },
-                body: JSON.stringify({ 'chatResponse': chatResponse, 'competency': competencyFrom, 'survey_id': id })
+                body: JSON.stringify({ 'chatResponse': promptResponse, 'competency': competencyFrom, 'survey_id': id })
             });
             const data = await response.json();
             if (data) {
-                setPrompt('')
+                setPromptResponse('')
                 setSelectedOption('')
                 setChatResponse('')
                 setCompetencyFrom('')
                 getGoals();
+                setButtonClicked(false)
+                setButtonText("I want to keep working on selected goals")
+                
             }
         } catch (error) {
             console.error('Error fetching categories:', error);
@@ -131,12 +137,40 @@ const Plans = () => {
             <div className="content-outer content-text-edit">
                 <Container>
                     <Row>
-                        <Col xs={12} md={6}><GoalCreator prompt={prompt} setPrompt={setPrompt} handleSubmit={GeneratePlans} selectedOption={selectedOption} setSelectedOption={setSelectedOption} categories={categories} /></Col>
-                        <Col xs={12} md={6}><SuggestedGoal chatResponse={chatResponse} loading={loading} regenerateResponse={setReGenerate} setReGenerate={setReGenerate} AddNewGoal={AddNewGoal} setChatResponse={setChatResponse} /></Col>
+                        <Col xs={12} md={6}><GoalCreator
+                            loading={loading}
+                            prompt={prompt}
+                            setPrompt={setPromptResponse}
+                            handleSubmit={GeneratePlans}
+                            selectedOption={selectedOption}
+                            setSelectedOption={setSelectedOption}
+                            categories={categories}
+                            chatResponse={chatResponse}
+                            setChatResponse={setChatResponse} />
+                        </Col>
+                        <Col xs={12} md={6}>
+                            <SuggestedGoal
+                                promptResponse={promptResponse}
+                                loading={loading}
+                                regenerateResponse={setReGenerate}
+                                AddNewGoal={AddNewGoal}
+                                setPromptResponse={setPromptResponse} />
+                        </Col>
                     </Row>
                     <Row>
                         <Col>
-                            <GoalListing goals={goals} getGoals={getGoals} categories={categories} setChatResponse={setChatResponse} setCompetencyFrom={setCompetencyFrom} /></Col>
+                            <GoalListing
+                                goals={goals}
+                                getGoals={getGoals}
+                                categories={categories}
+                                setChatResponse={setChatResponse}
+                                setCompetencyFrom={setCompetencyFrom}
+                                buttonClicked={buttonClicked}
+                                setButtonClicked={setButtonClicked}
+                                buttonText={buttonText}
+                                setButtonText={setButtonText}
+                            />
+                        </Col>
                     </Row>
                 </Container>
             </div>
