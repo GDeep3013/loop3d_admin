@@ -12,7 +12,7 @@ import html2pdf from 'html2pdf.js';
 // import ReactDOMServer from 'react-dom/server';
 const SurveySummary = () => {
     const { id } = useParams();
-    // const navigate = useNavigate()
+    const navigate = useNavigate()
     let images = {
         chartRef1: [],
         chartRef2: []
@@ -84,7 +84,7 @@ const SurveySummary = () => {
     }
     const GeneratePlans = async (competencyReport) => {
         try {
-           console.log('competencyReport',competencyReport)
+        //    console.log('competencyReport',competencyReport)
             const developmentalOpportunity = competencyReport?.developmentalOpportunity || 'nothing';
             const url = `/api/surveys/smart-goals/${id}/${developmentalOpportunity}/${competencyReport?.topStrength}`;
             // console.log('test1', url)
@@ -190,7 +190,7 @@ const SurveySummary = () => {
     }, [competencyReport]);
 
 
-console.log('competencyReportggg',competencyReport)
+// console.log('competencyReportggg',competencyReport)
 
 
 
@@ -277,6 +277,19 @@ console.log('competencyReportggg',competencyReport)
 
     return (
         <AuthLayout title={"Survey Summary"}>
+            <div className="main-back-heading">
+                <div className="container">
+                    <div className="row">
+                        <div className="col-md-6 p-0">
+                            <div className="profile-btns pt-0">
+                                <Button className="default-btn cancel-btn ml-0" onClick={() => navigate(-1)}>
+                                    Back
+                                </Button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div className="survey-inner survey_pdf relative">
                 {!loader ? (
                     <Container>

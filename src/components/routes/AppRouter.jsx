@@ -79,7 +79,7 @@ const AppRouter = () => {
     // const currentUrl = window.location.pathname;
    
     // const currentUrl = location.pathname;
-    console.log('currentUrl',currentUrl)
+    // console.log('currentUrl',currentUrl)
 
     // Define guest routes
     const guestRoutes = ['/','/login', '/forget-password', '/reset-password', '/create-password'];
