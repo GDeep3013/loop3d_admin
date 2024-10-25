@@ -2,13 +2,12 @@ import React, { useState, useEffect }from 'react'
 import AuthLayout from '../layout/Auth'
 import { Col, Row, Container, Form, Button } from "react-bootstrap";
 import {  useParams, useNavigate } from "react-router-dom";
-import { EditIcon } from "../components/svg-icons/icons"
 import Swal from 'sweetalert2'
 import axios from "axios"
 export default function AddCategory() {
     const { id } = useParams();
     const navigate = useNavigate();
-    const [roles, setRoles] = useState([]);
+
     const [formData, setFormData] = useState({
         title : '',
         category: '',
@@ -69,14 +68,12 @@ export default function AddCategory() {
             console.log('No response received from the server');
           } else {
             console.error('Error:', error.message);
-            // setErrors(error.message);
+
           }
         });
     };
-
+ 
    
-  
-  
     const handleChange = (e) => {
       const { name, value } = e.target;
       setFormData({ ...formData, [name]: value });

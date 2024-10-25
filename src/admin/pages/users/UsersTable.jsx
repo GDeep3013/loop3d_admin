@@ -29,7 +29,6 @@ export default function EmployeeTable({ }) {
     let result = await fetch(url);
     result = await result.json();
     if (result.status === 'success') {
-      // console.log(result)
       setEmployee(result.users);
       setTotalPages(result.totalPages); // Set totalPages received from the backend
     }
@@ -65,7 +64,6 @@ export default function EmployeeTable({ }) {
             icon: "success",
             confirmButtonColor: "#000",
           });
-          // alert(response.message);
           getEmployee();
         } else {
           console.error('Failed to delete user');

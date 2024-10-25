@@ -10,15 +10,11 @@ export default function ResetPassword() {
     const navigate = useNavigate();
     const query = useQuery();
     const token = query.get('token');
-
-    // console.log('token',token)
-
     const [showPassword, setShowPassword] = useState(false);
     const [formData, setFormData] = useState({
         password: '',
         confirmPassword:''
     });
-
     const [errors, setErrors] = useState({
         password: '',
       confirmPassword:''

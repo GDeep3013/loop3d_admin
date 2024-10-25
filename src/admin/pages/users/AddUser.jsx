@@ -149,12 +149,12 @@ export default function AddEmployee() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    // console.log(name, value);
+
     setFormData({ ...formData, [name]: value });
     setErrors({ ...errors, [name]: '' });
   };
 
-  // console.log(formData);
+
 
   useEffect(() => {
     if (id) {

@@ -63,7 +63,6 @@ const Plans = () => {
     // gernate plans for the smart goals
     const GeneratePlans = async () => {
         setLoading(true)
-        // console.log(promptResponse, competencyFrom, reGenerate);
         try {
             const response = await fetch('/api/plans/generate-plans', {
                 method: 'POST',

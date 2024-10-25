@@ -9,11 +9,8 @@ const SummaryPdf = () => {
         const reportRef = searchParams.get('reportRef'); // Get the reportRef query parameter
         return reportRef;
     };
-
     // Get the reportRef
     const reportRef = getQueryParams();
-
-console.log('reportRef',reportRef)
     return (
         <div>
             <h1>Generating your report...</h1>

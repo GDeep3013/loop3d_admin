@@ -84,10 +84,9 @@ const SurveySummary = () => {
     }
     const GeneratePlans = async (competencyReport) => {
         try {
-        //    console.log('competencyReport',competencyReport)
+  
             const developmentalOpportunity = competencyReport?.developmentalOpportunity || 'nothing';
             const url = `/api/surveys/smart-goals/${id}/${developmentalOpportunity}/${competencyReport?.topStrength}`;
-            // console.log('test1', url)
             const response = await fetch(url, {
                 headers: { 'x-api-key': import.meta.env.VITE_X_API_KEY }
             });
@@ -189,13 +188,6 @@ const SurveySummary = () => {
         }
     }, [competencyReport]);
 
-
-// console.log('competencyReportggg',competencyReport)
-
-
-
-
-
     const Participants = ['Self', 'Direct Report', 'Teammate', 'Supervisor', 'Other'];
 
     const renderTableRows = (data) => {
@@ -265,7 +257,6 @@ const SurveySummary = () => {
                 });
         },2000)
     };
-    // console.log('summaryArray', summaryArray)
 
     useEffect(() => {
         if (!loader) {

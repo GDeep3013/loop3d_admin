@@ -28,7 +28,6 @@ const CompetencyBar = ({ data, pdf = false ,survey_id,savedImages,getChartImages
     // Extract competency names as labels
     const labels = Object.keys(data); // Competencies like 'Communication', 'Leadership', 'Problem Solving'
 
-    // console.log(labels);
     // Create datasets for each rater category using 'averageWeightage'
     const chartData = {
         labels, // Competency names on the y-axis
@@ -161,7 +160,6 @@ const CompetencyBar = ({ data, pdf = false ,survey_id,savedImages,getChartImages
             setTimeout(() => {
                 const image = canvas.toDataURL('image/png');
                 setChartImage(image);
-                console.log(savedImages?.chart_image);
                 if (!savedImages?.chart_image) {
                     saveChartImageToDB(image, survey_id);
 

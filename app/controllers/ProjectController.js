@@ -134,9 +134,7 @@ const ProjectController = {
                         query.budget = priceQuery
                     }
                 }
-            
-            console.log(query);
-
+ 
             // Function to map selected price range to MongoDB query
             function getPriceQuery(selectedPrice) {
                 const [min, max] = selectedPrice.split('-').map(str => parseInt(str.replace(/\D/g, ''), 10));
@@ -238,8 +236,7 @@ const ProjectController = {
                 return res.status(404).json({ error: 'Project not found' });
             }
             if (removedFiles) {
-                console.log('im')
-
+    
                 for (const fileName of removedFiles.split(',')) {
                     try {
                         // Delete file from MongoDB

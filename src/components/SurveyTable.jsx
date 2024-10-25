@@ -31,7 +31,6 @@ export default function ProjectsTable() {
       setTotalPages(result.totalPages);
     }
   }
-  // console.log(project);
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
   };

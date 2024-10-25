@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
-import { MoreIcon,View,ViewReport } from "../../../components/svg-icons/icons";
-import { Container, Dropdown, Row, Col } from 'react-bootstrap';
+import { View,ViewReport } from "../../../components/svg-icons/icons";
+import { Container, Row, Col } from 'react-bootstrap';
 import { getSurveyById } from '../../../apis/SurveyApi';
 import { formatDateGB, formatDateUS } from '../../../utils/dateUtils';
 
@@ -11,14 +11,12 @@ export default function SurveyList({ loop_lead_id, org_id }) {
 
   const [surveys, setSurveys] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
-  const [sortField, setSortField] = useState('');
-  const [sortOrder, setSortOrder] = useState('');
+
   useEffect(() => {
     if (org_id && loop_lead_id) {
       (async () => {
         try {
           let data = await getSurveyById('',loop_lead_id, org_id, searchTerm);
-          // console.log('data', data);
           if (Array.isArray(data) && data.length > 0) {
             setSurveys(data);
           }

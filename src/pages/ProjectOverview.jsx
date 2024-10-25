@@ -24,7 +24,6 @@ export default function ProjectOverview() {
     async function getProject() {
         let result = await fetch(`/api/show-project/${id}`);
         result = await result.json();
-        // console.log(result, 'resultdetails');
         if (result.status == 'success') {
             setProject(result.project);
             setFiles(result.images);
@@ -76,7 +75,7 @@ export default function ProjectOverview() {
                 alert('Failed to copy to clipboard.');
             });
     };
-    // console.log(project, 'projec');
+
     return (
         <AuthLayout>
             <div className='overview-outer'>
