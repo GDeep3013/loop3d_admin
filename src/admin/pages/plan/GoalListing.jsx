@@ -1,15 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState ,useEffect} from 'react';
 import { Table, Button, Form } from 'react-bootstrap';
 import Swal from 'sweetalert2';
 import { Edit, Remove } from '../../../components/svg-icons/icons';
 import CompletionManagement from '../plan/CompletionManagement';
 
-const GoalListing = ({ goals, getGoals, categories, setCompetencyFrom, setChatResponse }) => {
+const GoalListing = ({ goals, getGoals, categories, setCompetencyFrom, setChatResponse,buttonClicked,setButtonClicked ,buttonText,setButtonText}) => {
     const [editingGoalId, setEditingGoalId] = useState(null);
     const [showModal, setShowModal] = useState(false);
-    const [selectedGoal, setSelectedGoal] = useState({});
-
-
+    const [selectedGoal, setSelectedGoal] = useState({});  
+    const [selectedGoalIds, setSelectedGoalIds] = useState([]);
     const [formData, setFormData] = useState({
         specific_goal: '',
         dead_line: '',
@@ -132,149 +131,186 @@ const GoalListing = ({ goals, getGoals, categories, setCompetencyFrom, setChatRe
             setShowModal(false); // Hide modal in case of error
         }
     };
+    const handleCheckboxChange = (goalId) => {
+        setSelectedGoalIds(prevSelectedGoalIds =>
+            prevSelectedGoalIds.includes(goalId)
+                ? prevSelectedGoalIds.filter(id => id !== goalId)
+                : [...prevSelectedGoalIds, goalId]
+        );
+        setButtonText("Confirm")
 
+    };
 
+    const formatGoalsWithStatus = (goals) => {
+        return goals.map((goal, index) =>
+            `${goal.specific_goal}\n\ncompetency:${goal.competency.category_name}\nStatus: ${goal.status}`
+        ).join('\n\n');
 
-    const handleCloseModal = () => setShowModal(false);
+    };
+
+    useEffect(() => {
+        if (goals && goals.length > 0) {
+            const allGoalIds = goals.map(goal => goal._id);
+            setSelectedGoalIds(allGoalIds);
+        }
+    }, [goals]);
+
 
     return (
         <div className="mt-5 plan_content goal-listing">
             <div className='table-scroll'>
-            <Table striped bordered hover className='goal-list-outer goal-list-contant'>
-                <thead>
-                    <tr>
-                        <th colSpan="8" className="text-center">Goals</th>
-                    </tr>
-                    <tr>
-                        <th>#</th>
-                        <th>Specific Goal</th>
-                        <th>Deadline</th>
-                        <th>Relevant Competency</th>
-                        <th>How have you applied it?</th>
-                        <th>What results have you seen from it?</th>
-                        <th>Status</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {goals.length > 0 && goals.map((goal, index) => (
-                        <tr key={goal._id || index}>
-                            <td>{ index+1}</td>
-                            <td style={{ width: '18%' }}>
-                                {editingGoalId === goal._id ? (
-                                    <Form.Control
-                                        type="text"
-                                        name="specific_goal"
-                                        value={formData.specific_goal}
-                                        onChange={handleInputChange}
-                                    />
-                                ) : (
-                                    <p>{goal.specific_goal}</p>
-                                )}
-                            </td>
-                            <td>
-                                {editingGoalId === goal._id ? (
-                                    <Form.Control
-                                        type="date"
-                                        name="dead_line"
-                                        value={formData.dead_line}
-                                        onChange={handleInputChange}
-                                    />
-                                ) : (
-                                    formatDate(goal.dead_line)
-                                )}
-                            </td>
-                            <td>
-                                {editingGoalId === goal._id ? (
-                                    <Form.Control
-                                        as="select"
-                                        name="competency"
-                                        value={formData.competency}
-                                        onChange={handleInputChange}
-                                    >
-                                        {categories.map(category => (
-                                            <option key={category._id} value={category._id}>{category.category_name}</option>
-                                        ))}
-                                    </Form.Control>
-                                ) : (
-                                    goal.competency.category_name
-                                )}
-                            </td>
-                            <td>
-                                {editingGoalId === goal._id ? (
-                                    <Form.Control
-                                        type="text"
-                                        name="goal_apply"
-                                        value={formData.goal_apply}
-                                        onChange={handleInputChange}
-                                        maxLength={100}
-                                    />
-                                ) : (
-                                    goal.goal_apply
-                                )}
-                            </td>
-                            <td>
-                                {editingGoalId === goal._id ? (
-                                    <Form.Control
-                                        type="text"
-                                        name="goal_result_seen"
-                                        value={formData.goal_result_seen}
-                                        onChange={handleInputChange}
-                                        maxLength={100}
-
-                                    />
-                                ) : (
-                                    goal.goal_result_seen
-                                )}
-                            </td>
-                            <td style={{ backgroundColor: getBackgroundColor(goal.status) }}>
-                                {editingGoalId === goal._id ? (
-                                    <Form.Control
-                                        as="select"
-                                        name="status"
-                                        value={formData.status}
-                                        onChange={handleInputChange}
-                                    >
-                                        <option value="Not Started">Not Started</option>
-                                        <option value="Started">Started</option>
-                                        <option value="Complete">Complete</option>
-                                    </Form.Control>
-
-                                ) : (
-                                    goal.status
-                                )}
-                            </td>
-                            <td>
-                                {editingGoalId === goal._id ? (
-                                    <Button variant="primary" title='update' onClick={() => handleSubmit(goal._id)}>Update</Button>
-                                ) : (<div className='d-flex'>
-                                    <button className='action-btn' title='edit' onClick={() => handleEditClick(goal)}><Edit /></button>
-                                    <button className='action-btn' title='delete' onClick={(e) => handleDelete(e, goal._id)}><Remove /></button>
-                                </div>
-                                )}
-                            </td>
+                <Table striped bordered hover className='goal-list-outer goal-list-contant'>
+                    <thead>
+                        <tr>
+                            <th colSpan="8" className="text-center">Goals</th>
                         </tr>
-                    ))}
-                </tbody>
-            </Table>
+                        <tr>
+                            <th>#</th>
+                            <th>Specific Goal</th>
+                            <th>Deadline</th>
+                            <th>Relevant Competency</th>
+                            <th>How have you applied it?</th>
+                            <th>What results have you seen from it?</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {goals.length > 0 && goals.map((goal, index) => (
+                            <tr key={goal._id || index}>
+                                <td>
+                                {buttonClicked ? ( // Check if button has been clicked
+                                        <Form.Check
+                                            type="checkbox"
+                                            checked={selectedGoalIds.includes(goal._id)}
+                                            onChange={() => handleCheckboxChange(goal._id)}
+                                        />
+                                    ) : (
+                                        index+1 // Display "No" if the button has not been clicked
+                                    )}
+                                </td>
+                                <td style={{ width: '18%' }}>
+                                    {editingGoalId === goal._id ? (
+                                        <Form.Control
+                                            type="text"
+                                            name="specific_goal"
+                                            value={formData.specific_goal}
+                                            onChange={handleInputChange}
+                                        />
+                                    ) : (
+                                        <p>{goal.specific_goal}</p>
+                                    )}
+                                </td>
+                                <td>
+                                    {editingGoalId === goal._id ? (
+                                        <Form.Control
+                                            type="date"
+                                            name="dead_line"
+                                            value={formData.dead_line}
+                                            onChange={handleInputChange}
+                                        />
+                                    ) : (
+                                        formatDate(goal.dead_line)
+                                    )}
+                                </td>
+                                <td>
+                                    {editingGoalId === goal._id ? (
+                                        <Form.Control
+                                            as="select"
+                                            name="competency"
+                                            value={formData.competency}
+                                            onChange={handleInputChange}
+                                        >
+                                            {categories.map(category => (
+                                                <option key={category._id} value={category._id}>{category.category_name}</option>
+                                            ))}
+                                        </Form.Control>
+                                    ) : (
+                                        goal.competency.category_name
+                                    )}
+                                </td>
+                                <td>
+                                    {editingGoalId === goal._id ? (
+                                        <Form.Control
+                                            type="text"
+                                            name="goal_apply"
+                                            value={formData.goal_apply}
+                                            onChange={handleInputChange}
+                                            maxLength={100}
+                                        />
+                                    ) : (
+                                        goal.goal_apply
+                                    )}
+                                </td>
+                                <td>
+                                    {editingGoalId === goal._id ? (
+                                        <Form.Control
+                                            type="text"
+                                            name="goal_result_seen"
+                                            value={formData.goal_result_seen}
+                                            onChange={handleInputChange}
+                                            maxLength={100}
+
+                                        />
+                                    ) : (
+                                        goal.goal_result_seen
+                                    )}
+                                </td>
+                                <td style={{ backgroundColor: getBackgroundColor(goal.status) }}>
+                                    {editingGoalId === goal._id ? (
+                                        <Form.Control
+                                            as="select"
+                                            name="status"
+                                            value={formData.status}
+                                            onChange={handleInputChange}
+                                        >
+                                            <option value="Not Started">Not Started</option>
+                                            <option value="Started">Started</option>
+                                            <option value="Complete">Complete</option>
+                                        </Form.Control>
+
+                                    ) : (
+                                        goal.status
+                                    )}
+                                </td>
+                                <td>
+                                    {editingGoalId === goal._id ? (
+                                        <Button variant="primary" title='update' onClick={() => handleSubmit(goal._id)}>Update</Button>
+                                    ) : (<div className='d-flex'>
+                                        <button className='action-btn' title='edit' onClick={() => handleEditClick(goal)}><Edit /></button>
+                                        <button className='action-btn' title='delete' onClick={(e) => handleDelete(e, goal._id)}><Remove /></button>
+                                    </div>
+                                    )}
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </Table>
             </div>
             <div className='completion-management plan_content'>
                 <div className="grp-btn d-flex">
-                    <Button variant="primary" className="w-50 me-2 " disabled={!showModal}  onClick={() => { setCompetencyFrom(selectedGoal?.specific_goal); setChatResponse(selectedGoal?.specific_goal);}} > I want to keep working on {selectedGoal?.competency}</Button>
+                    {/* <Button variant="primary" className="w-50 me-2 " disabled={!showModal} onClick={() => {
+                        setCompetencyFrom(selectedGoal?.specific_goal); const formattedGoals = formatGoalsWithStatus(goals); // Format the goals and statuses
+                        setChatResponse(formattedGoals);
+                    }} > I want to keep working on {selectedGoal?.competency}</Button> */}
+
+                    <Button
+                        variant="primary"
+                        className="w-50 me-2"
+                        onClick={() => {
+                            setButtonClicked(true);
+                            const formattedGoals = formatGoalsWithStatus(goals.filter(goal => selectedGoalIds.includes(goal._id)));
+                            setChatResponse(formattedGoals);
+                            setButtonText("I want to keep working on selected goals")
+                        }}
+                        disabled={selectedGoalIds.length === 0}
+                    >
+                        {buttonText}
+                    </Button>
+                    
                     <Button variant="secondary" className="w-50 ml-0" disabled={!showModal}>  I want to work on other competencies. </Button>
                 </div>
             </div>
-            {/* {showModal && (
-                <CompletionManagement
-                    show={showModal}
-                    onHide={handleCloseModal}
-                    specificGoal={selectedGoal.specific_goal}
-                    competency={selectedGoal.competency}
-                    setChatResponse={setChatResponse}
-                    setCompetencyFrom={setCompetencyFrom}
-                />
-            )} */}
-
         </div>
     );
 };

@@ -12,7 +12,7 @@ import html2pdf from 'html2pdf.js';
 // import ReactDOMServer from 'react-dom/server';
 const SurveySummary = () => {
     const { id } = useParams();
-    // const navigate = useNavigate()
+    const navigate = useNavigate()
     let images = {
         chartRef1: [],
         chartRef2: []
@@ -84,10 +84,9 @@ const SurveySummary = () => {
     }
     const GeneratePlans = async (competencyReport) => {
         try {
-           console.log('competencyReport',competencyReport)
+  
             const developmentalOpportunity = competencyReport?.developmentalOpportunity || 'nothing';
             const url = `/api/surveys/smart-goals/${id}/${developmentalOpportunity}/${competencyReport?.topStrength}`;
-            // console.log('test1', url)
             const response = await fetch(url, {
                 headers: { 'x-api-key': import.meta.env.VITE_X_API_KEY }
             });
@@ -189,13 +188,6 @@ const SurveySummary = () => {
         }
     }, [competencyReport]);
 
-
-console.log('competencyReportggg',competencyReport)
-
-
-
-
-
     const Participants = ['Self', 'Direct Report', 'Teammate', 'Supervisor', 'Other'];
 
     const renderTableRows = (data) => {
@@ -265,7 +257,6 @@ console.log('competencyReportggg',competencyReport)
                 });
         },2000)
     };
-    // console.log('summaryArray', summaryArray)
 
     useEffect(() => {
         if (!loader) {
@@ -277,6 +268,19 @@ console.log('competencyReportggg',competencyReport)
 
     return (
         <AuthLayout title={"Survey Summary"}>
+            <div className="main-back-heading">
+                <div className="container">
+                    <div className="row">
+                        <div className="col-md-6 p-0">
+                            <div className="profile-btns pt-0">
+                                <Button className="default-btn cancel-btn ml-0" onClick={() => navigate(-1)}>
+                                    Back
+                                </Button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div className="survey-inner survey_pdf relative">
                 {!loader ? (
                     <Container>

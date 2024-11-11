@@ -2,16 +2,15 @@ import React, { useState, useEffect } from "react";
 import AuthLayout from "../../../layout/Auth";
 import { Col, Row, Container, Form, Button } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
-import Swal from 'sweetalert2';
-import { getEmailById, createEmail, updateEmail } from '../../../apis/emailApi';
-import { useSelector } from 'react-redux';
+
+import { getEmailById } from '../../../apis/emailApi';
+
 
 export default function CreateEmail() {
-  const user = useSelector((state) => state.auth.user); // Assuming the slice is named "auth"
+
   const { id } = useParams();  // Retrieve email ID from the URL parameters
   const navigate = useNavigate();
-  const [errors, setErrors] = useState({});
-  const [loading, setLoading] = useState(false);
+ 
   const [email, setEmail]= useState(false);
 
   useEffect(() => {
@@ -20,8 +19,6 @@ export default function CreateEmail() {
         try {
           const data = await getEmailById(id);
           setEmail(data)
-          // console.log(data)
-
         } catch (error) {
           console.error("Error fetching email details:", error);
         }

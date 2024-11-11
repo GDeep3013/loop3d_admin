@@ -19,7 +19,6 @@ export default function LoopLeadSurveyParticipantDetails() {
     const getParticipants = async () => {
         try {
             let data = await getSurveyParticipantsById(id, searchTerm);
-            // console.log('data', data);
             if (Array.isArray(data) && data.length > 0) {
                 setSurveyParticipant(data);
                 setSurvey(data?.[0]?.survey_id)
@@ -60,7 +59,6 @@ export default function LoopLeadSurveyParticipantDetails() {
                     method: 'DELETE',
                     headers: { "x-api-key": import.meta.env.VITE_X_API_KEY }
                 });
-                // console.log(response, 'response');
                 if (response.ok) {
                     await Swal.fire({
                         title: "Deleted!",
@@ -68,7 +66,6 @@ export default function LoopLeadSurveyParticipantDetails() {
                         icon: "success",
                         confirmButtonColor: "#000",
                     });
-                    // alert(response.message);
                     getParticipants()
                 } else {
                     console.error('Failed to delete user');

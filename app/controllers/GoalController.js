@@ -60,7 +60,7 @@ exports.createGoals = async (req, res) => {
 
 exports.generatePlans = async (req, res) => {
     try {
-        const { prompt=null,
+        const { promptResponse=null,
             option=null,
             survey_id,
             reGenerate = null,
@@ -173,13 +173,11 @@ exports.generatePlans = async (req, res) => {
 
         let fullPrompt= ''
         if (reGenerate) {
-         fullPrompt = "Make the goal more specific and more measurable, ensuring it’s related to the chosen competency . The response should be in plain text without extra headings, bullet points, or other formatting and 2 lines only .\n\n smaty goal:\n" + chatResponse + "\n\n  competency :\n" + activeCompetency + ";"
-            
+         fullPrompt = "Make the goal more specific and more measurable, ensuring it’s related to the chosen competency . The response should be in plain text without extra headings, bullet points, or other formatting and 2 lines only .\n\n smaty goal:\n" + promptResponse + "\n\n  competency :\n" + activeCompetency + ";"            
         } else {
-            
-             fullPrompt = "Input Value : " + prompt + " . Based on the following survey results and developmental suggestions, generate one SMART plans for the competency " + option + " The response should be in plain text without extra headings, bullet points, or other formatting and 2 lines only .\n\n Survey Results:\n" + summary + "\n\n;"
-        }
-        // Call the OpenAI GPT model
+            fullPrompt= "Make the goal on behalf of my goal and their status here is my goals\n\n"+ chatResponse +  " \n\n generate one SMART plans for the competency " + option + " The response should be in plain text without extra headings,without any status, bullet points, or other formatting and 2 lines only."
+            //  fullPrompt = "Input Value : " + prompt + " . Based on the following survey results and developmental suggestions, generate one SMART plans for the competency " + option + " The response should be in plain text without extra headings, bullet points, or other formatting and 2 lines only .\n\n Survey Results:\n" + summary + "\n\n;"
+        } 
     
         const response = await openai.chat.completions.create({
             model: 'gpt-4', // Correct model name

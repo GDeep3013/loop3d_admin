@@ -11,8 +11,6 @@ export default function CreatePassword() {
     const query = useQuery();
     const token = query.get('token');
 
-    // console.log('token',token)
-
     const [showPassword, setShowPassword] = useState(false);
     const [formData, setFormData] = useState({
         password: '',

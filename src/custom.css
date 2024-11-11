@@ -318,3 +318,4 @@ button.add_participant:hover{ background-color: var(--secondary-color); color: #
   .goal-listing .content-text-edit .d-flex { display: flex !important; align-items: center; margin-top: 25px; column-gap: 1%; }
   .goal-listing .content-text-edit button { margin: 0 !important; }
   .goal-listing .plan_content .grp-btn.d-flex { margin-top: 30px; }
+   small.plan-error { position: relative; bottom: 12px; }

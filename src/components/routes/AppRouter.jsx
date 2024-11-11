@@ -40,7 +40,6 @@ import LoopLeadSurveyParticipantDetails from "../../LoopLead/pages/LoopLeadSurve
 import SurveySummary from "../../components/survey-summary/SurveySummary";
 import CreateFrom from "../../admin/pages/organizations/CreateFrom"
 import Loading from "../../components/Loading";
-
 import CreatePassword from "../../pages/CreatePassword";
 import SummaryPdf from "../survey-summary/SummaryPdf";
 import { useLocation } from 'react-router-dom';
@@ -79,7 +78,7 @@ const AppRouter = () => {
     // const currentUrl = window.location.pathname;
    
     // const currentUrl = location.pathname;
-    console.log('currentUrl',currentUrl)
+  
 
     // Define guest routes
     const guestRoutes = ['/','/login', '/forget-password', '/reset-password', '/create-password'];
@@ -106,9 +105,7 @@ const AppRouter = () => {
           navigate('/loop-lead/dashboard');
         
       }
-    }
-
-   
+    }  
   };
 
   useEffect(() => {

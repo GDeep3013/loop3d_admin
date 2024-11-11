@@ -117,14 +117,13 @@ const fetchPendingSurveys = async () => {
     console.error('Failed to fetch pending surveys:', error);
     return [];
   }
-  // console.log('hello')
+
 }
 
 const processPendingSurveys = async () => {
   const pendingSurveys = await fetchPendingSurveys();
 
   if (pendingSurveys.length === 0) {
-    console.log('No pending surveys found.');
     return;
   }
 
@@ -188,7 +187,6 @@ const processPendingSurveys = async () => {
 
 
 const task = cron.schedule('0 0 * * *', () => {
-  console.log('Cron Job Triggered: Fetching pending participants...');
     processPendingParticipants()
   processPendingSurveys()
   surveyComplete()
@@ -201,4 +199,3 @@ const task = cron.schedule('0 0 * * *', () => {
     });
 });
 
-console.log('Cron job is set up to run every minute...');

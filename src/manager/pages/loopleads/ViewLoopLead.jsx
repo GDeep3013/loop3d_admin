@@ -2,8 +2,7 @@ import React,{useEffect, useState } from 'react'
 import axios from "axios"
 
 export default function ViewLoopLead({ user_id, org_id }) {
-    // console.log('userId', user_id, org_id)
-    
+
     const [leadUser, setLeadUser] = useState();
 
     useEffect(() => {
@@ -13,10 +12,7 @@ export default function ViewLoopLead({ user_id, org_id }) {
                     const response = await axios.get(`/api/users/loop-leads-user/${user_id}/${org_id}`, {
                         headers: { 'x-api-key': import.meta.env.VITE_X_API_KEY }
                     });
-                 
-                //  console.log(response)
-                    if (response.data.status) {
-                  
+                    if (response.data.status) {                  
                         setLeadUser(response.data.user)
                      }
                 } catch (error) {
@@ -27,7 +23,7 @@ export default function ViewLoopLead({ user_id, org_id }) {
         }
     }, [user_id, org_id]);
     
-    // console.log('leadUser',leadUser)
+
   return (
       <div className='looplead-box'>
           <div className='loop-inner'>
