@@ -147,6 +147,42 @@ const processPendingSurveys = async () => {
   }
 }
 
+      const surveyComplete = async () => {
+        try {
+          // Fetch all surveys
+          const surveys = await Survey.find();
+
+          // Iterate over each survey to check completion criteria
+          for (const survey of surveys) {
+            // Check if 10 days have passed since the survey's creation date
+            const tenDaysPassed = (Date.now() - new Date(survey.createdAt)) >= (10 * 24 * 60 * 60 * 1000);
+
+            // Get all participants of the survey
+            const participants = await SurveyParticipant.find({ survey_id: survey._id });
+            
+            // Check if all participants have completed the survey
+            const completedParticipants = participants.filter(participant => participant.survey_status === 'completed');
+            const allParticipantsCompleted = participants.length === completedParticipants.length;
+
+            // Ensure a minimum of 5 participants have completed the survey
+            const minimumParticipantsMet = completedParticipants.length >= 5;
+
+            // Update the survey status to 'completed' if all conditions are met
+            if (allParticipantsCompleted && tenDaysPassed && minimumParticipantsMet) {
+              await Survey.findByIdAndUpdate(survey._id, { 
+                survey_status: 'completed', 
+                report_gen_date: Date.now() 
+              });
+              console.log(`Survey ID ${survey._id} marked as completed.`);
+            } else {
+              console.log(`Survey ID ${survey._id} does not meet completion criteria.`);
+            }
+          }
+        } catch (error) {
+          console.error('Error completing surveys:', error);
+        }
+      };
+
 
 // Cron job to run every minute
 
@@ -154,7 +190,8 @@ const processPendingSurveys = async () => {
 const task = cron.schedule('0 0 * * *', () => {
   console.log('Cron Job Triggered: Fetching pending participants...');
     processPendingParticipants()
-    processPendingSurveys()
+  processPendingSurveys()
+  surveyComplete()
     .then(() => {
       console.log('All pending participants processed.');
       // task.stop(); // Uncomment to stop the cron job after running once

@@ -71,8 +71,11 @@ exports.saveSurveyAnswers = async (req, res) => {
             const isSurveyComplete = surveyUpdated.ll_survey_status === 'yes' && surveyUpdated.mgr_survey_status === 'yes';
 
             if (allParticipantsCompleted ) {
-                await Survey.findByIdAndUpdate(survey_id, { survey_status: 'completed', report_gen_date: Date.now() });
-            }
+                await Survey.findByIdAndUpdate(survey_id, {report_gen_date: Date.now() });
+             }
+        if (completedParticipants >= 10 ) {
+            await Survey.findByIdAndUpdate(survey_id, { survey_status: 'completed', report_gen_date: Date.now() });
+        }
                     return res.status(existingAnswers ? 200 : 201).json({
             message: existingAnswers ? 'Survey answers updated successfully!' : 'Survey answers saved successfully!'
         });
