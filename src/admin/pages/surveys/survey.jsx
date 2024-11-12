@@ -129,7 +129,7 @@ export default function Survey() {
                                     </td>
                                     <td>
                                         <button className='action-btn' title='View Detail' onClick={() => navigate(`/view-survey-participant/${survey._id}`)}><View /></button>
-                                        <button className='action-btn' title='View Report' onClick={() => navigate(`/survey-summary/${survey._id}`)} disabled={survey?.survey_status != "completed" ? true : false}>
+                                        <button className='action-btn' title='View Report' onClick={() => navigate(`/survey-summary/${survey._id}`)} disabled={survey.report_gen_date != null ? true : false}>
                                             <ViewReport/>
                                         </button>
 
