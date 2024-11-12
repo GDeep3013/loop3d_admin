@@ -69,7 +69,8 @@ export default function SurveyList({ loop_lead_id, org_id }) {
             <th>Total Invitees</th>
             <th>Completed Surveys</th>
             <th>Loop Lead Completed Survey?</th>
-            <th>Manager Completed Survey?</th>
+              <th>Manager Completed Survey?</th>
+              <th>Survey Status</th>
             <th>Report Generation Date</th>
             <th>Action</th>
           </tr>
@@ -90,6 +91,8 @@ export default function SurveyList({ loop_lead_id, org_id }) {
                 <td>{survey.completed_survey}</td>
                 <td>{survey.ll_survey_status === 'yes' ? <span className='span-badge active-tag'>Yes</span> :<span className='span-badge inactive-tag'>No</span>}</td>
                 <td>{survey.mgr_survey_status === 'yes' ? <span className='span-badge active-tag'>Yes</span> : <span className='span-badge inactive-tag'>No</span>}</td>
+                <td>{survey.survey_status === 'completed' ? <span className='span-badge active-tag'>Completed</span> : <span className='span-badge inactive-tag'>Pending</span>}</td>
+
                 <td>
                   {survey.report_gen_date
                     ? formatDateGB(survey.report_gen_date)
