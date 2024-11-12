@@ -113,7 +113,7 @@ export default function LoopLeadSurveyParticipantDetails() {
                                             />
                                             <Link to={`/loop-lead/participant/create/${id}`} className='default-btn' >Add Particpant <PLusIcon /> </Link>
                                             <Link to={`/plans/${id}`} className='default-btn' >View Smart Goals</Link>
-                                            {survey.report_gen_date != null  && <Link to={`/survey-summary/${id}`} className='default-btn' >View Summary</Link>}
+                                            {survey?.report_gen_date == null  && <Link to={`/survey-summary/${id}`} className='default-btn' >View Summary</Link>}
 
 
                                         </form>
