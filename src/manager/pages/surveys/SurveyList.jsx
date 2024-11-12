@@ -118,7 +118,7 @@ export default function SurveyList() {
                                     </td>
                                     <td>
                                     <button className='action-btn' onClick={() => navigate(`/view-survey-participant/${survey._id}`)}><View /></button>
-                                    <button className='action-btn' title='View Report' onClick={() => navigate(`/survey-summary/${survey._id}`)} disabled={survey.report_gen_date != null ? true : false}>
+                                    <button className='action-btn' title='View Report' onClick={() => navigate(`/survey-summary/${survey._id}`)} disabled={survey.report_gen_date == null ? true : false}>
                                             <ViewReport/>
                                         </button>
 
