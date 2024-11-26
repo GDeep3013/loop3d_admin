@@ -1520,3 +1520,20 @@ exports.getSmartGoals = async (req, res) => {
     }
 };   
 
+
+exports.test = async (req, res) => {
+    try {
+        const updatedSurvey = await Survey.findByIdAndUpdate(
+            '67333bd92bf2bf612c8918c6', 
+            { survey_status: 'completed' },
+        );
+
+        if (!updatedSurvey) {
+            return res.status(404).json({ message: 'Survey not found' });
+        }
+
+        res.status(200).json({ message: 'Survey updated successfully', data: updatedSurvey });
+    } catch (error) {
+        res.status(500).json({ message: 'Error updating survey', error });
+    }
+};

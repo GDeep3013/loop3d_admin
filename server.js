@@ -50,7 +50,13 @@ app.use(cors());
 
 async function connectDB() {
   try {
-    await mongoose.connect(process.env.MONGODB_URI, {dbName:process.env.MONGODB_DB_NAME });
+    await mongoose.connect(process.env.MONGODB_URI, {
+      dbName: process.env.MONGODB_DB_NAME,
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      connectTimeoutMS: 30000, // 30 seconds
+      socketTimeoutMS: 45000,
+    });
       console.log('MongoDB connection established');
   } catch (error) {
       console.error('Error connecting to MongoDB', error);
@@ -69,7 +75,7 @@ app.use('/organizations', authenticateHeaderKey, organizationRoutes);
 app.use('/categories', authenticateHeaderKey, categoryRoutes);
 app.use('/questions', authenticateHeaderKey, questionRoutes);
 app.use('/competencies', authenticateHeaderKey, assignCompetencyRoutes);
-app.use('/surveys', authenticateHeaderKey, surveyRoutes);
+app.use('/surveys', surveyRoutes);
 app.use('/emails', authenticateHeaderKey, emailRoutes);
 app.use('/plans', authenticateHeaderKey, goalsRoutes);
 app.use('/images', authenticateHeaderKey, imagesRoutes);
