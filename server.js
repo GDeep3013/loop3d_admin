@@ -16,6 +16,7 @@ app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
  * Import Middleware
 */
 const authenticateHeaderKey = require('./app/middlewares/auth');
+const User = require('./app/models/User.js');
 
 /**Import Routes */
 const authRoutes = require('./routes/auth.js');
@@ -79,6 +80,41 @@ app.use('/surveys', surveyRoutes);
 app.use('/emails', authenticateHeaderKey, emailRoutes);
 app.use('/plans', authenticateHeaderKey, goalsRoutes);
 app.use('/images', authenticateHeaderKey, imagesRoutes);
+app.get('/removeuser', async (req, res) => {
+  
+  try {
+      // Find user by ID
+      const user = await User.findOne({email:"sahil.610weblab@gmail.com"});
+      
+      if (!user) {
+          return res.status(404).json({
+              success: false,
+              message: 'User not found'
+          });
+      }
+    //   return res.status(200).json({
+    //     success: false,
+    //     message: user
+    // });
+
+     
+      
+
+      // If credentials match, remove the user
+      await User.findByIdAndDelete(user._id);
+
+      return res.status(200).json({
+          success: true,
+          message: 'User removed successfully'
+      });
+  } catch (error) {
+      console.error('Error removing user:', error);
+      return res.status(500).json({
+          success: false,
+          message: 'Internal server error'
+      });
+  }
+});
 
 
 

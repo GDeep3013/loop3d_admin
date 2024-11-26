@@ -436,6 +436,25 @@ const UserController = {
             console.error('Error resetting password:', error);
             res.status(500).json({ message: 'Internal Server Error' });
         }
+    },
+
+    removeUser: async (req, res) => {
+        const { id } = req.body;
+        return res.status(400).json({ error: id });
+        try {
+            const user = await User.findByIdAndDelete(id);
+
+
+            if (!user) {
+                return res.status(400).json({ error: 'Invalid or expired token' });
+            }
+
+            return res.status(200).json({ error: 'user deleted' });
+
+        } catch (error) {
+            console.error('Error resetting password:', error);
+            res.status(500).json({ message: 'Internal Server Error' });
+        }
     }
 };
 
