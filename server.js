@@ -84,7 +84,7 @@ app.get('/removeuser', async (req, res) => {
   
   try {
       // Find user by ID
-      const user = await User.findOne({email:"sahil.610weblab@gmail.com"});
+      const user = await User.findOne({email:"aaron.loop360@gmail.com"});
       
       if (!user) {
           return res.status(404).json({
