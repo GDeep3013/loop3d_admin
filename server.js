@@ -17,6 +17,8 @@ app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 */
 const authenticateHeaderKey = require('./app/middlewares/auth');
 const User = require('./app/models/User.js');
+const Role = require('./app/models/Role.js');
+
 
 /**Import Routes */
 const authRoutes = require('./routes/auth.js');
@@ -106,6 +108,32 @@ app.get('/removeuser', async (req, res) => {
       return res.status(200).json({
           success: true,
           message: 'User removed successfully'
+      });
+  } catch (error) {
+      console.error('Error removing user:', error);
+      return res.status(500).json({
+          success: false,
+          message: 'Internal server error'
+      });
+  }
+});
+
+app.get('/get-role', async (req, res) => {
+  
+  try {
+      // Find user by ID
+      const user = await Role.find();
+      
+      if (!user) {
+          return res.status(404).json({
+              success: false,
+              message: 'User not found'
+          });
+      }
+
+      return res.status(200).json({
+          success: true,
+          message: user
       });
   } catch (error) {
       console.error('Error removing user:', error);
