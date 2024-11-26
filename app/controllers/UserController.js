@@ -27,7 +27,7 @@ const UserController = {
 
             try {
 
-                const { first_name, last_name, email, designation, user_type, organization_id, created_by = null } = req.body;
+                const { first_name, last_name, email, designation, user_type, organization_id,password, created_by = null } = req.body;
 
                 // Hash the password
 
@@ -38,6 +38,7 @@ const UserController = {
                     email: email,
                     designation: designation,
                     role: user_type,
+                    password:(password != undefined && password !="")?await bcrypt.hash(password, 10):null,
                     created_by: created_by,
                     organization: (organization_id) ? organization_id : null
                 };
