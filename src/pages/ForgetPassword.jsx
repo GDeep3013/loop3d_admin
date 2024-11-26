@@ -83,7 +83,7 @@ export default function ForgetPassword() {
           <Col className='login-hide-mobile' md={6}>
             <div className="loginContent">
               <img
-                src={"/images/logo.png"}
+                src={"/images/logoheader.svg"}
                 alt="Logo"
                 className="logoImg"
               />
