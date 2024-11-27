@@ -10,7 +10,8 @@ const { twoThreeMonthEmailToLead } = require('./templates/twoThreeMonthEmailToLe
 const { reminderEmailToParticapated } = require('./templates/reminderEmailToParticapated');
 const { sendCredentialMail } = require('./templates/sendCredentialMail');
 const { sendSumaryReport } = require('./templates/sendSumaryReport');
-const {createPasswordMail} =  require('./templates/createPasswordMail');
+const { createPasswordMail } = require('./templates/createPasswordMail');
+const { PasswordResetMail } = require('./templates/PasswordResetMail');
 
 const sendEmail = (type, recipientDetails) => {
     let mailOptions = {};
@@ -50,8 +51,10 @@ const sendEmail = (type, recipientDetails) => {
             break;
         case 'createPasswordMail':
             mailOptions = createPasswordMail(recipientDetails);
-            break; 
-
+            break;
+        case 'PasswordResetMail':
+            mailOptions = PasswordResetMail(recipientDetails);
+            break;
 
         default:
             throw new Error('Invalid email type');

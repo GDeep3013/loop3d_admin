@@ -20,7 +20,7 @@ const sendCredentialMail = (recipientDetails) => {
                     </td>
                 </tr>`
     return {
-      from: 'sahil.610weblab@gmail.com',
+      from: 'aaron.loop360@gmail.com',
       to: recipientDetails.email,
       subject: 'Progress Check - Loop3D Development',
       html:emailHeaderFooter(bodyContent)             

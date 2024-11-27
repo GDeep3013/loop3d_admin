@@ -20,7 +20,7 @@ const reminderEmailToParticapated = (recipientDetails) => {
                         </td>
                     </tr>`
     return {
-        from: 'sahil.610weblab@gmail.com',
+        from: 'aaron.loop360@gmail.com',
         to: recipientDetails.email,
         subject: recipientDetails.subject,       
         html: emailHeaderFooter(bodyContent)

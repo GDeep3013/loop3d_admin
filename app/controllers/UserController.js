@@ -27,7 +27,7 @@ const UserController = {
 
             try {
 
-                const { first_name, last_name, email, designation, user_type, organization_id,password, created_by = null } = req.body;
+                const { first_name, last_name, email, designation, user_type, organization_id, password, created_by = null } = req.body;
 
                 // Hash the password
 
@@ -38,7 +38,7 @@ const UserController = {
                     email: email,
                     designation: designation,
                     role: user_type,
-                    password:(password != undefined && password !="")?await bcrypt.hash(password, 10):null,
+                    password: (password != undefined && password != "") ? await bcrypt.hash(password, 10) : null,
                     created_by: created_by,
                     organization: (organization_id) ? organization_id : null
                 };
@@ -55,7 +55,7 @@ const UserController = {
                         const role = await Role.findById(user_type);
 
                         if (role?.type == "manager") {
-                            let url =   `${process.env.ADMIN_PANEL}/start-survey?token=`+response?._id
+                            let url = `${process.env.ADMIN_PANEL}/start-survey?token=` + response?._id
                             let admin_panel_url = `${process.env.ADMIN_PANEL}/create-password?token=${response?._id}`;
 
                             let email = response?.email
@@ -63,16 +63,16 @@ const UserController = {
                             let first_name = response?.first_name
 
                             let roles = role?.type
-                            sendEmail('createPasswordMail', {email,first_name,last_name,admin_panel_url})
-                            sendEmail('sendSurveyCreationEmail', { email, url,roles});
+                            sendEmail('createPasswordMail', { email, first_name, last_name, admin_panel_url })
+                            sendEmail('sendSurveyCreationEmail', { email, url, roles });
                         }
-                        
+
                     }
                     return res.status(201).json({
                         user: response,
                         message: 'User registered successfully',
                     });
-                    
+
                 } catch (err) {
                     if (err.code === 11000) {
                         if (err.keyPattern && err.keyPattern.email) {
@@ -195,9 +195,9 @@ const UserController = {
     showUser: async (req, res) => {
         try {
             let { id } = req.params;
-            let {token} = req.query;
+            let { token } = req.query;
 
-            if (token){
+            if (token) {
                 // let arr = id.split('.');
                 // let obj = {
                 //     iv: arr[0],
@@ -215,7 +215,7 @@ const UserController = {
             const role = await Role.findById(user.role);
 
             // Exclude sensitive fields like password from the response
-            const { _id, first_name,last_name, email, organization, createdAt, updatedAt } = user;
+            const { _id, first_name, last_name, email, organization, createdAt, updatedAt } = user;
             res.status(200).json({
                 _id,
                 first_name,
@@ -284,20 +284,20 @@ const UserController = {
     getLoopLeads: async (req, res) => {
         try {
             // Extract search parameters and pagination parameters from request
-            const { searchTerm ,type} = req.query;
+            const { searchTerm, type } = req.query;
 
             // Construct the query object for User.find() based on search term
             const role = await Role.findOne({ type: type });
-      
+
             const query = {
                 $or: [
-                  { organization: req.params.org_id },
-                  { created_by: req.params.org_id }
+                    { organization: req.params.org_id },
+                    { created_by: req.params.org_id }
                 ],
                 role: role?._id
             };
-    
-      
+
+
             if (searchTerm) {
                 query.$or = [
                     { first_name: { $regex: searchTerm, $options: 'i' } }, // Case-insensitive search by first_name
@@ -306,7 +306,7 @@ const UserController = {
                 ];
             }
 
-            
+
             // Fetch users based on the constructed query and pagination parameters
             const users = await User.find(query)
                 .populate({
@@ -317,7 +317,7 @@ const UserController = {
                 .populate('created_by', 'first_name last_name email') // Populate the role field as well
                 // Populate the role field as well
                 .sort({ createdAt: -1 }); // Sort by creation date in descending order
-              
+
 
             res.status(200).json({
                 status: 'success',
@@ -332,16 +332,16 @@ const UserController = {
     getLoopLeadsUserByOrgId: async (req, res) => {
         try {
             // Extract search parameters and pagination parameters from request
-            const { user_id ,org_id} = req.params;
+            const { user_id, org_id } = req.params;
 
             const query = {
                 $or: [
-                  { organization: org_id },
-                  { created_by: org_id }
+                    { organization: org_id },
+                    { created_by: org_id }
                 ],
-                _id:user_id,
-              };
-                     
+                _id: user_id,
+            };
+
 
             // Fetch users based on the constructed query and pagination parameters
             const user = await User.findOne(query)
@@ -352,7 +352,7 @@ const UserController = {
                 .populate('role', 'type')
                 .populate('created_by', 'first_name last_name email') // Populate the role field as well
                 .sort({ createdAt: -1 }); // Sort by creation date in descending order
-              
+
 
             res.status(200).json({
                 status: true,
@@ -360,10 +360,10 @@ const UserController = {
             });
 
         } catch (error) {
-        
+
             res.status(500).json({ error: 'Internal Server Error' });
         }
-        
+
     },
     forgetPassword: async (req, res) => {
         const { email } = req.body;
@@ -380,9 +380,10 @@ const UserController = {
             user.resetPasswordExpires = Date.now() + 3600000; // Token expires in 1 hour
 
             await user.save();
-           let emailRes = await sendResetEmail(user.email, token);
+            let emailRes = await sendEmail('PasswordResetMail', { user, token });
 
-            res.status(200).json({ status:true, message: 'Password reset email sent' ,emailRes:emailRes });
+            
+            res.status(200).json({ status: true, message: 'Password reset email sent', emailRes: emailRes });
         } catch (error) {
             console.error('Error handling forgot password:', error);
             res.status(500).json({ message: error });
@@ -407,7 +408,7 @@ const UserController = {
 
             await user.save();
 
-            res.status(200).json({status:true, message: 'Password has been reset successfull' });
+            res.status(200).json({ status: true, message: 'Password has been reset successfull' });
         } catch (error) {
             console.error('Error resetting password:', error);
             res.status(500).json({ message: 'Internal Server Error' });
@@ -431,7 +432,7 @@ const UserController = {
 
             await user.save();
 
-            res.status(200).json({status:true, message: 'Password has been created Successfully' });
+            res.status(200).json({ status: true, message: 'Password has been created Successfully' });
         } catch (error) {
             console.error('Error resetting password:', error);
             res.status(500).json({ message: 'Internal Server Error' });

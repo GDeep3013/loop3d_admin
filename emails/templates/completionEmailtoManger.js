@@ -14,7 +14,7 @@ const completionEmailtoManger = (recipientDetails) => {
                             </td>
                         </tr>`
     return {
-        from: 'sahil.610weblab@gmail.com',
+        from: 'aaron.loop360@gmail.com',
         to: recipientDetails.email,
         subject: 'Loop3D 360 Process - [Loop3D Lead full name] - Complete',
         html: emailHeaderFooter(bodyContent)
