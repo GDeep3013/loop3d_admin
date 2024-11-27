@@ -63,8 +63,21 @@ export default function ForgetPassword() {
                 timer: 1500
             });
             setTimeout(() => navigate('/login'), 4000);
-        }else {
-          document.getElementById('emailError').innerText = data.error;
+          } else {
+            if (data.error.response) {
+              Swal.fire({
+                position: "center",
+                icon: "error", // Change the icon to "error"
+                title: "Error", // Customize the title for the error
+                text: data.error.response || "Something went wrong!", // Optional text for additional information
+                showConfirmButton: true, // Show a confirm button for the user to acknowledge
+                confirmButtonText: "OK", // Text for the confirm button
+                timer: 3000 // Optional: Adjust timer if you want it to auto-close
+            });
+            } else {
+              
+              document.getElementById('emailError').innerText = data.error;
+            }
         }
       } catch (error) {
         console.error('Login error:', error);

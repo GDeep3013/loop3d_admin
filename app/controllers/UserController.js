@@ -386,7 +386,7 @@ const UserController = {
             res.status(200).json({ status: true, message: 'Password reset email sent', emailRes: emailRes });
         } catch (error) {
             console.error('Error handling forgot password:', error);
-            res.status(500).json({ message: error });
+            res.status(500).json({ error: error });
         }
     },
     resetPassword: async (req, res) => {
