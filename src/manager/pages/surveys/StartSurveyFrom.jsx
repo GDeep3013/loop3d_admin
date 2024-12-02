@@ -12,12 +12,14 @@ export default function StartSurveyForm() {
     const [activeTab, setActiveTab] = useState("individual_contributor");
     const [selectedCheckboxes, setSelectedCheckboxes] = useState([]);
     const [formData, setFormData] = useState({
-        loop_lead_name: "",
+        loop_lead_first_name: "",
+        loop_lead_last_name: "",
         loop_lead_email: "",
     });
     const [loader, setLoader] = useState(false);
     const [errors, setErrors] = useState({
-        loop_lead_name: "",
+        loop_lead_first_name: "",
+        loop_lead_last_name: "",
         loop_lead_email: "",
         competencies: ""
     });
@@ -94,12 +96,21 @@ export default function StartSurveyForm() {
         const newErrors = {};
 
         // Validate Loop Lead Name
-        if (!formData.loop_lead_name.trim()) {
-            newErrors.loop_lead_name = "Loop3d lead name is required.";
+        if (!formData.loop_lead_first_name.trim()) {
+            newErrors.loop_lead_first_name = "Loop3d first name is required.";
             formIsValid = false;
         }
-        else if (!/^[a-zA-Z\s-]+$/.test(formData.loop_lead_name)) {
-            newErrors.loop_lead_name = "Loop3d lead name can only contain letters, spaces, and dashes.";
+        else if (!/^[a-zA-Z\s-]+$/.test(formData.loop_lead_first_name)) {
+            newErrors.loop_lead_first_name = "Loop3d lead name can only contain letters, spaces, and dashes.";
+            formIsValid = false;
+        }
+
+        if (!formData.loop_lead_last_name.trim()) {
+            newErrors.loop_lead_last_name = "Loop3d Last name is required.";
+            formIsValid = false;
+        }
+        else if (!/^[a-zA-Z\s-]+$/.test(formData.loop_lead_last_name)) {
+            newErrors.loop_lead_last_name = "Loop3d lead name can only contain letters, spaces, and dashes.";
             formIsValid = false;
           }
 
@@ -140,7 +151,8 @@ export default function StartSurveyForm() {
                 name: "Employee Satisfaction Survey", 
                 loop_leads: [
                     {
-                        name: formData.loop_lead_name,
+                        firstName: formData.loop_lead_first_name,
+                        lastName: formData.loop_lead_last_name,
                         email: formData.loop_lead_email
                     }
                 ],
@@ -192,14 +204,27 @@ export default function StartSurveyForm() {
                         <div className="w-100">
                             <Form.Control
                                 type="text"
-                                name="loop_lead_name"
-                                value={formData.loop_lead_name}
+                                name="loop_lead_first_name"
+                                value={formData.loop_lead_first_name}
                                 onChange={handleInputChange}
                                 placeholder="Loop3d Lead Name"
-                                isInvalid={!!errors.loop_lead_name} // Shows error state for input
+                                isInvalid={!!errors.loop_lead_first_name} // Shows error state for input
                             />
                             <Form.Control.Feedback type="invalid">
-                                {errors.loop_lead_name}
+                                {errors.loop_lead_first_name}
+                            </Form.Control.Feedback>
+                        </div>
+                        <div className="w-100">
+                            <Form.Control
+                                type="text"
+                                name="loop_lead_last_name"
+                                value={formData.loop_lead_last_name}
+                                onChange={handleInputChange}
+                                placeholder="Loop3d Lead Name"
+                                isInvalid={!!errors.loop_lead_last_name} // Shows error state for input
+                            />
+                            <Form.Control.Feedback type="invalid">
+                                {errors.loop_lead_last_name}
                             </Form.Control.Feedback>
                         </div>
                         <div className="w-100">

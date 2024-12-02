@@ -51,7 +51,8 @@ exports.createSurvey = async (req, res) => {
             min: 1
         }).withMessage('At least one loop lead is required').run(req);
         await check('surveyData.loop_leads.*.email').isEmail().withMessage('Invalid email').run(req);
-        await check('surveyData.loop_leads.*.name').not().isEmpty().withMessage('Name is required').run(req);
+        await check('surveyData.loop_leads.*.firstName').not().isEmpty().withMessage(' First Name is required').run(req);
+        await check('surveyData.loop_leads.*.lastName').not().isEmpty().withMessage('Last Name is required').run(req);
         await check('surveyData.competencies').isArray().withMessage('Competencies must be an array').run(req);
 
         const errors = validationResult(req);
@@ -69,10 +70,7 @@ exports.createSurvey = async (req, res) => {
         let savedSurveys = [];
 
         for (let lead of loopLeads) {
-            const {
-                name,
-                email
-            } = lead;
+            const {firstName, lastName, email} = lead;
 
             // Check if the user already exists by email
             let user = await User.findOne({
@@ -87,7 +85,8 @@ exports.createSurvey = async (req, res) => {
                 });
 
                 user = new User({
-                    first_name:name,
+                    first_name:firstName,
+                    last_name:lastName,
                     email,
                     role: role?._id,
                     password: hashedPassword,
@@ -98,7 +97,7 @@ exports.createSurvey = async (req, res) => {
                 await user.save();
 
             }
-
+            let name=firstName +' '+  lastName
             // Create the survey and associate it with the user
             const survey = new Survey({
                 name: surveyData.name,
@@ -111,8 +110,8 @@ exports.createSurvey = async (req, res) => {
             const savedSurvey = await survey.save();
             let admin_panel_url = `${process.env.ADMIN_PANEL}/create-password?token=${user?._id}`;
             let url = `${process.env.ADMIN_PANEL}/loop-lead/participant/create/` + savedSurvey?._id
-            let first_name = name
-            let last_name = ''
+            let first_name = firstName
+            let last_name = lastName
             let summary_url = `${process.env.ADMIN_PANEL}/survey-summary?survey_id=` + savedSurvey?._id
             
 
