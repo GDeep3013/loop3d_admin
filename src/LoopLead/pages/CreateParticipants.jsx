@@ -75,9 +75,11 @@ const CreateParticipants = () => {
 
                                 <form method="post" className="mt-3 mt-lg-4">
                                     <div className="mb-3">
+                                        <label className="mb-2">Manager's Email</label>
                                         <input placeholder="First Name" type="email" name="employee_email" value={survey?.manager?.email} disabled required className="form-control text-dark fs-6 rounded-3 py-2 px-3" />
                                     </div>
                                     <div className="mb-3">
+                                        <label className="mb-2">Email</label>
                                         <input placeholder="First Name" type="email" name="employee_email" value={survey?.loop_lead?.email} disabled required className="form-control text-dark fs-6 rounded-3 py-2 px-3" />
                                     </div>
                                 </form>

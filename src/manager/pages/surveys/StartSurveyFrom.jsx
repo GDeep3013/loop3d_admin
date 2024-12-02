@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Container, Form } from "react-bootstrap";
 import { useSelector } from 'react-redux';
-
+import Swal from 'sweetalert2'
 export default function StartSurveyForm() {
     const user = useSelector((state) => state.auth.user);
     const router = useNavigate();
@@ -95,13 +95,17 @@ export default function StartSurveyForm() {
 
         // Validate Loop Lead Name
         if (!formData.loop_lead_name.trim()) {
-            newErrors.loop_lead_name = "Loop lead name is required.";
+            newErrors.loop_lead_name = "Loop3d lead name is required.";
             formIsValid = false;
         }
+        else if (!/^[a-zA-Z\s-]+$/.test(formData.loop_lead_name)) {
+            newErrors.loop_lead_name = "Loop3d lead name can only contain letters, spaces, and dashes.";
+            formIsValid = false;
+          }
 
         // Validate Loop Lead Email
         if (!formData.loop_lead_email.trim()) {
-            newErrors.loop_lead_email = "Loop lead email is required.";
+            newErrors.loop_lead_email = "Loop3d lead email is required.";
             formIsValid = false;
         } else if (!/\S+@\S+\.\S+/.test(formData.loop_lead_email)) {
             newErrors.loop_lead_email = "Please enter a valid email address.";
@@ -158,6 +162,12 @@ export default function StartSurveyForm() {
 
             if (response.ok) {
                 const data = await response.json();
+                await Swal.fire({
+                    title: "Success!",
+                    text: "Survey Created Successfully.",
+                    icon: "success",
+                    confirmButtonColor: "#000",
+                  });
                 const loopLeadId = data?.data?.surveys?.[0]?._id;
                 if (loopLeadId) {
                     router('/manager/dashboard');
@@ -185,7 +195,7 @@ export default function StartSurveyForm() {
                                 name="loop_lead_name"
                                 value={formData.loop_lead_name}
                                 onChange={handleInputChange}
-                                placeholder="Loop Lead Name"
+                                placeholder="Loop3d Lead Name"
                                 isInvalid={!!errors.loop_lead_name} // Shows error state for input
                             />
                             <Form.Control.Feedback type="invalid">
@@ -198,7 +208,7 @@ export default function StartSurveyForm() {
                                 name="loop_lead_email"
                                 value={formData.loop_lead_email}
                                 onChange={handleInputChange}
-                                placeholder="Loop Lead Email"
+                                placeholder="Loop3d Lead Email"
                                 isInvalid={!!errors.loop_lead_email} // Shows error state for input
                             />
                             <Form.Control.Feedback type="invalid">

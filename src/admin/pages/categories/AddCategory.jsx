@@ -115,10 +115,17 @@ export default function AddCategory() {
   };
 
   // Handle input changes
+  // const handleChange = (e) => {
+  //   setFormData({ ...formData, [e.target.name]: e.target.value });
+  //   setErrors({});
+  // };
+
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const trimmedValue = e.target.value.trimStart(); // Trim whitespace from the start
+    setFormData({ ...formData, [e.target.name]: trimmedValue });
     setErrors({});
   };
+
 
   return (
     <AuthLayout title={id ? "Edit Competency" : "Add Competency"}>

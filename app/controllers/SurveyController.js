@@ -146,14 +146,14 @@ exports.createSurvey = async (req, res) => {
 
 exports.createSurveyParticipants = async (req, res) => {
     try {
+        console.log(req);
         await check('participants').isArray({
                 min: 1
             }).withMessage('Participants array is required and cannot be empty').run(req),
             await check('survey_id').not().isEmpty().withMessage('Survey ID is required for each participant').run(req),
             await check('participants.*.p_first_name').not().isEmpty().withMessage('Participant first name is required').run(req),
-            await check('participants.*.p_last_name').not().isEmpty().withMessage('Participant last name is required').run(req),
+            // await check('participants.*.p_last_name').not().isEmpty().withMessage('Participant last name is required').run(req),
             await check('participants.*.p_type').not().isEmpty().withMessage('Participant type is required').run(req),
-
             await check('participants.*.p_email').isEmail().withMessage('Invalid email address').run(req)
 
         const errors = validationResult(req);

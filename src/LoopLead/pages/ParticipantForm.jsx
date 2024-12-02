@@ -1,8 +1,11 @@
 'use client';
 import React, { useState } from "react";
 import { Container, Dropdown, Row, Col } from 'react-bootstrap';
-
+import { useNavigate } from "react-router-dom";
+import Swal from 'sweetalert2'
 export default function ParticipantForm({ survey_id }) {
+    const navigate = useNavigate();
+
     const initialParticipants = Array.from({ length: 10 }, () => ({
         p_first_name: '',
         p_last_name: '',
@@ -34,7 +37,7 @@ export default function ParticipantForm({ survey_id }) {
         participants.forEach((participant, index) => {
             const participantErrors = {};
             if (!participant.p_first_name) participantErrors.p_first_name = 'First name is required';
-            if (!participant.p_last_name) participantErrors.p_last_name = 'Last name is required';
+            // if (!participant.p_last_name) participantErrors.p_last_name = 'Last name is required';
             if (!participant.p_email) {
                 participantErrors.p_email = 'Email is required';
             } else if (!/\S+@\S+\.\S+/.test(participant.p_email)) {
@@ -55,6 +58,7 @@ export default function ParticipantForm({ survey_id }) {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        
         if (validateForm()) {
             setLoader(true)         
             try {
@@ -72,8 +76,13 @@ export default function ParticipantForm({ survey_id }) {
                 });
 
                 if (response.ok) {
-                  
-                    window.location.reload()
+                    await Swal.fire({
+                        title: "Success!",
+                        text: "Participant Created Successfully.",
+                        icon: "success",
+                        confirmButtonColor: "#000",
+                      });
+                    navigate(`/loop-lead/view-survey-participant/${survey_id}`)
                     // handle success, e.g., redirect to another page or show a success message
                 } else {
                     console.error('Error submitting participants');
@@ -95,7 +104,7 @@ export default function ParticipantForm({ survey_id }) {
         <form method="post" className="mt-4 position-relative" onSubmit={handleSubmit}>
             <div className="participant bg-custom-color py-3 py-md-4 px-3 px-md-4 rounded-top d-none d-md-flex">
                 <div className="form-group w-100 text-center">
-                    <label className="text-white fs-3 fs-xl-6 heading-font">Participant :</label>
+                    <label className="text-white fs-3 fs-xl-6 heading-font ">Participant :</label>
                 </div>
                 <div className="form-group w-100 text-center">
                     <label className="text-white fs-3 fs-xl-6 heading-font">First Name</label>
@@ -174,7 +183,7 @@ export default function ParticipantForm({ survey_id }) {
                 Add Participant
             </button>
                     <button type="submit" className="mt-3 py-2 px-4 btn bg-custom-color ms-2 text-white submit_btn" disabled={loader}>
-                    {loader? 'submitting':"Submit"}
+                    {loader? 'Submitting':"Submit"}
             </button>
         </form>
     </Container>

@@ -95,7 +95,7 @@ export default function SurveyList() {
                 <td>
                   {survey.report_gen_date
                     ? formatDateGB(survey.report_gen_date)
-                    : 'Never'}
+                    : 'Not Available Yet'}
                 </td>
                 <td>
                 <button className='action-btn' onClick={() => navigate(`/loop-lead/view-survey-participant/${survey._id}`)}><View /></button>

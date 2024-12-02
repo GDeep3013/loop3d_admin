@@ -1,13 +1,13 @@
-import React, { useState ,useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import { Table, Button, Form } from 'react-bootstrap';
 import Swal from 'sweetalert2';
 import { Edit, Remove } from '../../../components/svg-icons/icons';
 import CompletionManagement from '../plan/CompletionManagement';
 
-const GoalListing = ({ goals, getGoals, categories, setCompetencyFrom, setChatResponse,buttonClicked,setButtonClicked ,buttonText,setButtonText}) => {
+const GoalListing = ({ goals, getGoals, categories, setCompetencyFrom, setChatResponse, buttonClicked, setButtonClicked, buttonText, setButtonText }) => {
     const [editingGoalId, setEditingGoalId] = useState(null);
     const [showModal, setShowModal] = useState(false);
-    const [selectedGoal, setSelectedGoal] = useState({});  
+    const [selectedGoal, setSelectedGoal] = useState({});
     const [selectedGoalIds, setSelectedGoalIds] = useState([]);
     const [formData, setFormData] = useState({
         specific_goal: '',
@@ -17,6 +17,7 @@ const GoalListing = ({ goals, getGoals, categories, setCompetencyFrom, setChatRe
         goal_result_seen: '',
         status: '',
     });
+    const [errors, setErrors] = useState({});
 
     const formatDate = (dateString) => {
         return new Date(dateString).toLocaleDateString('en-US', {
@@ -24,6 +25,31 @@ const GoalListing = ({ goals, getGoals, categories, setCompetencyFrom, setChatRe
             month: 'short',
             day: 'numeric',
         });
+    };
+
+    const validateForm = () => {
+        const newErrors = {};
+
+        if (!formData.specific_goal?.trim()) {
+            newErrors.specific_goal = "Specific goal is required.";
+        }
+
+        if (!formData.dead_line?.trim()) {
+            newErrors.dead_line = "Deadline is required.";
+        } else if (isNaN(Date.parse(formData.dead_line))) {
+            newErrors.dead_line = "Please provide a valid date.";
+        }
+
+        if (!formData.goal_apply?.trim()) {
+            newErrors.goal_apply = "Goal application information is required.";
+        }
+
+        if (!formData.goal_result_seen?.trim()) {
+            newErrors.goal_result_seen = "Goal result expectation is required.";
+        }       
+
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0; // Returns true if no errors
     };
 
     const handleDelete = async (e, id) => {
@@ -92,39 +118,41 @@ const GoalListing = ({ goals, getGoals, categories, setCompetencyFrom, setChatRe
         }));
     };
 
+
     const handleSubmit = async (id) => {
         try {
-            // Send the update request
-            const response = await fetch(`/api/plans/update/${id}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    "x-api-key": import.meta.env.VITE_X_API_KEY,
-                },
-                body: JSON.stringify(formData),
-            });
+            if (validateForm()) {
+                const response = await fetch(`/api/plans/update/${id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        "x-api-key": import.meta.env.VITE_X_API_KEY,
+                    },
+                    body: JSON.stringify(formData),
+                });
 
-            // Check if the update was successful
-            if (response.ok) {
-                getGoals(); // Refetch goals after updating
+                // Check if the update was successful
+                if (response.ok) {
+                    getGoals(); // Refetch goals after updating
 
-                const updatedGoal = await response.json(); // Parse the updated goal data
+                    const updatedGoal = await response.json(); // Parse the updated goal data
 
-                // Show modal if status is "Complete"
-                if (formData.status === 'Complete') {
-                    setSelectedGoal({
-                        specific_goal: updatedGoal?.specific_goal || formData.specific_goal, // Use response or fallback to formData
-                        competency: updatedGoal?.competency?.category_name || "N/A", // Safely handle competency name
-                    });
-                    setShowModal(true); // Show modal
-                    setEditingGoalId(null);
+                    // Show modal if status is "Complete"
+                    if (formData.status === 'Complete') {
+                        setSelectedGoal({
+                            specific_goal: updatedGoal?.specific_goal || formData.specific_goal, // Use response or fallback to formData
+                            competency: updatedGoal?.competency?.category_name || "N/A", // Safely handle competency name
+                        });
+                        setShowModal(true); // Show modal
+                        setEditingGoalId(null);
+                    } else {
+                        setShowModal(false);
+                        setEditingGoalId(null);// Hide modal if not "Complete"
+                    }
                 } else {
-                    setShowModal(false);
-                    setEditingGoalId(null);// Hide modal if not "Complete"
+                    console.error('Failed to update goal');
+                    setShowModal(false); // Ensure modal is hidden on failure
                 }
-            } else {
-                console.error('Failed to update goal');
-                setShowModal(false); // Ensure modal is hidden on failure
             }
         } catch (error) {
             console.error('Error updating goal:', error);
@@ -179,42 +207,45 @@ const GoalListing = ({ goals, getGoals, categories, setCompetencyFrom, setChatRe
                         {goals.length > 0 && goals.map((goal, index) => (
                             <tr key={goal._id || index}>
                                 <td>
-                                {buttonClicked ? ( // Check if button has been clicked
+                                    {buttonClicked ? ( // Check if button has been clicked
                                         <Form.Check
                                             type="checkbox"
                                             checked={selectedGoalIds.includes(goal._id)}
                                             onChange={() => handleCheckboxChange(goal._id)}
                                         />
                                     ) : (
-                                        index+1 // Display "No" if the button has not been clicked
+                                        index + 1 // Display "No" if the button has not been clicked
                                     )}
                                 </td>
                                 <td style={{ width: '18%' }}>
-                                    {editingGoalId === goal._id ? (
+                                    {editingGoalId === goal._id ? (<>
                                         <Form.Control
                                             type="text"
                                             name="specific_goal"
                                             value={formData.specific_goal}
                                             onChange={handleInputChange}
                                         />
-                                    ) : (
+                                        {errors.specific_goal && <small className="text-danger">{errors.specific_goal}</small>}
+                                    </>) : (
                                         <p>{goal.specific_goal}</p>
                                     )}
                                 </td>
                                 <td>
-                                    {editingGoalId === goal._id ? (
+                                    {editingGoalId === goal._id ? (<>
                                         <Form.Control
                                             type="date"
                                             name="dead_line"
                                             value={formData.dead_line}
                                             onChange={handleInputChange}
                                         />
+                                        {errors.dead_line && <small className="text-danger">{errors.dead_line}</small>}
+                                    </>
                                     ) : (
                                         formatDate(goal.dead_line)
                                     )}
                                 </td>
                                 <td>
-                                    {editingGoalId === goal._id ? (
+                                    {/* {editingGoalId === goal._id ? (
                                         <Form.Control
                                             as="select"
                                             name="competency"
@@ -225,33 +256,41 @@ const GoalListing = ({ goals, getGoals, categories, setCompetencyFrom, setChatRe
                                                 <option key={category._id} value={category._id}>{category.category_name}</option>
                                             ))}
                                         </Form.Control>
-                                    ) : (
-                                        goal.competency.category_name
-                                    )}
+                                    ) : ( */}
+                                    {goal.competency.category_name}
+                                    {/* )} */}
                                 </td>
                                 <td>
                                     {editingGoalId === goal._id ? (
-                                        <Form.Control
-                                            type="text"
-                                            name="goal_apply"
-                                            value={formData.goal_apply}
-                                            onChange={handleInputChange}
-                                            maxLength={100}
-                                        />
+                                        <>
+
+                                            <Form.Control
+                                                type="text"
+                                                name="goal_apply"
+                                                value={formData.goal_apply}
+                                                onChange={handleInputChange}
+                                                maxLength={100}
+                                            />
+                                            {errors.goal_apply && <small className="text-danger">{errors.goal_apply}</small>}
+                                        </>
                                     ) : (
                                         goal.goal_apply
                                     )}
                                 </td>
                                 <td>
                                     {editingGoalId === goal._id ? (
-                                        <Form.Control
-                                            type="text"
-                                            name="goal_result_seen"
-                                            value={formData.goal_result_seen}
-                                            onChange={handleInputChange}
-                                            maxLength={100}
+                                        <>
 
-                                        />
+                                            <Form.Control
+                                                type="text"
+                                                name="goal_result_seen"
+                                                value={formData.goal_result_seen}
+                                                onChange={handleInputChange}
+                                                maxLength={100}
+
+                                            />
+                                            {errors.goal_result_seen && <small className="text-danger">{errors.goal_result_seen}</small>}
+                                        </>
                                     ) : (
                                         goal.goal_result_seen
                                     )}
@@ -307,7 +346,7 @@ const GoalListing = ({ goals, getGoals, categories, setCompetencyFrom, setChatRe
                     >
                         {buttonText}
                     </Button>
-                    
+
                     <Button variant="secondary" className="w-50 ml-0" disabled={!showModal}>  I want to work on other competencies. </Button>
                 </div>
             </div>
