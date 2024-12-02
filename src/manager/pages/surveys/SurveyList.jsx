@@ -44,7 +44,7 @@ export default function SurveyList() {
     };
 
     return (
-        <AuthLayout title={"Surveys"}>
+        <AuthLayout title={"360"}>
             <div className='table-inner main-wrapper '>
                 <div className='content-outer'>
                     <div className='tabe-outer'>
@@ -98,7 +98,7 @@ export default function SurveyList() {
                             ) : surveys && surveys.length === 0 ? (
                                 <tr>
                                     <td colSpan="10" style={{ textAlign: 'center' }}>
-                                        <h4>No surveys found</h4>
+                                        <h4>No 360s found</h4>
                                     </td>
                                 </tr>
                             ) : (
