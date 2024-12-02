@@ -112,3 +112,8 @@ ul.custom-tabs.nav.nav-tabs { border-bottom: 1px solid #7abcdb; }
 .chat-gpt-summary h2 { margin-bottom: 20px; font-size: 28px; }
 .chat-gpt-summary .summary-item { margin-bottom: 30px; }
 .chat-gpt-summary .summary-item p { margin-bottom: 15px; font-size: 17px; line-height: 24px; }
+
+.looplead-box.new-box{ column-gap: 40px; }
+.looplead-box.new-box .loop-inner span.user-name { background-color: #174a6d; color: #fff; text-align: left; padding: 6px 18px; font-size: 19px; display: block; text-align: center;}
+.looplead-box.new-box .loop-inner span.date-text { font-size: 13px; padding: 6px 18px; background-color: #efefef; margin-top: 0px; display: block; text-align: center;}
+.looplead-box.new-box .looplead-box-outer { padding-top: 0; }

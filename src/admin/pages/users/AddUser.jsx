@@ -6,7 +6,7 @@ import Swal from 'sweetalert2'
 import axios from "axios"
 
 import { fetchOrgnizations } from "../../../apis/OrgnizationApi";
-
+import Select from "react-select";
 export default function AddEmployee() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -25,17 +25,37 @@ export default function AddEmployee() {
   const [errors, setErrors] = useState({});
 
   const [organizations, setOrganizations] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
 
   const isValidEmail = (email) => {
     // Simple email validation regex
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   };
 
-  useEffect(() => {
-    fetchOrgnizations().then((res) => {
-      setOrganizations(res.data);
+  async function getOrganizations() {
+    let url = `/api/organizations`; // Include currentPage in the URL
+    if (searchTerm) {
+        url += `?searchTerm=${encodeURIComponent(searchTerm)}`;
+    }
+
+    let result = await fetch(url, {
+        headers: { 'x-api-key': import.meta.env.VITE_X_API_KEY }
     });
-  }, []);
+    result = await result.json();
+
+    if (result.status == 'success') {
+        setOrganizations(
+          result.data.map((org) => ({
+            value: org._id,
+            label: org.name,
+          }))
+        );
+    }
+}
+
+  useEffect(() => {
+    getOrganizations()
+  }, [searchTerm]);
 
   const validateForm = (formData) => {
     let errors = {};
@@ -188,6 +208,14 @@ export default function AddEmployee() {
     fetchRoles();
   }, []);
 
+  const handleSelectChange = (selectedOption, action) => {
+    setFormData({ ...formData, [action.name]: selectedOption?.value || "" });
+    setErrors({ ...errors, [action.name]: "" });
+  };
+  const handleSearchChange = (inputValue) => {
+    setSearchTerm(inputValue);
+  };
+
   return (
     <AuthLayout title={id ? 'Edit User' : "Add User"}>
 
@@ -279,19 +307,20 @@ export default function AddEmployee() {
                     <Col md={4}>
                       <Form.Group className="mb-4">
                         <Form.Label>Organization</Form.Label><sup style={{color:'red'}}>*</sup>
-                        <Form.Select
-                          name="organization_id"
-                          value={formData.organization_id}
-                          onChange={handleChange}
-                        >
-                          <option value="">Select Organization</option>
-                          {organizations.length > 0 && organizations.map((org) => (
-                            <option key={org._id} value={org._id}>
-                              {org.name}
-                            </option>
-                          ))}
-                        </Form.Select>
-                        {errors?.organization_id && <small className="text-danger">{errors?.organization_id}</small>}
+                        <Select
+                name="organization_id"
+                options={organizations}
+                value={organizations.find(
+                  (org) => org.value === formData.organization_id
+                )}
+                onInputChange={handleSearchChange}
+                onChange={(selectedOption) =>
+                  handleSelectChange(selectedOption, { name: "organization_id" })
+                }
+                placeholder="Select Organization"
+                isClearable
+              />
+              {errors?.organization_id && <small className="text-danger">{errors?.organization_id}</small>}
                       </Form.Group>
                     </Col>
                     {/* <Col md={6}>
