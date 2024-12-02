@@ -56,9 +56,8 @@ export default function CreateOrganization({ id, savedData }) {
             errors.name = 'Organization name is required';
         } else if (formData.name.trim().length < 3) {
             errors.name = 'Organization name must be at least 3 characters long';
-        } else if (!namePattern.test(formData.name.trim())) {
-            errors.name = 'Organization name can only contain letters and numbers';
         }
+        
         if (!id && selectedCompetencies.length < 3) {
             errors.competency = 'At least 3 competencies must be selected';
         }

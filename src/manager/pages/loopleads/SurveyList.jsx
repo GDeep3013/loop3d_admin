@@ -34,6 +34,8 @@ export default function SurveyList({ loop_lead_id, org_id }) {
     setSearchTerm(e.target.value);
   };
 
+  console.log('surveys',surveys)
+
   return (
     <div className='table-inner'>
       <div className='content-outer'>

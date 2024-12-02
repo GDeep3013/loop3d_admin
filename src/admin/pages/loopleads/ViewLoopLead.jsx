@@ -24,12 +24,15 @@ export default function ViewLoopLead({ user_id, org_id }) {
             fetchLoopLeadUserDetails();
         }
     }, [user_id, org_id]);
+
+    // console.log('leadUser',leadUser?.organization?.name)
     
   return (
       <div className='looplead-box'>
           <div className='loop-inner'>
               <span>{leadUser?.first_name} {leadUser?.last_name}</span> 
           </div>
+              <span>{leadUser?.organization?.name}</span> 
           <div className='looplead-box-outer'>
           <div className='loop-contant'>
               <p><span>Email: <a href='mailto:RJones@y.com'>{leadUser?.email}</a></span></p>

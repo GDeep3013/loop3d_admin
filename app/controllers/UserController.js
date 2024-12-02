@@ -55,7 +55,7 @@ const UserController = {
                         const role = await Role.findById(user_type);
 
                         if (role?.type == "manager") {
-                            let url = `${process.env.ADMIN_PANEL}/start-survey?token=` + response?._id
+                            let url = `${process.env.ADMIN_PANEL}/manager/surveys/create`
                             let admin_panel_url = `${process.env.ADMIN_PANEL}/create-password?token=${response?._id}`;
 
                             let email = response?.email
