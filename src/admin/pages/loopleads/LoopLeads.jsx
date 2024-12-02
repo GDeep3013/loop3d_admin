@@ -63,9 +63,10 @@ export default function LoopLeads({ organization }) {
                         <th>Email address</th>
                         <th>Supervisor</th>
                         <th>Supervisor Email</th>
+                        <th>Total 360s</th>
                         {/* <th>Role</th> */}
-                        <th>Status <StatusIcon /> </th>
-                        <th>Action</th>
+                        {/* <th>Status <StatusIcon /> </th>
+                        <th>Action</th> */}
                     </tr>
                 </thead>
                 <tbody>
@@ -92,11 +93,12 @@ export default function LoopLeads({ organization }) {
                                     <td className='text-lowercase'>{user.email}</td>
                                     <td>{user.created_by?.first_name} {user.created_by?.last_name}</td>
                                     <td>{user.created_by?.email} </td>
+                                    <td>{user?.surveyCount} </td>
 
                                     {/* <td>{user?.role?.type =="looped_lead"?"loop lead":user?.role?.type}</td> */}
-                                    <td><span className='span-badge active-tag'>Active</span></td>
-                                    <td>
-                                    <button className='action-btn' onClick={() => navigate(`/view-loop_lead/${user._id}/${organization.orgniation_id}`)}><View /></button>
+                                    {/* <td><span className='span-badge active-tag'>Active</span></td> */}
+                                 
+                                    {/* <button className='action-btn' onClick={() => navigate(`/view-loop_lead/${user._id}/${organization.orgniation_id}`)}><View /></button> */}
                                     {/* <button className='action-btn' onClick={() => navigate(`/add-user/${user._id}`)}><Edit /></button> */}
                                     {/* <Dropdown className='custom-dropdown'>
                                         <Dropdown.Toggle variant="success" id="dropdown-basic">
@@ -108,7 +110,7 @@ export default function LoopLeads({ organization }) {
                                             <Dropdown.Item onClick={() => navigate(`/add-user/${user._id}`)}>Edit</Dropdown.Item>
                                         </Dropdown.Menu>
                                     </Dropdown> */}
-                                </td>
+                                
                             </tr>
                         ))
                     )}

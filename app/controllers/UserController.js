@@ -2,6 +2,7 @@ const User = require('../models/User.js');
 const Role = require('../models/Role.js');
 const bcrypt = require('bcrypt');
 const { check, validationResult } = require('express-validator');
+const Survey = require('../models/Survey');
 
 const path = require('path');
 const { v4: uuidv4 } = require('uuid');
@@ -318,10 +319,20 @@ const UserController = {
                 // Populate the role field as well
                 .sort({ createdAt: -1 }); // Sort by creation date in descending order
 
+            const usersWithSurveyCounts = await Promise.all(users.map(async (user) => {
+                const surveyCount = await Survey.countDocuments({
+                    loop_lead: user._id,
+                });
+                return {
+                    ...user.toObject(), // Convert the Mongoose document to a plain object
+                    surveyCount: surveyCount,
+                };
+            }));
 
+            // console.log(usersWithSurveyCounts,'usersWithSurveyCounts')
             res.status(200).json({
                 status: 'success',
-                users: users,
+                users: usersWithSurveyCounts,
             });
 
         } catch (error) {
@@ -382,7 +393,7 @@ const UserController = {
             await user.save();
             let emailRes = await sendEmail('PasswordResetMail', { user, token });
 
-            
+
             res.status(200).json({ status: true, message: 'Password reset email sent', emailRes: emailRes });
         } catch (error) {
             console.error('Error handling forgot password:', error);
