@@ -140,7 +140,7 @@ export default function EmployeeTable({ }) {
                       <div className='user-name'>{user.last_name !== null ? user.last_name:''}</div>
                     </div>
                   </td>
-                  <td className='text-lowercase'> <Link href="#" > {user?.email} </Link></td>
+                  <td className='text-lowercase'> <Link href={`mailto:${user?.email}`} > {user?.email} </Link></td>
                   <td>{user?.role?.type =="looped_lead"?"loop lead":user?.role?.type}</td>
                   <td>{user?.organization?.name}</td>
                   <td><span className='span-badge active-tag'>Active</span></td>

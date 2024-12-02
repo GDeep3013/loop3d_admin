@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
-import { MoreIcon,View ,PLusIcon,ViewReport  } from "../../../components/svg-icons/icons";
+import { MoreIcon, View, PLusIcon, ViewReport } from "../../../components/svg-icons/icons";
 import { Container, Dropdown, Row, Col, Pagination } from 'react-bootstrap';
-import { getSurveys , getSurveyById } from '../../../apis/SurveyApi';
+import { getSurveys, getSurveyById } from '../../../apis/SurveyApi';
 import AuthLayout from '../../../layout/Auth';
 import { formatDateGB, formatDateUS } from '../../../utils/dateUtils';
 import { Link } from "react-router-dom";
@@ -19,7 +19,7 @@ export default function SurveyList() {
     useEffect(() => {
         const fetchSurveys = async () => {
             setLoading(true);
-            let mgr_id = user?._id            
+            let mgr_id = user?._id
             try {
                 const data = await getSurveyById(mgr_id,searchTerm);
                 if (Array.isArray(data) && data.length > 0) {
@@ -42,7 +42,7 @@ export default function SurveyList() {
 
     const handlePaginationClick = (pageNumber) => {
         setCurrentPage(pageNumber);
-      };
+    };
 
     return (
         <AuthLayout title={"Surveys"}>
@@ -63,7 +63,7 @@ export default function SurveyList() {
                                                 onChange={handleSearch}
                                                 className='form-control'
                                             />
-                                        <Link to="/manager/surveys/create" className='default-btn' >Add Survey <PLusIcon /> </Link>
+                                            <Link to="/manager/surveys/create" className='default-btn' >Add Survey <PLusIcon /> </Link>
                                         </form>
 
                                     </Col>
@@ -73,60 +73,62 @@ export default function SurveyList() {
                     </div>
                 </div>
                 <div className='table-scroll  shadow-border-wrapper ml-8'>
-                <table className='table'>
-                    <thead>
-                        <tr>
-                            <th>Survey</th>
-                            <th>Initiation Date</th>
-                            <th>Loop Lead Name</th>
-                            <th>Manager Name</th>
-                            <th>Total Invitees</th>
-                            <th>Completed Surveys</th>
-                            <th>Loop Lead Completed Survey?</th>
+                    <table className='table'>
+                        <thead>
+                            <tr>
+                                <th>Survey</th>
+                                <th>Initiation Date</th>
+                                <th>Loop Lead Name</th>
+                                <th>Manager Name</th>
+                                <th>Total Invitees</th>
+                                <th>Completed Surveys</th>
+                                <th>Loop Lead Completed Survey?</th>
                                 <th>Manager Completed Survey?</th>
                                 <th>Survey Status</th>
-                            <th>Report Generation Date</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {loading ? (
-                            <tr>
-                                <td colSpan="10" style={{ textAlign: 'center' }}>
-                                    Loading...
-                                </td>
+                                <th>Report Generation Date</th>
+                                <th>Action</th>
                             </tr>
-                        ) :surveys && surveys.length === 0 ? (
-                            <tr>
-                                <td colSpan="10" style={{ textAlign: 'center' }}>
-                                    <h4>No surveys found</h4>
-                                </td>
-                            </tr>
-                        ) : (
-                            surveys && surveys.map((survey, index) => (
-                                <tr key={survey._id}>
-                                    <td>{index + 1}</td>
-                                    <td>{formatDateGB(survey.createdAt)}</td>
-                                    <td>{survey?.loop_lead?.first_name} {survey?.loop_lead?.last_name}</td>
-                                    <td>{survey?.mgr_id?.first_name}  {survey?.mgr_id?.last_name}</td>
-                                    <td>{survey.total_invites}</td>
-                                    <td>{survey.completed_survey}</td>
-                                    <td>{survey.ll_survey_status === 'yes' ? <span className='span-badge active-tag'>Yes</span> : <span className='span-badge inactive-tag'>No</span>}</td>
-                                    <td>{survey.mgr_survey_status === 'yes' ? <span className='span-badge active-tag'>Yes</span> : <span className='span-badge inactive-tag'>No</span>}</td>
-                                    <td>{survey.survey_status === 'completed' ? <span className='span-badge active-tag'>Completed</span> : <span className='span-badge inactive-tag'>Pending</span>}</td>
-
-                                    <td>
-                                        {survey.report_gen_date
-                                            ? formatDateGB(survey.report_gen_date)
-                                            : 'Never'}
+                        </thead>
+                        <tbody>
+                            {loading ? (
+                                <tr>
+                                    <td colSpan="10" style={{ textAlign: 'center' }}>
+                                        Loading...
                                     </td>
-                                    <td>
-                                    <button className='action-btn' onClick={() => navigate(`/view-survey-participant/${survey._id}`)}><View /></button>
-                                    <button className='action-btn' title='View Report' onClick={() => navigate(`/survey-summary/${survey._id}`)} disabled={survey.report_gen_date == null ? true : false}>
-                                            <ViewReport/>
-                                        </button>
+                                </tr>
+                            ) : surveys && surveys.length === 0 ? (
+                                <tr>
+                                    <td colSpan="10" style={{ textAlign: 'center' }}>
+                                        <h4>No 360s found</h4>
+                                    </td>
+                                </tr>
+                            ) : (
+                                surveys && surveys.map((survey, index) => (
+                                    <tr key={survey._id}>
+                                        <td>{index + 1}</td>
+                                        <td>{formatDateGB(survey.createdAt)}</td>
+                                        <td>{survey?.loop_lead?.first_name} {survey?.loop_lead?.last_name}</td>
+                                        <td>{survey?.mgr_id?.first_name}  {survey?.mgr_id?.last_name}</td>
+                                        <td>{survey.total_invites}</td>
+                                        <td>{survey.completed_survey}</td>
+                                        <td>{survey.ll_survey_status === 'yes' ? <span className='span-badge active-tag'>Yes</span> : <span className='span-badge inactive-tag'> Not completed
+                                        </span>}</td>
+                                        <td>{survey.mgr_survey_status === 'yes' ? <span className='span-badge active-tag'>Yes</span> : <span className='span-badge inactive-tag'> Not completed
+                                        </span>}</td>
+                                        <td>{survey.survey_status === 'completed' ? <span className='span-badge active-tag'>Completed</span> : <span className='span-badge inactive-tag'>Pending</span>}</td>
 
-                                        {/* <Dropdown className='custom-dropdown'>
+                                        <td>
+                                            {survey.report_gen_date
+                                                ? formatDateGB(survey.report_gen_date)
+                                                : 'Never'}
+                                        </td>
+                                        <td>
+                                            <button className='action-btn' onClick={() => navigate(`/view-survey-participant/${survey._id}`)}><View /></button>
+                                            <button className='action-btn' title='View Report' onClick={() => navigate(`/survey-summary/${survey._id}`)} disabled={survey.report_gen_date == null ? true : false}>
+                                                <ViewReport />
+                                            </button>
+
+                                            {/* <Dropdown className='custom-dropdown'>
                                             <Dropdown.Toggle variant="success" id="dropdown-basic">
                                                 <MoreIcon />
                                             </Dropdown.Toggle>
@@ -136,20 +138,20 @@ export default function SurveyList() {
                                                 </Dropdown.Item>
                                             </Dropdown.Menu>
                                         </Dropdown> */}
-                                    </td>
-                                </tr>
-                            ))
-                        )}
-                    </tbody>
-                </table>
-            </div>
+                                        </td>
+                                    </tr>
+                                ))
+                            )}
+                        </tbody>
+                    </table>
+                </div>
             </div>
             {totalPages > 1 && (
                 <Pagination className='justify-content-center pagination-outer'>
-                <Pagination.First onClick={() => handlePaginationClick(1)} disabled={currentPage === 1} />
-                <Pagination.Prev onClick={() => handlePaginationClick(currentPage - 1)} disabled={currentPage === 1} />
-                <Pagination.Next onClick={() => handlePaginationClick(currentPage + 1)} disabled={currentPage === totalPages} />
-                <Pagination.Last onClick={() => handlePaginationClick(totalPages)} disabled={currentPage === totalPages} />
+                    <Pagination.First onClick={() => handlePaginationClick(1)} disabled={currentPage === 1} />
+                    <Pagination.Prev onClick={() => handlePaginationClick(currentPage - 1)} disabled={currentPage === 1} />
+                    <Pagination.Next onClick={() => handlePaginationClick(currentPage + 1)} disabled={currentPage === totalPages} />
+                    <Pagination.Last onClick={() => handlePaginationClick(totalPages)} disabled={currentPage === totalPages} />
                 </Pagination>
             )}
         </AuthLayout>

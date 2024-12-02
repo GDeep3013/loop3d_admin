@@ -61,7 +61,7 @@ export default function ManagerList({ organization }) {
                         <th>First Name</th>
                         <th>Last Name</th>
                         <th>Email address</th>
-                        <th>Role</th>
+                        {/* <th>Role</th> */}
                         <th>Status <StatusIcon /> </th>
                         <th>Action</th>
                     </tr>
@@ -70,7 +70,7 @@ export default function ManagerList({ organization }) {
                     {users.length === 0 ? (
                         <tr>
                             <td colSpan="12" style={{ textAlign: 'center' }}>
-                                <h4>No Loop3D Manager</h4>
+                                <h4>No Supervisors Found</h4>
                             </td>
                         </tr>
                     ) : (
@@ -88,7 +88,7 @@ export default function ManagerList({ organization }) {
                                 </td>
                                     <td>{user.email}</td>
 
-                                <td>{user.role.type}</td>
+                                {/* <td>{user.role.type}</td> */}
                                 <td><span className='span-badge active-tag'>Active</span></td>
                                     <td>
                                     <button className='action-btn' onClick={() => navigate(`/view-loop_lead/${user._id}/${organization.orgniation_id}`)}><View /></button>
