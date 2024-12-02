@@ -167,21 +167,21 @@ export default function Organization() {
                             {!loading && Organizations.length > 0 && (
                                 Organizations.map((org, index) => (
                                     <tr key={org._id} >
-                                        <td onClick={() => navigate(`view/${org._id}`)}>{(currentPage - 1) * 10 + (index + 1)}</td>
-                                        <td onClick={() => navigate(`view/${org._id}`)}>
+                                        <td onClick={() => navigate(`edit/${org._id}`)}>{(currentPage - 1) * 10 + (index + 1)}</td>
+                                        <td onClick={() => navigate(`edit/${org._id}`)}>
                                             <div className="user-profile d-flex align-items-center">
                                                 <div className='user-name'>{org.name}</div>
                                             </div>
                                         </td>
-                                        <td onClick={() => navigate(`view/${org._id}`)} >{new Date(org.createdAt).toLocaleDateString('en-GB', {
+                                        <td onClick={() => navigate(`edit/${org._id}`)} >{new Date(org.createdAt).toLocaleDateString('en-GB', {
                                             day: '2-digit',
                                             month: 'short',
                                             year: 'numeric',
                                         })}</td>
-                                        <td onClick={() => navigate(`view/${org._id}`)} ><span className='span-badge active-tag'>Active</span></td>
+                                        <td onClick={() => navigate(`edit/${org._id}`)} ><span className='span-badge active-tag'>Active</span></td>
                                         <td>
                                             {/* <button className='action-btn' onClick={() => navigate(`view/${org._id}`)}><View /></button> */}
-                                            <button className='action-btn' onClick={() => navigate(`edit/${org._id}`)}><Edit /></button>
+                                            {/* <button className='action-btn' onClick={() => navigate(`edit/${org._id}`)}><Edit /></button> */}
                                             <button className='action-btn' onClick={() => handleDelete(org._id)}><Remove /></button>
                                             {/* <Dropdown className='custom-dropdown'>
                                             <Dropdown.Toggle variant="success" id="dropdown-basic">
