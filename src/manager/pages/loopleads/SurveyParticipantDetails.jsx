@@ -140,7 +140,7 @@ export default function SurveyParticipantDetails() {
                                         <td>{participant?._id}</td>
                                         <td>{participant.survey_status === 'completed' ? <span className='span-badge active-tag'>Completed</span> : <span className='span-badge inactive-tag'>Pending</span>}</td>
                                         <td>
-                                            <button className='action-btn' onClick={() => handleDelete(participant._id)}><Remove /></button>
+                                            <button className='action-btn'  disabled={participant.survey_status === 'completed'} onClick={() => handleDelete(participant._id)}><Remove /></button>
                                         </td>
                                     </tr>
                                 ))

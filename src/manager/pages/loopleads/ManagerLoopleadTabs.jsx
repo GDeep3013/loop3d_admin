@@ -37,7 +37,7 @@ export default function ManagerLoopleadTabs() {
         <Tab eventKey="home" title="Overview">
           <ViewLoopLead user_id={userId} org_id={orgId} />
         </Tab>
-        <Tab eventKey="profile" title="Survey">
+        <Tab eventKey="profile" title="360">
           <SurveyList loop_lead_id={userId} org_id={orgId} />
         </Tab>
         </Tabs>

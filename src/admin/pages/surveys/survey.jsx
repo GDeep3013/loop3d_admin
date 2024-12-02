@@ -109,7 +109,7 @@ export default function Survey() {
                             ) : surveys.length === 0 ? (
                                 <tr>
                                     <td colSpan="10" style={{ textAlign: 'center' }}>
-                                        <h4>No surveys found</h4>
+                                        <h4>No 360s found</h4>
                                     </td>
                                 </tr>
                             ) : (
@@ -130,7 +130,7 @@ export default function Survey() {
                                         <td>
                                             {survey.report_gen_date
                                                 ? formatDateGB(survey.report_gen_date)
-                                                : 'Never'}
+                                                : 'Not available yet'}
                                         </td>
                                         <td>
                                             <button className='action-btn' title='View Detail' onClick={() => navigate(`/view-survey-participant/${survey._id}`)}><View /></button>

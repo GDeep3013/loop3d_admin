@@ -65,7 +65,7 @@ export default function SurveyList() {
           <tr>
             <th>Survey</th>
             <th>Initiation Date</th>
-            <th>Total Invitees</th>
+            <th>Total Invitees</th> 
             <th>Completed Surveys</th>
             <th>Loop Lead Completed Survey?</th>
               <th>Manager Completed Survey?</th>
@@ -78,7 +78,7 @@ export default function SurveyList() {
           {surveys.length === 0 ? (
             <tr>
               <td colSpan="8" style={{ textAlign: 'center' }}>
-                <h4>No surveys found</h4>
+                <h4>No 360   found</h4>
               </td>
             </tr>
           ) : (
@@ -95,7 +95,7 @@ export default function SurveyList() {
                 <td>
                   {survey.report_gen_date
                     ? formatDateGB(survey.report_gen_date)
-                    : 'Never'}
+                    : 'Not Available Yet'}
                 </td>
                 <td>
                 <button className='action-btn' onClick={() => navigate(`/loop-lead/view-survey-participant/${survey._id}`)}><View /></button>

@@ -64,7 +64,7 @@ export default function LoopLeads({  }) {
                         <th>Last Name</th>
                         <th>Email address</th>
                         <th>Supervisor</th>
-                        <th>Role</th>
+                        {/* <th>Role</th> */}
                         <th>Status <StatusIcon /> </th>
                         <th>Action</th>
                     </tr>
@@ -92,7 +92,7 @@ export default function LoopLeads({  }) {
                                     <td className='text-lowercase'>{user.email}</td>
                                     <td>{user.created_by?.first_name} {user.created_by?.last_name}</td>
 
-                                    <td>{user?.role?.type =="looped_lead"?"loop lead":user?.role?.type}</td>
+                                    {/* <td>{user?.role?.type =="looped_lead"?"loop lead":user?.role?.type}</td> */}
                                     <td><span className='span-badge active-tag'>Active</span></td>
                                     <td>
                                     <button className='action-btn' onClick={() => navigate(`/manager/view-loop_lead/${user._id}/${mgr_id}`)}><View /></button>

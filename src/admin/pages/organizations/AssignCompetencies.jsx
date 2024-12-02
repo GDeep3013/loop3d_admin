@@ -117,9 +117,8 @@ export default function AssignCompetencies({ data, type }) {
                                                 checked={selectedCompetencies.includes(cat._id)}
                                                 onChange={() => handleCheckboxChange(cat._id)}
                                             />
-                                                <span> {cat.category_name}</span>
-                                                </label>
-                                           
+                                                <span> {cat.category_name.trimStart()}</span>
+                                            </label>
                                         </li>
                                     ))}
                             </ul>
@@ -140,7 +139,7 @@ export default function AssignCompetencies({ data, type }) {
                                                 checked={selectedCompetencies?.includes(cat?._id)}
                                                 onChange={() => handleCheckboxChange(cat?._id)}
                                             />
-                                                <span>{cat.category_name}</span>
+                                                <span>{cat.category_name.trimStart()}</span>
                                                 </label>
                                          
                                         </li>

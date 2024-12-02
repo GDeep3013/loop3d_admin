@@ -45,7 +45,7 @@ export default function SurveyList() {
     };
 
     return (
-        <AuthLayout title={"Surveys"}>
+        <AuthLayout title={"360"}>
             <div className='table-inner main-wrapper '>
                 <div className='content-outer'>
                     <div className='tabe-outer'>
@@ -120,7 +120,7 @@ export default function SurveyList() {
                                         <td>
                                             {survey.report_gen_date
                                                 ? formatDateGB(survey.report_gen_date)
-                                                : 'Never'}
+                                                : 'Not available yet'}
                                         </td>
                                         <td>
                                             <button className='action-btn' onClick={() => navigate(`/view-survey-participant/${survey._id}`)}><View /></button>

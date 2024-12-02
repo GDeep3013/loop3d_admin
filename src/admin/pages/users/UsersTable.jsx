@@ -126,10 +126,10 @@ export default function EmployeeTable({ }) {
               </tr>)
             }
             {
-            !loading && Employe.length > 0 && Employe.map((user, ind) => (
+              !loading && Employe.length > 0 && Employe.map((user, ind) => (
 
                 user?.role?.type != "admin" && <tr key={user?._id}>
-                <td>{(currentPage - 1) * 10 + (ind + 1)}</td>
+                  <td>{(currentPage - 1) * 10 + (ind + 1)}</td>
                   <td>
                     <div className="user-profile d-flex align-items-center">
                       <div className='user-name'>{user?.first_name}</div>
@@ -137,11 +137,22 @@ export default function EmployeeTable({ }) {
                   </td>
                   <td>
                     <div className="user-profile d-flex align-items-center">
-                      <div className='user-name'>{user.last_name !== null ? user.last_name:''}</div>
+                      <div className='user-name'>{user.last_name !== null ? user.last_name : ''}</div>
                     </div>
                   </td>
-                  <td className='text-lowercase'> <Link href={`mailto:${user?.email}`} > {user?.email} </Link></td>
-                  <td>{user?.role?.type =="looped_lead"?"loop lead":user?.role?.type}</td>
+                  <td> <Link
+                    to={`mailto:${user.email}`}
+                    onClick={(e) => {
+                     // Prevent Link navigation
+                      if (user?.email) {
+                        window.location.href = `mailto:${user.email}`; // Trigger mail client
+                      }
+                    }}
+                  >
+                    {user?.email}
+                  </Link>
+                  </td>
+                  <td>{user?.role?.type == "looped_lead" ? "loop lead" : user?.role?.type}</td>
                   <td>{user?.organization?.name}</td>
                   <td><span className='span-badge active-tag'>Active</span></td>
                   <td>

@@ -7,7 +7,6 @@ const SurveyParticipantSchema = new mongoose.Schema({
     },
     p_last_name: {
         type: String,
-        required: true
     },
     p_email: {
         type: String,

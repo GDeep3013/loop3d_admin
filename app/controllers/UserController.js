@@ -70,7 +70,7 @@ const UserController = {
                     }
                     return res.status(201).json({
                         user: response,
-                        message: 'User registered successfully',
+                        message: 'User Registered successfully',
                     });
 
                 } catch (err) {
@@ -186,7 +186,7 @@ const UserController = {
             if (!deletedUser) {
                 return res.status(404).json({ error: 'User not found' });
             }
-            res.status(200).json({ status: 'success', message: 'User deleted successfully' });
+            res.status(200).json({ status: 'success', message: 'User Deleted Successfully' });
         } catch (error) {
             console.error(error);
             res.status(500).json({ error: 'Internal Server Error' });
@@ -273,7 +273,7 @@ const UserController = {
             user.role = user_type;
             await user.save();
 
-            res.status(200).json({ message: 'User updated successfully' });
+            res.status(200).json({ message: 'User Updated Successfully' });
 
         } catch (error) {
             // Handle errors
@@ -408,7 +408,7 @@ const UserController = {
 
             await user.save();
 
-            res.status(200).json({ status: true, message: 'Password has been reset successfull' });
+            res.status(200).json({ status: true, message: 'Password has been reset Successfull' });
         } catch (error) {
             console.error('Error resetting password:', error);
             res.status(500).json({ message: 'Internal Server Error' });
@@ -432,7 +432,7 @@ const UserController = {
 
             await user.save();
 
-            res.status(200).json({ status: true, message: 'Password has been created Successfully' });
+            res.status(200).json({ status: true, message: 'Password Has Been Created Successfully' });
         } catch (error) {
             console.error('Error resetting password:', error);
             res.status(500).json({ message: 'Internal Server Error' });
