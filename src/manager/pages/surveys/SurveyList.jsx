@@ -16,14 +16,15 @@ export default function SurveyList() {
     const [totalPages, setTotalPages] = useState(1);
     const [loading, setLoading] = useState(false);
     const user = useSelector((state) => state.auth.user);
-
     useEffect(() => {
         const fetchSurveys = async () => {
             setLoading(true);
             let mgr_id = user?._id
             try {
-                const data = await getSurveyById(mgr_id, searchTerm);
-                setSurveys(data);
+                const data = await getSurveyById(mgr_id,searchTerm);
+                if (Array.isArray(data) && data.length > 0) {
+                    setSurveys(data);
+                  }
                 setLoading(false);
             } catch (error) {
                 setLoading(false);
