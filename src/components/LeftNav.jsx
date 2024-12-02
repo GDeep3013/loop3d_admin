@@ -65,7 +65,7 @@ export default function LeftNav({isMenuOpen,setIsMenuOpen}) {
           <li className="sideNavItem">
             <NavLink to="/questions">
               <QuestionIcon />
-              Questions
+              Open Ended Questions
             </NavLink>
           </li>
           {/* <li className="sideNavItem">

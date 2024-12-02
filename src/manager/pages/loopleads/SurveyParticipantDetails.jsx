@@ -117,8 +117,9 @@ export default function SurveyParticipantDetails() {
                                 <th>Participant Last </th>
                                 <th>Participant Email</th>
                                 <th>Participant Relationship</th>
+                                <th>Participant ID</th>
                                 <th>Survey Status</th>
-                                <th>Action</th>
+                                <th>Remove Participant</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -136,6 +137,7 @@ export default function SurveyParticipantDetails() {
                                         <td>{participant?.p_last_name}</td>
                                         <td className='text-lowercase'>{participant?.p_email}</td>
                                         <td>{participant?.p_type}</td>
+                                        <td>{participant?._id}</td>
                                         <td>{participant.survey_status === 'completed' ? <span className='span-badge active-tag'>Completed</span> : <span className='span-badge inactive-tag'>Pending</span>}</td>
                                         <td>
                                             <button className='action-btn' onClick={() => handleDelete(participant._id)}><Remove /></button>

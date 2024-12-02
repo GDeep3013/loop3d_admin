@@ -13,7 +13,7 @@ export default function SurveyParticipantDetails() {
     const { id } = useParams();
 
     const [surveyParticipant, setSurveyParticipant] = useState([]);
-    const [survey, setSurvey ] = useState();
+    const [survey, setSurvey] = useState();
     const [searchTerm, setSearchTerm] = useState('');
 
     const getParticipants = async () => {
@@ -58,14 +58,14 @@ export default function SurveyParticipantDetails() {
                     method: 'DELETE',
                     headers: { "x-api-key": import.meta.env.VITE_X_API_KEY }
                 });
-                   if (response.ok) {
+                if (response.ok) {
                     await Swal.fire({
                         title: "Deleted!",
                         text: "Your file has been deleted.",
                         icon: "success",
                         confirmButtonColor: "#000",
                     });
-                  
+
                     getParticipants()
                 } else {
                     console.error('Failed to delete user');
@@ -133,8 +133,9 @@ export default function SurveyParticipantDetails() {
                                 <th>Participant Last </th>
                                 <th>Participant Email</th>
                                 <th>Participant Relationship</th>
+                                <th>Participant ID</th>
                                 <th>Survey Status</th>
-                                <th>Action</th>
+                                <th>Remove Participant</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -152,6 +153,7 @@ export default function SurveyParticipantDetails() {
                                         <td>{participant?.p_last_name}</td>
                                         <td className='text-lowercase'>{participant?.p_email}</td>
                                         <td>{participant?.p_type}</td>
+                                        <td >{participant?._id}</td>
                                         <td>{participant.survey_status === 'completed' ? <span className='span-badge active-tag'>Completed</span> : <span className='span-badge inactive-tag'>Pending</span>}</td>
                                         <td>
                                             <button className='action-btn' onClick={() => handleDelete(participant._id)}><Remove /></button>

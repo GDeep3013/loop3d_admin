@@ -88,8 +88,8 @@ export default function SurveyList() {
                 <td>{formatDateGB(survey.createdAt)}</td>
                 <td>{survey.total_invites}</td>
                 <td>{survey.completed_survey}</td>
-                <td>{survey.ll_survey_status === 'yes' ? <span className='span-badge active-tag'>Yes</span> :<span className='span-badge inactive-tag'>No</span>}</td>
-                <td>{survey.mgr_survey_status === 'yes' ? <span className='span-badge active-tag'>Yes</span> : <span className='span-badge inactive-tag'>No</span>}</td>
+                <td>{survey.ll_survey_status === 'yes' ? <span className='span-badge active-tag'>Yes</span> :<span className='span-badge inactive-tag'> Not completed</span>}</td>
+                <td>{survey.mgr_survey_status === 'yes' ? <span className='span-badge active-tag'>Yes</span> : <span className='span-badge inactive-tag'> Not completed</span>}</td>
                 <td>{survey.survey_status === 'completed' ? <span className='span-badge active-tag'>Completed</span> : <span className='span-badge inactive-tag'>Pending</span>}</td>
 
                 <td>

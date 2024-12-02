@@ -75,7 +75,7 @@ export default function SurveyList({ loop_lead_id, org_id }) {
           {surveys.length === 0 ? (
             <tr>
               <td colSpan="8" style={{ textAlign: 'center' }}>
-                <h4>No surveys found</h4>
+                <h4>No 360s Found</h4>
               </td>
             </tr>
           ) : (
@@ -85,8 +85,8 @@ export default function SurveyList({ loop_lead_id, org_id }) {
                 <td>{formatDateGB(survey.createdAt)}</td>
                 <td>{survey.total_invites}</td>
                 <td>{survey.completed_survey}</td>
-                <td>{survey.ll_survey_status === 'yes' ? <span className='span-badge active-tag'>Yes</span> :<span className='span-badge inactive-tag'>No</span>}</td>
-                <td>{survey.mgr_survey_status === 'yes' ? <span className='span-badge active-tag'>Yes</span> : <span className='span-badge inactive-tag'>No</span>}</td>
+                <td>{survey.ll_survey_status === 'yes' ? <span className='span-badge active-tag'>Yes</span> :<span className='span-badge inactive-tag'> Not completed</span>}</td>
+                <td>{survey.mgr_survey_status === 'yes' ? <span className='span-badge active-tag'>Yes</span> : <span className='span-badge inactive-tag'> Not completed</span>}</td>
                 <td>
                   {survey.report_gen_date
                     ? formatDateGB(survey.report_gen_date)

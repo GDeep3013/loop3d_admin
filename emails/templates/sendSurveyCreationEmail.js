@@ -14,7 +14,7 @@ const sendSurveyCreationEmail = (recipientDetails) => {
                       </td>
                   </tr>`
   return  {
-    from: 'aaron.loop360@gmail.com',
+    from: 'Loop3D <aaron.loop360@gmail.com>', 
     to: recipientDetails.email,
     subject: 'Loop3D 360 Feedback Process - Launch',    
     html: emailHeaderFooter(bodyContent)

@@ -17,14 +17,12 @@ const PasswordResetMail = (recipientDetails) => {
         <p>The Loop3D Team</p>
     </td>
 </tr>`
-  return {
-    from: 'aaron.loop360@gmail.com',
-    to: recipientDetails.user.email,
-    subject: 'Password Reset',
-    html: emailHeaderFooter(bodyContent)
-
-
-  };
+return {
+  from: 'Loop3D <aaron.loop360@gmail.com>',
+  to: recipientDetails.user.email,
+  subject: 'Password Reset',
+  html: emailHeaderFooter(bodyContent),
+};
 };
 
 module.exports = { PasswordResetMail };
