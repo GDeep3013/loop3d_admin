@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const surveyController = require('../app/controllers/SurveyController');
 const SurveyAnswersController = require('../app/controllers/SurveyAnswersController');
+const UserController = require('../app/controllers/UserController'); // Adjust the path as needed
 
 // Create Survey with Survey Members
 router.post('/create', surveyController.createSurvey);
@@ -21,6 +22,7 @@ router.get('/smart-goals/:survey_id/:dev_opp/:top_str', surveyController.getSmar
 router.get('/test', surveyController.test);
 
 
+router.get('/fetch-manager', UserController.fetchManager);
 
 
 module.exports = router;

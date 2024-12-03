@@ -7,6 +7,7 @@ import { Button } from 'react-bootstrap';
 import AddQuestion from './AddQuestion';
 
 import AssignCompetencies from '../organizations/AssignCompetencies';
+import AssignCompetenciesQuestions from '../organizations/AssignCompetenciesQuestions';
 import axios from "axios";
 
 
@@ -71,7 +72,8 @@ export default function QuestionTabs() {
 
                 </Tab>
                 <Tab eventKey="profile" title="Competencies">
-                    <AssignCompetencies data={{ ref_id: id}} type="question" />
+                    {/* <AssignCompetencies data={{ ref_id: id}} type="question" /> */}
+                    <AssignCompetenciesQuestions data={{ ref_id: id}} type="question" />
                 </Tab>
                 </Tabs>
                 </div>

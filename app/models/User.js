@@ -7,7 +7,8 @@ const userSchema = new mongoose.Schema({
     email: { type: String, unique: true, required: true },
     resetPasswordToken: { type: String },   
     resetPasswordExpires: { type: String },  
-    
+    title:{type: String},
+    phone:{type: String},
     organization: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Organization',
