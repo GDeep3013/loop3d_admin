@@ -75,15 +75,11 @@ export default function AddEmployee() {
     } else if (!isValidEmail(formData.email)) {
       errors.email = 'Invalid email address';
     }
-
-
     if (!formData.user_type.trim()) {
       errors.user_type = 'User type is required';
     }
-
     if (!formData.organization_id) {
       errors.organization_id = 'Organization is required';
-
     }
 
     return errors;
@@ -167,6 +163,9 @@ export default function AddEmployee() {
     }
   };
 
+ 
+
+
   const handleChange = (e) => {
     const { name, value } = e.target;
 
@@ -185,14 +184,18 @@ export default function AddEmployee() {
             throw new Error('Failed to fetch user details');
           }
           const userData = await response.json();
+          console.log(roles,userData);
+
+          // const userTypeOption = roles.find(option => option.label === userData.role) || null;
+
           setFormData({
             first_name: userData.first_name ? userData.first_name : '',
             last_name: userData.last_name ? userData.last_name : '',
             email: userData.email ? userData.email : '',
             phone: userData.phone ? userData.phone : '',
             designation: userData.designation ? userData.designation : '',
-            user_type: userData.role?._id ? userData.role?._id : '',
-            organization_id: userData.organization_id ? userData.organization_id : '',
+            user_type: userData?.role_id,
+            organization_id: userData.organization ? userData.organization: '',
             _method: 'PUT',
           });
         } catch (error) {

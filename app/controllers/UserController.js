@@ -217,12 +217,14 @@ const UserController = {
 
             // Exclude sensitive fields like password from the response
             const { _id, first_name, last_name, email, organization, createdAt, updatedAt } = user;
+           
             res.status(200).json({
                 _id,
                 first_name,
                 last_name,
                 email,
                 role: role ? role.type : null,
+                role_id: role ? role?._id : null,
                 organization,
                 createdAt,
                 updatedAt

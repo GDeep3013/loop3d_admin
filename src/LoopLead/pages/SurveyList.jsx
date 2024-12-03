@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
-import { MoreIcon,View,ViewReport } from "../../components/svg-icons/icons";
+import { MoreIcon, View, ViewReport } from "../../components/svg-icons/icons";
 import { Container, Dropdown, Row, Col } from 'react-bootstrap';
 import { getSurveyById } from '../../apis/SurveyApi';
 import { formatDateGB, formatDateUS } from '../../utils/dateUtils';
@@ -12,19 +12,23 @@ export default function SurveyList() {
   const user = useSelector((state) => state.auth.user);
   const [surveys, setSurveys] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
-
+  const [loading, setLoading] = useState(false);
 
 
   useEffect(() => {
     if (user?._id) {
       (async () => {
         try {
+          setLoading(true)
           let data = await getSurveyById('', user?._id, '', searchTerm);
           if (Array.isArray(data) && data.length > 0) {
             setSurveys(data);
           }
+          setLoading(false)
+
         } catch (error) {
           console.error("Error fetching surveys:", error);
+          setLoading(false)
         }
       })();
     }
@@ -34,6 +38,7 @@ export default function SurveyList() {
     setSearchTerm(e.target.value);
   };
 
+
   return (
     <div className='table-inner mt-5'>
       <div className='content-outer'>
@@ -41,7 +46,7 @@ export default function SurveyList() {
           <div className='table-heading'>
             <Container>
               <Row>
-                <Col md={6} className='text-end'>                  
+                <Col md={6} className='text-end'>
                 </Col>
                 <Col md={6} className='text-end'>
                   <form className='d-flex justify-content-end'>
@@ -60,50 +65,56 @@ export default function SurveyList() {
         </div>
       </div>
       <div className='table-scroll table-pd'>
-      <table className='table'>
-        <thead>
-          <tr>
-            <th>Survey</th>
-            <th>Initiation Date</th>
-            <th>Total Invitees</th> 
-            <th>Completed Surveys</th>
-            <th>Loop Lead Completed Survey?</th>
+        <table className='table'>
+          <thead>
+            <tr>
+              <th>Survey</th>
+              <th>Initiation Date</th>
+              <th>Total Invitees</th>
+              <th>Completed Surveys</th>
+              <th>Loop Lead Completed Survey?</th>
               <th>Manager Completed Survey?</th>
               <th>Survey Status</th>
-            <th>Report Generation Date</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {surveys.length === 0 ? (
-            <tr>
-              <td colSpan="8" style={{ textAlign: 'center' }}>
-                <h4>No 360   found</h4>
-              </td>
+              <th>Report Generation Date</th>
+              <th>Action</th>
             </tr>
-          ) : (
-            surveys.map((survey, index) => (
-              <tr key={survey._id}>
-                <td>{index + 1}</td>
-                <td>{formatDateGB(survey.createdAt)}</td>
-                <td>{survey.total_invites}</td>
-                <td>{survey.completed_survey}</td>
-                <td>{survey.ll_survey_status === 'yes' ? <span className='span-badge active-tag'>Yes</span> :<span className='span-badge inactive-tag'> Not completed</span>}</td>
-                <td>{survey.mgr_survey_status === 'yes' ? <span className='span-badge active-tag'>Yes</span> : <span className='span-badge inactive-tag'> Not completed</span>}</td>
-                <td>{survey.survey_status === 'completed' ? <span className='span-badge active-tag'>Completed</span> : <span className='span-badge inactive-tag'>Pending</span>}</td>
-
-                <td>
-                  {survey.report_gen_date
-                    ? formatDateGB(survey.report_gen_date)
-                    : 'Not Available Yet'}
+          </thead>
+          <tbody>
+            {loading ? (
+              <tr>
+                <td colSpan="10" style={{ textAlign: 'center' }}>
+                  Loading...
                 </td>
-                <td>
-                <button className='action-btn' onClick={() => navigate(`/loop-lead/view-survey-participant/${survey._id}`)}><View /></button>
-                <button className='action-btn' title='View Report' onClick={() => navigate(`/survey-summary/${survey._id}`)} disabled={survey.report_gen_date == null ? true : false}>
-                                            <ViewReport/>
-                                        </button>
+              </tr>
+            ) : surveys && surveys.length === 0 ? (
+              <tr>
+                <td colSpan="10" style={{ textAlign: 'center' }}>
+                  <h4>No 360s found</h4>
+                </td>
+              </tr>
+            ) : (
+              surveys.map((survey, index) => (
+                <tr key={survey._id}>
+                  <td>{index + 1}</td>
+                  <td>{formatDateGB(survey.createdAt)}</td>
+                  <td>{survey.total_invites}</td>
+                  <td>{survey.completed_survey}</td>
+                  <td>{survey.ll_survey_status === 'yes' ? <span className='span-badge active-tag'>Yes</span> : <span className='span-badge inactive-tag'> Not completed</span>}</td>
+                  <td>{survey.mgr_survey_status === 'yes' ? <span className='span-badge active-tag'>Yes</span> : <span className='span-badge inactive-tag'> Not completed</span>}</td>
+                  <td>{survey.survey_status === 'completed' ? <span className='span-badge active-tag'>Completed</span> : <span className='span-badge inactive-tag'>Pending</span>}</td>
 
-                  {/* <Dropdown className='custom-dropdown'>
+                  <td>
+                    {survey.report_gen_date
+                      ? formatDateGB(survey.report_gen_date)
+                      : 'Not Available Yet'}
+                  </td>
+                  <td>
+                    <button className='action-btn' onClick={() => navigate(`/loop-lead/view-survey-participant/${survey._id}`)}><View /></button>
+                    <button className='action-btn' title='View Report' onClick={() => navigate(`/survey-summary/${survey._id}`)} disabled={survey.report_gen_date == null ? true : false}>
+                      <ViewReport />
+                    </button>
+
+                    {/* <Dropdown className='custom-dropdown'>
                     <Dropdown.Toggle variant="success" id="dropdown-basic">
                       <MoreIcon />
                     </Dropdown.Toggle>
@@ -113,13 +124,13 @@ export default function SurveyList() {
                       </Dropdown.Item>
                     </Dropdown.Menu>
                   </Dropdown> */}
-                </td>
-              </tr>
-            ))
-          )}
-        </tbody>
-      </table>
-    </div>
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

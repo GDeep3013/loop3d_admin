@@ -79,27 +79,27 @@ export default function LoopLeads({ organization }) {
                     ) : (
                             users.map(user => (
                                 <tr key={user._id}>
-                                      <td>
+                                      <td  onClick={() => navigate(`/view-loop_lead/${user._id}/${organization.orgniation_id}`)}>
                                     <div className="user-profile d-flex align-items-center">
                                         <div className='user-name'>{user?.last_name}</div>
                                     </div>
                                 </td>
-                                <td>
+                                <td  onClick={() => navigate(`/view-loop_lead/${user._id}/${organization.orgniation_id}`)}>
                                     <div className="user-profile d-flex align-items-center">
                                         <div className='user-name'>{user?.first_name}</div>
                                     </div>
                                 </td>
                              
-                                    <td className='text-lowercase'>{user.email}</td>
-                                    <td>{user.created_by?.first_name} {user.created_by?.last_name}</td>
-                                    <td>{user.created_by?.email} </td>
-                                    <td>{user?.surveyCount} </td>
+                                    <td  onClick={() => navigate(`/view-loop_lead/${user._id}/${organization.orgniation_id}`)} className='text-lowercase'>{user.email}</td>
+                                    <td  onClick={() => navigate(`/view-loop_lead/${user._id}/${organization.orgniation_id}`)}>{user.created_by?.first_name} {user.created_by?.last_name}</td>
+                                    <td  onClick={() => navigate(`/view-loop_lead/${user._id}/${organization.orgniation_id}`)}>{user.created_by?.email} </td>
+                                    <td  onClick={() => navigate(`/view-loop_lead/${user._id}/${organization.orgniation_id}`)}>{user?.surveyCount} </td>
 
                                     {/* <td>{user?.role?.type =="looped_lead"?"loop lead":user?.role?.type}</td> */}
                                     {/* <td><span className='span-badge active-tag'>Active</span></td> */}
                                  
-                                    {/* <button className='action-btn' onClick={() => navigate(`/view-loop_lead/${user._id}/${organization.orgniation_id}`)}><View /></button> */}
-                                    {/* <button className='action-btn' onClick={() => navigate(`/add-user/${user._id}`)}><Edit /></button> */}
+                                    {/* <button className='action-btn' onClick={() => navigate(`/view-loop_lead/${user._id}/${organization.orgniation_id}`)}><View /></button>
+                                    <button className='action-btn' onClick={() => navigate(`/add-user/${user._id}`)}><Edit /></button> */}
                                     {/* <Dropdown className='custom-dropdown'>
                                         <Dropdown.Toggle variant="success" id="dropdown-basic">
                                             <MoreIcon />

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Container, Dropdown, Row, Col } from 'react-bootstrap';
+import { Container, Dropdown, Row, Col ,Button} from 'react-bootstrap';
 import ParticipantForm from './ParticipantForm'
 import { useParams, useNavigate } from "react-router-dom";
 import AuthLayout from "../../layout/Auth";
@@ -7,7 +7,7 @@ import { useSelector } from 'react-redux';
 
 const CreateParticipants = () => {
     const user = useSelector((state) => state.auth.user);
-
+const navigate=useNavigate()
     const { id } = useParams();
 
     const [survey, setSurvey] = useState();
@@ -42,17 +42,19 @@ const CreateParticipants = () => {
     return (
         <AuthLayout title={"Create Participant"}>
             <div>
-                <div className="lunchpad pt-5 pt-md-5 pb-5">
-                    <Container>
-
-
+                <div className="profile-btns pt-4">
+                                    <Button className="default-btn cancel-btn ml-0" onClick={() => navigate(-1)}>
+                                        Back
+                                    </Button>                               
+                </div>
+                <div className="lunchpad pt-4 pt-md-5 pb-5">
+                    <Container>                
                         <div className="d-flex flex-column flex-lg-row gap-lg-5 gap-3">
                             <div className="w-100 w-lg-50">
                                 <h2 className="text-dark fs-1 fs-lg-3 fw-bold heading-font">Loop3d Launchpad</h2>
                                 <p className="fs-6 lh-lg text-dark mw-100 mw-lg-75 mt-3 mt-lg-0">
                                     Welcome! Use this page to enter the email addresses for everyone who you would like to take the survey. Please note that your email and your manager's email are required along with a minimum of 10 other raters.
                                 </p>
-
                                 <div className="teammate mt-3 mt-lg-5 py-3 px-3 rounded">
                                     <p className="text-dark fs-6 lh-lg mt-1">
                                         <strong className="text-custom-color fw-bold">Teammate -</strong> People on your team and level who report to the same supervisor.

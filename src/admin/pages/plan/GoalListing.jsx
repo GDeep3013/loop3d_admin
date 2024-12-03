@@ -39,14 +39,15 @@ const GoalListing = ({ goals, getGoals, categories, setCompetencyFrom, setChatRe
         } else if (isNaN(Date.parse(formData.dead_line))) {
             newErrors.dead_line = "Please provide a valid date.";
         }
-
-        if (!formData.goal_apply?.trim()) {
-            newErrors.goal_apply = "Goal application information is required.";
+        if (formData.status == 'Complete') {
+            if (!formData.goal_apply?.trim()) {
+                newErrors.goal_apply = "Goal application information is required.";
+            }
+            if (!formData.goal_result_seen?.trim()) {
+                newErrors.goal_result_seen = "Goal result expectation is required.";
+            }
         }
 
-        if (!formData.goal_result_seen?.trim()) {
-            newErrors.goal_result_seen = "Goal result expectation is required.";
-        }       
 
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0; // Returns true if no errors
