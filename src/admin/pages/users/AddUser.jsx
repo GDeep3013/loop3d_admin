@@ -20,6 +20,7 @@ export default function AddEmployee() {
     user_type: '',
     _method: '',
     organization_id: '',
+    phone: '',
     created_by: null
   });
   const [errors, setErrors] = useState({});
@@ -35,23 +36,23 @@ export default function AddEmployee() {
   async function getOrganizations() {
     let url = `/api/organizations`; // Include currentPage in the URL
     if (searchTerm) {
-        url += `?searchTerm=${encodeURIComponent(searchTerm)}`;
+      url += `?searchTerm=${encodeURIComponent(searchTerm)}`;
     }
 
     let result = await fetch(url, {
-        headers: { 'x-api-key': import.meta.env.VITE_X_API_KEY }
+      headers: { 'x-api-key': import.meta.env.VITE_X_API_KEY }
     });
     result = await result.json();
 
     if (result.status == 'success') {
-        setOrganizations(
-          result.data.map((org) => ({
-            value: org._id,
-            label: org.name,
-          }))
-        );
+      setOrganizations(
+        result.data.map((org) => ({
+          value: org._id,
+          label: org.name,
+        }))
+      );
     }
-}
+  }
 
   useEffect(() => {
     getOrganizations()
@@ -62,14 +63,14 @@ export default function AddEmployee() {
     const namePattern = /^[A-Za-z\s]+$/;
     if (!formData.first_name.trim()) {
       errors.first_name = 'First name is required';
-    }else if (formData.first_name.trim().length < 3) {
+    } else if (formData.first_name.trim().length < 3) {
       errors.first_name = 'First name must be at least 3 characters long';
-  } else if (!namePattern.test(formData.first_name.trim())) {
+    } else if (!namePattern.test(formData.first_name.trim())) {
       errors.first_name = 'First name can only contain letters';
-  }
-  if (!namePattern.test(formData.last_name.trim())) {
+    }
+    if (!namePattern.test(formData.last_name.trim())) {
       errors.last_name = 'Last name can only contain letters';
-  }
+    }
     if (!formData.email.trim()) {
       errors.email = 'Email is required';
     } else if (!isValidEmail(formData.email)) {
@@ -80,6 +81,12 @@ export default function AddEmployee() {
     }
     if (!formData.organization_id) {
       errors.organization_id = 'Organization is required';
+    }
+    if (formData.phone) {
+      const phonePattern = /^[0-9]{10}$/;
+      if (!phonePattern.test(formData.phone)) {
+        errors.phone= 'Please enter a valid phone number.'   
+      }
     }
 
     return errors;
@@ -102,7 +109,7 @@ export default function AddEmployee() {
     // formDataToSend.append('confirmPassword', formData.confirmPassword ? formData.confirmPassword : '');
     // formDataToSend.append('user_type', formData.user_type ? formData.user_type : '');
     // formDataToSend.append('organization_id', formData.organization_id ? formData.organization_id : null);
-    setLoader(true)         
+    setLoader(true)
 
     let url = "/api/register";
     if (id) {
@@ -123,7 +130,7 @@ export default function AddEmployee() {
           showConfirmButton: false,
           timer: 1500
         });
-        setLoader(false)         
+        setLoader(false)
 
         setTimeout(() => navigate('/users'), 1500);
       })
@@ -132,7 +139,7 @@ export default function AddEmployee() {
           console.log('error.response', error.response);
           setErrors(error.response.data.errors?.[0]);
           setErrors(error.response.data.errors);
-          setLoader(false)         
+          setLoader(false)
 
         } else if (error.request) {
           console.log('No response received from the server');
@@ -163,7 +170,7 @@ export default function AddEmployee() {
     }
   };
 
- 
+
 
 
   const handleChange = (e) => {
@@ -184,7 +191,7 @@ export default function AddEmployee() {
             throw new Error('Failed to fetch user details');
           }
           const userData = await response.json();
-          console.log(roles,userData);
+          console.log(roles, userData);
 
           // const userTypeOption = roles.find(option => option.label === userData.role) || null;
 
@@ -195,7 +202,7 @@ export default function AddEmployee() {
             phone: userData.phone ? userData.phone : '',
             designation: userData.designation ? userData.designation : '',
             user_type: userData?.role_id,
-            organization_id: userData.organization ? userData.organization: '',
+            organization_id: userData.organization ? userData.organization : '',
             _method: 'PUT',
           });
         } catch (error) {
@@ -218,6 +225,7 @@ export default function AddEmployee() {
   const handleSearchChange = (inputValue) => {
     setSearchTerm(inputValue);
   };
+  console.log(formData);
 
   return (
     <AuthLayout title={id ? 'Edit User' : "Add User"}>
@@ -250,7 +258,7 @@ export default function AddEmployee() {
                     <Col md={4}>
                       <Form.Group
                         className="mb-4">
-                        <Form.Label>First Name</Form.Label><sup style={{color:'red'}}>*</sup>
+                        <Form.Label>First Name</Form.Label><sup style={{ color: 'red' }}>*</sup>
                         <Form.Control
                           type="text"
                           name="first_name"
@@ -278,7 +286,7 @@ export default function AddEmployee() {
                     <Col md={4}>
                       <Form.Group
                         className="mb-4">
-                        <Form.Label>Email Address</Form.Label><sup style={{color:'red'}}>*</sup>
+                        <Form.Label>Email Address</Form.Label><sup style={{ color: 'red' }}>*</sup>
                         <Form.Control
                           type="email"
                           name="email"
@@ -293,7 +301,22 @@ export default function AddEmployee() {
                     <Col md={4}>
                       <Form.Group
                         className="mb-4">
-                        <Form.Label>User Type</Form.Label><sup style={{color:'red'}}>*</sup>
+                        <Form.Label>Phone</Form.Label>
+                        <Form.Control
+                          type="number"
+                          name="phone"
+                          value={formData.phone}
+                          onChange={(e) => { handleChange(e) }}
+                          placeholder="xxxxxxxx"
+                          className='text-lowercase'
+                        />
+                        {errors?.phone && <small className="text-danger">{errors?.phone}</small>}
+                      </Form.Group>
+                    </Col>
+                    <Col md={4}>
+                      <Form.Group
+                        className="mb-4">
+                        <Form.Label>User Type</Form.Label><sup style={{ color: 'red' }}>*</sup>
                         <Form.Select aria-label="Default select example" name="user_type" value={formData.user_type} onChange={handleChange}>
                           <option>Select User Type</option>
                           {roles.map(option => (
@@ -309,21 +332,21 @@ export default function AddEmployee() {
                     </Col>
                     <Col md={4}>
                       <Form.Group className="mb-4">
-                        <Form.Label>Organization</Form.Label><sup style={{color:'red'}}>*</sup>
+                        <Form.Label>Organization</Form.Label><sup style={{ color: 'red' }}>*</sup>
                         <Select
-                name="organization_id"
-                options={organizations}
-                value={organizations.find(
-                  (org) => org.value === formData.organization_id
-                )}
-                onInputChange={handleSearchChange}
-                onChange={(selectedOption) =>
-                  handleSelectChange(selectedOption, { name: "organization_id" })
-                }
-                placeholder="Select Organization"
-                isClearable
-              />
-              {errors?.organization_id && <small className="text-danger">{errors?.organization_id}</small>}
+                          name="organization_id"
+                          options={organizations}
+                          value={organizations.find(
+                            (org) => org.value === formData.organization_id
+                          )}
+                          onInputChange={handleSearchChange}
+                          onChange={(selectedOption) =>
+                            handleSelectChange(selectedOption, { name: "organization_id" })
+                          }
+                          placeholder="Select Organization"
+                          isClearable
+                        />
+                        {errors?.organization_id && <small className="text-danger">{errors?.organization_id}</small>}
                       </Form.Group>
                     </Col>
                     {/* <Col md={6}>
@@ -341,7 +364,7 @@ export default function AddEmployee() {
 
                     </Form.Group>
                   </Col> */}
-               
+
                     {/* <Col md={6}>
                     <Form.Group
                       className="mb-4">

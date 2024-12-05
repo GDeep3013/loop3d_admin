@@ -116,4 +116,24 @@ ul.custom-tabs.nav.nav-tabs { border-bottom: 1px solid #7abcdb; }
 .looplead-box.new-box{ column-gap: 40px; }
 .looplead-box.new-box .loop-inner span.user-name { background-color: #174a6d; color: #fff; text-align: left; padding: 6px 18px; font-size: 19px; display: block; text-align: center;}
 .looplead-box.new-box .loop-inner span.date-text { font-size: 13px; padding: 6px 18px; background-color: #efefef; margin-top: 0px; display: block; text-align: center;}
-.looplead-box.new-box .looplead-box-outer { padding-top: 0; }
+
+
+.looplead-box-outer .loop-contant { position: relative; }
+.looplead-box-outer .loop-contant button.action-btn { position: absolute; top: 0; right: 0; display: inline-block; width: 30px; height: 30px; border-radius: 50%; background-color: #174a6d; }
+.looplead-box-outer .loop-contant button.action-btn:hover{ background-color: #174a6d; }
+.looplead-box-outer .loop-contant button.action-btn:hover svg path:first-child{ fill: none; }
+.looplead-box-outer .loop-contant button.action-btn svg { fill: #fff; opacity: 1; width: 16px; height: 16px; margin: -3px 0 0 0; }
+.looplead-box-outer button.action-btn:hover svg path{ fill: #fff; }
+
+.looplead-box-outer .loop-contant label, .looplead-box.new-box .loop-inner label { font-size: 14px; font-weight: 400; color: #2E2E2E; margin-bottom: 8px; display: block; }
+.looplead-box-outer .loop-contant input, .looplead-box.new-box .loop-inner input{ min-height: 46px; padding: 0 15px; text-transform: capitalize; border: 1px solid #dee2e6; }
+.looplead-box.new-box .loop-inner p { margin-bottom: 11px; }
+
+.looplead-box.new-box .looplead-box-outer { padding-top: 0;}
+.looplead-box.new-box .looplead-box-outer .edit-buttons{ width: 100%; max-width: 100%; }
+
+.looplead-box.new-box{ flex-wrap: wrap; }
+.looplead-box.new-box .edit-buttons { width: 100%; margin-top: 20px; display: flex; column-gap: 10px; }
+.looplead-box.new-box .edit-buttons .default-btn { min-width: 87px; }
+.looplead-box.new-box .edit-buttons .cancel-btn{ background-color:transparent; color: #000; }
+.looplead-box.new-box .edit-buttons .cancel-btn:hover{ background-color: var(--theme-color); color: #fff; }

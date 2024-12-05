@@ -25,10 +25,8 @@ const UserController = {
             if (!errors.isEmpty()) {
                 return res.status(400).json({ errors: errors.array() });
             }
-
             try {
-
-                const { first_name, last_name, email, designation, user_type, organization_id, password, created_by = null } = req.body;
+                const { first_name, last_name, email, designation, user_type, organization_id, phone, password, created_by = null } = req.body;
 
                 // Hash the password
 
@@ -37,6 +35,7 @@ const UserController = {
                     first_name: first_name,
                     last_name: last_name,
                     email: email,
+                    phone: phone,
                     designation: designation,
                     role: user_type,
                     password: (password != undefined && password != "") ? await bcrypt.hash(password, 10) : null,
@@ -217,7 +216,7 @@ const UserController = {
 
             // Exclude sensitive fields like password from the response
             const { _id, first_name, last_name, email, organization, createdAt, updatedAt } = user;
-           
+
             res.status(200).json({
                 _id,
                 first_name,
@@ -363,7 +362,7 @@ const UserController = {
                     select: 'name', // Exclude the __v field from the populated organization documents
                 })
                 .populate('role', 'type')
-                .populate('created_by', 'first_name last_name email') // Populate the role field as well
+                .populate('created_by', 'first_name last_name email phone') // Populate the role field as well
                 .sort({ createdAt: -1 }); // Sort by creation date in descending order
 
 
@@ -433,12 +432,9 @@ const UserController = {
 
         try {
             const user = await User.findById(token);
-
-
             if (!user) {
                 return res.status(400).json({ error: 'Invalid or expired token' });
             }
-
             user.password = await bcrypt.hash(newPassword, 10);
             user.resetPasswordToken = undefined; // Clear the token
             user.resetPasswordExpires = undefined; // Clear the expiry time
@@ -468,6 +464,63 @@ const UserController = {
         } catch (error) {
             console.error('Error resetting password:', error);
             res.status(500).json({ message: 'Internal Server Error' });
+        }
+    },
+    fetchManager: async (req, res) => {
+        try {
+
+            // Find the "manager" role by name
+            const managerRole = await Role.findOne({ type: 'manager' });
+            if (!managerRole) {
+                return res.status(404).json({
+                    status: 'error',
+                    message: 'Manager role not found',
+                });
+            }
+            const users = await User.find({ role: managerRole._id })
+            res.status(200).json({
+                status: 'success',
+                users,
+            });
+        } catch (error) {
+            console.error('Error fetching managers:', error);
+            res.status(500).json({ error: 'Internal Server Error' });
+        }
+    },
+    UpdateLoopLead: async (req, res) => {
+        const { id } = req.params;
+        const { first_name, last_name, email, title, new_created_by, created_by } = req.body;
+        console.log(id);
+        try {
+            // Check if the provided email is unique (not already in use)
+            const existingUser = await User.findOne({ email });
+            if (existingUser && existingUser._id.toString() !== id) {
+                return res.status(400).json({ message: 'Email is already in exist' });
+            }
+
+            // Prepare data for updating
+            const updateData = {
+                first_name,
+                last_name,
+                email,
+                title,
+                created_by: new_created_by ? new_created_by : created_by._id,
+            };
+
+            const updatedUser = await User.findByIdAndUpdate(
+                id,
+                updateData,
+                { new: true }
+            );
+
+            if (!updatedUser) {
+                return res.status(404).json({ message: 'User not found' });
+            }
+
+            res.status(200).json({ status: 200, data: updatedUser, message: 'Update Record Successfully' });
+        } catch (error) {
+            console.error('Error updating user:', error);
+            res.status(500).json({ message: 'Server error' });
         }
     }
 };
