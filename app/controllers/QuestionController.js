@@ -45,7 +45,7 @@ exports.createQuestion = async (req, res) => {
         // Save the question to the database first
         await newQuestion.save();
 
-        if (questionType = "Radio") {
+        if (questionType == "Radio") {
             // Map options to include questionId and save them to the question
             newQuestion.options = options && options.map(option => ({
                 ...option,
