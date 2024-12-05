@@ -24,15 +24,11 @@ exports.createQuestion = async (req, res) => {
     // Check if a question with the same text, organization, and (optional) parentType already exists
     const existingQuestion = await Question.findOne(query);
 
-    if (existingQuestion) {
-        return res.status(400).json({
-            error: 'A question with the same text already exists in this organization with the same parentType.'
-        });
-    }
+ 
 
         if (existingQuestion) {
             return res.status(400).json({
-                error: 'A question with the same text already exists in this category and organization.'
+                error: 'A question with the same text already exists'
             });
         }
 
@@ -49,15 +45,16 @@ exports.createQuestion = async (req, res) => {
         // Save the question to the database first
         await newQuestion.save();
 
-        // Map options to include questionId and save them to the question
-        newQuestion.options =  options && options.map(option => ({
-            ...option,
-            questionId: newQuestion._id  // Set the questionId for each option
-        }));
+        if (questionType = "Radio") {
+            // Map options to include questionId and save them to the question
+            newQuestion.options = options && options.map(option => ({
+                ...option,
+                questionId: newQuestion._id  // Set the questionId for each option
+            }));
 
-        // Save the updated question with options
-        await newQuestion.save();
-
+            // Save the updated question with options
+            await newQuestion.save();
+        }
         // Ensure the category ID and organization ID are present
         if (organization_id && newQuestion) {
             // Create the new assignment
