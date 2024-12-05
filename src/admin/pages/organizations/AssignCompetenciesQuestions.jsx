@@ -114,7 +114,7 @@ export default function AssignCompetenciesQuestions({ data, type }) {
                                             <label>
                                             <input
                                                 type="checkbox"
-                                                checked={selectedCompetencies.includes(cat?._id)}
+                                                checked={selectedCompetencies?.includes(cat?._id)}
                                                 onChange={() => handleCheckboxChange(cat?._id)}
                                             />
                                                 <span> {cat.category_name.trimStart()}</span>
