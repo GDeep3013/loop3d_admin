@@ -323,7 +323,6 @@ export default function AssignCompetencies({ data, type }) {
     };
     const handleTabSelect = (key) => {
         setActiveTab(key);
-        fetchQuestions(data?.ref_id)
 
     };
     // console.log(formData)

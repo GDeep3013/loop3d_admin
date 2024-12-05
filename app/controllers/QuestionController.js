@@ -59,12 +59,12 @@ exports.createQuestion = async (req, res) => {
         await newQuestion.save();
 
         // Ensure the category ID and organization ID are present
-        if (currentCategoryId && organization_id && newQuestion) {
+        if (organization_id && newQuestion) {
             // Create the new assignment
             const newAssignment = {
                 user_id: createdBy,
                 question_id: newQuestion._id,
-                category_id: currentCategoryId,
+                category_id: currentCategoryId?currentCategoryId:null,
                 organization_id,
                 status: 'active',
             };
@@ -79,7 +79,8 @@ exports.createQuestion = async (req, res) => {
 
             // If no existing assignment, save the new one
             if (!existingAssignment) {
-                await AssignCompetency.create(newAssignment);
+                const newa= await AssignCompetency.create(newAssignment);
+                console.log('newAssignmentnewa',newa)
             }
         }
 

@@ -320,14 +320,15 @@ button.add_participant:hover{ background-color: var(--secondary-color); color: #
   .goal-listing .plan_content .grp-btn.d-flex { margin-top: 30px; }
    small.plan-error { position: relative; bottom: 12px; }
 
-   .accordion-item .question-section .question-item { margin: 0 0 11px 0; }
- .accordion-item .question-section .question-item .question-actions { display: inline-block; margin: 0 8px 0 0;}
- .accordion-item .question-section .question-item .question-actions a { font-size: 11px; margin-right: 5px; }
- .accordion-item .question-section .question-item .question-actions a:hover{ text-decoration: underline; }
- .list-scroll .accordion .accordion-body button.default-btn { min-width: 144px; min-height: 35px; line-height: 35px; background-color: transparent; color:#000; font-weight: 600; font-size: 18px; }
+ .question-section .question-item { margin: 0 0 11px 0; }
+ .question-section .question-item .question-actions { display: inline-block; margin: 0 8px 0 0;}
+ .question-section .question-item .question-actions a { font-size: 11px; margin-right: 5px; }
+ .question-section .question-item .question-actions a:hover{ text-decoration: underline; }
+ .list-scroll .accordion .accordion-body button.default-btn, .ended-questions button.default-btn { min-width: 144px; min-height: 35px; line-height: 35px; background-color: transparent; color:#000; font-weight: 600; font-size: 18px; }
  .list-scroll .accordion .accordion-body button.default-btn:hover{ color: #0F172A; }
  .list-scroll .accordion .accordion-item .accordion-header label input[type="checkbox"] { accent-color: #174a6d; margin: 0 12px 0 0; width: 17px; height: 17px; }
 .list-scroll .accordion { font-family: var(--font-poppins); }
+.ended-questions h2{ font-weight: 600; }
 
 .new-question{ font-family: var(--font-poppins); }
 .new-question .modal-dialog { max-width: 630px; }

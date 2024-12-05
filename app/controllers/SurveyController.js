@@ -145,7 +145,6 @@ exports.createSurvey = async (req, res) => {
 
 exports.createSurveyParticipants = async (req, res) => {
     try {
-        console.log(req);
         await check('participants').isArray({
                 min: 1
             }).withMessage('Participants array is required and cannot be empty').run(req),
@@ -409,24 +408,32 @@ exports.getSurveyById = async (req, res) => {
             });
         }
 
+        const org_id1 =surveys.flatMap(survey => survey.organization._id)
         // Step 2: Fetch related AssignCompetency data for the survey(s)
         const categoryIds = surveys.flatMap(survey => survey.competencies.map(comp => comp._id));
         const assignCompetencies = await AssignCompetency.find({
-                category_id: {
-                    $in: categoryIds
+            $or: [
+                { // Case 1: organization_id is null and category_id is not null
+                    organization_id: null,
+                    category_id: { $ne: null } // Ensure category_id is not null
                 },
-                organization_id: null
-            })
-            .populate({
-                path: 'question_id', // Populate question_id field
-                select: 'questionText questionType options', // Select only the necessary fields from Question
-                populate: {
-                    path: 'options', // Populate options within the question
-                    select: 'text weightage' // Select only text and weightage fields from Option
+                { // Case 2: organization_id matches and category_id is null
+                    organization_id: org_id1, // Match the provided org_id
+                    category_id: null
                 }
-            })
+            ],
+            question_id: { $ne: null } // Ensure question_id is not null for both cases
+        }).populate({
+            path: 'question_id',
+            select: 'questionText questionType options', // Select necessary fields
+            populate: {
+                path: 'options',
+                select: 'text weightage' // Select specific fields for options
+            }
+        });
         const questionsArray = assignCompetencies.map(ac => ac?.question_id);
 
+       
         // Optionally remove duplicates if needed (e.g., if multiple entries for the same question)
         const questions = Array.from(new Set(questionsArray.map(q => q?._id)))
             .map(id => {
@@ -439,7 +446,7 @@ exports.getSurveyById = async (req, res) => {
                 $in: categoryIds
             }
         })
-
+        console.log(competencies,'competencies');
         // Step 3: Merge competencies and assignCompetencies data into the survey(s)
         const results = await Promise.all(surveys.map(async (survey) => {
 
@@ -674,7 +681,7 @@ const processParticipantAnswers = (participant, answers, participantType, assign
                         if (!answer.answer) {
                             report.categories[categoryName][participantType].totalQuestions += 1;
                         } else {
-                            if (question?.questionType === 'Text') {
+                            if (question?.questionType === 'OpenEnded') {
                                 // Handle text-based questions (free text answers)
                                 report.categories[categoryName][participantType].textAnswers.push({
                                     id: question?._id,

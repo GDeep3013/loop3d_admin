@@ -12,6 +12,7 @@ const OpenEndedQuestions = ({ activeTab, organization_id, createdBy,fetchQuestio
         currentCategoryId: null,
         organization_id: organization_id
     });
+
     const [errors, setErrors] = useState({});
     const [showModal, setShowModal] = useState(false);
     const [isEdit, setIsEdit] = useState(false);
@@ -27,7 +28,11 @@ const OpenEndedQuestions = ({ activeTab, organization_id, createdBy,fetchQuestio
     };
 
   
-
+    useEffect(() => {
+        if (activeTab && organization_id) {
+            fetchQuestions(organization_id); // Make sure the ref_id exists
+        }
+    }, [activeTab, organization_id]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -75,7 +80,7 @@ const OpenEndedQuestions = ({ activeTab, organization_id, createdBy,fetchQuestio
                     currentCategoryId: null,
                     organization_id: organization_id
                 });
-                fetchQuestions(organization_id)
+                fetchQuestions(organization_id); // Make sure the ref_id exists
                 setIsEdit(false)
                 setEditId(null)
                 setErrors('')
@@ -139,8 +144,8 @@ const OpenEndedQuestions = ({ activeTab, organization_id, createdBy,fetchQuestio
     };
 
     return (
-        <div>
-            <h1>Open Ended Questions</h1>
+        <div className="ended-questions p-4">
+            <h2 className="fs-5 mb-3 font-semibold">Open Ended Questions</h2>
 
             <div className="question-section">
                 {openQuestions && openQuestions.map((question, index) => (
@@ -158,7 +163,7 @@ const OpenEndedQuestions = ({ activeTab, organization_id, createdBy,fetchQuestio
 
             </div>
             <Button variant="primary" onClick={() => setShowModal(true)} className="default-btn">
-                Add New Question
+            + Add New Question
             </Button>
 
             <Modal show={showModal} onHide={() => {setShowModal(false), setEditId(''), setIsEdit(false),setFormData(''),setErrors('')}} className="new-question">
