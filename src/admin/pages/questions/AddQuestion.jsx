@@ -10,6 +10,7 @@ export default function AddQuestion({ id, savedData }) {
     const navigate = useNavigate();
 
     const [formData, setFormData] = useState({
+        _id:'',
         questionText: '',
         questionType: '', // 'Text' or 'Radio'
         options: [{ text: '', weightage: 1 }], // Added weightage
@@ -136,7 +137,7 @@ export default function AddQuestion({ id, savedData }) {
             setErrors({ form: 'Failed to save question' });
         }
     };
-
+    console.log(formData);
     return (
         <div>
         {!id && <div className="tabe-outer ml-2" style={{marginLeft: "23px"}}>

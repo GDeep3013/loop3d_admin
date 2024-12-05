@@ -1,8 +1,57 @@
 const AssignCompetency = require('../models/AssignCompetencyModel');
 const Category = require('../models/CategoryModel');
 const User = require('../models/User');
+const Question = require('../models/Question')
 
 // Create a new assignment
+const addQuestions = async (category_id, organization_id) => {
+    try {
+        const existingAssignments = await AssignCompetency.find({
+            category_id: { $in: category_id },
+            question_id: { $ne: null }, // Ensure question_id is not null
+        });
+        
+        
+        // Iterate over the existing assignments
+        for (const assignment of existingAssignments) {
+            // Fetch the question directly using the question_id from the assignment
+            const question = await Question.findById(assignment.question_id);
+        
+            // Check if the question exists and doesn't have category_id and organization_id
+            if (question && !question.category_id && !question.organization_id) {
+                // Create a new question based on the existing question's properties
+                const clonedQuestion = new Question({
+                    questionType: question.questionType,
+                    questionText: question.questionText,
+                    options: question.options,
+                    category_id: category_id,
+                    organization_id: organization_id,
+                    status: 'active',
+                });
+        
+                // Save the cloned question
+                await clonedQuestion.save();
+            }
+        }
+
+    } catch (error) {
+        console.error('Error cloning questions:', error);
+        throw new Error('Failed to clone questions.');
+    }
+};
+
+const removeQuestions = async (category_id, organization_id) => {
+    try {
+        // Find and delete questions associated with the given category_id and organization_id
+        const deletedQuestions = await Question.deleteMany({
+            category_id: { $in: category_id },
+            organization_id: organization_id,
+        });
+    } catch (error) {
+        console.error('Error removing questions:', error);
+        throw new Error('Failed to remove questions.');
+    }
+};
 exports.createAssignment = async (req, res) => {
     try {
         const { action, type, ref_id, user_id, category_id} = req.body;
@@ -43,6 +92,8 @@ exports.createAssignment = async (req, res) => {
             }
 
             // Save all new assignments to the database
+            await addQuestions(category_id,ref_id)
+
             const savedAssignments = await AssignCompetency.insertMany(filteredAssignments);
 
             return res.status(201).json(savedAssignments);
@@ -66,6 +117,7 @@ exports.createAssignment = async (req, res) => {
 
             // Check if any documents were deleted
             if (result) {
+                await removeQuestions(category_id, ref_id);
                 return res.status(200).json({ message: 'Competency unassigned successfully' });
             } else {
                 return res.status(404).json({ message: 'No assignments found to remove' });
@@ -98,15 +150,50 @@ exports.getAllAssignments = async (req, res) => {
 // Get a single assignment by ID
 exports.getAssignmentById = async (req, res) => {
     try {
-        const assignment = await AssignCompetency.findById(req.params.id)
-            .populate('user_id', 'first_name last_name')
-            .populate('organization_id', 'name')
-            .populate('question_id', 'text')
-            .populate('category_id', 'category_name competency_type status');
-        if (!assignment) {
-            return res.status(404).json({ message: 'Assignment not found' });
+        if (!req.query.cat_id) {
+            const assignment = await AssignCompetency.findById(req.params.id)
+                .populate('user_id', 'first_name last_name')
+                .populate('organization_id', 'name')
+                .populate('question_id', 'questionType status questionText options')
+                .populate('category_id', 'category_name competency_type status');
+            if (!assignment) {
+                return res.status(404).json({ message: 'Assignment not found' });
+            }
+            res.status(200).json(assignment);
+        } else {
+            const { cat_id, org_id } = req.query;
+
+            // Validate required query parameters
+            if (!cat_id || !org_id) {
+                return res.status(400).json({ message: 'Both category_id and organization_id are required.' });
+            }
+    
+            // Fetch questions matching the given category_id and organization_id
+            const questions = await Question.find({
+                category_id: cat_id,
+                organization_id: org_id,
+            }).select('questionText questionType status options');
+    
+            if (!questions || questions.length === 0) {
+                return res.status(404).json({ message: 'No questions found for the given category and organization.' });
+            }
+    
+            // Structure the response
+            const groupedData = {
+                category_id: cat_id,
+                organization_id: org_id,
+                questions: questions.map(question => ({
+                    question_id: question._id,
+                    questionText: question.questionText,
+                    questionType: question.questionType,
+                    status: question.status,
+                    options: question.options,
+                })),
+            };
+    
+            return res.status(200).json(groupedData);
+            
         }
-        res.status(200).json(assignment);
     } catch (error) {
         res.status(500).json({ error: error.message });
     }

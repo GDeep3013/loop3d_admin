@@ -8,6 +8,8 @@ const ChatController = require('../app/controllers/ChatController');
 router.post('/create', QuestionController.createQuestion);
 
 router.get('/', QuestionController.getAllQuestions);
+router.get('/get-openended-question', QuestionController.getOpenEndedQuestion);
+
 
 router.get('/:id', QuestionController.getQuestionById);
 

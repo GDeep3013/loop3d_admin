@@ -9,6 +9,8 @@ router.post('/assign', AssignCompetencyController.createAssignment);
 // Route to get all assignments
 router.get('/', AssignCompetencyController.getAllAssignments);
 router.get('/assign', AssignCompetencyController.getAssignmentsByUserId);
+router.get('/get-questions', AssignCompetencyController.getAssignmentById);
+
 
 
 // Route to get a specific assignment by ID

@@ -30,6 +30,20 @@ const QuestionSchema = new mongoose.Schema({
         type: String,
         required: true // Ensure the question type is required
     },
+    organization_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Organization', // References the Organization model
+        default:null,
+    },
+    category_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Category', // References the Category model
+        default:null,
+    },
+    parentType: {
+        type: String,
+        default:null,
+    },
     options: [OptionSchema]  // Array of options with references to the question ID
 }, {
     timestamps: true

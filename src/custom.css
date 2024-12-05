@@ -52,7 +52,7 @@
 .latest-projects { margin-top: 80px; }
 .latest-projects .filterBox .d-flex { justify-content: right; }
 .latest-projects h2 { font-size: 18px; font-weight: 500; }
-.dashboard-header h1 { font-size: 21px; font-weight: 600; color: var(--black-color); margin-bottom: 3px; }
+.dashboard-header h1 { font-size: 21px; font-weight: 600; font-family: var(--font-poppins); color: var(--black-color); margin-bottom: 3px; }
 .dashboard-header p { font-size: 14px; color: #747474; }
 .latest-projects .filterBox .dropdown { width: auto; max-width: fit-content; min-width: 160px; }
 /* pagination css */
@@ -169,7 +169,7 @@ form.formOuter input.form-control { line-height: 56px; padding: 0 14px; border: 
 .question-from .question-inner { display: flex; align-items: center; padding-top: 13px; justify-content: space-between; }
 .profile-btns { padding-top: 30px; }
 .outer-box button.btn { background-color: var(--theme-color); border: none; }
-.question-contant { display: flex; width: 49%; justify-content: space-between; padding-bottom: 20px; }
+.question-contant { display: flex; width: 49%; justify-content: space-between; padding-bottom: 20px; align-items: center;}
 .custom-list.list-group li.list-group-item:after { position: absolute; content: ''; top: 7px; left: 0; width: 7px; height: 7px; background-color: #000; border-radius: 10px; }
 .card-body { padding: 25px; }
 .card-title strong { display: block; padding-bottom: 11px; }
@@ -319,3 +319,26 @@ button.add_participant:hover{ background-color: var(--secondary-color); color: #
   .goal-listing .content-text-edit button { margin: 0 !important; }
   .goal-listing .plan_content .grp-btn.d-flex { margin-top: 30px; }
    small.plan-error { position: relative; bottom: 12px; }
+
+   .accordion-item .question-section .question-item { margin: 0 0 11px 0; }
+ .accordion-item .question-section .question-item .question-actions { display: inline-block; margin: 0 8px 0 0;}
+ .accordion-item .question-section .question-item .question-actions a { font-size: 11px; margin-right: 5px; }
+ .accordion-item .question-section .question-item .question-actions a:hover{ text-decoration: underline; }
+ .list-scroll .accordion .accordion-body button.default-btn { min-width: 144px; min-height: 35px; line-height: 35px; background-color: transparent; color:#000; font-weight: 600; font-size: 18px; }
+ .list-scroll .accordion .accordion-body button.default-btn:hover{ color: #0F172A; }
+ .list-scroll .accordion .accordion-item .accordion-header label input[type="checkbox"] { accent-color: #174a6d; margin: 0 12px 0 0; width: 17px; height: 17px; }
+.list-scroll .accordion { font-family: var(--font-poppins); }
+
+.new-question{ font-family: var(--font-poppins); }
+.new-question .modal-dialog { max-width: 630px; }
+.new-question .modal-dialog .modal-body { padding: 33px 10px; }
+.list-scroll h3 { font-family: var(--font-poppins); font-weight: 600; font-size: 19px; margin: 0 0 10px 0; }
+.content-outer .content-outer.edit-org .nav-item button.nav-link { color: #000; }
+.content-outer .content-outer.edit-org .nav-item button.nav-link.active{ color: var(--theme-color); }
+.content-outer .content-outer.edit-org .nav-item button.nav-link:hover{ color: var(--theme-color); border-color: transparent; }
+
+.question-contant button.default-btn { min-width: 113px; min-height: 40px; line-height: 40px; }
+.question-from.delete-option .question-inner button.btn:hover { background-color: #dc3545; }
+
+.delete-option button.btn.btn-danger { min-height: 40px; line-height: 28px; }
+.delete-option button.btn.btn-danger img { max-width: 21px; filter: invert(1); }
