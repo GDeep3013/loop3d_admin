@@ -352,30 +352,38 @@ export default function AssignCompetencies({ data, type }) {
                                         </Accordion.Header>
                                         <Accordion.Body>
                                             {selectedCategory && cat._id == selectedCategory.category_id && (
-                                                <div className="question-section">
-                                                    {selectedCategory.questions.map((value, ind) => (
-
-                                                        <div key={value.question_id} className="question-item">
-                                                            {value.questionType == "Radio" && <p>
-
-                                                                <span className='fw-bold'>Q{ind + 1}:</span> {value.questionText}
-                                                                <div className="question-actions ms-2">
-                                                                    <Link onClick={() => {
-                                                                        handleEditQuestion(value,selectedCategory.category_id)
-                                                                    }}
-                                                                        style={{ cursor: 'pointer', color: 'red' }}>
-                                                                        ✏️
-                                                                    </Link>
-                                                                    <Link onClick={() => handleDelete(value.question_id, cat._id)} style={{ cursor: 'pointer', color: 'red' }}>
-                                                                        ❌
-                                                                    </Link>
-                                                                </div></p>
-
-                                                            }
-
-                                                        </div>
-                                                    ))}
-                                                </div>
+                                                   <div className="question-section">
+                                                   {(() => {
+                                                       let i = 1; // Initialize a counter
+                                                       return selectedCategory.questions.map((value) => (
+                                                           <div key={value.question_id} className="question-item">
+                                                               {value.questionType == "Radio" && (
+                                                                   <p>
+                                                                       <span className="fw-bold">Q{i++}:</span> {value.questionText}
+                                                                       <div className="question-actions ms-2">
+                                                                           <Link
+                                                                               onClick={() => {
+                                                                                   handleEditQuestion(value, selectedCategory.category_id);
+                                                                               }}
+                                                                               style={{ cursor: "pointer", color: "red" }}
+                                                                           >
+                                                                               ✏️
+                                                                           </Link>
+                                                                           <Link
+                                                                               onClick={() =>
+                                                                                   handleQuestionDelete(value.question_id, option.id)
+                                                                               }
+                                                                               style={{ cursor: "pointer", color: "red" }}
+                                                                           >
+                                                                               ❌
+                                                                           </Link>
+                                                                       </div>
+                                                                   </p>
+                                                               )}
+                                                           </div>
+                                                       ));
+                                                   })()}
+                                               </div>
                                             )}
                                             <Button
                                                 variant="primary"
@@ -419,26 +427,38 @@ export default function AssignCompetencies({ data, type }) {
                                         </Accordion.Header>
                                         <Accordion.Body>
                                             {selectedCategory && cat._id == selectedCategory.category_id && (
-                                                <div className="question-section">
-                                                    {selectedCategory.questions.map((value, ind) => (
-
-                                                        <div key={value._id} className="question-item">
-                                                            {value.questionType == "Radio" && <p>
-                                                                <div className="question-actions">
-                                                                    <Link onClick={() => handleEditQuestion(value,selectedCategory.category_id)}
-                                                                        style={{ cursor: 'pointer', color: 'red' }}>
-                                                                        ✏️
-                                                                    </Link>
-                                                                    <Link onClick={() => handleDelete(value.question_id)} style={{ cursor: 'pointer', color: 'red' }}>
-                                                                        ❌
-                                                                    </Link>
-                                                                </div>
-                                                                <span>Q{ind + 1}:</span> {value.questionText}</p>
-                                                            }
-
-                                                        </div>
-                                                    ))}
-                                                </div>
+                                                  <div className="question-section">
+                                                  {(() => {
+                                                      let i = 1; // Initialize a counter
+                                                      return selectedCategory.questions.map((value) => (
+                                                          <div key={value.question_id} className="question-item">
+                                                              {value.questionType == "Radio" && (
+                                                                  <p>
+                                                                      <span className="fw-bold">Q{i++}:</span> {value.questionText}
+                                                                      <div className="question-actions ms-2">
+                                                                          <Link
+                                                                              onClick={() => {
+                                                                                  handleEditQuestion(value, selectedCategory.category_id);
+                                                                              }}
+                                                                              style={{ cursor: "pointer", color: "red" }}
+                                                                          >
+                                                                              ✏️
+                                                                          </Link>
+                                                                          <Link
+                                                                              onClick={() =>
+                                                                                  handleQuestionDelete(value.question_id, option.id)
+                                                                              }
+                                                                              style={{ cursor: "pointer", color: "red" }}
+                                                                          >
+                                                                              ❌
+                                                                          </Link>
+                                                                      </div>
+                                                                  </p>
+                                                              )}
+                                                          </div>
+                                                      ));
+                                                  })()}
+                                              </div>
                                             )}
                                             <Button
                                                 variant="primary"

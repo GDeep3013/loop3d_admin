@@ -408,21 +408,13 @@ exports.getSurveyById = async (req, res) => {
             });
         }
 
-        const org_id1 =surveys.flatMap(survey => survey.organization._id)
+        const org_id1 = surveys.flatMap(survey => survey.organization._id)
+        const manager_id =surveys.flatMap(survey => survey.manager._id)
+
         // Step 2: Fetch related AssignCompetency data for the survey(s)
         const categoryIds = surveys.flatMap(survey => survey.competencies.map(comp => comp._id));
-        const assignCompetencies = await AssignCompetency.find({
-            $or: [
-                { // Case 1: organization_id is null and category_id is not null
-                    organization_id: null,
-                    category_id: { $ne: null } // Ensure category_id is not null
-                },
-                { // Case 2: organization_id matches and category_id is null
-                    organization_id: org_id1, // Match the provided org_id
-                    category_id: null
-                }
-            ],
-            question_id: { $ne: null } // Ensure question_id is not null for both cases
+        const assignCompetencies = await AssignCompetency.find({ organization_id: org_id1, user_id:manager_id,question_id: { $ne: null } 
+             // Ensure question_id is not null for both cases
         }).populate({
             path: 'question_id',
             select: 'questionText questionType options', // Select necessary fields
@@ -435,9 +427,9 @@ exports.getSurveyById = async (req, res) => {
 
        
         // Optionally remove duplicates if needed (e.g., if multiple entries for the same question)
-        const questions = Array.from(new Set(questionsArray.map(q => q?._id)))
+        const questions = Array.from(new Set(questionsArray.map(q => q?._id )))
             .map(id => {
-                return questionsArray.find(q => q?._id.equals(id));
+                return questionsArray.find(q => q?._id.equals(id) );
             });
 
 

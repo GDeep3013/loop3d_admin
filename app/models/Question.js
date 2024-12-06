@@ -44,6 +44,11 @@ const QuestionSchema = new mongoose.Schema({
         type: String,
         default:null,
     },
+    manager: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        default:null,// Assuming you have a User model
+    },
     options: [OptionSchema]  // Array of options with references to the question ID
 }, {
     timestamps: true

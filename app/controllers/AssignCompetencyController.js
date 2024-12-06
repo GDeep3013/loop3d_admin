@@ -161,7 +161,7 @@ exports.getAssignmentById = async (req, res) => {
             }
             res.status(200).json(assignment);
         } else {
-            const { cat_id, org_id } = req.query;
+            const { cat_id, org_id,manager_id } = req.query;
 
             // Validate required query parameters
             if (!cat_id || !org_id) {
@@ -169,10 +169,22 @@ exports.getAssignmentById = async (req, res) => {
             }
     
             // Fetch questions matching the given category_id and organization_id
-            const questions = await Question.find({
-                category_id: cat_id,
-                organization_id: org_id,
-            }).select('questionText questionType status options');
+          
+            let questions = [];
+            if (manager_id && org_id) {
+                 questions = await Question.find({
+                    category_id: cat_id,
+                    organization_id: org_id,
+                    manager:manager_id
+                }).select('questionText questionType status options');
+            } else {
+                 questions = await Question.find({
+                    category_id: cat_id,
+                     organization_id: org_id,
+                     manager:null
+
+                }).select('questionText questionType status options');
+            }
     
             if (!questions || questions.length === 0) {
                 return res.status(404).json({ message: 'No questions found for the given category and organization.' });
