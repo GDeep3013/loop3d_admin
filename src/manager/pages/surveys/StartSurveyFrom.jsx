@@ -347,9 +347,9 @@ console.log('questionFormData',questionFormData)
         setIsEdit(true);
         setCurrentCategoryId(cat_id);
         setQuestionFormData({
-            questionText: '',
-            questionType: '', // 'Text' or 'Radio'
-            options: [{ text: '', weightage: 1 }], // Added weightage
+            questionText: value?.questionText || '', // Assign questionText or fallback to an empty string
+            questionType: value?.questionType || '', // Assign questionType or fallback to an empty string
+            options: value?.options || [{ text: '', weightage: 1 }], 
             createdBy: user?._id,
             manager_id:user._id,
             currentCategoryId: null,
