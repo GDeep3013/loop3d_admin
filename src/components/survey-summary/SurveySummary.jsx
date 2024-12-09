@@ -225,15 +225,20 @@ const SurveySummary = () => {
 
     }
 
-
     const generatePdf = () => {
         setPdf(true);
+        const loop_lead_name = `${survey?.loop_lead?.first_name}_${survey?.loop_lead?.last_name}`;
+        const company_name = survey?.organization?.name || "Unknown Company"; // Fallback in case `company_name` is not available
+        const survey_id = survey?._id || "UnknownID";
+        const current_date = new Date().toLocaleDateString('en-GB').split('/').join('-'); // Format date as DD-MM-YYYY
+        
+        // Create file name
+        const file_name = `${loop_lead_name}_${company_name}_${survey_id}_survey_report.pdf`.toLowerCase();
         setTimeout(() => {// Set the state to indicate PDF generation is in progress
             const element = reportRef.current; // Reference to the component you want to convert to PDF
-    
             const options = {
                 margin: [5, 5, 5, 5], // Adjust margins as needed
-                filename: 'survey_report.pdf',
+                filename: file_name,
                 image: { type: 'jpeg', quality: 0.98 },
                 html2canvas: { scale: 2, useCORS: true },
                 jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },

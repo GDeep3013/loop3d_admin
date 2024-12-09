@@ -30,7 +30,7 @@ const ChartBar = ({ competency, index, data, getChartImagesFromDB, chart2Data, s
     const chartRef1 = useRef([]); // Ref for the first chart
     const chartRef2 = useRef([]);
     const chartData = {
-        labels: Object.keys(data),
+        labels: [1.0, 2.0, 2.5, 3.0],
         datasets: [
             {
                 label: 'Average Weightage',
@@ -41,13 +41,7 @@ const ChartBar = ({ competency, index, data, getChartImagesFromDB, chart2Data, s
     };
 
     const chartData2 = {
-        labels: chart2Data?.map((item) => {
-            const maxLabelLength = 15; // Set the maximum length for display
-            const truncatedLabel = item?.question.length > maxLabelLength
-                ? item?.question.substring(0, maxLabelLength) + '...'
-                : item?.question;
-            return truncatedLabel;
-        }),
+        labels: [1.0, 2.0, 2.5, 3.0],
         datasets: [
             {
                 label: 'Self',
@@ -66,13 +60,49 @@ const ChartBar = ({ competency, index, data, getChartImagesFromDB, chart2Data, s
         indexAxis: 'y',
         responsive: true,
         plugins: {
-            legend: {
-                position: 'top',
-                
+            position: 'top',
+            labels: {
+                font: {
+                    size: 14,
+                    family: 'Arial',
+                    weight: 'normal',
+                    color: '#555',
+                },
             },
             title: {
                 display: true,
                 text: competency,
+                font: {
+                    size: 14,
+                    weight: 'bold',
+                    family: 'Arial',
+                    color: '#174A6D',
+                },
+                padding: {
+                    top: 20,
+                    bottom: 20,
+                },
+            },
+        },
+        scales: {
+            x: {
+                min: 1.0, // Ensure the x-axis starts from 1.0
+                max: 3.0,
+                ticks: {
+                    color: '#555',
+                    font: {
+                        size: 14,
+                    },
+                },
+            },
+            y: {
+                ticks: {
+                    color: '#555',
+                    font: {
+                        size: 14,
+                    }
+                }
+               
             },
         },
     };
@@ -136,6 +166,8 @@ const ChartBar = ({ competency, index, data, getChartImagesFromDB, chart2Data, s
         },
         scales: {
             x: {
+                min: 1.0, // Ensure the x-axis starts from 1.0
+                max: 3.0,
                 ticks: {
                     color: '#555',
                     font: {

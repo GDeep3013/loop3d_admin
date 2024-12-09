@@ -67,6 +67,8 @@ const CompetencyBar = ({ data, pdf = false ,survey_id,savedImages,getChartImages
         maintainAspectRatio: false, // Disable aspect ratio to manage height manually
         scales: {
             x: {
+                min: 1.0, // Ensure the x-axis starts from 1.0
+                max: 3.0,
                 beginAtZero: true, // Ensure the chart starts at 0
             },
             y: {

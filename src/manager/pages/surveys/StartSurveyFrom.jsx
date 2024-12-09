@@ -473,7 +473,7 @@ console.log('questionFormData',questionFormData)
                                 name="loop_lead_first_name"
                                 value={formData.loop_lead_first_name}
                                 onChange={handleInputChange}
-                                placeholder="Loop3d Lead Name"
+                                placeholder="Loop3d Lead First Name"
                                 isInvalid={!!errors.loop_lead_first_name} // Shows error state for input
                             />
                             <Form.Control.Feedback type="invalid">
@@ -486,7 +486,7 @@ console.log('questionFormData',questionFormData)
                                 name="loop_lead_last_name"
                                 value={formData.loop_lead_last_name}
                                 onChange={handleInputChange}
-                                placeholder="Loop3d Lead Name"
+                                placeholder="Loop3d Lead Last Name"
                                 isInvalid={!!errors.loop_lead_last_name} // Shows error state for input
                             />
                             <Form.Control.Feedback type="invalid">
