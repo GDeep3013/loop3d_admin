@@ -609,7 +609,15 @@ exports.deleteParticipant = async (req, res) => {
     }
 };
 
-const processParticipantAnswers = (participant, answers, participantType, assignCompetencies, competencies, questions, report) => {
+const processParticipantAnswers = (
+    participant, 
+    answers, 
+    participantType, 
+    assignCompetencies, 
+    competencies, 
+    questions, 
+    report
+) => {
     // Initialize report categories if not already initialized
     if (!report.categories) {
         report.categories = {};
@@ -619,104 +627,112 @@ const processParticipantAnswers = (participant, answers, participantType, assign
         report.resultArray = {}; // Initialize resultArray if it doesn't exist
     }
 
+    let previousCategoryName = "Uncategorized"; // Default to "Uncategorized" initially
+
     if (answers) {
         for (const answer of answers) {
             const question = questions.find(q => q?._id.equals(answer?.questionId));
             if (question) {
                 const assignCompetency = assignCompetencies?.find(ac => ac?.question_id?.equals(question?._id));
+                let categoryName = previousCategoryName; // Default to the previous competency
+
                 if (assignCompetency) {
-                    const competency = competencies.find(c => c ?._id.equals(assignCompetency?.category_id));
+                    const competency = competencies.find(c => c?._id.equals(assignCompetency?.category_id));
                     if (competency) {
-                        const categoryName = competency?.category_name;
-                        const selectedOption = question.options.find(option =>
-                            option ?._id?.toString() === answer?.optionId?.toString()
-                        );
-                        const weightage = selectedOption ? selectedOption.weightage : (answer?.weightage || 0);
+                        categoryName = competency?.category_name; // Use the current competency
+                        previousCategoryName = competency?.category_name; // Update the previous category for the next iteration
+                    }
+                }
 
-                        // Initialize category for each participant type
-                        if (!report.categories[categoryName]) {
-                            report.categories[categoryName] = {
-                                Self: {
-                                    totalQuestions: 0,
-                                    totalWeightage: 0,
-                                    textAnswers: [],
-                                    averageWeightage: 0
-                                },
-                                'Direct Report': {
-                                    totalQuestions: 0,
-                                    totalWeightage: 0,
-                                    textAnswers: [],
-                                    averageWeightage: 0
-                                },
-                                Teammate: {
-                                    totalQuestions: 0,
-                                    totalWeightage: 0,
-                                    textAnswers: [],
-                                    averageWeightage: 0
-                                },
-                                Supervisor: {
-                                    totalQuestions: 0,
-                                    totalWeightage: 0,
-                                    textAnswers: [],
-                                    averageWeightage: 0
-                                },
-                                Other: {
-                                    totalQuestions: 0,
-                                    totalWeightage: 0,
-                                    textAnswers: [],
-                                    averageWeightage: 0
-                                }
-                            };
-                        }
+                // Initialize category for each participant type
+                if (!report.categories[categoryName]) {
+                    report.categories[categoryName] = {
+                        Self: {
+                            totalQuestions: 0,
+                            totalWeightage: 0,
+                            textAnswers: [],
+                            averageWeightage: 0,
+                        },
+                        'Direct Report': {
+                            totalQuestions: 0,
+                            totalWeightage: 0,
+                            textAnswers: [],
+                            averageWeightage: 0,
+                        },
+                        Teammate: {
+                            totalQuestions: 0,
+                            totalWeightage: 0,
+                            textAnswers: [],
+                            averageWeightage: 0,
+                        },
+                        Supervisor: {
+                            totalQuestions: 0,
+                            totalWeightage: 0,
+                            textAnswers: [],
+                            averageWeightage: 0,
+                        },
+                        Other: {
+                            totalQuestions: 0,
+                            totalWeightage: 0,
+                            textAnswers: [],
+                            averageWeightage: 0,
+                        },
+                    };
+                }
 
-                        // Increment totalQuestions and totalWeightage for the participantType
-                        if (!answer.answer) {
-                            report.categories[categoryName][participantType].totalQuestions += 1;
-                        } else {
-                            if (question?.questionType === 'OpenEnded') {
-                                // Handle text-based questions (free text answers)
-                                report.categories[categoryName][participantType].textAnswers.push({
-                                    id: question?._id,
-                                    questionText: question.questionText,
-                                    answerText: answer.answer,
-                                    participant: {
-                                        type: participantType, // Participant type (Self, Direct Report, etc.)
-                                        id: participant.id, // Assuming there's an ID for the participant
-                                        name: `${participant.p_first_name} ${participant.p_last_name}`, // Assuming participant has first and last name
-                                        email: participant.p_email // Assuming participant has an email
-                                    }
-                                });
-                            }
-                        }
+                const selectedOption = question.options.find(option =>
+                    option?._id?.toString() === answer?.optionId?.toString()
+                );
+                const weightage = selectedOption ? selectedOption.weightage : (answer?.weightage || 0);
 
-                        report.categories[categoryName][participantType].totalWeightage += weightage;
+                // Handle text-based questions (free text answers)
+                if (question?.questionType === 'OpenEnded') {
+                    report.categories[categoryName][participantType].textAnswers.push({
+                        id: question?._id,
+                        questionText: question.questionText,
+                        answerText: answer.answer,
+                        participant: {
+                            type: participantType, // Participant type (Self, Direct Report, etc.)
+                            id: participant.id, // Assuming there's an ID for the participant
+                            name: `${participant.p_first_name} ${participant.p_last_name}`, // Assuming participant has first and last name
+                            email: participant.p_email, // Assuming participant has an email
+                        },
+                    });
+                }
 
-                        // Initialize the result array for the category if it doesn't exist
-                        if (!report.resultArray[categoryName]) {
-                            report.resultArray[categoryName] = []; // Create an array for the category
-                        }
+                // Increment totalQuestions and totalWeightage for the participantType
+                if (!answer.answer) {
+                    report.categories[categoryName][participantType].totalQuestions += 1;
+                }
 
-                        // Prepare entry for the question
-                        const entry = report.resultArray[categoryName].find(e => e.question === question.questionText) || {
-                            question: question.questionText,
-                            self_average: 0,
-                            total_other_weightage: 0, // Placeholder for total weightage of others
-                            total_other_responses: 0 // To track total responses for others
-                        };
+                report.categories[categoryName][participantType].totalWeightage += weightage;
 
-                        if (!answer.answer) {
-                            if (participantType === 'Self') {
-                                entry.self_average += weightage; // Accumulate self average
-                            } else {
-                                entry.total_other_weightage += weightage; // Accumulate total weightage for others
-                                entry.total_other_responses += 1; // Count responses from others
-                            }
+                // Initialize the result array for the category if it doesn't exist
+                if (!report.resultArray[categoryName]) {
+                    report.resultArray[categoryName] = []; // Create an array for the category
+                }
 
-                            // Add entry to the result array for the category
-                            if (!report.resultArray[categoryName].some(e => e.question === question.questionText)) {
-                                report.resultArray[categoryName].push(entry); // Add entry if it doesn't exist
-                            }
-                        }
+                // Prepare entry for the question
+                const entry = report.resultArray[categoryName].find(
+                    e => e.question === question.questionText
+                ) || {
+                    question: question.questionText,
+                    self_average: 0,
+                    total_other_weightage: 0, // Placeholder for total weightage of others
+                    total_other_responses: 0, // To track total responses for others
+                };
+
+                if (!answer.answer) {
+                    if (participantType === 'Self') {
+                        entry.self_average += weightage; // Accumulate self average
+                    } else {
+                        entry.total_other_weightage += weightage; // Accumulate total weightage for others
+                        entry.total_other_responses += 1; // Count responses from others
+                    }
+
+                    // Add entry to the result array for the category
+                    if (!report.resultArray[categoryName].some(e => e.question === question.questionText)) {
+                        report.resultArray[categoryName].push(entry); // Add entry if it doesn't exist
                     }
                 }
             }
@@ -740,6 +756,7 @@ const processParticipantAnswers = (participant, answers, participantType, assign
     });
 };
 
+
 exports.generateSurveyReport = async (req, res) => {
     try {
         const {
@@ -757,14 +774,13 @@ exports.generateSurveyReport = async (req, res) => {
                 error: 'Survey not found'
             });
         }
+        const org_id1 = survey?.organization?._id
+        const manager_id =survey?.manager?._id
 
         const categoryIds = survey.competencies.map(comp => comp._id);
-        const assignCompetencies = await AssignCompetency.find({
-            category_id: {
-                $in: categoryIds
-            },
-            organization_id: null
-        }).populate({
+        const assignCompetencies = await AssignCompetency.find({ organization_id: org_id1, user_id:manager_id,question_id: { $ne: null } 
+            // Ensure question_id is not null for both cases
+       }).populate({
             path: 'question_id',
             select: 'questionText questionType options',
             populate: {
@@ -776,7 +792,6 @@ exports.generateSurveyReport = async (req, res) => {
         const questionsArray = assignCompetencies.map(ac => ac?.question_id);
         const questions = Array.from(new Set(questionsArray.map(q => q?._id)))
             .map(id => questionsArray.find(q => q?._id.equals(id)));
-
         const competencies = await Category.find({
             _id: {
                 $in: categoryIds
@@ -886,8 +901,8 @@ const calculateCategoryAverages = (assignCompetencies, competencies, questions, 
     let minAverage = Infinity;
 
     competencies ?.forEach((competency) => {
-        const competencyQuestions = questions ?.filter(q =>
-            assignCompetencies.some(ac => ac ?.category_id.equals(competency._id) && ac ?.question_id ?._id.equals(q ?._id))
+        const competencyQuestions = questions?.filter(q =>
+            assignCompetencies.some(ac => ac?.category_id.equals(competency?._id) && ac?.question_id?._id.equals(q?._id))
         );
 
         let totalQuestions = 0;
@@ -896,14 +911,14 @@ const calculateCategoryAverages = (assignCompetencies, competencies, questions, 
         competencyQuestions.forEach(question => {
             // Find all participant answers for this question
             const questionAnswers = participantAnswers
-                .map(pa => pa.answers.find(ans => ans ?.questionId ?.equals(question ?._id)))
+                .map(pa => pa.answers.find(ans => ans?.questionId?.equals(question?._id)))
                 .filter(Boolean); // Filter out any undefined answers
 
             // Calculate the total weightage for the question
             questionAnswers.forEach(answer => {
                 // Find the selected option in the question's options
-                const selectedOption = question.options.find(option =>
-                    option ?._id ?.toString() === answer ?.optionId ?.toString()
+                const selectedOption = question?.options.find(option =>
+                    option ._id ?.toString() === answer?.optionId?.toString()
                 );
 
                 // Get the weightage from the selected option or fallback to answer weightage
@@ -970,13 +985,9 @@ exports.generateCompetencyAverageReport = async (req, res) => {
                 $in: categoryIds
             }
         });
-
-        const assignCompetencies = await AssignCompetency.find({
-            category_id: {
-                $in: categoryIds
-            },
-            organization_id: null
-        }).populate({
+        const org_id1 = survey?.organization?._id
+        const manager_id = survey?.manager?._id
+        const assignCompetencies = await AssignCompetency.find({organization_id: org_id1, user_id: manager_id, question_id: { $ne: null }}).populate({
             path: 'question_id',
             select: 'questionText questionType options',
             populate: {

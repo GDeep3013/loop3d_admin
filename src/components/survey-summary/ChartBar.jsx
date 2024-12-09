@@ -24,13 +24,13 @@ const ChartBar = ({ competency, index, data, getChartImagesFromDB, chart2Data, s
     // Ref for the second chart
     const [chartImage1, setChartImage1] = useState(null); // State for the first chart image
     const [chartImage2, setChartImage2] = useState(null);
-    
+    const [isMobile, setIsMobile] = useState(false);
     const [chartWidth, setChartWidth] = useState(700);
     const [chartHeight, setChartHeight] = useState(400);
     const chartRef1 = useRef([]); // Ref for the first chart
     const chartRef2 = useRef([]);
     const chartData = {
-        labels: [1.0, 2.0, 2.5, 3.0],
+        labels: Object.keys(data),
         datasets: [
             {
                 label: 'Average Weightage',
@@ -41,53 +41,51 @@ const ChartBar = ({ competency, index, data, getChartImagesFromDB, chart2Data, s
     };
 
     const chartData2 = {
-        labels: [1.0, 2.0, 2.5, 3.0],
+        labels: chart2Data?.map((item) => {
+            const maxLabelLength = 15; // Set the maximum length for display
+            const truncatedLabel = item?.question.length > maxLabelLength
+                ? item?.question.substring(0, maxLabelLength) + '...'
+                : item?.question;
+            return truncatedLabel;
+        }),
         datasets: [
             {
                 label: 'Self',
                 data: Object.values(chart2Data)?.map((item) => item?.self_average),
                 backgroundColor: 'rgb(23,74,109)',
+                lineWidth: 0,
+                tickWidth:0
             },
             {
                 label: 'Total others',
                 data: Object.values(chart2Data)?.map((item) => item?.other_average),
                 backgroundColor: 'rgb(122,188,219)',
+                lineWidth:0,
+                tickWidth:0
+
             }
         ],
     };
 
     const options = {
-        indexAxis: 'y',
+        indexAxis: isMobile ? 'x' : 'y',
         responsive: true,
+        maintainAspectRatio: false, // Allow the chart to take the full height
+
         plugins: {
-            position: 'top',
-            labels: {
-                font: {
-                    size: 14,
-                    family: 'Arial',
-                    weight: 'normal',
-                    color: '#555',
-                },
+            legend: {
+                position: 'top',
+                
             },
             title: {
                 display: true,
                 text: competency,
-                font: {
-                    size: 14,
-                    weight: 'bold',
-                    family: 'Arial',
-                    color: '#174A6D',
-                },
-                padding: {
-                    top: 20,
-                    bottom: 20,
-                },
             },
         },
         scales: {
             x: {
                 min: 1.0, // Ensure the x-axis starts from 1.0
-                max: 3.0,
+                max: 3.0, 
                 ticks: {
                     color: '#555',
                     font: {
@@ -101,7 +99,7 @@ const ChartBar = ({ competency, index, data, getChartImagesFromDB, chart2Data, s
                     font: {
                         size: 14,
                     }
-                }
+                },
                
             },
         },
@@ -125,7 +123,7 @@ const ChartBar = ({ competency, index, data, getChartImagesFromDB, chart2Data, s
     
     
     const options2 = {
-        indexAxis: 'y',
+        indexAxis: isMobile ? 'x' : 'y',
         responsive: true,
         maintainAspectRatio: false, // Allow the chart to take the full height
         plugins: {
@@ -167,7 +165,7 @@ const ChartBar = ({ competency, index, data, getChartImagesFromDB, chart2Data, s
         scales: {
             x: {
                 min: 1.0, // Ensure the x-axis starts from 1.0
-                max: 3.0,
+                max: 3.0, 
                 ticks: {
                     color: '#555',
                     font: {
@@ -198,9 +196,11 @@ const ChartBar = ({ competency, index, data, getChartImagesFromDB, chart2Data, s
             const windowWidth = window.innerWidth;
 
             if (windowWidth <= 768) {
+                setIsMobile(true);
                 setChartWidth(300); // Adjust as needed for mobile
                 setChartHeight(300); // Adjust as needed for mobile
             } else {
+                setIsMobile(false);
                 setChartWidth(700);
                 setChartHeight(400);; // Default height for larger screens
             }
