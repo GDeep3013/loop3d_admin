@@ -229,10 +229,20 @@ exports.cloneQuestion = async (req, res) => {
         for (const question of questions) {
             // Check if the question already exists in the same category and organization
             const existingQuestion = await Question.findOne({
-                questionText: question.questionText,
-                category_id: categoryId,
-                organization_id: organization_id,
-                manager: manager_id
+                $or: [// Second condition: organization_id and questionType "OpenEnded"
+                
+                {
+                    questionText: question.questionText,
+                    category_id: categoryId,
+                    organization_id: organization_id,
+                    manager: manager_id
+                },
+                {
+                    questionText: question.questionText,
+                    organization_id: organization_id,
+                    manager: manager_id,
+                    questionType: 'OpenEnded'
+                }]
             });
 
             // If the question already exists, skip cloning
