@@ -33,7 +33,8 @@ const Plans = () => {
             result = await result.json();
             const activeCategories = Array.isArray(result.categories)
             ? result.categories.filter(category => category && category.status === 'active')
-            : [];            setCategories(activeCategories);
+                : [];
+            setCategories(activeCategories);
         } catch (error) {
             console.error(error);
         }
