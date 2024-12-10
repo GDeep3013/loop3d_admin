@@ -31,8 +31,9 @@ const Plans = () => {
                 headers: { 'x-api-key': import.meta.env.VITE_X_API_KEY }
             });
             result = await result.json();
-            const activeCategories = result.categories.filter(category => category.status === 'active');
-            setCategories(activeCategories);
+            const activeCategories = Array.isArray(result.categories)
+            ? result.categories.filter(category => category && category.status === 'active')
+            : [];            setCategories(activeCategories);
         } catch (error) {
             console.error(error);
         }
