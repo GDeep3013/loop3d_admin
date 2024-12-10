@@ -186,7 +186,7 @@ const UserController = {
             if (!deletedUser) {
                 return res.status(404).json({ error: 'User not found' });
             }
-            res.status(200).json({ status: 'success', message: 'User Deleted Successfully' });
+            res.status(200).json({ status: 'success', message: 'User deleted successfully' });
         } catch (error) {
             console.error(error);
             res.status(500).json({ error: 'Internal Server Error' });
@@ -275,7 +275,7 @@ const UserController = {
             user.role = user_type;
             await user.save();
 
-            res.status(200).json({ message: 'User Updated Successfully' });
+            res.status(200).json({ message: 'User updated successfully' });
 
         } catch (error) {
             // Handle errors
@@ -420,7 +420,7 @@ const UserController = {
 
             await user.save();
 
-            res.status(200).json({ status: true, message: 'Password has been reset Successfull' });
+            res.status(200).json({ status: true, message: 'Password has been reset successfull' });
         } catch (error) {
             console.error('Error resetting password:', error);
             res.status(500).json({ message: 'Internal Server Error' });
@@ -441,7 +441,7 @@ const UserController = {
 
             await user.save();
 
-            res.status(200).json({ status: true, message: 'Password Has Been Created Successfully' });
+            res.status(200).json({ status: true, message: 'Password has been created successfully.' });
         } catch (error) {
             console.error('Error resetting password:', error);
             res.status(500).json({ message: 'Internal Server Error' });
@@ -517,7 +517,7 @@ const UserController = {
                 return res.status(404).json({ message: 'User not found' });
             }
 
-            res.status(200).json({ status: 200, data: updatedUser, message: 'Update Record Successfully' });
+            res.status(200).json({ status: 200, data: updatedUser, message: 'Update record successfully' });
         } catch (error) {
             console.error('Error updating user:', error);
             res.status(500).json({ message: 'Server error' });
