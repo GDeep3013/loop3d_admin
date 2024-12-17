@@ -112,7 +112,7 @@ exports.createSurvey = async (req, res) => {
             let url = `${process.env.ADMIN_PANEL}/loop-lead/participant/create/` + savedSurvey?._id
             let first_name = firstName
             let last_name = lastName
-            let summary_url = `${process.env.ADMIN_PANEL}/survey-summary?survey_id=` + savedSurvey?._id
+            let summary_url = `${process.env.ADMIN_PANEL}/survey-summary/` + savedSurvey?._id
             
 
             sendEmail('createPasswordMail', {email,first_name,last_name,admin_panel_url})
@@ -1128,10 +1128,11 @@ const generateSummary = async (survey_id,report) => {
             acc.push(formattedQuestionData);
             return acc;
         }, []);
-
+        
         try {
-                        
+            
             const resultsJson = JSON.stringify(formattedResult);
+            console.log(resultsJson)
 
             // Create the different prompts
             const questionSummary = 
@@ -1438,7 +1439,7 @@ const saveOrUpdateSurveyReport=async (surveyId, responseData,type) =>{
             .populate('manager', 'first_name last_name email') // Populate mgr_id with name and email fields
             .populate('organization', 'name') // Populate organization_id with name
             .populate('competencies', '_id');
-            let summary_url = `${process.env.ADMIN_PANEL}/survey-summary?survey_id=` + survey?._id
+            let summary_url = `${process.env.ADMIN_PANEL}/survey-summary/`+ survey?._id
             let name = survey?.loop_lead?.first_name
             let email = survey?.loop_lead?.email
 
