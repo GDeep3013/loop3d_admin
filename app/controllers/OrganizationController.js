@@ -25,7 +25,6 @@ const addQuestions = async (organization_id) => {
             // Save cloned category
             const savedCategory = await clonedCategory.save();
             clonedCategories.push(savedCategory); // Save the reference of the cloned category
-            console.log('Cloned Category:', savedCategory);
 
             // Step 2: Clone all associated questions for this category
             const questions = await Question.find({ category_id: category._id, questionType:"Radio", organization_id: null  });
@@ -43,10 +42,28 @@ const addQuestions = async (organization_id) => {
 
                 // Save cloned question
                 await clonedQuestion.save();
-                console.log('Cloned Question:', clonedQuestion);
             }
         }
 
+        const OpenEndeds = await Question.find({
+            category_id: null,
+            questionType: "OpenEnded",
+            organization_id: null,
+            parentType: { $ne: null }  // Correct usage of $ne operator for parentType
+        });
+        
+        for (const question2 of OpenEndeds) {
+            const clonedQuestion = new Question({
+                questionType: question2.questionType,
+                questionText: question2.questionText,
+                parentType: question2.parentType,
+                organization_id: organization_id,  // Assign new org_id
+                status: 'active',
+            });
+        
+            // Save cloned question
+            await clonedQuestion.save();
+        }
         // Return the list of cloned categories
         return clonedCategories;
     } catch (error) {
@@ -72,18 +89,20 @@ const OrganizationController = {
                     const newAssignments = [];
                     const category1 = await Category.findById(competency);
                     const matchedCategory = clonedCategories.find(
-                        (category) => category.category_name === category1.category_name // Match by category name
+                        (category) => category.category_name == category1.category_name // Match by category name
                     );
 
                     if (!matchedCategory) {
                         console.log(`No cloned category found for: ${competency}`);
                         continue; // Skip if no match found
                     }
+
+                    console.log('matchedCategory',matchedCategory)
                     // Prepare the main category assignment
                     newAssignments.push({
                         user_id,
                         organization_id: savedOrganization._id,
-                        category_id: competency, // Assuming value holds the category ID
+                        category_id: matchedCategory._id, // Assuming value holds the category ID
                         status: 'active', // Set default status
                     });
     
@@ -91,7 +110,7 @@ const OrganizationController = {
                     const existingAssignments = await AssignCompetency.find({
                         organization_id: savedOrganization._id,
                         user_id,
-                        category_id: competency, // Match the selected competency's category ID
+                        category_id: matchedCategory._id, // Match the selected competency's category ID
                     });
     
                     // If there are existing assignments, skip to next competency
