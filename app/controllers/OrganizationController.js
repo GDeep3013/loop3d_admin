@@ -1,9 +1,61 @@
 const Organization = require('../models/Organization');
 const { validationResult } = require('express-validator');
 const AssignCompetency = require('../models/AssignCompetencyModel');
+const Question = require('../models/Question')
+const Category = require('../models/CategoryModel');
 
+const addQuestions = async (organization_id) => {
+    try {
+        // Step 1: Get all categories with org_id null and clone them
+        const categories = await Category.find({ organization_id: null }); // Get categories where org_id is null
+        
+        // Create a mapping of old category name to the cloned category
+        const clonedCategories = [];
+
+        // Iterate over each category
+        for (const category of categories) {
+            const clonedCategory = new Category({
+                category_name: category.category_name,
+                competency_type: category.competency_type,
+                created_by: category.created_by,
+                status: category.status,
+                organization_id: organization_id,  // Assign new org_id
+            });
+
+            // Save cloned category
+            const savedCategory = await clonedCategory.save();
+            clonedCategories.push(savedCategory); // Save the reference of the cloned category
+            console.log('Cloned Category:', savedCategory);
+
+            // Step 2: Clone all associated questions for this category
+            const questions = await Question.find({ category_id: category._id, questionType:"Radio", organization_id: null  });
+            
+            // Iterate over each question
+            for (const question of questions) {
+                const clonedQuestion = new Question({
+                    questionType: question.questionType,
+                    questionText: question.questionText,
+                    options: question.options,
+                    category_id: savedCategory._id,  // Use the cloned category ID
+                    organization_id: organization_id,  // Assign new org_id
+                    status: 'active',
+                });
+
+                // Save cloned question
+                await clonedQuestion.save();
+                console.log('Cloned Question:', clonedQuestion);
+            }
+        }
+
+        // Return the list of cloned categories
+        return clonedCategories;
+    } catch (error) {
+        console.error('Error cloning categories and questions:', error);
+        throw new Error('Failed to clone categories and questions.');
+    }
+};
 const OrganizationController = {
-
+  
     createOrganization: async (req, res) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
@@ -14,9 +66,19 @@ const OrganizationController = {
             const organization = new Organization({ name });
             const savedOrganization = await organization.save();
             if (savedOrganization?._id) {
+                const clonedCategories = await addQuestions(savedOrganization?._id); // Clone categories and questions
+
                 for (let competency of selectedCompetency) {
                     const newAssignments = [];
-    
+                    const category1 = await Category.findById(competency);
+                    const matchedCategory = clonedCategories.find(
+                        (category) => category.category_name === category1.category_name // Match by category name
+                    );
+
+                    if (!matchedCategory) {
+                        console.log(`No cloned category found for: ${competency}`);
+                        continue; // Skip if no match found
+                    }
                     // Prepare the main category assignment
                     newAssignments.push({
                         user_id,
@@ -39,6 +101,8 @@ const OrganizationController = {
     
                     // Save new assignment
                     await AssignCompetency.insertMany(newAssignments);
+                    await addQuestions(savedOrganization?._id)
+
                 }
             }
             res.status(201).json(savedOrganization);

@@ -1,5 +1,6 @@
 // controllers/categoryController.js
 const Category = require('../models/CategoryModel');
+const Question = require('../models/Question')
 
 // Create a new category
 const CategoryController = {
@@ -35,7 +36,7 @@ const CategoryController = {
         try {
             // Extract query parameters for pagination
             let { page = 1, limit =50, getType = null, searchTerm ,sortField , sortOrder } = req.query;
-            const query = {};
+            const query = { organization_id: null };
             if (searchTerm) {
                 query.$or = [
                     { category_name: { $regex: searchTerm, $options: 'i' } }
@@ -91,6 +92,35 @@ const CategoryController = {
                 return res.status(404).json({ error: "Category not found" });
             }
             res.status(200).json(category);
+        } catch (error) {
+            res.status(400).json({ error: error.message });
+        }
+    },
+
+    getCategoryByOrgId : async (req, res) => {
+        try {
+            // Retrieve categories by organization_id
+            const categories = await Category.find({ organization_id: req.params.id }); // Use org_id from request params
+            
+            if (!categories || categories.length === 0) {
+                return res.status(404).json({ error: "Categories not found for this organization" });
+            }
+            
+            // Fetch the associated questions for each category
+            const categoryWithQuestions = [];
+    
+            for (const category of categories) {
+                // Get questions related to the current category
+                const questions = await Question.find({ category_id: category._id });
+    
+                // Add questions to category data
+                categoryWithQuestions.push({
+                    category,
+                    questions
+                });
+            }
+    
+            res.status(200).json({ categories: categoryWithQuestions }); // Return categories with their associated questions
         } catch (error) {
             res.status(400).json({ error: error.message });
         }

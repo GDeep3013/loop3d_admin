@@ -103,7 +103,7 @@ exports.getAllQuestions = async (req, res) => {
         let query = { organization_id: null, category_id: null };
         if (type === "OpenEnded") {
             query = {
-                organization_id: null, category_id: null, parentType: "OpenEnded", parentType: { $ne: null } // Ensure parentType is not null };
+                organization_id: null, category_id: null, questionType: "OpenEnded", parentType: { $ne: null } // Ensure parentType is not null };
             };
         }
             

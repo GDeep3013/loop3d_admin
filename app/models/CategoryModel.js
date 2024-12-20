@@ -4,11 +4,15 @@ const categorySchema = new mongoose.Schema({
     category_name: {
         type: String,
         required: true,
-        unique: true
     },
     competency_type: { 
         type: String,
         required: true,
+    },
+    organization_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Organization', // Assuming you have a User model
+        default: null
     },
     created_by: {
         type: mongoose.Schema.Types.ObjectId,

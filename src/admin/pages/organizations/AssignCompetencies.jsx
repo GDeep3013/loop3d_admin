@@ -47,7 +47,7 @@ export default function AssignCompetencies({ data, type }) {
     async function getAllCategory() {
         setLoading(true);
         try {
-            let url = `/api/categories`;
+            let url = `/api/categories/get-category-orgid/${data?.ref_id}`;
             if (searchTerm) {
                 url += `?searchTerm=${encodeURIComponent(searchTerm)}`;
             }
@@ -334,8 +334,7 @@ export default function AssignCompetencies({ data, type }) {
                     <div className="list-scroll">
                         <h3>Individual Contributor</h3>
                         <Accordion defaultActiveKey="0">
-                            {category
-                                .filter(cat => cat.competency_type === "individual_contributor" && cat.status !== "inactive")
+                            {category?.filter(cat => cat.competency_type === "individual_contributor" && cat.status !== "inactive")
                                 .map((cat) => (
                                     <Accordion.Item key={cat._id} eventKey={cat._id}>
                                         <Accordion.Header onClick={(e) => {
@@ -409,9 +408,8 @@ export default function AssignCompetencies({ data, type }) {
                     <div className="list-scroll new-tab-design">
                         <h3>People Manager</h3>
                         <Accordion defaultActiveKey="0">
-                            {category
-                                .filter(cat => cat.competency_type === "people_manager" && cat.status !== "inactive")
-                                .map((cat) => (
+                            {category?.filter(cat => cat.competency_type === "people_manager" && cat.status !== "inactive")
+                            ?.map((cat) => (
                                     <Accordion.Item key={cat._id} eventKey={cat._id}>
                                         <Accordion.Header  onClick={(e) => {
                                                     fetchCategoriesById(cat._id); // Custom logic for header click
