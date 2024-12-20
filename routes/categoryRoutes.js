@@ -11,6 +11,8 @@ router.get('/', CategoryController.getCategories);
 
 // Get a category by ID
 router.get('/:id', CategoryController.getCategoryById);
+router.get('/get-category-orgid/:id', CategoryController.getCategoryByOrgId);
+
 
 // Update a category by ID
 router.put('/:id', CategoryController.updateCategory);
