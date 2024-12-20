@@ -222,7 +222,7 @@ export default function CompetencyQuestionsListing({ cat_id }) {
                     setFormData({
                         questionText: '',
                         questionType: 'Radio', // 'Text' or 'Radio'
-                        options: [{ text: '', weightage: 1 }], // Added weightage
+                        options: [{ text: '', weightage: 1 },{ text: '', weightage: 1 },{ text: '', weightage: 1 }], // Added weightage
                         createdBy: user?._id,
                         currentCategoryId: cat_id,
                     })
@@ -432,7 +432,18 @@ export default function CompetencyQuestionsListing({ cat_id }) {
                                         <Button type="submit" className="default-btn">
                                             {isEdit ? "Update" : "Save"}
                                         </Button>
-                                        <Button type="button" className="default-btn cancel-btn" onClick={() => { setShowModal(false), setFormData(''), setIsEdit(''), setEditId('') }}>
+                      <Button type="button" className="default-btn cancel-btn" onClick={() => {
+                        setShowModal(false),
+                        setFormData({
+                          questionText: '',
+                          questionType: 'Radio', // 'Text' or 'Radio'
+                          options: [{ text: '', weightage: 1 },{ text: '', weightage: 1 },{ text: '', weightage: 1 }], // Added weightage
+                          createdBy: user?._id,
+                          currentCategoryId: null,
+                      });
+                          setIsEdit(''),
+                          setEditId('')
+                      }}>
                                             Cancel
                                         </Button>
                                     </div>
