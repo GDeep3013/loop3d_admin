@@ -188,7 +188,7 @@ export default function CreateOrganization({ id, savedData }) {
                         <Col md={12}>
                             <div className="profile-btns pt-0 mt-3">
                                 <Button className="default-btn" onClick={handleSubmit} disabled={loader}>
-                                    {id ? "Update" : "Save"}
+                                    {id ? (loader?"Updating" :"Update"): (loader?"Saving" :"Save")}
                                 </Button>
                                 <Button className="default-btn cancel-btn" onClick={() => navigate('/organizations')}>
                                     Cancel
