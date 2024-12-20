@@ -9,6 +9,8 @@ router.post('/create', QuestionController.createQuestion);
 
 router.get('/', QuestionController.getAllQuestions);
 router.get('/get-openended-question', QuestionController.getOpenEndedQuestion);
+router.get('/get-questions-by-Competency/:id', QuestionController.getQuestionByCompetencyId);
+
 
 
 router.get('/:id', QuestionController.getQuestionById);

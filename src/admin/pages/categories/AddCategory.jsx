@@ -5,7 +5,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import Swal from 'sweetalert2';
 import axios from "axios";
 import { useSelector } from 'react-redux';
-
+import CompetencyQuestionsListing from './CompetencyQuestionsListing'
 
 export default function AddCategory() {
 
@@ -219,6 +219,8 @@ export default function AddCategory() {
           </Container>
         </Form>
       </div>
+
+      {id && <CompetencyQuestionsListing cat_id={id} />}
     </AuthLayout>
   );
 }

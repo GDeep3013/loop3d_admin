@@ -62,16 +62,16 @@ exports.createQuestion = async (req, res) => {
             await newQuestion.save();
         }
         // Ensure the category ID and organization ID are present
-        if (organization_id && newQuestion) {
+        if (newQuestion && (organization_id || currentCategoryId)) {
             // Create the new assignment
             const newAssignment = {
                 user_id: createdBy,
                 question_id: newQuestion._id,
-                category_id: currentCategoryId?currentCategoryId:null,
-                organization_id,
+                category_id: currentCategoryId ? currentCategoryId : null,
+                organization_id:organization_id?organization_id:null,
                 status: 'active',
             };
-
+        
             // Check for existing assignments to avoid duplication
             const existingAssignment = await AssignCompetency.findOne({
                 question_id: newQuestion._id,
@@ -79,14 +79,13 @@ exports.createQuestion = async (req, res) => {
                 category_id: currentCategoryId,
                 organization_id,
             });
-
+        
             // If no existing assignment, save the new one
             if (!existingAssignment) {
-                const newa= await AssignCompetency.create(newAssignment);
-                console.log('newAssignmentnewa',newa)
+                const newAssignmentRecord = await AssignCompetency.create(newAssignment);
+                console.log('newAssignmentRecord', newAssignmentRecord);
             }
         }
-
         // Send a response back to the client with the created question
         res.status(201).json(newQuestion);
     } catch (err) {
@@ -155,6 +154,75 @@ exports.getQuestionById = async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 };
+
+exports.getQuestionByCompetencyId = async (req, res) => {
+    try {
+        // Destructure query parameters and set defaults
+        let { page = 1, limit = 10, searchTerm } = req.query;
+
+        // Convert query parameters to integers
+        page = parseInt(page, 10) || 1;
+        limit = parseInt(limit, 10) || 10;
+
+        // Ensure `req.params.id` is valid
+        if (!req.params.id) {
+            return res.status(400).json({ error: "Category ID is required." });
+        }
+
+        // Build query
+        const query = {
+            category_id: { $in: req.params.id },
+            question_id: { $ne: null, $exists: true },
+            organization_id: { $eq: null }
+        };
+
+        // Add search functionality
+        if (searchTerm) {
+            query.$or = [
+                { "question_id.questionText": { $regex: searchTerm, $options: 'i' } } // Nested field search
+            ];
+        }
+
+        // Calculate skip value for pagination
+        const skip = (page - 1) * limit;
+
+        // Fetch questions with population and filter by `Radio` type
+        const questions = await AssignCompetency.find(query)
+            .sort({ _id: -1 }) // Sort by latest first
+            .skip(skip)
+            .limit(limit)
+            .populate({
+                path: 'question_id',
+                match: { questionType: 'Radio' }, // Filter only `Radio` type
+                select: 'questionType status questionText options' // Select specific fields
+            });
+
+        // Filter out entries where `question_id` is null due to population filtering
+        const filteredQuestions = questions.filter(q => q.question_id);
+
+        // Total document count for filtered questions
+        const totalQuestions = filteredQuestions.length;
+
+        // Calculate total pages
+        const totalPages = Math.ceil(totalQuestions / limit);
+
+        // Respond with data
+        res.status(200).json({
+            questions: filteredQuestions,
+            meta: {
+                totalQuestions,
+                currentPage: page,
+                totalPages,
+                pageSize: limit,
+            },
+        });
+    } catch (err) {
+        // Handle errors
+        console.error(err);
+        res.status(500).json({ error: "Internal server error." });
+    }
+};
+
 
 // Function to update a question
 exports.updateQuestion = async (req, res) => {
