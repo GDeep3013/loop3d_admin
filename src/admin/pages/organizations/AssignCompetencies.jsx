@@ -23,7 +23,7 @@ export default function AssignCompetencies({ data, type }) {
     const [formData, setFormData] = useState({
         questionText: '',
         questionType: 'Radio', // 'Text' or 'Radio'
-        options: [{ text: '', weightage: 1 },{ text: '', weightage: 1 },{ text: '', weightage: 1 }], 
+        options: [{ text: '', weightage: 1 }, { text: '', weightage: 1 }, { text: '', weightage: 1 }],
         createdBy: user?._id,
         currentCategoryId: null,
         organization_id: data?.ref_id
@@ -126,7 +126,7 @@ export default function AssignCompetencies({ data, type }) {
 
             const data = await response.json();
             if (response.ok) {
-                setOpenEndedQuestions(data); 
+                setOpenEndedQuestions(data);
             } else {
                 console.error('Failed to fetch questions');
             }
@@ -259,16 +259,16 @@ export default function AssignCompetencies({ data, type }) {
                     timer: 1500
                 });
                 setShowModal(false)
-                
+
                 fetchCategoriesById(currentCategoryId ? currentCategoryId : formData.currentCategoryId)
                 setFormData({
                     questionText: '',
                     questionType: 'Radio', // 'Text' or 'Radio'
-                     options: [{ text: '', weightage: 1 },{ text: '', weightage: 1 },{ text: '', weightage: 1 }], // Added weightage
+                    options: [{ text: '', weightage: 1 }, { text: '', weightage: 1 }, { text: '', weightage: 1 }], // Added weightage
                     createdBy: user?._id,
                     currentCategoryId: null,
                     organization_id: data?.ref_id
-                    
+
                 })
             } else {
                 setErrors({ form: data.error });
@@ -277,6 +277,42 @@ export default function AssignCompetencies({ data, type }) {
             setErrors({ form: 'Failed to save question' });
         }
     };
+    // const handleQuestionDelete = async (e, id, categoryId) => {
+    //     e.preventDefault();
+    //     console.log('hello')
+    //     try {
+    //         const confirmResult = await Swal.fire({
+    //             title: "Are you sure?",
+    //             text: "You won't be able to revert this!",
+    //             icon: "warning",
+    //             showCancelButton: true,
+    //             confirmButtonColor: "#000",
+    //             cancelButtonColor: "#d26c6c",
+    //             confirmButtonText: "Yes, delete it!"
+    //         });
+
+    //         if (confirmResult.isConfirmed) {
+    //             const response = await fetch(`/api/questions/${id}`, {
+    //                 method: 'DELETE',
+    //                 headers: { "x-api-key": import.meta.env.VITE_X_API_KEY }
+    //             });
+
+    //             if (response.ok) {
+    //                 await Swal.fire({
+    //                     title: "Deleted!",
+    //                     text: "The question has been deleted.",
+    //                     icon: "success",
+    //                     confirmButtonColor: "#000",
+    //                 });
+    //                 fetchCategoriesById(categoryId);
+    //             } else {
+    //                 console.error('Failed to delete question');
+    //             }
+    //         }
+    //     } catch (error) {
+    //         console.error('Error deleting question:', error);
+    //     }
+    // };
 
     const handleDelete = async (id, categoryId) => {
         try {
@@ -313,16 +349,16 @@ export default function AssignCompetencies({ data, type }) {
         }
     };
 
-    const handleEditQuestion = async (value,cat_id) => {
+    const handleEditQuestion = async (value, cat_id) => {
         // console.log(value)
-        setShowModal(true);     
+        setShowModal(true);
         setEditId(value?.question_id)
         setIsEdit(true);
         setCurrentCategoryId(cat_id);
         setFormData({
             questionText: value?.questionText || '', // Assign questionText or fallback to an empty string
             questionType: value?.questionType || '', // Assign questionType or fallback to an empty string
-            options: value?.options || [{ text: '', weightage: 1 },{ text: '', weightage: 1 },{ text: '', weightage: 1 }], // Assign options or fallback to default
+            options: value?.options || [{ text: '', weightage: 1 }, { text: '', weightage: 1 }, { text: '', weightage: 1 }], // Assign options or fallback to default
             createdBy: user?._id,
             organization_id: data?.ref_id
             // Keep the current user ID
@@ -343,12 +379,19 @@ export default function AssignCompetencies({ data, type }) {
                         <h3>Individual Contributor</h3>
                         <Accordion defaultActiveKey="0">
                             {categories?.filter(data => data?.category?.competency_type === "individual_contributor" && data?.category?.status !== "inactive")
+                                .reduce((uniqueCategories, data) => {
+                                    // Check if the category_name is already in the uniqueCategories array
+                                    if (!uniqueCategories.some(c => c.category?.category_name === data?.category?.category_name)) {
+                                        uniqueCategories.push(data);
+                                    }
+                                    return uniqueCategories;
+                                }, [])
                                 .map((data) => (
                                     <Accordion.Item key={data?.category?._id} eventKey={data?.category?._id}>
                                         <Accordion.Header onClick={(e) => {
-                                                    fetchCategoriesById(data?.category?._id); // Custom logic for header click
-                                                }} >
-                                            <label onClick={()=>{fetchCategoriesById(data?.category?._id);}}>
+                                            fetchCategoriesById(data?.category?._id); // Custom logic for header click
+                                        }} >
+                                            <label onClick={() => { fetchCategoriesById(data?.category?._id); }}>
                                                 <input
                                                     type="checkbox"
                                                     checked={selectedCompetencies.includes(data?.category?._id)}
@@ -359,38 +402,38 @@ export default function AssignCompetencies({ data, type }) {
                                         </Accordion.Header>
                                         <Accordion.Body>
                                             {selectedCategory && data?.category?._id == selectedCategory.category_id && (
-                                                   <div className="question-section">
-                                                   {(() => {
-                                                       let i = 1; // Initialize a counter
-                                                       return selectedCategory.questions.map((value) => (
-                                                           <div key={value.question_id} className="question-item">
-                                                               {value.questionType == "Radio" && (
-                                                                   <p>
-                                                                       <span className="fw-bold">Q{i++}:</span> {value.questionText}
-                                                                       <div className="question-actions ms-2">
-                                                                           <Link
-                                                                               onClick={() => {
-                                                                                   handleEditQuestion(value, selectedCategory.category_id);
-                                                                               }}
-                                                                               style={{ cursor: "pointer", color: "red" }}
-                                                                           >
-                                                                               ✏️
-                                                                           </Link>
-                                                                           <Link
-                                                                               onClick={() =>
-                                                                                handleDelete(value.question_id, option.id)
-                                                                               }
-                                                                               style={{ cursor: "pointer", color: "red" }}
-                                                                           >
-                                                                               ❌
-                                                                           </Link>
-                                                                       </div>
-                                                                   </p>
-                                                               )}
-                                                           </div>
-                                                       ));
-                                                   })()}
-                                               </div>
+                                                <div className="question-section">
+                                                    {(() => {
+                                                        let i = 1; // Initialize a counter
+                                                        return selectedCategory.questions.map((value) => (
+                                                            <div key={value.question_id} className="question-item">
+                                                                {value.questionType == "Radio" && (
+                                                                    <p>
+                                                                        <span className="fw-bold">Q{i++}:</span> {value.questionText}
+                                                                        <div className="question-actions ms-2">
+                                                                            <Link
+                                                                                onClick={() => {
+                                                                                    handleEditQuestion(value, selectedCategory.category_id);
+                                                                                }}
+                                                                                style={{ cursor: "pointer", color: "red" }}
+                                                                            >
+                                                                                ✏️
+                                                                            </Link>
+                                                                            <Link
+                                                                                onClick={() =>
+                                                                                    handleDelete(value.question_id, option.id)
+                                                                                }
+                                                                                style={{ cursor: "pointer", color: "red" }}
+                                                                            >
+                                                                                ❌
+                                                                            </Link>
+                                                                        </div>
+                                                                    </p>
+                                                                )}
+                                                            </div>
+                                                        ));
+                                                    })()}
+                                                </div>
                                             )}
                                             <Button
                                                 variant="primary"
@@ -417,11 +460,18 @@ export default function AssignCompetencies({ data, type }) {
                         <h3>People Manager</h3>
                         <Accordion defaultActiveKey="0">
                             {categories?.filter(data => data?.category?.competency_type === "people_manager" && data?.category?.status !== "inactive")
-                            ?.map((data) => (
+                                  .reduce((uniqueCategories, data) => {
+                                    // Check if the category_name is already in the uniqueCategories array
+                                    if (!uniqueCategories.some(c => c.category?.category_name === data?.category?.category_name)) {
+                                        uniqueCategories.push(data);
+                                    }
+                                    return uniqueCategories;
+                                }, [])
+                                ?.map((data) => (
                                     <Accordion.Item key={data?.category?._id} eventKey={data?.category?._id}>
-                                        <Accordion.Header  onClick={(e) => {
-                                                    fetchCategoriesById(data?.category?._id); // Custom logic for header click
-                                                }} >
+                                        <Accordion.Header onClick={(e) => {
+                                            fetchCategoriesById(data?.category?._id); // Custom logic for header click
+                                        }} >
                                             <label >
                                                 <input
                                                     type="checkbox"
@@ -433,42 +483,42 @@ export default function AssignCompetencies({ data, type }) {
                                         </Accordion.Header>
                                         <Accordion.Body>
                                             {selectedCategory && data?.category?._id == selectedCategory.category_id && (
-                                                  <div className="question-section">
-                                                  {(() => {
-                                                      let i = 1; // Initialize a counter
-                                                      return selectedCategory.questions.map((value) => (
-                                                          <div key={value.question_id} className="question-item">
-                                                              {value.questionType == "Radio" && (
-                                                                  <p>
-                                                                      <span className="fw-bold">Q{i++}:</span> {value.questionText}
-                                                                      <div className="question-actions ms-2">
-                                                                          <Link
-                                                                              onClick={() => {
-                                                                                  handleEditQuestion(value, selectedCategory.category_id);
-                                                                              }}
-                                                                              style={{ cursor: "pointer", color: "red" }}
-                                                                          >
-                                                                              ✏️
-                                                                          </Link>
-                                                                          <Link
-                                                                              onClick={() =>
-                                                                                handleDelete(value.question_id, option.id)
-                                                                              }
-                                                                              style={{ cursor: "pointer", color: "red" }}
-                                                                          >
-                                                                              ❌
-                                                                          </Link>
-                                                                      </div>
-                                                                  </p>
-                                                              )}
-                                                          </div>
-                                                      ));
-                                                  })()}
-                                              </div>
+                                                <div className="question-section">
+                                                    {(() => {
+                                                        let i = 1; // Initialize a counter
+                                                        return selectedCategory.questions.map((value) => (
+                                                            <div key={value.question_id} className="question-item">
+                                                                {value.questionType == "Radio" && (
+                                                                    <p>
+                                                                        <span className="fw-bold">Q{i++}:</span> {value.questionText}
+                                                                        <div className="question-actions ms-2">
+                                                                            <Link
+                                                                                onClick={() => {
+                                                                                    handleEditQuestion(value, selectedCategory.category_id);
+                                                                                }}
+                                                                                style={{ cursor: "pointer", color: "red" }}
+                                                                            >
+                                                                                ✏️
+                                                                            </Link>
+                                                                            <Link
+                                                                                onClick={() =>
+                                                                                    handleDelete(value.question_id, option.id)
+                                                                                }
+                                                                                style={{ cursor: "pointer", color: "red" }}
+                                                                            >
+                                                                                ❌
+                                                                            </Link>
+                                                                        </div>
+                                                                    </p>
+                                                                )}
+                                                            </div>
+                                                        ));
+                                                    })()}
+                                                </div>
                                             )}
                                             <Button
                                                 variant="primary"
-                                                onClick={() => handleOpenModal(data?.category?._id) }
+                                                onClick={() => handleOpenModal(data?.category?._id)}
                                                 className='default-btn'
                                             // Trigger modal for question creation
                                             >
@@ -480,118 +530,118 @@ export default function AssignCompetencies({ data, type }) {
                         </Accordion>
                     </div>
                     <div>
-                    <OpenEndedQuestions activeTab={activeTab} openQuestions={openEndedQuestions} setOpenQuestions={setOpenEndedQuestions} fetchQuestions={fetchQuestions} organization_id={data?.ref_id} createdBy={user?._id} />
+                        <OpenEndedQuestions activeTab={activeTab} openQuestions={openEndedQuestions} setOpenQuestions={setOpenEndedQuestions} fetchQuestions={fetchQuestions} organization_id={data?.ref_id} createdBy={user?._id} />
                     </div>
                 </Tab>
             </Tabs>
 
             {/* Bootstrap Modal for Creating Question */}
             <Modal show={showModal} onHide={() => {
-                            setShowModal(false),
-                            setFormData({
-                                questionText: '',
-                                questionType: 'Radio', // 'Text' or 'Radio'
-                                options: [{ text: '', weightage: 1 },{ text: '', weightage: 1 },{ text: '', weightage: 1 }], // Added weightage
-                                createdBy: user?._id,
-                                currentCategoryId: cat_id,
-                            });
-                                setIsEdit(''),
-                                setEditId('')
-                        }} className='new-question'>
-                            <Modal.Header closeButton>
-                                <Modal.Title>{isEdit ? "Edit Question" : "Create New Question"}</Modal.Title>
-                            </Modal.Header>
-                            <Modal.Body>
-                                <Form onSubmit={handleSubmit}>
-                                    <Container className="outer-box">
-                                        <Row>
-                                            <Col md={11}>
-                                                <Form.Group className="mb-4">
-                                                    <Form.Label>Question Text</Form.Label><sup style={{ color: 'red' }}>*</sup>
-                                                    <Form.Control
-                                                        type="text"
-                                                        name="questionText"
-                                                        value={formData.questionText}
-                                                        onChange={handleChange}
-                                                        placeholder="Enter question text"
-                                                    />
-                                                    {errors.questionText && <small className="text-danger">{errors.questionText}</small>}
-                                                </Form.Group>
-                                            </Col>
-                                        </Row>
-                                        <Row>
-                                                <Col md={12}>
-                                                    <div className='question-contant w-100'>
-                                                        <h3 className="add-title">Answers</h3>
-                                                        {/* <Button type="button" onClick={addOption} variant="primary" className='default-btn'>
+                setShowModal(false),
+                    setFormData({
+                        questionText: '',
+                        questionType: 'Radio', // 'Text' or 'Radio'
+                        options: [{ text: '', weightage: 1 }, { text: '', weightage: 1 }, { text: '', weightage: 1 }], // Added weightage
+                        createdBy: user?._id,
+                        currentCategoryId: cat_id,
+                    });
+                setIsEdit(''),
+                    setEditId('')
+            }} className='new-question'>
+                <Modal.Header closeButton>
+                    <Modal.Title>{isEdit ? "Edit Question" : "Create New Question"}</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Form onSubmit={handleSubmit}>
+                        <Container className="outer-box">
+                            <Row>
+                                <Col md={11}>
+                                    <Form.Group className="mb-4">
+                                        <Form.Label>Question Text</Form.Label><sup style={{ color: 'red' }}>*</sup>
+                                        <Form.Control
+                                            type="text"
+                                            name="questionText"
+                                            value={formData.questionText}
+                                            onChange={handleChange}
+                                            placeholder="Enter question text"
+                                        />
+                                        {errors.questionText && <small className="text-danger">{errors.questionText}</small>}
+                                    </Form.Group>
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Col md={12}>
+                                    <div className='question-contant w-100'>
+                                        <h3 className="add-title">Answers</h3>
+                                        {/* <Button type="button" onClick={addOption} variant="primary" className='default-btn'>
                                                             Add Option
                                                         </Button> */}
-                                                    </div>
-                                                    <div className='question-from delete-option'>
-                                                        {formData.options.map((option, index) => (
-                                                            <div key={index} className="mb-3 w-100">
-                                                                <Row className='row-gap-3'>
-                                                                    <Col md={8} className='col-12'>
-                                                                        <Form.Control
-                                                                            type="text"
-                                                                            name="text"
-                                                                            className='w-100'
-                                                                            placeholder={`Option ${index + 1}`}
-                                                                            value={option.text}
-                                                                            onChange={(e) => handleOptionChange(index, e)}
-                                                                        />
-                                                                    </Col>
-                                                                    <Col md={3} className='col-9'>
-                                                                        <Form.Control
-                                                                            as="select"
-                                                                            name="weightage"
-                                                                            className='w-100'
-                                                                            value={option.weightage}
-                                                                            onChange={(e) => handleOptionChange(index, e)}
-                                                                        >
-                                                                            <option value="">Select weightage</option>
-                                                                            <option value="1">1</option>
-                                                                            <option value="2">2</option>
-                                                                            <option value="3">3</option>
-                                                                            <option value="4">4</option>
-                                                                            <option value="5">5</option>
-                                                                            <option value="6">6</option>
-                                                                            <option value="7">7</option>
-                                                                            <option value="8">8</option>
-                                                                            <option value="9">9</option>
-                                                                            <option value="10">10</option>
-                                                                        </Form.Control>
-                                                                        
-                                                                    </Col>
-                                                                    {/* <Col md={2} className='col-3'>
+                                    </div>
+                                    <div className='question-from delete-option'>
+                                        {formData.options.map((option, index) => (
+                                            <div key={index} className="mb-3 w-100">
+                                                <Row className='row-gap-3'>
+                                                    <Col md={8} className='col-12'>
+                                                        <Form.Control
+                                                            type="text"
+                                                            name="text"
+                                                            className='w-100'
+                                                            placeholder={`Option ${index + 1}`}
+                                                            value={option.text}
+                                                            onChange={(e) => handleOptionChange(index, e)}
+                                                        />
+                                                    </Col>
+                                                    <Col md={3} className='col-9'>
+                                                        <Form.Control
+                                                            as="select"
+                                                            name="weightage"
+                                                            className='w-100'
+                                                            value={option.weightage}
+                                                            onChange={(e) => handleOptionChange(index, e)}
+                                                        >
+                                                            <option value="">Select weightage</option>
+                                                            <option value="1">1</option>
+                                                            <option value="2">2</option>
+                                                            <option value="3">3</option>
+                                                            <option value="4">4</option>
+                                                            <option value="5">5</option>
+                                                            <option value="6">6</option>
+                                                            <option value="7">7</option>
+                                                            <option value="8">8</option>
+                                                            <option value="9">9</option>
+                                                            <option value="10">10</option>
+                                                        </Form.Control>
+
+                                                    </Col>
+                                                    {/* <Col md={2} className='col-3'>
                                                                     <Button type="button" onClick={() => removeOption(index)} variant="danger">
                                                                         <img src='/images/remove.png' alt='Remove' />
                                                                     </Button>
                                                                     </Col> */}
-                                                                </Row>
-                                                                
-                                                            </div>
-                                                        ))}
-                                                    </div>
-                                                    {errors.options && <small className="text-danger">{errors.options}</small>}
-                                                </Col>
-                                           
-                                            <Col md={12}>
-                                                <div className="profile-btns pt-0">
-                                                    <Button type="submit" className="default-btn">
-                                                        {isEdit ? "Update" : "Save"}
-                                                    </Button>
-                                                    <Button type="button" className="default-btn cancel-btn" onClick={() => { setShowModal(false), setFormData(''), setIsEdit(''), setEditId('') }}>
-                                                        Cancel
-                                                    </Button>
-                                                </div>
-                                                {errors.form && <p className="text-danger">{errors.form}</p>}
-                                            </Col>
-                                        </Row>
-                                    </Container>
-                                </Form>
-                            </Modal.Body>
-                        </Modal>
+                                                </Row>
+
+                                            </div>
+                                        ))}
+                                    </div>
+                                    {errors.options && <small className="text-danger">{errors.options}</small>}
+                                </Col>
+
+                                <Col md={12}>
+                                    <div className="profile-btns pt-0">
+                                        <Button type="submit" className="default-btn">
+                                            {isEdit ? "Update" : "Save"}
+                                        </Button>
+                                        <Button type="button" className="default-btn cancel-btn" onClick={() => { setShowModal(false), setFormData(''), setIsEdit(''), setEditId('') }}>
+                                            Cancel
+                                        </Button>
+                                    </div>
+                                    {errors.form && <p className="text-danger">{errors.form}</p>}
+                                </Col>
+                            </Row>
+                        </Container>
+                    </Form>
+                </Modal.Body>
+            </Modal>
         </div>
     );
 }
