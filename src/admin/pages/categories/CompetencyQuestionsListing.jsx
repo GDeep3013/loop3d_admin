@@ -344,7 +344,7 @@ export default function CompetencyQuestionsListing({ cat_id }) {
                     questionType: 'Radio', // 'Text' or 'Radio'
                     options: [{ text: '', weightage: 1 },{ text: '', weightage: 1 },{ text: '', weightage: 1 }], // Added weightage
                     createdBy: user?._id,
-                    currentCategoryId: cat_id,
+                    currentCategoryId: null,
                 });
                     setIsEdit(''),
                     setEditId('')

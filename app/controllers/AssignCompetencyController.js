@@ -92,7 +92,6 @@ exports.createAssignment = async (req, res) => {
             }
 
             // Save all new assignments to the database
-            await addQuestions(category_id,ref_id)
 
             const savedAssignments = await AssignCompetency.insertMany(filteredAssignments);
 

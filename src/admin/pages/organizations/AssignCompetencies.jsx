@@ -11,7 +11,7 @@ export default function AssignCompetencies({ data, type }) {
     const [competencies, setCompetencies] = useState([]);
     const [selectedCompetencies, setSelectedCompetencies] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState(null);
-    const [category, setCategory] = useState([]);
+    const [categories, setCategories] = useState([]);
     const [loading, setLoading] = useState(true);
     const user = useSelector((state) => state.auth.user);
     const [searchTerm, setSearchTerm] = useState('');
@@ -22,8 +22,8 @@ export default function AssignCompetencies({ data, type }) {
 
     const [formData, setFormData] = useState({
         questionText: '',
-        questionType: '', // 'Text' or 'Radio'
-        options: [{ text: '', weightage: 1 }], // Added weightage
+        questionType: 'Radio', // 'Text' or 'Radio'
+        options: [{ text: '', weightage: 1 },{ text: '', weightage: 1 },{ text: '', weightage: 1 }], 
         createdBy: user?._id,
         currentCategoryId: null,
         organization_id: data?.ref_id
@@ -55,7 +55,7 @@ export default function AssignCompetencies({ data, type }) {
                 headers: { 'x-api-key': import.meta.env.VITE_X_API_KEY }
             });
             result = await result.json();
-            setCategory(result.categories);
+            setCategories(result.categories);
             setLoading(false);
         } catch (error) {
             setLoading(false);
@@ -180,12 +180,17 @@ export default function AssignCompetencies({ data, type }) {
         }
 
         if (data.questionType === 'Radio') {
-            if (data.options.length === 0 || data.options.every(option => !option.text.trim())) {
-                validationErrors.options = 'At least one option is required';
+            // Check if there are at least 3 options
+            if (data.options.length < 3) {
+                validationErrors.options = 'At least 3 options are required';
+            } else {
+                // Check that each option has a non-empty text value
+                const emptyOption = data.options.find(option => !option.text.trim());
+                if (emptyOption) {
+                    validationErrors.options = 'At least 3 options are required';
+                }
             }
-
         }
-
         return validationErrors;
     };
 
@@ -195,7 +200,7 @@ export default function AssignCompetencies({ data, type }) {
         if (name === "questionType" && value === "Text") {
             setFormData({ ...formData, [name]: value, options: [] });
         } else {
-            setFormData({ ...formData, [name]: value, options: [{ text: '', isCorrect: false, weightage: 1 }] });
+            setFormData({ ...formData, [name]: value });
         }
         setErrors({});
     };
@@ -258,11 +263,12 @@ export default function AssignCompetencies({ data, type }) {
                 fetchCategoriesById(currentCategoryId ? currentCategoryId : formData.currentCategoryId)
                 setFormData({
                     questionText: '',
-                    questionType: '', // 'Text' or 'Radio'
-                    options: [{ text: '', weightage: 1 }], // Added weightage
+                    questionType: 'Radio', // 'Text' or 'Radio'
+                     options: [{ text: '', weightage: 1 },{ text: '', weightage: 1 },{ text: '', weightage: 1 }], // Added weightage
                     createdBy: user?._id,
                     currentCategoryId: null,
                     organization_id: data?.ref_id
+                    
                 })
             } else {
                 setErrors({ form: data.error });
@@ -316,8 +322,10 @@ export default function AssignCompetencies({ data, type }) {
         setFormData({
             questionText: value?.questionText || '', // Assign questionText or fallback to an empty string
             questionType: value?.questionType || '', // Assign questionType or fallback to an empty string
-            options: value?.options || [{ text: '', weightage: 1 }], // Assign options or fallback to default
-            createdBy: user?._id, // Keep the current user ID
+            options: value?.options || [{ text: '', weightage: 1 },{ text: '', weightage: 1 },{ text: '', weightage: 1 }], // Assign options or fallback to default
+            createdBy: user?._id,
+            organization_id: data?.ref_id
+            // Keep the current user ID
             // currentCategoryId: value?.currentCategoryId || null // Assign the category ID or fallback to null
         })
     };
@@ -334,23 +342,23 @@ export default function AssignCompetencies({ data, type }) {
                     <div className="list-scroll">
                         <h3>Individual Contributor</h3>
                         <Accordion defaultActiveKey="0">
-                            {category?.filter(cat => cat.competency_type === "individual_contributor" && cat.status !== "inactive")
-                                .map((cat) => (
-                                    <Accordion.Item key={cat._id} eventKey={cat._id}>
+                            {categories?.filter(data => data?.category?.competency_type === "individual_contributor" && data?.category?.status !== "inactive")
+                                .map((data) => (
+                                    <Accordion.Item key={data?.category?._id} eventKey={data?.category?._id}>
                                         <Accordion.Header onClick={(e) => {
-                                                    fetchCategoriesById(cat._id); // Custom logic for header click
+                                                    fetchCategoriesById(data?.category?._id); // Custom logic for header click
                                                 }} >
-                                            <label onClick={()=>{fetchCategoriesById(cat._id);}}>
+                                            <label onClick={()=>{fetchCategoriesById(data?.category?._id);}}>
                                                 <input
                                                     type="checkbox"
-                                                    checked={selectedCompetencies.includes(cat._id)}
-                                                    onChange={() => handleCheckboxChange(cat._id)}
+                                                    checked={selectedCompetencies.includes(data?.category?._id)}
+                                                    onChange={() => handleCheckboxChange(data?.category?._id)}
                                                 />
-                                                <span>{cat.category_name.trimStart()}</span>
+                                                <span>{data?.category?.category_name.trimStart()}</span>
                                             </label>
                                         </Accordion.Header>
                                         <Accordion.Body>
-                                            {selectedCategory && cat._id == selectedCategory.category_id && (
+                                            {selectedCategory && data?.category?._id == selectedCategory.category_id && (
                                                    <div className="question-section">
                                                    {(() => {
                                                        let i = 1; // Initialize a counter
@@ -370,7 +378,7 @@ export default function AssignCompetencies({ data, type }) {
                                                                            </Link>
                                                                            <Link
                                                                                onClick={() =>
-                                                                                   handleQuestionDelete(value.question_id, option.id)
+                                                                                handleDelete(value.question_id, option.id)
                                                                                }
                                                                                style={{ cursor: "pointer", color: "red" }}
                                                                            >
@@ -386,7 +394,7 @@ export default function AssignCompetencies({ data, type }) {
                                             )}
                                             <Button
                                                 variant="primary"
-                                                onClick={() => handleOpenModal(cat._id)}
+                                                onClick={() => handleOpenModal(data?.category?._id)}
                                                 className='default-btn'
 
                                             // Trigger modal for question creation
@@ -408,23 +416,23 @@ export default function AssignCompetencies({ data, type }) {
                     <div className="list-scroll new-tab-design">
                         <h3>People Manager</h3>
                         <Accordion defaultActiveKey="0">
-                            {category?.filter(cat => cat.competency_type === "people_manager" && cat.status !== "inactive")
-                            ?.map((cat) => (
-                                    <Accordion.Item key={cat._id} eventKey={cat._id}>
+                            {categories?.filter(data => data?.category?.competency_type === "people_manager" && data?.category?.status !== "inactive")
+                            ?.map((data) => (
+                                    <Accordion.Item key={data?.category?._id} eventKey={data?.category?._id}>
                                         <Accordion.Header  onClick={(e) => {
-                                                    fetchCategoriesById(cat._id); // Custom logic for header click
+                                                    fetchCategoriesById(data?.category?._id); // Custom logic for header click
                                                 }} >
                                             <label >
                                                 <input
                                                     type="checkbox"
-                                                    checked={selectedCompetencies.includes(cat._id)}
-                                                    onChange={() => handleCheckboxChange(cat._id)}
+                                                    checked={selectedCompetencies.includes(data?.category?._id)}
+                                                    onChange={() => handleCheckboxChange(data?.category?._id)}
                                                 />
-                                                <span>{cat.category_name.trimStart()}</span>
+                                                <span>{data?.category?.category_name.trimStart()}</span>
                                             </label>
                                         </Accordion.Header>
                                         <Accordion.Body>
-                                            {selectedCategory && cat._id == selectedCategory.category_id && (
+                                            {selectedCategory && data?.category?._id == selectedCategory.category_id && (
                                                   <div className="question-section">
                                                   {(() => {
                                                       let i = 1; // Initialize a counter
@@ -444,7 +452,7 @@ export default function AssignCompetencies({ data, type }) {
                                                                           </Link>
                                                                           <Link
                                                                               onClick={() =>
-                                                                                  handleQuestionDelete(value.question_id, option.id)
+                                                                                handleDelete(value.question_id, option.id)
                                                                               }
                                                                               style={{ cursor: "pointer", color: "red" }}
                                                                           >
@@ -460,7 +468,7 @@ export default function AssignCompetencies({ data, type }) {
                                             )}
                                             <Button
                                                 variant="primary"
-                                                onClick={() => handleOpenModal(cat._id) }
+                                                onClick={() => handleOpenModal(data?.category?._id) }
                                                 className='default-btn'
                                             // Trigger modal for question creation
                                             >
@@ -478,119 +486,112 @@ export default function AssignCompetencies({ data, type }) {
             </Tabs>
 
             {/* Bootstrap Modal for Creating Question */}
-            <Modal show={showModal} onHide={() => { setShowModal(false), setFormData(''), setIsEdit(''), setEditId('') }} className='new-question'>
-                <Modal.Header closeButton>
-                    <Modal.Title>{isEdit ? "Edit Question" : "Create New Question"}</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <Form onSubmit={handleSubmit}>
-                        <Container className="outer-box">
-                            <Row>
-                                <Col md={7}>
-                                    <Form.Group className="mb-4">
-                                        <Form.Label>Question Text</Form.Label><sup style={{ color: 'red' }}>*</sup>
-                                        <Form.Control
-                                            type="text"
-                                            name="questionText"
-                                            value={formData.questionText}
-                                            onChange={handleChange}
-                                            placeholder="Enter question text"
-                                        />
-                                        {errors.questionText && <small className="text-danger">{errors.questionText}</small>}
-                                    </Form.Group>
-                                </Col>
-                                <Col md={5}>
-                                    <Form.Group className="mb-4">
-                                        <Form.Label>Answer Type</Form.Label><sup style={{ color: 'red' }}>*</sup>
-                                        <Form.Control
-                                            
-                                            as="select"
-                                            name="questionType"
-                                            value={formData.questionType}
-                                            onChange={handleChange}
-                                        >
-                                            <option value="">Select Type</option>
-                                            {/* <option value="Text">Text</option> */}
-                                            <option value="Radio">Radio</option>
-                                        </Form.Control>
-                                        {errors.questionType && <small className="text-danger">{errors.questionType}</small>}
-                                    </Form.Group>
-                                </Col>
-                            </Row>
-                            <Row>
-                                {formData.questionType === 'Radio' && (
-                                    <Col md={12}>
-                                        <div className='question-contant w-100'>
-                                            <h3 className="add-title">Answers</h3>
-                                            <Button type="button" onClick={addOption} variant="primary" className='default-btn'>
-                                                Add Option
-                                            </Button>
-                                        </div>
-                                        <div className='question-from delete-option'>
-                                            {formData.options.map((option, index) => (
-                                                <div key={index} className="mb-3 w-100">
-                                                    <Row className='row-gap-3'>
-                                                        <Col md={7} className='col-12'>
-                                                            <Form.Control
-                                                                type="text"
-                                                                name="text"
-                                                                className='w-100'
-                                                                placeholder={`Option ${index + 1}`}
-                                                                value={option.text}
-                                                                onChange={(e) => handleOptionChange(index, e)}
-                                                            />
-                                                        </Col>
-                                                        <Col md={3} className='col-9'>
-                                                            <Form.Control
-                                                                as="select"
-                                                                name="weightage"
-                                                                className='w-100'
-                                                                value={option.weightage}
-                                                                onChange={(e) => handleOptionChange(index, e)}
-                                                            >
-                                                                <option value="">Select weightage</option>
-                                                                <option value="1">1</option>
-                                                                <option value="2">2</option>
-                                                                <option value="3">3</option>
-                                                                <option value="4">4</option>
-                                                                <option value="5">5</option>
-                                                                <option value="6">6</option>
-                                                                <option value="7">7</option>
-                                                                <option value="8">8</option>
-                                                                <option value="9">9</option>
-                                                                <option value="10">10</option>
-                                                            </Form.Control>
-                                                            
-                                                        </Col>
-                                                        <Col md={2} className='col-3'>
-                                                        <Button type="button" onClick={() => removeOption(index)} variant="danger">
-                                                            <img src='/images/remove.png' alt='Remove' />
-                                                        </Button>
-                                                        </Col>
-                                                    </Row>
-                                                    
+            <Modal show={showModal} onHide={() => {
+                            setShowModal(false),
+                            setFormData({
+                                questionText: '',
+                                questionType: 'Radio', // 'Text' or 'Radio'
+                                options: [{ text: '', weightage: 1 },{ text: '', weightage: 1 },{ text: '', weightage: 1 }], // Added weightage
+                                createdBy: user?._id,
+                                currentCategoryId: cat_id,
+                            });
+                                setIsEdit(''),
+                                setEditId('')
+                        }} className='new-question'>
+                            <Modal.Header closeButton>
+                                <Modal.Title>{isEdit ? "Edit Question" : "Create New Question"}</Modal.Title>
+                            </Modal.Header>
+                            <Modal.Body>
+                                <Form onSubmit={handleSubmit}>
+                                    <Container className="outer-box">
+                                        <Row>
+                                            <Col md={11}>
+                                                <Form.Group className="mb-4">
+                                                    <Form.Label>Question Text</Form.Label><sup style={{ color: 'red' }}>*</sup>
+                                                    <Form.Control
+                                                        type="text"
+                                                        name="questionText"
+                                                        value={formData.questionText}
+                                                        onChange={handleChange}
+                                                        placeholder="Enter question text"
+                                                    />
+                                                    {errors.questionText && <small className="text-danger">{errors.questionText}</small>}
+                                                </Form.Group>
+                                            </Col>
+                                        </Row>
+                                        <Row>
+                                                <Col md={12}>
+                                                    <div className='question-contant w-100'>
+                                                        <h3 className="add-title">Answers</h3>
+                                                        {/* <Button type="button" onClick={addOption} variant="primary" className='default-btn'>
+                                                            Add Option
+                                                        </Button> */}
+                                                    </div>
+                                                    <div className='question-from delete-option'>
+                                                        {formData.options.map((option, index) => (
+                                                            <div key={index} className="mb-3 w-100">
+                                                                <Row className='row-gap-3'>
+                                                                    <Col md={8} className='col-12'>
+                                                                        <Form.Control
+                                                                            type="text"
+                                                                            name="text"
+                                                                            className='w-100'
+                                                                            placeholder={`Option ${index + 1}`}
+                                                                            value={option.text}
+                                                                            onChange={(e) => handleOptionChange(index, e)}
+                                                                        />
+                                                                    </Col>
+                                                                    <Col md={3} className='col-9'>
+                                                                        <Form.Control
+                                                                            as="select"
+                                                                            name="weightage"
+                                                                            className='w-100'
+                                                                            value={option.weightage}
+                                                                            onChange={(e) => handleOptionChange(index, e)}
+                                                                        >
+                                                                            <option value="">Select weightage</option>
+                                                                            <option value="1">1</option>
+                                                                            <option value="2">2</option>
+                                                                            <option value="3">3</option>
+                                                                            <option value="4">4</option>
+                                                                            <option value="5">5</option>
+                                                                            <option value="6">6</option>
+                                                                            <option value="7">7</option>
+                                                                            <option value="8">8</option>
+                                                                            <option value="9">9</option>
+                                                                            <option value="10">10</option>
+                                                                        </Form.Control>
+                                                                        
+                                                                    </Col>
+                                                                    {/* <Col md={2} className='col-3'>
+                                                                    <Button type="button" onClick={() => removeOption(index)} variant="danger">
+                                                                        <img src='/images/remove.png' alt='Remove' />
+                                                                    </Button>
+                                                                    </Col> */}
+                                                                </Row>
+                                                                
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                    {errors.options && <small className="text-danger">{errors.options}</small>}
+                                                </Col>
+                                           
+                                            <Col md={12}>
+                                                <div className="profile-btns pt-0">
+                                                    <Button type="submit" className="default-btn">
+                                                        {isEdit ? "Update" : "Save"}
+                                                    </Button>
+                                                    <Button type="button" className="default-btn cancel-btn" onClick={() => { setShowModal(false), setFormData(''), setIsEdit(''), setEditId('') }}>
+                                                        Cancel
+                                                    </Button>
                                                 </div>
-                                            ))}
-                                        </div>
-                                        {errors.options && <small className="text-danger">{errors.options}</small>}
-                                    </Col>
-                                )}
-                                <Col md={12}>
-                                    <div className="profile-btns pt-0">
-                                        <Button type="submit" className="default-btn">
-                                            {isEdit ? "Update" : "Save"}
-                                        </Button>
-                                        <Button type="button" className="default-btn cancel-btn" onClick={() => { setShowModal(false), setFormData(''), setIsEdit(''), setEditId('') }}>
-                                            Cancel
-                                        </Button>
-                                    </div>
-                                    {errors.form && <p className="text-danger">{errors.form}</p>}
-                                </Col>
-                            </Row>
-                        </Container>
-                    </Form>
-                </Modal.Body>
-            </Modal>
+                                                {errors.form && <p className="text-danger">{errors.form}</p>}
+                                            </Col>
+                                        </Row>
+                                    </Container>
+                                </Form>
+                            </Modal.Body>
+                        </Modal>
         </div>
     );
 }
