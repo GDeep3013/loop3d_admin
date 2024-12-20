@@ -78,7 +78,7 @@ export default function LoopLeads({ organization }) {
                         </tr>
                     ) : (
                             users.map(user => (
-                                <tr key={user._id}>
+                                <tr key={user._id} className='table-list-hover'>
                                       <td  onClick={() => navigate(`/view-loop_lead/${user._id}/${organization.orgniation_id}`)}>
                                     <div className="user-profile d-flex align-items-center">
                                         <div className='user-name'>{user?.last_name}</div>

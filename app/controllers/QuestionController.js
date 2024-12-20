@@ -98,9 +98,15 @@ exports.createQuestion = async (req, res) => {
 exports.getAllQuestions = async (req, res) => {
     try {
         // Extract query parameters for pagination
-        let { page = 1, limit = 10, searchTerm } = req.query;
-        const query = { organization_id: null,category_id:null};
-
+        let { page = 1, limit = 10, searchTerm, type } = req.query;
+  
+        let query = { organization_id: null, category_id: null };
+        if (type === "OpenEnded") {
+            query = {
+                organization_id: null, category_id: null, parentType: "OpenEnded", parentType: { $ne: null } // Ensure parentType is not null };
+            };
+        }
+            
         // Add search functionality
         if (searchTerm) {
             query.$or = [
@@ -115,7 +121,7 @@ exports.getAllQuestions = async (req, res) => {
         // Calculate the number of documents to skip
         const skip = (page-1) * limit;
 
-        // Fetch questions with pagination and populate the options field
+       
         const questions = await Question.find(query)
             .populate('options') // Adjust the field if your schema uses a different reference
             .sort({ _id: -1 })

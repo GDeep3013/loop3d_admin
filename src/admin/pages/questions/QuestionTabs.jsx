@@ -71,10 +71,10 @@ export default function QuestionTabs() {
                     <AddQuestion id={id} savedData={formData} />
 
                 </Tab>
-                <Tab eventKey="profile" title="Competencies">
-                    {/* <AssignCompetencies data={{ ref_id: id}} type="question" /> */}
+                {/* <Tab eventKey="profile" title="Competencies">
+               <AssignCompetencies data={{ ref_id: id}} type="question" /> 
                     <AssignCompetenciesQuestions data={{ ref_id: id}} type="question" />
-                </Tab>
+                </Tab> */}
                 </Tabs>
                 </div>
         </AuthLayout>

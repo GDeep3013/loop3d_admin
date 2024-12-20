@@ -3,17 +3,17 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Container, Row, Col, Tab, Tabs, Accordion, Button, Modal, Form } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
 import Swal from 'sweetalert2'
-import { Link } from 'react-router-dom';
-import OpenEndedQuestions from "./OpenEndedQuestions";
+// import { Link } from 'react-router-dom';
+// import OpenEndedQuestions from "./OpenEndedQuestions";
 
 
 export default function StartSurveyForm() {
     const user = useSelector((state) => state.auth.user);
     const router = useNavigate();
-    const searchParams = useParams();
-    const token = user?._id;
+    // const searchParams = useParams();
+    // const token = user?._id;
     const [selectedCategory, setSelectedCategory] = useState(null);
-    const [currentCategoryId, setCurrentCategoryId] = useState('');
+    // const [currentCategoryId, setCurrentCategoryId] = useState('');
 
     const [activeTab, setActiveTab] = useState("individual_contributor");
     const [selectedCheckboxes, setSelectedCheckboxes] = useState([]);
@@ -35,24 +35,24 @@ export default function StartSurveyForm() {
         people_manager: []
     });
 
-    const [showModal, setShowModal] = useState(false);
-    const [editId, setEditId] = useState('');
-    const [isEdit, setIsEdit] = useState(false);
+    // const [showModal, setShowModal] = useState(false);
+    // const [editId, setEditId] = useState('');
+    // const [isEdit, setIsEdit] = useState(false);
     const [openEndedQuestions, setOpenEndedQuestions] = useState([]);
 
-    const [questionFormData, setQuestionFormData] = useState({
-        questionText: '',
-        questionType: '', // 'Text' or 'Radio'
-        options: [{ text: '', weightage: 1 }], // Added weightage
-        createdBy: user?._id,
-        manager_id:user._id,
-        currentCategoryId: null,
-        organization_id: user?.organization
-    });
-    const handleOpenModal = (categoryId) => {
-        setQuestionFormData({ ...questionFormData, currentCategoryId: categoryId });
-        setShowModal(true); // Show the modal
-    };
+    // const [questionFormData, setQuestionFormData] = useState({
+    //     questionText: '',
+    //     questionType: '', // 'Text' or 'Radio'
+    //     options: [{ text: '', weightage: 1 }], // Added weightage
+    //     createdBy: user?._id,
+    //     manager_id:user._id,
+    //     currentCategoryId: null,
+    //     organization_id: user?.organization
+    // });
+    // const handleOpenModal = (categoryId) => {
+    //     setQuestionFormData({ ...questionFormData, currentCategoryId: categoryId });
+    //     setShowModal(true); // Show the modal
+    // };
     const cloneQuestion = async (categoryId) => {
         try {
             console.log('categoryId',categoryId)
@@ -248,165 +248,164 @@ export default function StartSurveyForm() {
         }
     };
 
-    const validateQuestionForm = (data) => {
-        let validationErrors = {};
+    // const validateQuestionForm = (data) => {
+    //     let validationErrors = {};
 
-        if (!data.questionText.trim()) {
-            validationErrors.questionText = 'Question text is required';
-        }
+    //     if (!data.questionText.trim()) {
+    //         validationErrors.questionText = 'Question text is required';
+    //     }
 
-        if (!data.questionType) {
-            validationErrors.questionType = 'Answer type is required';
-        }
+    //     if (!data.questionType) {
+    //         validationErrors.questionType = 'Answer type is required';
+    //     }
 
-        if (data.questionType === 'Radio') {
-            if (data.options.length === 0 || data.options.every(option => !option.text.trim())) {
-                validationErrors.options = 'At least one option is required';
-            }
+    //     if (data.questionType === 'Radio') {
+    //         if (data.options.length === 0 || data.options.every(option => !option.text.trim())) {
+    //             validationErrors.options = 'At least one option is required';
+    //         }
 
-        }
+    //     }
 
-        return validationErrors;
-    };
+    //     return validationErrors;
+    // };
 
     // Handle input changes
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        if (name === "questionType" && value === "Text") {
-            setQuestionFormData({ ...questionFormData, [name]: value, options: [] });
-        } else {
-            setQuestionFormData({ ...questionFormData, [name]: value, options: [{ text: '', isCorrect: false, weightage: 1 }] });
-        }
-        setErrors({});
-    };
+    // const handleChange = (e) => {
+    //     const { name, value } = e.target;
+    //     if (name === "questionType" && value === "Text") {
+    //         setQuestionFormData({ ...questionFormData, [name]: value, options: [] });
+    //     } else {
+    //         setQuestionFormData({ ...questionFormData, [name]: value, options: [{ text: '', isCorrect: false, weightage: 1 }] });
+    //     }
+    //     setErrors({});
+    // };
 
     // Handle option change
-    const handleOptionChange = (index, e) => {
-        const { name, value, checked } = e.target;
-        const updatedOptions = [...questionFormData.options];
+    // const handleOptionChange = (index, e) => {
+    //     const { name, value, checked } = e.target;
+    //     const updatedOptions = [...questionFormData.options];
 
-        updatedOptions[index][name] = name === 'isCorrect' ? checked : value;
+    //     updatedOptions[index][name] = name === 'isCorrect' ? checked : value;
 
 
-        setQuestionFormData({ ...questionFormData, options: updatedOptions });
-    };
+    //     setQuestionFormData({ ...questionFormData, options: updatedOptions });
+    // };
 
     // Add a new option
-    const addOption = () => {
-        setQuestionFormData({ ...questionFormData, options: [...questionFormData.options, { text: '', isCorrect: false, weightage: 1 }] });
-    };
+    // const addOption = () => {
+    //     setQuestionFormData({ ...questionFormData, options: [...questionFormData.options, { text: '', isCorrect: false, weightage: 1 }] });
+    // };
 
     // Remove an option
-    const removeOption = (index) => {
-        const updatedOptions = questionFormData.options.filter((_, i) => i !== index);
-        setQuestionFormData({ ...questionFormData, options: updatedOptions });
-    };
+    // const removeOption = (index) => {
+    //     const updatedOptions = questionFormData.options.filter((_, i) => i !== index);
+    //     setQuestionFormData({ ...questionFormData, options: updatedOptions });
+    // };
 
     // Handle form submission
 
-console.log('questionFormData',questionFormData)
-    const handleQuestionDelete = async (id, categoryId) => {
-        try {
-            const confirmResult = await Swal.fire({
-                title: "Are you sure?",
-                text: "You won't be able to revert this!",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#000",
-                cancelButtonColor: "#d26c6c",
-                confirmButtonText: "Yes, delete it!"
-            });
+    // const handleQuestionDelete = async (id, categoryId) => {
+    //     try {
+    //         const confirmResult = await Swal.fire({
+    //             title: "Are you sure?",
+    //             text: "You won't be able to revert this!",
+    //             icon: "warning",
+    //             showCancelButton: true,
+    //             confirmButtonColor: "#000",
+    //             cancelButtonColor: "#d26c6c",
+    //             confirmButtonText: "Yes, delete it!"
+    //         });
 
-            if (confirmResult.isConfirmed) {
-                const response = await fetch(`/api/questions/${id}`, {
-                    method: 'DELETE',
-                    headers: { "x-api-key": import.meta.env.VITE_X_API_KEY }
-                });
+    //         if (confirmResult.isConfirmed) {
+    //             const response = await fetch(`/api/questions/${id}`, {
+    //                 method: 'DELETE',
+    //                 headers: { "x-api-key": import.meta.env.VITE_X_API_KEY }
+    //             });
 
-                if (response.ok) {
-                    await Swal.fire({
-                        title: "Deleted!",
-                        text: "The question has been deleted.",
-                        icon: "success",
-                        confirmButtonColor: "#000",
-                    });
-                    fetchCategoriesById(categoryId);
-                } else {
-                    console.error('Failed to delete question');
-                }
-            }
-        } catch (error) {
-            console.error('Error deleting question:', error);
-        }
-    };
+    //             if (response.ok) {
+    //                 await Swal.fire({
+    //                     title: "Deleted!",
+    //                     text: "The question has been deleted.",
+    //                     icon: "success",
+    //                     confirmButtonColor: "#000",
+    //                 });
+    //                 fetchCategoriesById(categoryId);
+    //             } else {
+    //                 console.error('Failed to delete question');
+    //             }
+    //         }
+    //     } catch (error) {
+    //         console.error('Error deleting question:', error);
+    //     }
+    // };
 
-    const handleEditQuestion = async (value,cat_id) => {
-        // console.log(value)
-        setShowModal(true);     
-        setEditId(value?.question_id)
-        setIsEdit(true);
-        setCurrentCategoryId(cat_id);
-        setQuestionFormData({
-            questionText: value?.questionText || '', // Assign questionText or fallback to an empty string
-            questionType: value?.questionType || '', // Assign questionType or fallback to an empty string
-            options: value?.options || [{ text: '', weightage: 1 }], 
-            createdBy: user?._id,
-            manager_id:user._id,
-            currentCategoryId: null,
-            organization_id: user?.organizationa // Assign the category ID or fallback to null
-        })
-    };
+    // const handleEditQuestion = async (value,cat_id) => {
+    //     // console.log(value)
+    //     setShowModal(true);     
+    //     setEditId(value?.question_id)
+    //     setIsEdit(true);
+    //     setCurrentCategoryId(cat_id);
+    //     setQuestionFormData({
+    //         questionText: value?.questionText || '', // Assign questionText or fallback to an empty string
+    //         questionType: value?.questionType || '', // Assign questionType or fallback to an empty string
+    //         options: value?.options || [{ text: '', weightage: 1 }], 
+    //         createdBy: user?._id,
+    //         manager_id:user._id,
+    //         currentCategoryId: null,
+    //         organization_id: user?.organizationa // Assign the category ID or fallback to null
+    //     })
+    // };
 
-    const handleQuestionSubmit = async (e) => {
-        e.preventDefault();
-        console.log('questionFormData',questionFormData)
-        const validationErrors = validateQuestionForm(questionFormData);
-        if (Object.keys(validationErrors).length > 0) {
-            setErrors(validationErrors);
-            return;
-        }
-        const url = editId ? `/api/questions/${editId}` : '/api/questions/create';
-        const method = editId ? 'PUT' : 'POST';
+    // const handleQuestionSubmit = async (e) => {
+    //     e.preventDefault();
+    //     console.log('questionFormData',questionFormData)
+    //     const validationErrors = validateQuestionForm(questionFormData);
+    //     if (Object.keys(validationErrors).length > 0) {
+    //         setErrors(validationErrors);
+    //         return;
+    //     }
+    //     const url = editId ? `/api/questions/${editId}` : '/api/questions/create';
+    //     const method = editId ? 'PUT' : 'POST';
 
 
-        try {
-            const response = await fetch(url, {
-                method,
-                headers: {
-                    'Content-Type': 'application/json',
-                    'x-api-key': import.meta.env.VITE_X_API_KEY
-                },
-                body: JSON.stringify(questionFormData)
-            });
-            const data = await response.json();
+    //     try {
+    //         const response = await fetch(url, {
+    //             method,
+    //             headers: {
+    //                 'Content-Type': 'application/json',
+    //                 'x-api-key': import.meta.env.VITE_X_API_KEY
+    //             },
+    //             body: JSON.stringify(questionFormData)
+    //         });
+    //         const data = await response.json();
 
-            if (response.ok || data) {
-                Swal.fire({
-                    position: 'center',
-                    icon: 'success',
-                    title: `Question Created Successfully!`,
-                    showConfirmButton: false,
-                    timer: 1500
-                });
-                setShowModal(false)
+    //         if (response.ok || data) {
+    //             Swal.fire({
+    //                 position: 'center',
+    //                 icon: 'success',
+    //                 title: `Question Created Successfully!`,
+    //                 showConfirmButton: false,
+    //                 timer: 1500
+    //             });
+    //             setShowModal(false)
                 
-                fetchCategoriesById(currentCategoryId ? currentCategoryId : questionFormData.currentCategoryId)
-                setQuestionFormData({
-                    questionText: '',
-                    questionType: '', // 'Text' or 'Radio'
-                    options: [{ text: '', weightage: 1 }], // Added weightage
-                    createdBy: user?._id,
-                    manager_id:user._id,
-                    currentCategoryId: null,
-                    organization_id: user?.organization
-                })
-            } else {
-                setErrors({ form: data.error });
-            }
-        } catch (error) {
-            setErrors({ form: 'Failed to save question' });
-        }
-    };
+    //             fetchCategoriesById(currentCategoryId ? currentCategoryId : questionFormData.currentCategoryId)
+    //             setQuestionFormData({
+    //                 questionText: '',
+    //                 questionType: '', // 'Text' or 'Radio'
+    //                 options: [{ text: '', weightage: 1 }], // Added weightage
+    //                 createdBy: user?._id,
+    //                 manager_id:user._id,
+    //                 currentCategoryId: null,
+    //                 organization_id: user?.organization
+    //             })
+    //         } else {
+    //             setErrors({ form: data.error });
+    //         }
+    //     } catch (error) {
+    //         setErrors({ form: 'Failed to save question' });
+    //     }
+    // };
 
 
     async function fetchCategoriesById(categoryId) {
@@ -528,7 +527,7 @@ console.log('questionFormData',questionFormData)
                         </button>
                     </div>
                     <div>
-                    <Accordion defaultActiveKey="0">
+                    {/* <Accordion defaultActiveKey="0">
                             <ul>
                                 {uniqueOptions.map((option, index) => (
                                     <Accordion.Item key={option.id} eventKey={String(index)}>
@@ -593,11 +592,11 @@ console.log('questionFormData',questionFormData)
                                     </Accordion.Item>
                                 ))}
                             </ul>
-                        </Accordion>
+                        </Accordion> */}
                     
                     </div>
 
-                    {/* <div>
+                    <div>
                         <ul className='survey-listings'>
                             {uniqueOptions.map((option) => (
                                 <li key={option.id}>
@@ -613,13 +612,13 @@ console.log('questionFormData',questionFormData)
                                 </li>
                             ))}
                         </ul>
-                    </div> */}
+                    </div>
                     {errors.competencies && <div className="text-danger">{errors.competencies}</div>}
                 </div>
 
                 {/* Submit Button */}
            
-                <OpenEndedQuestions activeTab={activeTab} openQuestions={openEndedQuestions} setOpenQuestions={setOpenEndedQuestions} fetchQuestions={fetchQuestions} organization_id={user?.organization} createdBy={user?._id} />
+                {/* <OpenEndedQuestions activeTab={activeTab} openQuestions={openEndedQuestions} setOpenQuestions={setOpenEndedQuestions} fetchQuestions={fetchQuestions} organization_id={user?.organization} createdBy={user?._id} /> */}
                 <div className="mt-4">
                     <button
                         type="button"
@@ -635,7 +634,7 @@ console.log('questionFormData',questionFormData)
             </form>
 
 
-            <Modal show={showModal} onHide={() => { setShowModal(false), setQuestionFormData(''), setIsEdit(''), setEditId('') }} className='new-question'>
+            {/* <Modal show={showModal} onHide={() => { setShowModal(false), setQuestionFormData(''), setIsEdit(''), setEditId('') }} className='new-question'>
                 <Modal.Header closeButton>
                     <Modal.Title>{isEdit ? "Edit Question" : "Create New Question"}</Modal.Title>
                 </Modal.Header>
@@ -667,7 +666,6 @@ console.log('questionFormData',questionFormData)
                                             onChange={handleChange}
                                         >
                                             <option value="">Select Type</option>
-                                            {/* <option value="Text">Text</option> */}
                                             <option value="Radio">Radio</option>
                                         </Form.Control>
                                         {errors.questionType && <small className="text-danger">{errors.questionType}</small>}
@@ -747,7 +745,7 @@ console.log('questionFormData',questionFormData)
                         </Container>
                     </Form>
                 </Modal.Body>
-            </Modal>
+            </Modal> */}
         </>
     );
 }

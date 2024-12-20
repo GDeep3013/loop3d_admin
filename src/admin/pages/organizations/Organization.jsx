@@ -166,7 +166,7 @@ export default function Organization() {
 
                             {!loading && Organizations.length > 0 && (
                                 Organizations.map((org, index) => (
-                                    <tr key={org._id} >
+                                    <tr key={org._id} className='table-list-hover' >
                                         <td onClick={() => navigate(`edit/${org._id}`)}>{(currentPage - 1) * 10 + (index + 1)}</td>
                                         <td onClick={() => navigate(`edit/${org._id}`)}>
                                             <div className="user-profile d-flex align-items-center">
