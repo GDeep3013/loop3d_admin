@@ -23,7 +23,7 @@ export default function Question() {
   async function getQuestions() {
     setLoading(true);
     try {
-      let url = `/api/questions?page=${currentPage}`;
+      let url = `/api/questions?page=${currentPage}&type=OpenEnded`;
       if (searchTerm) {
         url += `&searchTerm=${encodeURIComponent(searchTerm)}`;
       }
@@ -110,7 +110,7 @@ export default function Question() {
             <tr>
               <th>Serial No.</th>
               <th>Question</th>
-              <th>Type</th>
+              <th>Competency Type</th>
               <th>Status <StatusIcon /> </th>
               <th>Action</th>
             </tr>
@@ -134,18 +134,18 @@ export default function Question() {
             }
 
             {!loading && questions.length > 0 && questions?.map((question, ind) => (
-              <tr key={question._id}>
-                <td>{(currentPage - 1) * 10 + (ind + 1)}</td>
-                <td>
+              <tr key={question._id}  className='table-list-hover'>
+                <td  onClick={() => navigate(`/questions/${question._id}`)} >{(currentPage - 1) * 10 + (ind + 1)}</td>
+                <td  onClick={() => navigate(`/questions/${question._id}`)} >
                   {question.questionText}
                 </td>
-                <td>
-                  {question.questionType}
+                <td  onClick={() => navigate(`/questions/${question._id}`)} >
+                  {question.parentType=="peopleManager"?"People Manager":(question.parentType=="individualContributor"?"Individual Contributor":question.parentType)}
                 </td>
-                <td><span className='span-badge active-tag'>Active</span></td>
+                <td  onClick={() => navigate(`/questions/${question._id}`)} ><span className='span-badge active-tag'>Active</span></td>
                 <td>
-                <button className='action-btn' onClick={() => navigate(`/questions/detail/${question._id}`)}><View /></button>
-                 <button className='action-btn' onClick={() => navigate(`/questions/${question._id}`)}><Edit /></button>
+                {/* <button className='action-btn' onClick={() => navigate(`/questions/detail/${question._id}`)}><View /></button>
+                 <button className='action-btn' onClick={() => navigate(`/questions/${question._id}`)}><Edit /></button> */}
                  <button className='action-btn' onClick={() => handleDelete(question._id)}><Remove /></button>
                   {/* <Dropdown className='custom-dropdown'>
                     <Dropdown.Toggle variant="success" id="dropdown-basic">

@@ -63,6 +63,12 @@ ul.pagination-outer { padding: 24px 0 0 0; }
 .pagination-outer li.page-item .page-link span { font-size: 26px; line-height: normal;}
 .dropdown-menu{ 	transform: translateY(15px); animation: fadeIn 0.5s ease 1 forwards }
 .filterBox .dropdown-menu { margin-top: 51px; }
+
+.table-list-hover{ cursor: pointer; background-color: #7abcdb; }
+
+table.table tbody tr.table-list-hover:hover{ background-color: #edf9ff; }
+table.table tbody tr.table-list-hover:hover td{ background-color: #edf9ff; }
+
 @keyframes fadeIn { 100% { opacity: 1; transform: none; } }
 /* start project overview css */
 .box-border{ border: 1px solid #DFDFDF; border-radius: 10px; background-color: #fff; }

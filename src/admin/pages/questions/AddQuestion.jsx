@@ -8,13 +8,14 @@ import { useSelector } from 'react-redux';
 export default function AddQuestion({ id, savedData }) {
     const user = useSelector((state) => state.auth.user);
     const navigate = useNavigate();
-
+    
     const [formData, setFormData] = useState({
         _id:'',
         questionText: '',
-        questionType: '', // 'Text' or 'Radio'
-        options: [{ text: '', weightage: 1 }], // Added weightage
-        createdBy: user?.id
+        questionType: 'OpenEnded', // 'Text' or 'Radio'
+        parentType:"",
+        // options: [{ text: '', weightage: 1 }], // Added weightage
+        createdBy: user?._id
     });
     const [categories, setCategories] = useState([]);
     const [errors, setErrors] = useState({});
@@ -38,7 +39,7 @@ export default function AddQuestion({ id, savedData }) {
         if (savedData) {
             setFormData({
                 ...savedData,
-                createdBy: user?.id // Ensure createdBy is set
+                createdBy: user?._id // Ensure createdBy is set
             });
         }
     }, [savedData, user?.id]);
@@ -68,11 +69,11 @@ export default function AddQuestion({ id, savedData }) {
     // Handle input changes
     const handleChange = (e) => {
         const { name, value } = e.target;
-        if (name === "questionType" && value === "Text") {
-            setFormData({ ...formData, [name]: value, options: [] });
-        } else {
-            setFormData({ ...formData, [name]: value, options: [{ text: '', isCorrect: false, weightage: 1 }] });
-        }
+        // if (name === "questionType" && value === "Text") {
+            setFormData({ ...formData, [name]: value,  });
+        // } else {
+        //     // setFormData({ ...formData, [name]: value, options: [{ text: '', isCorrect: false, weightage: 1 }] });
+        // }
         setErrors({});
     };
 
@@ -88,15 +89,15 @@ export default function AddQuestion({ id, savedData }) {
     };
 
     // Add a new option
-    const addOption = () => {
-        setFormData({ ...formData, options: [...formData.options, { text: '', isCorrect: false, weightage: 1 }] });
-    };
+    // const addOption = () => {
+    //     setFormData({ ...formData, options: [...formData.options, { text: '', isCorrect: false, weightage: 1 }] });
+    // };
 
     // Remove an option
-    const removeOption = (index) => {
-        const updatedOptions = formData.options.filter((_, i) => i !== index);
-        setFormData({ ...formData, options: updatedOptions });
-    };
+    // const removeOption = (index) => {
+    //     const updatedOptions = formData.options.filter((_, i) => i !== index);
+    //     setFormData({ ...formData, options: updatedOptions });
+    // };
 
     // Handle form submission
     const handleSubmit = async (e) => {
@@ -176,16 +177,16 @@ export default function AddQuestion({ id, savedData }) {
                         </Col>
                         <Col md={6}>
                             <Form.Group className="mb-4">
-                                <Form.Label>Answer Type</Form.Label><sup style={{color:'red'}}>*</sup>
+                                <Form.Label>Competency Type</Form.Label><sup style={{color:'red'}}>*</sup>
                                 <Form.Control
                                     as="select"
-                                    name="questionType"
-                                    value={formData.questionType}
+                                    name="parentType"
+                                    value={formData.parentType}
                                     onChange={handleChange}
                                 >
                                     <option value="">Select Type</option>
-                                    <option value="Text">Text</option>
-                                    <option value="Radio">Radio</option>
+                                    <option value="peopleManager">People Manager</option>
+                                    <option value="individualContributor">Individual Contributor</option>
                                 </Form.Control>
                                 {errors.questionType && <small className="text-danger">{errors.questionType}</small>}
                             </Form.Group>
