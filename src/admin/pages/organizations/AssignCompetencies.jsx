@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Row, Col, Tab, Tabs, Accordion, Button, Modal, Form } from 'react-bootstrap';
+import { Container, Row, Col, Tab, Tabs,Spinner, Accordion, Button, Modal, Form } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
 import { getAssignmentsByUserAndOrg, createAssignCompetency } from "../../../apis/assignCompetencyApi";
 import { Edit, Remove } from '../../../components/svg-icons/icons'; // Importing edit and delete icons from React Icons
@@ -37,8 +37,8 @@ export default function AssignCompetencies({ data, type }) {
 
     useEffect(() => {
         if (data?.ref_id) {
-            getCategory();
             getAllCategory();
+            getCategory();
             fetchQuestions(data?.ref_id)
         }
     }, [data?.ref_id, searchTerm]);
@@ -57,22 +57,22 @@ export default function AssignCompetencies({ data, type }) {
             result = await result.json();
             setCategories(result.categories);
             setLoading(false);
+
         } catch (error) {
             setLoading(false);
+
             console.error(error);
         }
     }
 
     // Fetch assignments by user and organization
     async function getCategory() {
-        setLoading(true);
         try {
             const result = await getAssignmentsByUserAndOrg(user?._id, data?.ref_id, type);
             setCompetencies(result.assignments || []);
             setSelectedCompetencies(result.assignments?.map(assignment => assignment?.category_id?._id) || []);
-            setLoading(false);
+
         } catch (error) {
-            setLoading(false);
             console.error(error);
         }
     }
@@ -137,7 +137,6 @@ export default function AssignCompetencies({ data, type }) {
 
     // Fetch categories by category ID (to get questions)
     async function fetchCategoriesById(categoryId) {
-        setLoading(true);
         try {
             const response = await fetch(`/api/competencies/get-questions?org_id=${data?.ref_id}&cat_id=${categoryId}`, {
                 method: "GET",
@@ -156,13 +155,20 @@ export default function AssignCompetencies({ data, type }) {
         } catch (error) {
             console.error("Error fetching categories:", error);
         } finally {
-            setLoading(false);
         }
     }
 
     // Handle opening the modal for creating a question
     const handleOpenModal = (categoryId) => {
-        setFormData({ ...formData, currentCategoryId: categoryId });
+        setFormData({
+            questionText: '',
+            questionType: 'Radio', // 'Text' or 'Radio'
+            options: [{ text: '', weightage: 1 }, { text: '', weightage: 1 }, { text: '', weightage: 1 }], // Added weightage
+            createdBy: user?._id,
+            currentCategoryId: categoryId,
+            organization_id: data?.ref_id
+
+        });
         setShowModal(true); // Show the modal
     };
 
@@ -369,279 +375,299 @@ export default function AssignCompetencies({ data, type }) {
         setActiveTab(key);
 
     };
+    console.log('data?.ref_id', data?.ref_id)
     // console.log(formData)
     return (
-        <div className="content-outer pd-2 edit-org tab-design">
-            <Tabs onSelect={handleTabSelect} defaultActiveKey="individualContributor" className="mb-3">
-                {/* Individual Contributor Tab */}
-                <Tab eventKey="individualContributor" title="Individual Contributor">
-                    <div className="list-scroll">
-                        <h3>Individual Contributor</h3>
-                        <Accordion defaultActiveKey="0">
-                            {categories?.filter(data => data?.category?.competency_type === "individual_contributor" && data?.category?.status !== "inactive")
-                                .reduce((uniqueCategories, data) => {
-                                    // Check if the category_name is already in the uniqueCategories array
-                                    if (!uniqueCategories.some(c => c.category?.category_name === data?.category?.category_name)) {
-                                        uniqueCategories.push(data);
-                                    }
-                                    return uniqueCategories;
-                                }, [])
-                                .map((data) => (
-                                    <Accordion.Item key={data?.category?._id} eventKey={data?.category?._id}>
-                                        <Accordion.Header onClick={(e) => {
-                                            fetchCategoriesById(data?.category?._id); // Custom logic for header click
-                                        }} >
-                                            <label onClick={() => { fetchCategoriesById(data?.category?._id); }}>
-                                                <input
-                                                    type="checkbox"
-                                                    checked={selectedCompetencies.includes(data?.category?._id)}
-                                                    onChange={() => handleCheckboxChange(data?.category?._id)}
-                                                />
-                                                <span>{data?.category?.category_name.trimStart()}</span>
-                                            </label>
-                                        </Accordion.Header>
-                                        <Accordion.Body>
-                                            {selectedCategory && data?.category?._id == selectedCategory.category_id && (
-                                                <div className="question-section">
-                                                    {(() => {
-                                                        let i = 1; // Initialize a counter
-                                                        return selectedCategory.questions.map((value) => (
-                                                            <div key={value.question_id} className="question-item">
-                                                                {value.questionType == "Radio" && (
-                                                                    <p>
-                                                                        <span className="fw-bold">Q{i++}:</span> {value.questionText}
-                                                                        <div className="question-actions ms-2">
-                                                                            <Link
-                                                                                onClick={() => {
-                                                                                    handleEditQuestion(value, selectedCategory.category_id);
-                                                                                }}
-                                                                                style={{ cursor: "pointer", color: "red" }}
-                                                                            >
-                                                                                ✏️
-                                                                            </Link>
-                                                                            <Link
-                                                                                onClick={() =>
-                                                                                    handleDelete(value.question_id, option.id)
-                                                                                }
-                                                                                style={{ cursor: "pointer", color: "red" }}
-                                                                            >
-                                                                                ❌
-                                                                            </Link>
-                                                                        </div>
-                                                                    </p>
-                                                                )}
-                                                            </div>
-                                                        ));
-                                                    })()}
-                                                </div>
-                                            )}
-                                            <Button
-                                                variant="primary"
-                                                onClick={() => handleOpenModal(data?.category?._id)}
-                                                className='default-btn'
+        loading?<div className="loading-spinner">
+            <Spinner animation="border" variant="primary" />
+        </div>:
+            <div className="content-outer pd-2 edit-org tab-design">
+                <Tabs onSelect={handleTabSelect} defaultActiveKey="individualContributor" className="mb-3">
+                    {/* Individual Contributor Tab */}
+                    <Tab eventKey="individualContributor" title="Individual Contributor">
+                        <div className="list-scroll">
+                            <h3>Individual Contributor</h3>
+                            <Accordion defaultActiveKey="0">
+                                {categories?.filter(data => data?.category?.competency_type === "individual_contributor" && data?.category?.status !== "inactive")
+                                    .reduce((uniqueCategories, data) => {
+                                        // Check if the category_name is already in the uniqueCategories array
+                                        if (!uniqueCategories.some(c => c.category?.category_name === data?.category?.category_name)) {
+                                            uniqueCategories.push(data);
+                                        }
+                                        return uniqueCategories;
+                                    }, [])
+                                    .map((data) => (
+                                        <Accordion.Item key={data?.category?._id} eventKey={data?.category?._id}>
+                                            <Accordion.Header onClick={(e) => {
+                                                fetchCategoriesById(data?.category?._id); // Custom logic for header click
+                                            }} >
+                                                <label onClick={() => { fetchCategoriesById(data?.category?._id); }}>
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={selectedCompetencies.includes(data?.category?._id)}
+                                                        onChange={() => handleCheckboxChange(data?.category?._id)}
+                                                    />
+                                                    <span>{data?.category?.category_name.trimStart()}</span>
+                                                </label>
+                                            </Accordion.Header>
+                                            <Accordion.Body>
+                                                {selectedCategory && data?.category?._id == selectedCategory.category_id && (
+                                                    <div className="question-section">
+                                                        {(() => {
+                                                            let i = 1; // Initialize a counter
+                                                            return selectedCategory.questions.map((value) => (
+                                                                <div key={value.question_id} className="question-item">
+                                                                    {value.questionType == "Radio" && (
+                                                                        <p>
+                                                                            <span className="fw-bold">Q{i++}:</span> {value.questionText}
+                                                                            <div className="question-actions ms-2">
+                                                                                <Link
+                                                                                    onClick={() => {
+                                                                                        handleEditQuestion(value, selectedCategory.category_id);
+                                                                                    }}
+                                                                                    style={{ cursor: "pointer", color: "red" }}
+                                                                                >
+                                                                                    ✏️
+                                                                                </Link>
+                                                                                <Link
+                                                                                    onClick={() =>
+                                                                                        handleDelete(value.question_id, selectedCategory.category_id)
+                                                                                    }
+                                                                                    style={{ cursor: "pointer", color: "red" }}
+                                                                                >
+                                                                                    ❌
+                                                                                </Link>
+                                                                            </div>
+                                                                        </p>
+                                                                    )}
+                                                                </div>
+                                                            ));
+                                                        })()}
+                                                    </div>
+                                                )}
+                                                <Button
+                                                    variant="primary"
+                                                    onClick={() => handleOpenModal(data?.category?._id)}
+                                                    className='default-btn'
 
-                                            // Trigger modal for question creation
-                                            >
-                                                + Add New Item
-                                            </Button>
-                                        </Accordion.Body>
-                                    </Accordion.Item>
-                                ))}
-                        </Accordion>
-                    </div>
-                    <div>
-                        <OpenEndedQuestions activeTab={activeTab} openQuestions={openEndedQuestions} setOpenQuestions={setOpenEndedQuestions} fetchQuestions={fetchQuestions} organization_id={data?.ref_id} createdBy={user?._id} />
-                    </div>
-                </Tab>
+                                                // Trigger modal for question creation
+                                                >
+                                                    + Add New Item
+                                                </Button>
+                                            </Accordion.Body>
+                                        </Accordion.Item>
+                                    ))}
+                            </Accordion>
+                        </div>
+                        <div>
+                            <OpenEndedQuestions activeTab={activeTab} openQuestions={openEndedQuestions} setOpenQuestions={setOpenEndedQuestions} fetchQuestions={fetchQuestions} organization_id={data?.ref_id} createdBy={user?._id} />
+                        </div>
+                    </Tab>
 
-                {/* People Manager Tab */}
-                <Tab eventKey="peopleManager" title="People Manager">
-                    <div className="list-scroll new-tab-design">
-                        <h3>People Manager</h3>
-                        <Accordion defaultActiveKey="0">
-                            {categories?.filter(data => data?.category?.competency_type === "people_manager" && data?.category?.status !== "inactive")
-                                  .reduce((uniqueCategories, data) => {
-                                    // Check if the category_name is already in the uniqueCategories array
-                                    if (!uniqueCategories.some(c => c.category?.category_name === data?.category?.category_name)) {
-                                        uniqueCategories.push(data);
-                                    }
-                                    return uniqueCategories;
-                                }, [])
-                                ?.map((data) => (
-                                    <Accordion.Item key={data?.category?._id} eventKey={data?.category?._id}>
-                                        <Accordion.Header onClick={(e) => {
-                                            fetchCategoriesById(data?.category?._id); // Custom logic for header click
-                                        }} >
-                                            <label >
-                                                <input
-                                                    type="checkbox"
-                                                    checked={selectedCompetencies.includes(data?.category?._id)}
-                                                    onChange={() => handleCheckboxChange(data?.category?._id)}
-                                                />
-                                                <span>{data?.category?.category_name.trimStart()}</span>
-                                            </label>
-                                        </Accordion.Header>
-                                        <Accordion.Body>
-                                            {selectedCategory && data?.category?._id == selectedCategory.category_id && (
-                                                <div className="question-section">
-                                                    {(() => {
-                                                        let i = 1; // Initialize a counter
-                                                        return selectedCategory.questions.map((value) => (
-                                                            <div key={value.question_id} className="question-item">
-                                                                {value.questionType == "Radio" && (
-                                                                    <p>
-                                                                        <span className="fw-bold">Q{i++}:</span> {value.questionText}
-                                                                        <div className="question-actions ms-2">
-                                                                            <Link
-                                                                                onClick={() => {
-                                                                                    handleEditQuestion(value, selectedCategory.category_id);
-                                                                                }}
-                                                                                style={{ cursor: "pointer", color: "red" }}
-                                                                            >
-                                                                                ✏️
-                                                                            </Link>
-                                                                            <Link
-                                                                                onClick={() =>
-                                                                                    handleDelete(value.question_id, option.id)
-                                                                                }
-                                                                                style={{ cursor: "pointer", color: "red" }}
-                                                                            >
-                                                                                ❌
-                                                                            </Link>
-                                                                        </div>
-                                                                    </p>
-                                                                )}
-                                                            </div>
-                                                        ));
-                                                    })()}
-                                                </div>
-                                            )}
-                                            <Button
-                                                variant="primary"
-                                                onClick={() => handleOpenModal(data?.category?._id)}
-                                                className='default-btn'
-                                            // Trigger modal for question creation
-                                            >
-                                                + Add New Item
-                                            </Button>
-                                        </Accordion.Body>
-                                    </Accordion.Item>
-                                ))}
-                        </Accordion>
-                    </div>
-                    <div>
-                        <OpenEndedQuestions activeTab={activeTab} openQuestions={openEndedQuestions} setOpenQuestions={setOpenEndedQuestions} fetchQuestions={fetchQuestions} organization_id={data?.ref_id} createdBy={user?._id} />
-                    </div>
-                </Tab>
-            </Tabs>
+                    {/* People Manager Tab */}
+                    <Tab eventKey="peopleManager" title="People Manager">
+                        <div className="list-scroll new-tab-design">
+                            <h3>People Manager</h3>
+                            <Accordion defaultActiveKey="0">
+                                {categories?.filter(data => data?.category?.competency_type === "people_manager" && data?.category?.status !== "inactive")
+                                    .reduce((uniqueCategories, data) => {
+                                        // Check if the category_name is already in the uniqueCategories array
+                                        if (!uniqueCategories.some(c => c.category?.category_name === data?.category?.category_name)) {
+                                            uniqueCategories.push(data);
+                                        }
+                                        return uniqueCategories;
+                                    }, [])
+                                    ?.map((data) => (
+                                        <Accordion.Item key={data?.category?._id} eventKey={data?.category?._id}>
+                                            <Accordion.Header onClick={(e) => {
+                                                fetchCategoriesById(data?.category?._id); // Custom logic for header click
+                                            }} >
+                                                <label >
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={selectedCompetencies.includes(data?.category?._id)}
+                                                        onChange={() => handleCheckboxChange(data?.category?._id)}
+                                                    />
+                                                    <span>{data?.category?.category_name.trimStart()}</span>
+                                                </label>
+                                            </Accordion.Header>
+                                            <Accordion.Body>
+                                                {selectedCategory && data?.category?._id == selectedCategory.category_id && (
+                                                    <div className="question-section">
+                                                        {(() => {
+                                                            let i = 1; // Initialize a counter
+                                                            return selectedCategory.questions.map((value) => (
+                                                                <div key={value.question_id} className="question-item">
+                                                                    {value.questionType == "Radio" && (
+                                                                        <p>
+                                                                            <span className="fw-bold">Q{i++}:</span> {value.questionText}
+                                                                            <div className="question-actions ms-2">
+                                                                                <Link
+                                                                                    onClick={() => {
+                                                                                        handleEditQuestion(value, selectedCategory.category_id);
+                                                                                    }}
+                                                                                    style={{ cursor: "pointer", color: "red" }}
+                                                                                >
+                                                                                    ✏️
+                                                                                </Link>
+                                                                                <Link
+                                                                                    onClick={() =>
+                                                                                        handleDelete(value.question_id, selectedCategory.category_id)
+                                                                                    }
+                                                                                    style={{ cursor: "pointer", color: "red" }}
+                                                                                >
+                                                                                    ❌
+                                                                                </Link>
+                                                                            </div>
+                                                                        </p>
+                                                                    )}
+                                                                </div>
+                                                            ));
+                                                        })()}
+                                                    </div>
+                                                )}
+                                                <Button
+                                                    variant="primary"
+                                                    onClick={() => handleOpenModal(data?.category?._id)}
+                                                    className='default-btn'
+                                                // Trigger modal for question creation
+                                                >
+                                                    + Add New Item
+                                                </Button>
+                                            </Accordion.Body>
+                                        </Accordion.Item>
+                                    ))}
+                            </Accordion>
+                        </div>
+                        <div>
+                            <OpenEndedQuestions activeTab={activeTab} openQuestions={openEndedQuestions} setOpenQuestions={setOpenEndedQuestions} fetchQuestions={fetchQuestions} organization_id={data?.ref_id} createdBy={user?._id} />
+                        </div>
+                    </Tab>
+                </Tabs>
 
-            {/* Bootstrap Modal for Creating Question */}
-            <Modal show={showModal} onHide={() => {
-                setShowModal(false),
-                    setFormData({
-                        questionText: '',
-                        questionType: 'Radio', // 'Text' or 'Radio'
-                        options: [{ text: '', weightage: 1 }, { text: '', weightage: 1 }, { text: '', weightage: 1 }], // Added weightage
-                        createdBy: user?._id,
-                        currentCategoryId: cat_id,
-                    });
-                setIsEdit(''),
-                    setEditId('')
-            }} className='new-question'>
-                <Modal.Header closeButton>
-                    <Modal.Title>{isEdit ? "Edit Question" : "Create New Question"}</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <Form onSubmit={handleSubmit}>
-                        <Container className="outer-box">
-                            <Row>
-                                <Col md={11}>
-                                    <Form.Group className="mb-4">
-                                        <Form.Label>Question Text</Form.Label><sup style={{ color: 'red' }}>*</sup>
-                                        <Form.Control
-                                            type="text"
-                                            name="questionText"
-                                            value={formData.questionText}
-                                            onChange={handleChange}
-                                            placeholder="Enter question text"
-                                        />
-                                        {errors.questionText && <small className="text-danger">{errors.questionText}</small>}
-                                    </Form.Group>
-                                </Col>
-                            </Row>
-                            <Row>
-                                <Col md={12}>
-                                    <div className='question-contant w-100'>
-                                        <h3 className="add-title">Answers</h3>
-                                        {/* <Button type="button" onClick={addOption} variant="primary" className='default-btn'>
+                {/* Bootstrap Modal for Creating Question */}
+                <Modal show={showModal} onHide={() => {
+                    setShowModal(false),
+                        setFormData({
+                            questionText: '',
+                            questionType: 'Radio', // 'Text' or 'Radio'
+                            options: [{ text: '', weightage: 1 }, { text: '', weightage: 1 }, { text: '', weightage: 1 }], // Added weightage
+                            createdBy: user?._id,
+                            currentCategoryId: null,
+                            organization_id: data?.ref_id
+
+                        });
+                    setIsEdit(''),
+                        setEditId('')
+                }} className='new-question'>
+                    <Modal.Header closeButton>
+                        <Modal.Title>{isEdit ? "Edit Question" : "Create New Question"}</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <Form onSubmit={handleSubmit}>
+                            <Container className="outer-box">
+                                <Row>
+                                    <Col md={11}>
+                                        <Form.Group className="mb-4">
+                                            <Form.Label>Question Text</Form.Label><sup style={{ color: 'red' }}>*</sup>
+                                            <Form.Control
+                                                type="text"
+                                                name="questionText"
+                                                value={formData.questionText}
+                                                onChange={handleChange}
+                                                placeholder="Enter question text"
+                                            />
+                                            {errors.questionText && <small className="text-danger">{errors.questionText}</small>}
+                                        </Form.Group>
+                                    </Col>
+                                </Row>
+                                <Row>
+                                    <Col md={12}>
+                                        <div className='question-contant w-100'>
+                                            <h3 className="add-title">Answers</h3>
+                                            {/* <Button type="button" onClick={addOption} variant="primary" className='default-btn'>
                                                             Add Option
                                                         </Button> */}
-                                    </div>
-                                    <div className='question-from delete-option'>
-                                        {formData.options.map((option, index) => (
-                                            <div key={index} className="mb-3 w-100">
-                                                <Row className='row-gap-3'>
-                                                    <Col md={8} className='col-12'>
-                                                        <Form.Control
-                                                            type="text"
-                                                            name="text"
-                                                            className='w-100'
-                                                            placeholder={`Option ${index + 1}`}
-                                                            value={option.text}
-                                                            onChange={(e) => handleOptionChange(index, e)}
-                                                        />
-                                                    </Col>
-                                                    <Col md={3} className='col-9'>
-                                                        <Form.Control
-                                                            as="select"
-                                                            name="weightage"
-                                                            className='w-100'
-                                                            value={option.weightage}
-                                                            onChange={(e) => handleOptionChange(index, e)}
-                                                        >
-                                                            <option value="">Select weightage</option>
-                                                            <option value="1">1</option>
-                                                            <option value="2">2</option>
-                                                            <option value="3">3</option>
-                                                            <option value="4">4</option>
-                                                            <option value="5">5</option>
-                                                            <option value="6">6</option>
-                                                            <option value="7">7</option>
-                                                            <option value="8">8</option>
-                                                            <option value="9">9</option>
-                                                            <option value="10">10</option>
-                                                        </Form.Control>
+                                        </div>
+                                        <div className='question-from delete-option'>
+                                            {formData.options.map((option, index) => (
+                                                <div key={index} className="mb-3 w-100">
+                                                    <Row className='row-gap-3'>
+                                                        <Col md={8} className='col-12'>
+                                                            <Form.Control
+                                                                type="text"
+                                                                name="text"
+                                                                className='w-100'
+                                                                placeholder={`Option ${index + 1}`}
+                                                                value={option.text}
+                                                                onChange={(e) => handleOptionChange(index, e)}
+                                                            />
+                                                        </Col>
+                                                        <Col md={3} className='col-9'>
+                                                            <Form.Control
+                                                                as="select"
+                                                                name="weightage"
+                                                                className='w-100'
+                                                                value={option.weightage}
+                                                                onChange={(e) => handleOptionChange(index, e)}
+                                                            >
+                                                                <option value="">Select weightage</option>
+                                                                <option value="1">1</option>
+                                                                <option value="2">2</option>
+                                                                <option value="3">3</option>
+                                                                <option value="4">4</option>
+                                                                <option value="5">5</option>
+                                                                <option value="6">6</option>
+                                                                <option value="7">7</option>
+                                                                <option value="8">8</option>
+                                                                <option value="9">9</option>
+                                                                <option value="10">10</option>
+                                                            </Form.Control>
 
-                                                    </Col>
-                                                    {/* <Col md={2} className='col-3'>
+                                                        </Col>
+                                                        {/* <Col md={2} className='col-3'>
                                                                     <Button type="button" onClick={() => removeOption(index)} variant="danger">
                                                                         <img src='/images/remove.png' alt='Remove' />
                                                                     </Button>
                                                                     </Col> */}
-                                                </Row>
+                                                    </Row>
 
-                                            </div>
-                                        ))}
-                                    </div>
-                                    {errors.options && <small className="text-danger">{errors.options}</small>}
-                                </Col>
+                                                </div>
+                                            ))}
+                                        </div>
+                                        {errors.options && <small className="text-danger">{errors.options}</small>}
+                                    </Col>
 
-                                <Col md={12}>
-                                    <div className="profile-btns pt-0">
-                                        <Button type="submit" className="default-btn">
-                                            {isEdit ? "Update" : "Save"}
-                                        </Button>
-                                        <Button type="button" className="default-btn cancel-btn" onClick={() => { setShowModal(false), setFormData(''), setIsEdit(''), setEditId('') }}>
-                                            Cancel
-                                        </Button>
-                                    </div>
-                                    {errors.form && <p className="text-danger">{errors.form}</p>}
-                                </Col>
-                            </Row>
-                        </Container>
-                    </Form>
-                </Modal.Body>
-            </Modal>
-        </div>
+                                    <Col md={12}>
+                                        <div className="profile-btns pt-0">
+                                            <Button type="submit" className="default-btn">
+                                                {isEdit ? "Update" : "Save"}
+                                            </Button>
+                                            <Button type="button" className="default-btn cancel-btn" onClick={() => {
+                                                setShowModal(false),
+                                                    setFormData({
+                                                        questionText: '',
+                                                        questionType: 'Radio', // 'Text' or 'Radio'
+                                                        options: [{ text: '', weightage: 1 }, { text: '', weightage: 1 }, { text: '', weightage: 1 }], // Added weightage
+                                                        createdBy: user?._id,
+                                                        currentCategoryId: null,
+                                                        organization_id: data?.ref_id
+                        
+                                                    });
+                                                setIsEdit(''),
+                                                    setEditId('')
+                                            }}>
+                                                Cancel
+                                            </Button>
+                                        </div>
+                                        {errors.form && <p className="text-danger">{errors.form}</p>}
+                                    </Col>
+                                </Row>
+                            </Container>
+                        </Form>
+                    </Modal.Body>
+                </Modal>
+            </div>
+            
     );
 }

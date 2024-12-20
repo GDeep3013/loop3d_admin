@@ -53,7 +53,7 @@ const CategoryController = {
             // Fetch categories with pagination
             let categories = [];
             if (getType == "AssignCompetency") {
-                categories = await Category.find()
+                categories = await Category.find({ organization_id: null })
             } else if (sortField && sortOrder) {
                 const order = sortOrder === 'asc' ? 1 : -1;
                 categories = await Category.find(query).sort({ [sortField]: order }).skip(skip).limit(limit);        

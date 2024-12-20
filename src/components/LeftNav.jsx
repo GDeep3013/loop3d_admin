@@ -59,7 +59,7 @@ export default function LeftNav({isMenuOpen,setIsMenuOpen}) {
           <li className="sideNavItem">
             <NavLink to="/competencies">
               <Category />
-              Competencies
+              Global  Competencies
             </NavLink>
           </li>
           <li className="sideNavItem">
