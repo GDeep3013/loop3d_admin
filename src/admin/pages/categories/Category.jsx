@@ -124,7 +124,7 @@ export default function Category() {
     const handlePaginationClickIC = (page) => setCurrentPageIC(page);
     const handlePaginationClickPM = (page) => setCurrentPagePM(page);
     return (
-        <AuthLayout title={'Welcome to Competency'} subTitle={'Competency'}>
+        <AuthLayout title={'Welcome to  Global  Competencies'} subTitle={' Global  Competencies'}>
             <div className="tabe-outer ">
                 <div className="main-back-heading">
                     <div className="container">
