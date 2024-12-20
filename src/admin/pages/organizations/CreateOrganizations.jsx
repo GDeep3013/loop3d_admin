@@ -57,7 +57,7 @@ export default function CreateOrganization({ id, savedData }) {
         } else if (formData.name.trim().length < 3) {
             errors.name = 'Organization name must be at least 3 characters long';
         }
-        
+
         if (!id && selectedCompetencies.length < 3) {
             errors.competency = 'At least 3 competencies must be selected';
         }
@@ -126,7 +126,7 @@ export default function CreateOrganization({ id, savedData }) {
                     <Row>
                         <Col md={6}>
                             <Form.Group className="mb-4">
-                                <Form.Label>Organization Name</Form.Label><sup style={{color:'red'}}>*</sup>
+                                <Form.Label>Organization Name</Form.Label><sup style={{ color: 'red' }}>*</sup>
                                 <Form.Control
                                     type="text"
                                     name="name"
@@ -143,20 +143,28 @@ export default function CreateOrganization({ id, savedData }) {
                                     <div className='list-scroll'>
                                         <h3>Individual Contributor</h3>
                                         <ul className='custom-tabs'>
-                                            {categories && categories
-                                                .filter(cat => cat.competency_type === 'individual_contributor' && cat.status !== "inactive")
-                                                .map((cat) => (
-                                                    <li key={cat._id} className='list-group-item d-flex align-items-center'>
-                                                        <label>
-                                                            <input
-                                                                type="checkbox"
-                                                                checked={selectedCompetencies.includes(cat._id)}
-                                                                onChange={() => handleCheckboxChange(cat._id)}
-                                                            />
-                                                            <span> {cat.category_name}</span>
-                                                        </label>
-                                                    </li>
-                                                ))}
+                                            {categories &&
+                                                categories
+                                                    .filter(cat => cat.competency_type === 'individual_contributor' && cat.status !== "inactive")
+                                                    .reduce((uniqueCategories, cat) => {
+                                                        if (!uniqueCategories.some(c => c.category_name === cat.category_name)) {
+                                                            uniqueCategories.push(cat);
+                                                        }
+                                                        return uniqueCategories;
+                                                    }, [])
+                                                    .map((cat) => (
+                                                        <li key={cat._id} className='list-group-item d-flex align-items-center'>
+                                                            <label>
+                                                                <input
+                                                                    type="checkbox"
+                                                                    checked={selectedCompetencies.includes(cat._id)}
+                                                                    onChange={() => handleCheckboxChange(cat._id)}
+                                                                />
+                                                                <span> {cat.category_name}</span>
+                                                            </label>
+                                                        </li>
+                                                    ))
+                                            }
                                         </ul>
                                     </div>
                                 </Col>
@@ -164,31 +172,40 @@ export default function CreateOrganization({ id, savedData }) {
                                     <div className='list-scroll'>
                                         <h3>People Manager</h3>
                                         <ul className='custom-tabs'>
-                                            {categories && categories
-                                                .filter(cat => cat.competency_type === 'people_manager' && cat.status !== "inactive")
-                                                .map((cat) => (
-                                                    <li key={cat._id} className='list-group-item d-flex align-items-center'>
-                                                        <label>
-                                                            <input
-                                                                type="checkbox"
-                                                                checked={selectedCompetencies.includes(cat._id)}
-                                                                onChange={() => handleCheckboxChange(cat._id)}
-                                                            />
-                                                            <span>{cat.category_name}</span>
-                                                        </label>
-                                                    </li>
-                                                ))}
+                                            {categories &&
+                                                categories
+                                                    .filter(cat => cat.competency_type === 'people_manager' && cat.status !== "inactive")
+                                                    .reduce((uniqueCategories, cat) => {
+                                                        // Check if the category_name is already in the uniqueCategories array
+                                                        if (!uniqueCategories.some(c => c.category_name === cat.category_name)) {
+                                                            uniqueCategories.push(cat);
+                                                        }
+                                                        return uniqueCategories;
+                                                    }, [])
+                                                    .map((cat) => (
+                                                        <li key={cat._id} className='list-group-item d-flex align-items-center'>
+                                                            <label>
+                                                                <input
+                                                                    type="checkbox"
+                                                                    checked={selectedCompetencies.includes(cat._id)}
+                                                                    onChange={() => handleCheckboxChange(cat._id)}
+                                                                />
+                                                                <span>{cat.category_name}</span>
+                                                            </label>
+                                                        </li>
+                                                    ))
+                                            }
                                         </ul>
                                     </div>
                                 </Col>
                             </Row>
-                        {errors.competency && <Col md={12}><small className="text-danger">{errors.competency}</small></Col>}
+                            {errors.competency && <Col md={12}><small className="text-danger">{errors.competency}</small></Col>}
                         </Col>}
 
                         <Col md={12}>
                             <div className="profile-btns pt-0 mt-3">
                                 <Button className="default-btn" onClick={handleSubmit} disabled={loader}>
-                                    {id ? (loader?"Updating" :"Update"): (loader?"Saving" :"Save")}
+                                    {id ? (loader ? "Updating" : "Update") : (loader ? "Saving" : "Save")}
                                 </Button>
                                 <Button className="default-btn cancel-btn" onClick={() => navigate('/organizations')}>
                                     Cancel
