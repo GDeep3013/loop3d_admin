@@ -116,7 +116,6 @@ exports.createAssignment = async (req, res) => {
 
             // Check if any documents were deleted
             if (result) {
-                await removeQuestions(category_id, ref_id);
                 return res.status(200).json({ message: 'Competency unassigned successfully' });
             } else {
                 return res.status(404).json({ message: 'No assignments found to remove' });

@@ -10,7 +10,7 @@ const CategoryController = {
             const { category_name, competency_type, created_by, status } = req.body;
     
             // Check if a category with the same name already exists
-            const existingCategory = await Category.findOne({ category_name });
+            const existingCategory = await Category.findOne({ category_name , competency_type});
             if (existingCategory) {
                 return res.status(400).json({ error: "Competency with this name already exists." });
             }

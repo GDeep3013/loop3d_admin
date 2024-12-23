@@ -120,7 +120,7 @@ const OrganizationController = {
     
                     // Save new assignment
                     await AssignCompetency.insertMany(newAssignments);
-                    await addQuestions(savedOrganization?._id)
+                    // await addQuestions(savedOrganization?._id)
 
                 }
             }

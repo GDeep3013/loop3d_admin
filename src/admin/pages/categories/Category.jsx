@@ -182,6 +182,13 @@ export default function Category() {
                                                 </td>
                                             </tr>
                                         )}
+                                        {!loading && paginatedICData.length === 0 && (
+                                            <tr>
+                                                <td colSpan="5" style={{ textAlign: 'center' }}>
+                                                    Record not found
+                                                </td>
+                                            </tr>
+                                        )}
                                         {!loading && paginatedICData.map((cat, ind) => (
                                             <tr key={cat._id}>
                                                 <td>{(currentPageIC - 1) * itemsPerPage + ind + 1}</td>
@@ -252,6 +259,13 @@ export default function Category() {
                                             <tr>
                                                 <td colSpan="5" style={{ textAlign: 'center' }}>
                                                     <Loading />
+                                                </td>
+                                            </tr>
+                                        )}
+                                        {!loading && paginatedPMData.length === 0 && (
+                                            <tr>
+                                                <td colSpan="5" style={{ textAlign: 'center' }}>
+                                                    Record not found
                                                 </td>
                                             </tr>
                                         )}

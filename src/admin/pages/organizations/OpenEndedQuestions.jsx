@@ -3,7 +3,7 @@ import { Button, Modal, Form, Container, Row, Col } from "react-bootstrap";
 import Swal from "sweetalert2";
 import { Link } from "react-router-dom";
 
-const OpenEndedQuestions = ({ activeTab, organization_id, createdBy,fetchQuestions,openQuestions,setOpenQuestions }) => {
+const OpenEndedQuestions = ({ activeTab, organization_id, createdBy, fetchQuestions, openQuestions, setOpenQuestions }) => {
     const [formData, setFormData] = useState({
         questionText: '',
         questionType: 'OpenEnded',
@@ -12,6 +12,14 @@ const OpenEndedQuestions = ({ activeTab, organization_id, createdBy,fetchQuestio
         currentCategoryId: null,
         organization_id: organization_id
     });
+
+    useEffect(() => {
+        setFormData(prevData => ({
+            ...prevData,
+            parentType: activeTab,
+        }));
+    }, [activeTab]);
+
 
     const [errors, setErrors] = useState({});
     const [showModal, setShowModal] = useState(false);
@@ -27,7 +35,7 @@ const OpenEndedQuestions = ({ activeTab, organization_id, createdBy,fetchQuestio
         return validationErrors;
     };
 
-  
+
     useEffect(() => {
         if (activeTab && organization_id) {
             fetchQuestions(organization_id); // Make sure the ref_id exists
@@ -41,6 +49,7 @@ const OpenEndedQuestions = ({ activeTab, organization_id, createdBy,fetchQuestio
             [name]: value
         }));
     };
+    // console.log(formData)
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -128,21 +137,21 @@ const OpenEndedQuestions = ({ activeTab, organization_id, createdBy,fetchQuestio
         }
     };
     const handleEditQuestion = async (question) => {
-        setShowModal(true);     
+        setShowModal(true);
         setEditId(question._id)
         setIsEdit(true);
-         setFormData({
+        setFormData({
             questionText: question?.questionText,
             questionType: 'OpenEnded',
             parentType: activeTab,
             createdBy: createdBy,
             currentCategoryId: null,
             organization_id: organization_id
-         });
-        console.log(formData,'formData')
-    
-    };
+        });
+        console.log(formData, 'formData')
 
+    };
+    // console.log('openQuestions',openQuestions)
     return (
         <div className="ended-questions p-4">
             <h2 className="fs-5 mb-3 font-semibold">Open Ended Questions</h2>
@@ -154,7 +163,7 @@ const OpenEndedQuestions = ({ activeTab, organization_id, createdBy,fetchQuestio
                             <span className='fw-bold'>Q{index + 1}:</span> {question.questionText}
                             <div className="question-actions ms-2">
                                 <Link onClick={() => { handleEditQuestion(question) }} style={{ cursor: 'pointer', color: 'red' }}> ✏️ </Link>
-                                <Link onClick={() => {handleDelete(question._id)}} style={{ cursor: 'pointer', color: 'red' }}> ❌ </Link>
+                                <Link onClick={() => { handleDelete(question._id) }} style={{ cursor: 'pointer', color: 'red' }}> ❌ </Link>
                             </div>
                         </div>
                     </p>
@@ -163,10 +172,10 @@ const OpenEndedQuestions = ({ activeTab, organization_id, createdBy,fetchQuestio
 
             </div>
             <Button variant="primary" onClick={() => setShowModal(true)} className="default-btn">
-            + Add New Question
+                + Add New Question
             </Button>
 
-            <Modal show={showModal} onHide={() => {setShowModal(false), setEditId(''), setIsEdit(false),setFormData(''),setErrors('')}} className="new-question">
+            <Modal show={showModal} onHide={() => { setShowModal(false), setEditId(''), setIsEdit(false), setFormData(''), setErrors('') }} className="new-question">
                 <Modal.Header closeButton>
                     <Modal.Title>{isEdit ? "Edit Question" : "Create New Question"}</Modal.Title>
                 </Modal.Header>
@@ -197,7 +206,7 @@ const OpenEndedQuestions = ({ activeTab, organization_id, createdBy,fetchQuestio
                                         <Button
                                             type="button"
                                             className="default-btn cancel-btn"
-                                            onClick={() =>  {setShowModal(false), setEditId(''), setIsEdit(false),setFormData(''),setErrors('')}
+                                            onClick={() => { setShowModal(false), setEditId(''), setIsEdit(false), setFormData(''), setErrors('') }
                                             }
                                         >
                                             Cancel

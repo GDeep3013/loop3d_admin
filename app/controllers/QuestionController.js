@@ -369,6 +369,8 @@ exports.cloneQuestion = async (req, res) => {
 // Function to delete a question
 exports.deleteQuestion = async (req, res) => {
     try {
+        // const Question1 = await Question.findById(req.params.id);
+        // return res.status(404).json({ message: Question1 });
         const deletedQuestion = await Question.findByIdAndDelete(req.params.id);
         if (!deletedQuestion) {
             return res.status(404).json({ message: 'Question not found' });

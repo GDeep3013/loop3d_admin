@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Row, Col, Tab, Tabs,Spinner, Accordion, Button, Modal, Form } from 'react-bootstrap';
+import { Container, Row, Col, Tab, Tabs, Spinner, Accordion, Button, Modal, Form } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
 import { getAssignmentsByUserAndOrg, createAssignCompetency } from "../../../apis/assignCompetencyApi";
 import { Edit, Remove } from '../../../components/svg-icons/icons'; // Importing edit and delete icons from React Icons
@@ -150,7 +150,11 @@ export default function AssignCompetencies({ data, type }) {
                 // console.log(result, 'result');
                 setSelectedCategory(result); // Assuming result is an array of category objects
             } else {
-                console.error("Error fetching categories:", result.message);
+                if (result.message == "No questions found for the given category and organization.") {
+
+                    setSelectedCategory(result);
+                }
+                else { console.error("Error fetching categories:", result.message); }
             }
         } catch (error) {
             console.error("Error fetching categories:", error);
@@ -265,8 +269,55 @@ export default function AssignCompetencies({ data, type }) {
                     timer: 1500
                 });
                 setShowModal(false)
+                // setCategories((prevCategories) => {
+                //     return prevCategories.map((category) => {
+                //         console.log(category.category_id,formData.currentCategoryId,data)
+                //         if (category.category_id === formData.currentCategoryId) {
+                //             return {
+                //                 ...category,
+                //                 questions: editId
+                //                     ? category.questions.map((question) =>
+                //                         question._id === editId
+                //                             ? { ...question, ...formData }
+                //                             : question
+                //                     )
+                //                     : [...category.questions, data] // Add new question if creating
+                //             };
+                //         }
+                //         return category;
+                //     });
+                // });
+                setCategories((prevCategories) => {
+                    return prevCategories.map((category) => {
+                        // Check if the category matches the selected category
+                        if (category._id === formData.currentCategoryId) {
+                            console.log(category._id,'of');
+                            return {
+                                ...category,
+                                questions: editId
+                                    ? category.questions.map((question) =>
+                                        question._id === editId
+                                            ? { ...question, ...formData }  // Edit question if editId matches
+                                            : question
+                                    )
+                                    : [...category.questions, data]  // Add new question if no editId
+                            };
+                        } else {
+                            console.log(category, data.category_id);
+                            if (category.category._id === data.category_id) {
+                                return {
+                                    ...category,
+                                    questions: [...category.questions, data]  // Push new question to the matched category
+                                };
+                            }
 
-                fetchCategoriesById(currentCategoryId ? currentCategoryId : formData.currentCategoryId)
+                            // Return the category unchanged if no match
+                            return category;
+                        }
+                    });
+                });
+
+                // fetchCategoriesById(currentCategoryId ? currentCategoryId : formData.currentCategoryId)
                 setFormData({
                     questionText: '',
                     questionType: 'Radio', // 'Text' or 'Radio'
@@ -276,6 +327,9 @@ export default function AssignCompetencies({ data, type }) {
                     organization_id: data?.ref_id
 
                 })
+                setIsEdit(false)
+                setErrors('');
+
             } else {
                 setErrors({ form: data.error });
             }
@@ -321,6 +375,7 @@ export default function AssignCompetencies({ data, type }) {
     // };
 
     const handleDelete = async (id, categoryId) => {
+
         try {
             const confirmResult = await Swal.fire({
                 title: "Are you sure?",
@@ -345,7 +400,19 @@ export default function AssignCompetencies({ data, type }) {
                         icon: "success",
                         confirmButtonColor: "#000",
                     });
-                    fetchCategoriesById(categoryId);
+                    setCategories(prevCategories => prevCategories.map(category => {
+
+                        if (category.category._id === categoryId) {
+                            return {
+                                ...category,
+                                questions: category.questions.filter(question => {
+                                    return question._id !== id;
+                                })
+                            };
+                        }
+                        return category;
+                    }));
+
                 } else {
                     console.error('Failed to delete question');
                 }
@@ -358,7 +425,7 @@ export default function AssignCompetencies({ data, type }) {
     const handleEditQuestion = async (value, cat_id) => {
         // console.log(value)
         setShowModal(true);
-        setEditId(value?.question_id)
+        setEditId(value?._id)
         setIsEdit(true);
         setCurrentCategoryId(cat_id);
         setFormData({
@@ -373,14 +440,15 @@ export default function AssignCompetencies({ data, type }) {
     };
     const handleTabSelect = (key) => {
         setActiveTab(key);
+        console.log('activeTab', activeTab);
 
     };
-    console.log('data?.ref_id', data?.ref_id)
+    // console.log('data?.ref_id', data?.ref_id)
     // console.log(formData)
     return (
-        loading?<div className="loading-spinner">
+        loading ? <div className="loading-spinner">
             <Spinner animation="border" variant="primary" />
-        </div>:
+        </div> :
             <div className="content-outer pd-2 edit-org tab-design">
                 <Tabs onSelect={handleTabSelect} defaultActiveKey="individualContributor" className="mb-3">
                     {/* Individual Contributor Tab */}
@@ -398,10 +466,10 @@ export default function AssignCompetencies({ data, type }) {
                                     }, [])
                                     .map((data) => (
                                         <Accordion.Item key={data?.category?._id} eventKey={data?.category?._id}>
-                                            <Accordion.Header onClick={(e) => {
-                                                fetchCategoriesById(data?.category?._id); // Custom logic for header click
-                                            }} >
-                                                <label onClick={() => { fetchCategoriesById(data?.category?._id); }}>
+                                            <Accordion.Header
+                                            // onClick={(e) => { fetchCategoriesById(data?.category?._id); }}
+                                            >
+                                                <label>
                                                     <input
                                                         type="checkbox"
                                                         checked={selectedCompetencies.includes(data?.category?._id)}
@@ -411,28 +479,26 @@ export default function AssignCompetencies({ data, type }) {
                                                 </label>
                                             </Accordion.Header>
                                             <Accordion.Body>
-                                                {selectedCategory && data?.category?._id == selectedCategory.category_id && (
+                                                {data?.questions && (
                                                     <div className="question-section">
                                                         {(() => {
                                                             let i = 1; // Initialize a counter
-                                                            return selectedCategory.questions.map((value) => (
-                                                                <div key={value.question_id} className="question-item">
+                                                            return data?.questions?.map((value) => (
+                                                                <div key={value._id} className="question-item">
                                                                     {value.questionType == "Radio" && (
                                                                         <p>
                                                                             <span className="fw-bold">Q{i++}:</span> {value.questionText}
                                                                             <div className="question-actions ms-2">
                                                                                 <Link
                                                                                     onClick={() => {
-                                                                                        handleEditQuestion(value, selectedCategory.category_id);
+                                                                                        handleEditQuestion(value, value.category_id);
                                                                                     }}
                                                                                     style={{ cursor: "pointer", color: "red" }}
                                                                                 >
                                                                                     ✏️
                                                                                 </Link>
                                                                                 <Link
-                                                                                    onClick={() =>
-                                                                                        handleDelete(value.question_id, selectedCategory.category_id)
-                                                                                    }
+                                                                                    onClick={() => { handleDelete(value._id, value.category_id) }}
                                                                                     style={{ cursor: "pointer", color: "red" }}
                                                                                 >
                                                                                     ❌
@@ -479,9 +545,9 @@ export default function AssignCompetencies({ data, type }) {
                                     }, [])
                                     ?.map((data) => (
                                         <Accordion.Item key={data?.category?._id} eventKey={data?.category?._id}>
-                                            <Accordion.Header onClick={(e) => {
-                                                fetchCategoriesById(data?.category?._id); // Custom logic for header click
-                                            }} >
+                                            <Accordion.Header
+                                            // onClick={(e) => { fetchCategoriesById(data?.category?._id); }}
+                                            >
                                                 <label >
                                                     <input
                                                         type="checkbox"
@@ -492,28 +558,26 @@ export default function AssignCompetencies({ data, type }) {
                                                 </label>
                                             </Accordion.Header>
                                             <Accordion.Body>
-                                                {selectedCategory && data?.category?._id == selectedCategory.category_id && (
+                                                {data?.questions  && (
                                                     <div className="question-section">
                                                         {(() => {
                                                             let i = 1; // Initialize a counter
-                                                            return selectedCategory.questions.map((value) => (
-                                                                <div key={value.question_id} className="question-item">
+                                                            return data?.questions.map((value) => (
+                                                                <div key={value._id} className="question-item">
                                                                     {value.questionType == "Radio" && (
                                                                         <p>
                                                                             <span className="fw-bold">Q{i++}:</span> {value.questionText}
                                                                             <div className="question-actions ms-2">
                                                                                 <Link
                                                                                     onClick={() => {
-                                                                                        handleEditQuestion(value, selectedCategory.category_id);
+                                                                                        handleEditQuestion(value, value.category_id);
                                                                                     }}
                                                                                     style={{ cursor: "pointer", color: "red" }}
                                                                                 >
                                                                                     ✏️
                                                                                 </Link>
                                                                                 <Link
-                                                                                    onClick={() =>
-                                                                                        handleDelete(value.question_id, selectedCategory.category_id)
-                                                                                    }
+                                                                                   onClick={() => { handleDelete(value._id, value.category_id) }}
                                                                                     style={{ cursor: "pointer", color: "red" }}
                                                                                 >
                                                                                     ❌
@@ -652,7 +716,7 @@ export default function AssignCompetencies({ data, type }) {
                                                         createdBy: user?._id,
                                                         currentCategoryId: null,
                                                         organization_id: data?.ref_id
-                        
+
                                                     });
                                                 setIsEdit(''),
                                                     setEditId('')
@@ -668,6 +732,6 @@ export default function AssignCompetencies({ data, type }) {
                     </Modal.Body>
                 </Modal>
             </div>
-            
+
     );
 }
