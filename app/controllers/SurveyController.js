@@ -2,6 +2,8 @@ const Survey = require('../models/Survey');
 const SurveyParticipant = require('../models/SurveyParticipantModel');
 const User = require('../models/User')
 const Role = require('../models/Role')
+const Question = require('../models/Question')
+
 const AssignCompetency = require('../models/AssignCompetencyModel');
 const Category = require('../models/CategoryModel')
 const SurveyReport = require('../models/SurveyReport')
@@ -413,32 +415,63 @@ exports.getSurveyById = async (req, res) => {
 
         // Step 2: Fetch related AssignCompetency data for the survey(s)
         const categoryIds = surveys.flatMap(survey => survey.competencies.map(comp => comp._id));
-        const assignCompetencies = await AssignCompetency.find({ organization_id: org_id1, user_id:manager_id,question_id: { $ne: null } 
-             // Ensure question_id is not null for both cases
-        }).populate({
-            path: 'question_id',
-            select: 'questionText questionType options', // Select necessary fields
-            populate: {
-                path: 'options',
-                select: 'text weightage' // Select specific fields for options
-            }
-        });
-        const questionsArray = assignCompetencies.map(ac => ac?.question_id);
-
-       
-        // Optionally remove duplicates if needed (e.g., if multiple entries for the same question)
-        const questions = Array.from(new Set(questionsArray.map(q => q?._id )))
-            .map(id => {
-                return questionsArray.find(q => q?._id.equals(id) );
-            });
-
-
+        // const assignCompetencies = await AssignCompetency.find({ organization_id: org_id1, question_id: { $ne: null } 
+        //      // Ensure question_id is not null for both cases
+        // }).populate({
+        //     path: 'question_id',
+        //     select: 'questionText questionType options', // Select necessary fields
+        //     populate: {
+        //         path: 'options',
+        //         select: 'text weightage' // Select specific fields for options
+        //     }
+        // });
         const competencies = await Category.find({
             _id: {
                 $in: categoryIds
             }
         })
-        console.log(competencies,'competencies');
+
+      
+        // Fetch the associated questions for each category
+        const questionsByCategory = [];
+       
+        for (const category of competencies) {
+          
+            // Get questions related to the current category
+            const questions = await Question.find({ category_id: category._id,questionType: "Radio" });
+       
+            if (questions.length > 0) {
+                questionsByCategory.push(...questions);
+            }
+        }
+
+        const questions2 = await Question.find({ organization_id: org_id1,questionType: "OpenEnded" });
+       
+        if (questions2.length > 0) {
+            questionsByCategory.push(...questions2);
+        }
+   
+        // const assignCompetencies = await AssignCompetency.find({
+        //     organization_id: org_id1,
+        //     category_id: { $ne: null }  // Match related categories
+        // }).populate({
+        //     path: 'category_id',
+        //     select: 'category_name competency_type'
+        // });
+
+    
+        // console.log( 'question' ,assignCompetencies,'question');
+
+       
+        // Optionally remove duplicates if needed (e.g., if multiple entries for the same question)
+        const questions = Array.from(new Set(questionsByCategory.map(q => q?._id )))
+            .map(id => {
+                return questionsByCategory.find(q => q?._id.equals(id) );
+            });
+
+
+    
+        // console.log(competencies,'competencies');
         // Step 3: Merge competencies and assignCompetencies data into the survey(s)
         const results = await Promise.all(surveys.map(async (survey) => {
 
@@ -613,7 +646,6 @@ const processParticipantAnswers = (
     participant, 
     answers, 
     participantType, 
-    assignCompetencies, 
     competencies, 
     questions, 
     report
@@ -633,11 +665,10 @@ const processParticipantAnswers = (
         for (const answer of answers) {
             const question = questions.find(q => q?._id.equals(answer?.questionId));
             if (question) {
-                const assignCompetency = assignCompetencies?.find(ac => ac?.question_id?.equals(question?._id));
                 let categoryName = previousCategoryName; // Default to the previous competency
 
-                if (assignCompetency) {
-                    const competency = competencies.find(c => c?._id.equals(assignCompetency?.category_id));
+                if (question?.category_id) {
+                    const competency = competencies.find(c => c?._id.equals(question?.category_id));
                     if (competency) {
                         categoryName = competency?.category_name; // Use the current competency
                         previousCategoryName = competency?.category_name; // Update the previous category for the next iteration
@@ -778,26 +809,60 @@ exports.generateSurveyReport = async (req, res) => {
         const manager_id =survey?.manager?._id
 
         const categoryIds = survey.competencies.map(comp => comp._id);
-        const assignCompetencies = await AssignCompetency.find({ organization_id: org_id1, user_id:manager_id,question_id: { $ne: null } 
-            // Ensure question_id is not null for both cases
-       }).populate({
-            path: 'question_id',
-            select: 'questionText questionType options',
-            populate: {
-                path: 'options',
-                select: 'text weightage'
-            }
-        });
-
-        const questionsArray = assignCompetencies.map(ac => ac?.question_id);
-        const questions = Array.from(new Set(questionsArray.map(q => q?._id)))
-            .map(id => questionsArray.find(q => q?._id.equals(id)));
+    //     const assignCompetencies = await AssignCompetency.find({ organization_id: org_id1,question_id: { $ne: null } 
+    //         // Ensure question_id is not null for both cases
+    //    }).populate({
+    //         path: 'question_id',
+    //         select: 'questionText questionType options',
+    //         populate: {
+    //             path: 'options',
+    //             select: 'text weightage'
+    //         }
+        //     });
         const competencies = await Category.find({
             _id: {
                 $in: categoryIds
             }
         });
 
+        const questionsByCategory = [];
+       
+        for (const category of competencies) {
+          
+            // Get questions related to the current category
+            const questions = await Question.find({ category_id: category._id,questionType: "Radio" });
+       
+            if (questions.length > 0) {
+                questionsByCategory.push(...questions);
+            }
+        }
+
+        const questions2 = await Question.find({ organization_id: org_id1,questionType: "OpenEnded" });
+       
+        if (questions2.length > 0) {
+            questionsByCategory.push(...questions2);
+        }
+   
+        // const assignCompetencies = await AssignCompetency.find({
+        //     organization_id: org_id1,
+        //     category_id: { $ne: null }  // Match related categories
+        // }).populate({
+        //     path: 'category_id',
+        //     select: 'category_name competency_type'
+        // });
+
+    
+        // console.log( 'question' ,assignCompetencies,'question');
+
+       
+        // Optionally remove duplicates if needed (e.g., if multiple entries for the same question)
+        const questions = Array.from(new Set(questionsByCategory.map(q => q?._id )))
+            .map(id => {
+                return questionsByCategory.find(q => q?._id.equals(id) );
+            });
+
+
+     
         const report = {
             surveyDetails: {
                 id: survey ?._id,
@@ -844,13 +909,13 @@ exports.generateSurveyReport = async (req, res) => {
         const loopLeadAnswers = await SurveyAnswers.findOne({
             participant_id: survey?.loop_lead?._id
         });
-        processParticipantAnswers(survey.loop_lead, loopLeadAnswers?.answers, 'Self', assignCompetencies, competencies, questions, report);
+        processParticipantAnswers(survey.loop_lead, loopLeadAnswers?.answers, 'Self',  competencies, questions, report);
 
         // Process Manager (Supervisor)
         const managerAnswers = await SurveyAnswers.findOne({
             participant_id: survey.manager?._id
         });
-        processParticipantAnswers(survey.manager, managerAnswers?.answers, 'Supervisor', assignCompetencies, competencies, questions, report);
+        processParticipantAnswers(survey.manager, managerAnswers?.answers, 'Supervisor', competencies, questions, report);
 
         // Process other participants (Direct Report, Teammate, Other)
         const participants = await SurveyParticipant.find({
@@ -861,7 +926,7 @@ exports.generateSurveyReport = async (req, res) => {
             const participantAnswers = await SurveyAnswers.findOne({
                 participant_id: participant?._id
             });
-            processParticipantAnswers(participant, participantAnswers?.answers, participantType, assignCompetencies, competencies, questions, report);
+            processParticipantAnswers(participant, participantAnswers?.answers, participantType, competencies, questions, report);
         }
         const survey_report = await SurveyReport.findOne({ survey_id: survey_id })
         let summary=[]
@@ -893,7 +958,7 @@ exports.generateSurveyReport = async (req, res) => {
     }
 };
 
-const calculateCategoryAverages = (assignCompetencies, competencies, questions, participantAnswers) => {
+const calculateCategoryAverages = (competencies, questions, participantAnswers) => {
     let report = {};
     let topStrength = '';
     let developmentalOpportunity = '';
@@ -902,7 +967,7 @@ const calculateCategoryAverages = (assignCompetencies, competencies, questions, 
 
     competencies ?.forEach((competency) => {
         const competencyQuestions = questions?.filter(q =>
-            assignCompetencies.some(ac => ac?.category_id.equals(competency?._id) && ac?.question_id?._id.equals(q?._id))
+            competency?._id.equals(q?.category_id)
         );
 
         let totalQuestions = 0;
@@ -980,32 +1045,61 @@ exports.generateCompetencyAverageReport = async (req, res) => {
         }
 
         const categoryIds = survey.competencies.map(comp => comp._id);
+        // const competencies = await Category.find({
+        //     _id: {
+        //         $in: categoryIds
+        //     }
+        // });
+        const org_id1 = survey?.organization?._id
+        // const manager_id = survey?.manager?._id
+        // const assignCompetencies = await AssignCompetency.find({organization_id: org_id1, user_id: manager_id, question_id: { $ne: null }}).populate({
+        //     path: 'question_id',
+        //     select: 'questionText questionType options',
+        //     populate: {
+        //         path: 'options',
+        //         select: 'text weightage'
+        //     }
+        // });
+
+        // if (!assignCompetencies || assignCompetencies.length === 0) {
+        //     return res.status(404).json({
+        //         error: 'No competencies found for the given survey'
+        //     });
+        // }
+
+        // // Fetch unique questions from assignCompetencies
+        // const questionsArray = assignCompetencies.map(ac => ac ?.question_id);
+        // const questions = Array.from(new Set(questionsArray.map(q => q ?._id)))
+        //     .map(id => questionsArray.find(q => q ?._id.equals(id)));
         const competencies = await Category.find({
             _id: {
                 $in: categoryIds
             }
         });
-        const org_id1 = survey?.organization?._id
-        const manager_id = survey?.manager?._id
-        const assignCompetencies = await AssignCompetency.find({organization_id: org_id1, user_id: manager_id, question_id: { $ne: null }}).populate({
-            path: 'question_id',
-            select: 'questionText questionType options',
-            populate: {
-                path: 'options',
-                select: 'text weightage'
-            }
-        });
 
-        if (!assignCompetencies || assignCompetencies.length === 0) {
-            return res.status(404).json({
-                error: 'No competencies found for the given survey'
-            });
+        const questionsByCategory = [];
+       
+        for (const category of competencies) {
+          
+            // Get questions related to the current category
+            const questions = await Question.find({ category_id: category._id,questionType: "Radio" });
+       
+            if (questions.length > 0) {
+                questionsByCategory.push(...questions);
+            }
         }
 
-        // Fetch unique questions from assignCompetencies
-        const questionsArray = assignCompetencies.map(ac => ac ?.question_id);
-        const questions = Array.from(new Set(questionsArray.map(q => q ?._id)))
-            .map(id => questionsArray.find(q => q ?._id.equals(id)));
+        const questions2 = await Question.find({ organization_id: org_id1,questionType: "OpenEnded" });
+       
+        if (questions2.length > 0) {
+            questionsByCategory.push(...questions2);
+        }
+   
+        const questions = Array.from(new Set(questionsByCategory.map(q => q?._id )))
+            .map(id => {
+                return questionsByCategory.find(q => q?._id.equals(id) );
+            });
+
 
         // Fetch participants for the survey
         const participants = await SurveyParticipant.find({
@@ -1039,7 +1133,7 @@ exports.generateCompetencyAverageReport = async (req, res) => {
             report,
             topStrength,
             developmentalOpportunity
-        } = calculateCategoryAverages(assignCompetencies, competencies, questions, participantAnswers);
+        } = calculateCategoryAverages(competencies, questions, participantAnswers);
 
         return res.status(200).json({
             report,

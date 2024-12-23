@@ -53,34 +53,36 @@ export default function StartSurveyForm() {
     //     setQuestionFormData({ ...questionFormData, currentCategoryId: categoryId });
     //     setShowModal(true); // Show the modal
     // };
-    const cloneQuestion = async (categoryId) => {
-        try {
-            console.log('categoryId',categoryId)
-            const response = await fetch('/api/questions/clone-question', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'x-api-key': import.meta.env.VITE_X_API_KEY 
-                },
-                body: JSON.stringify({organization_id:user?.organization, manager_id:user._id, categoryId:categoryId}),
-            });
+
     
-            const result = await response.json();
+    // const cloneQuestion = async (categoryId) => {
+    //     try {
+    //         console.log('categoryId',categoryId)
+    //         const response = await fetch('/api/questions/clone-question', {
+    //             method: 'POST',
+    //             headers: {
+    //                 'Content-Type': 'application/json',
+    //                 'x-api-key': import.meta.env.VITE_X_API_KEY 
+    //             },
+    //             body: JSON.stringify({organization_id:user?.organization, manager_id:user._id, categoryId:categoryId}),
+    //         });
     
-            if (response.ok) {
-                // Handle success (e.g., update UI or show a success message)
-                fetchQuestions()
-            } else {
-                // Handle error
-                console.error('Error cloning question:', result.message);
-            }
-        } catch (error) {
-            console.error('Network error:', error);
-        }
-    };
+    //         const result = await response.json();
+    
+    //         if (response.ok) {
+    //             // Handle success (e.g., update UI or show a success message)
+    //             fetchQuestions()
+    //         } else {
+    //             // Handle error
+    //             console.error('Error cloning question:', result.message);
+    //         }
+    //     } catch (error) {
+    //         console.error('Network error:', error);
+    //     }
+    // };
 
     const handleCheckboxChange = (label, id) => {
-        cloneQuestion(id)
+        // cloneQuestion(id)
         if (selectedCheckboxes.includes(id)) {
             setSelectedCheckboxes(selectedCheckboxes.filter((item) => item !== id));
         } else {
@@ -458,7 +460,7 @@ export default function StartSurveyForm() {
 
     const options = assignments[activeTab] || [];
     const uniqueOptions = options.filter(
-        (option, index, self) => self.findIndex(o => o.id === option.id) === index
+        (option, index, self) => self.findIndex(o => o.name === option.name) === index
     );
 
     return (
