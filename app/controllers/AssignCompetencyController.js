@@ -180,7 +180,6 @@ exports.getAssignmentById = async (req, res) => {
                     category_id: cat_id,
                      organization_id: org_id,
                      manager:null
-
                 }).select('questionText questionType status options');
             }
     

@@ -83,13 +83,12 @@ const OrganizationController = {
             const organization = new Organization({ name });
             const savedOrganization = await organization.save();
             if (savedOrganization?._id) {
-                const clonedCategories = await addQuestions(savedOrganization?._id); // Clone categories and questions
-
+                const clonedCategories = await addQuestions(savedOrganization?._id); 
                 for (let competency of selectedCompetency) {
                     const newAssignments = [];
                     const category1 = await Category.findById(competency);
                     const matchedCategory = clonedCategories.find(
-                        (category) => category.category_name == category1.category_name // Match by category name
+                        (category) => category.category_name == category1.category_name 
                     );
 
                     if (!matchedCategory) {

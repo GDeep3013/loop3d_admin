@@ -286,88 +286,88 @@ exports.updateQuestion = async (req, res) => {
         }
 };
     
-exports.cloneQuestion = async (req, res) => {
-    const { organization_id, categoryId, manager_id } = req.body;
+// exports.cloneQuestion = async (req, res) => {
+//     const { organization_id, categoryId, manager_id } = req.body;
 
-    try {
-        // Use $or to match either category_id or organization_id
-        const questions = await Question.find({
-            $or: [
-                { organization_id: organization_id, category_id: categoryId },  // First condition: organization_id and category_id match
-                { organization_id: organization_id, questionType: 'OpenEnded' }  // Second condition: organization_id and questionType "OpenEnded"
-            ]
-        });
-        const clonedQuestions = [];
+//     try {
+//         // Use $or to match either category_id or organization_id
+//         const questions = await Question.find({
+//             $or: [
+//                 { organization_id: organization_id, category_id: categoryId },  // First condition: organization_id and category_id match
+//                 { organization_id: organization_id, questionType: 'OpenEnded' }  // Second condition: organization_id and questionType "OpenEnded"
+//             ]
+//         });
+//         const clonedQuestions = [];
 
-        // Iterate over the existing assignments
-        for (const question of questions) {
-            // Check if the question already exists in the same category and organization
-            const existingQuestion = await Question.findOne({
-                $or: [// Second condition: organization_id and questionType "OpenEnded"
+//         // Iterate over the existing assignments
+//         for (const question of questions) {
+//             // Check if the question already exists in the same category and organization
+//             const existingQuestion = await Question.findOne({
+//                 $or: [             
+//                 {
+//                     questionText: question.questionText,
+//                     category_id: categoryId,
+//                     organization_id: organization_id,
+//                     manager: manager_id
+//                 },
+//                 {
+//                     questionText: question.questionText,
+//                     organization_id: organization_id,
+//                     manager: manager_id,
+//                     questionType: 'OpenEnded'
+//                 }]
+//             });
+
+//             // If the question already exists, skip cloning
+//             if (existingQuestion) {
+//                 continue;  // Skip cloning this question
+//             }
+
+//             // Clone the question based on its properties
+//             const clonedQuestion = new Question({
+//                 questionType: question.questionType,
+//                 questionText:  question.questionText,
+//                 parentType:question.parentType?question.parentType:null,
+//                 options: question.options,  // Assuming 'options' is part of the question
+//                 category_id: categoryId,   // Assign the new category_id
+//                 organization_id: organization_id,
+//                 manager: manager_id,        // Assign the new manager_id
+//                 status: 'active',           // Status can be set to 'active' or any other status you prefer
+//             });
+
+//             // Save the cloned question
+//             await clonedQuestion.save();
+//             if (clonedQuestion._id) {
                 
-                {
-                    questionText: question.questionText,
-                    category_id: categoryId,
-                    organization_id: organization_id,
-                    manager: manager_id
-                },
-                {
-                    questionText: question.questionText,
-                    organization_id: organization_id,
-                    manager: manager_id,
-                    questionType: 'OpenEnded'
-                }]
-            });
+//                 clonedQuestions.push({
+//                     questionText: clonedQuestion.questionText,
+//                     category_id: categoryId,
+//                     organization_id: organization_id,
+//                     question_id:clonedQuestion._id,
+//                       user_id: manager_id,
+//                 });
+//             }
 
-            // If the question already exists, skip cloning
-            if (existingQuestion) {
-                continue;  // Skip cloning this question
-            }
+//             // Add to the set to avoid duplicating in future iterations
+//         }
+//         if (clonedQuestions.length > 0) {
+//             await AssignCompetency.insertMany(clonedQuestions);
+//         }
 
-            // Clone the question based on its properties
-            const clonedQuestion = new Question({
-                questionType: question.questionType,
-                questionText:  question.questionText,
-                parentType:question.parentType?question.parentType:null,
-                options: question.options,  // Assuming 'options' is part of the question
-                category_id: categoryId,   // Assign the new category_id
-                organization_id: organization_id,
-                manager: manager_id,        // Assign the new manager_id
-                status: 'active',           // Status can be set to 'active' or any other status you prefer
-            });
+//         // Save the assignments if there are new cloned questions
 
-            // Save the cloned question
-            await clonedQuestion.save();
-            if (clonedQuestion._id) {
-                
-                clonedQuestions.push({
-                    questionText: clonedQuestion.questionText,
-                    category_id: categoryId,
-                    organization_id: organization_id,
-                    question_id:clonedQuestion._id,
-                        user_id: manager_id,
-                });
-            }
+//         // Send a success response after cloning questions
+//         res.status(200).json({ message: 'Questions cloned successfully.' });
 
-            // Add to the set to avoid duplicating in future iterations
-        }
-        if (clonedQuestions.length > 0) {
-            await AssignCompetency.insertMany(clonedQuestions);
-        }
+//     } catch (error) {
+//         console.error('Error cloning questions:', error);
+//         res.status(500).json({ message: 'Failed to clone questions.', error: error.message });
+//     }
+// };
 
-        // Save the assignments if there are new cloned questions
 
-        // Send a success response after cloning questions
-        res.status(200).json({ message: 'Questions cloned successfully.' });
 
-    } catch (error) {
-        console.error('Error cloning questions:', error);
-        res.status(500).json({ message: 'Failed to clone questions.', error: error.message });
-    }
-};
-
-// Function to delete a question
-exports.deleteQuestion = async (req, res) => {
+exports.deleteQuestion = async (req, res) => {  
     try {
         // const Question1 = await Question.findById(req.params.id);
         // return res.status(404).json({ message: Question1 });

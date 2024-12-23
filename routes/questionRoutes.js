@@ -21,7 +21,7 @@ router.delete('/:id', QuestionController.deleteQuestion);
 
 router.post('/send-prompt', ChatController.sendPromptToChatGPT);
 router.post('/send-prompt', ChatController.sendPromptToChatGPT);
-router.post('/clone-question', QuestionController.cloneQuestion);
+// router.post('/clone-question', QuestionController.cloneQuestion);
 
 
 
