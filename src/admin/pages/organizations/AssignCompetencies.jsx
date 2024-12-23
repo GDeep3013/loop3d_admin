@@ -19,11 +19,12 @@ export default function AssignCompetencies({ data, type }) {
     const [editId, setEditId] = useState('');
     const [isEdit, setIsEdit] = useState(false);
     const [openEndedQuestions, setOpenEndedQuestions] = useState([]);
+    const option = [{ text: 'Always', weightage: 3 }, { text: 'Usually', weightage: 2 }, { text: 'Never', weightage: 1 }];
 
     const [formData, setFormData] = useState({
         questionText: '',
         questionType: 'Radio', // 'Text' or 'Radio'
-        options: [{ text: '', weightage: 1 }, { text: '', weightage: 1 }, { text: '', weightage: 1 }],
+        options: option,
         createdBy: user?._id,
         currentCategoryId: null,
         organization_id: data?.ref_id
@@ -167,7 +168,7 @@ export default function AssignCompetencies({ data, type }) {
         setFormData({
             questionText: '',
             questionType: 'Radio', // 'Text' or 'Radio'
-            options: [{ text: '', weightage: 1 }, { text: '', weightage: 1 }, { text: '', weightage: 1 }], // Added weightage
+            options:option, // Added weightage
             createdBy: user?._id,
             currentCategoryId: categoryId,
             organization_id: data?.ref_id
@@ -321,7 +322,7 @@ export default function AssignCompetencies({ data, type }) {
                 setFormData({
                     questionText: '',
                     questionType: 'Radio', // 'Text' or 'Radio'
-                    options: [{ text: '', weightage: 1 }, { text: '', weightage: 1 }, { text: '', weightage: 1 }], // Added weightage
+                    options:option, // Added weightage
                     createdBy: user?._id,
                     currentCategoryId: null,
                     organization_id: data?.ref_id
@@ -431,7 +432,7 @@ export default function AssignCompetencies({ data, type }) {
         setFormData({
             questionText: value?.questionText || '', // Assign questionText or fallback to an empty string
             questionType: value?.questionType || '', // Assign questionType or fallback to an empty string
-            options: value?.options || [{ text: '', weightage: 1 }, { text: '', weightage: 1 }, { text: '', weightage: 1 }], // Assign options or fallback to default
+            options: value?.options || option, // Assign options or fallback to default
             createdBy: user?._id,
             organization_id: data?.ref_id
             // Keep the current user ID
@@ -615,7 +616,7 @@ export default function AssignCompetencies({ data, type }) {
                         setFormData({
                             questionText: '',
                             questionType: 'Radio', // 'Text' or 'Radio'
-                            options: [{ text: '', weightage: 1 }, { text: '', weightage: 1 }, { text: '', weightage: 1 }], // Added weightage
+                            options: option, // Added weightage
                             createdBy: user?._id,
                             currentCategoryId: null,
                             organization_id: data?.ref_id
@@ -712,7 +713,7 @@ export default function AssignCompetencies({ data, type }) {
                                                     setFormData({
                                                         questionText: '',
                                                         questionType: 'Radio', // 'Text' or 'Radio'
-                                                        options: [{ text: '', weightage: 1 }, { text: '', weightage: 1 }, { text: '', weightage: 1 }], // Added weightage
+                                                        options: option, // Added weightage
                                                         createdBy: user?._id,
                                                         currentCategoryId: null,
                                                         organization_id: data?.ref_id
