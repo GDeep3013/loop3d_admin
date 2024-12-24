@@ -40,7 +40,7 @@ export default function SurveyList() {
 
 
   return (
-    <div className='table-inner mt-5'>
+    <div className='table-inner mt-5  main-wrapper pd-2 bg-white shadow-border-wrapper ml-8'>
       <div className='content-outer'>
         <div className='tabe-outer'>
           <div className='table-heading'>

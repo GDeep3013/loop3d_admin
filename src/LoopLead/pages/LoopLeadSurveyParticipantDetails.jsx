@@ -125,7 +125,7 @@ export default function LoopLeadSurveyParticipantDetails() {
                     </div>
                 </div>
 
-                <div className='table-scroll table-pd'>
+                <div className='table-scroll table-pd '>
                     <table className='table'>
                         <thead>
                             <tr>
