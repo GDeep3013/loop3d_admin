@@ -145,6 +145,7 @@ export default function ViewLoopLead({ user_id, org_id }) {
     if (loader) {
         return <div className='loader ms-4 '>Loading...</div>;
     }
+    console.log(leadUser?.created_by?.email)
 
     return (
         <div className='looplead-box new-box d-flex align-items-start'>

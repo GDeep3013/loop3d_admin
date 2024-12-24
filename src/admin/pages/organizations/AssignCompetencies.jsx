@@ -444,7 +444,7 @@ export default function AssignCompetencies({ data, type }) {
             <Spinner animation="border" variant="primary" />
         </div> :
             <div className="content-outer pd-2 edit-org tab-design">
-                <Tabs onSelect={handleTabSelect} defaultActiveKey="individualContributor" className="mb-3">
+                <Tabs onSelect={handleTabSelect} defaultActiveKey="individualContributor" className="mb-0">
                     {/* Individual Contributor Tab */}
                     <Tab eventKey="individualContributor" title="Individual Contributor">
                         <div className="list-scroll">

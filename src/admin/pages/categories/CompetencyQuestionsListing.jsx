@@ -289,7 +289,7 @@ export default function CompetencyQuestionsListing({ cat_id }) {
 
               {!loading && questions.length > 0 && questions?.map((question, ind) => (
 
-                <tr key={question?.question_id?._id}>
+                <tr key={question?.question_id?._id} className='table-list-design'>
                   <td>{(currentPage - 1) * 10 + (ind + 1)}</td>
                   <td>
                     {question?.question_id?.questionText}
