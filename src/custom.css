@@ -73,6 +73,7 @@ table.table tbody tr.table-list-hover:hover td{ background-color: #edf9ff; }
 
 table.table tbody tr.table-list-design:hover{ background-color: #edf9ff; }
 table.table tbody tr.table-list-design:hover td{ background-color: #edf9ff; }
+.loginForm form.formOuter input.form-control {padding:0 43px;}
 
 @keyframes fadeIn { 100% { opacity: 1; transform: none; } }
 /* start project overview css */
