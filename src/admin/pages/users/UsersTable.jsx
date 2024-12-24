@@ -128,7 +128,8 @@ export default function EmployeeTable({ }) {
             {
               !loading && Employe.length > 0 && Employe.map((user, ind) => (
 
-                user?.role?.type != "admin" && <tr key={user?._id}>
+                user?.role?.type != "admin" &&
+                <tr key={user?._id} className='table-list-design'>
                   <td>{(currentPage - 1) * 10 + (ind + 1)}</td>
                   <td>
                     <div className="user-profile d-flex align-items-center">

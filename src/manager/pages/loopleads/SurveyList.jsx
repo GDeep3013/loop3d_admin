@@ -86,24 +86,24 @@ export default function SurveyList({ loop_lead_id, org_id }) {
               </tr>
             ) : (
               surveys.map((survey, index) => (
-                <tr key={survey._id}>
-                  <td>{index + 1}</td>
-                  <td>{formatDateGB(survey.createdAt)}</td>
-                  <td>{survey.total_invites}</td>
-                  <td>{survey.completed_survey}</td>
-                  <td>{survey.ll_survey_status === 'yes' ? <span className='span-badge active-tag'>Yes</span> : <span className='span-badge inactive-tag'> Not completed
+                <tr key={survey._id} className='table-list-hover'>
+                  <td onClick={() => navigate(`/view-survey-participant/${survey._id}`)}>{index + 1}</td>
+                  <td onClick={() => navigate(`/view-survey-participant/${survey._id}`)}>{formatDateGB(survey.createdAt)}</td>
+                  <td onClick={() => navigate(`/view-survey-participant/${survey._id}`)}>{survey.total_invites}</td>
+                  <td onClick={() => navigate(`/view-survey-participant/${survey._id}`)}>{survey.completed_survey}</td>
+                  <td onClick={() => navigate(`/view-survey-participant/${survey._id}`)}>{survey.ll_survey_status === 'yes' ? <span className='span-badge active-tag'>Yes</span> : <span className='span-badge inactive-tag'> Not completed
                   </span>}</td>
-                  <td>{survey.mgr_survey_status === 'yes' ? <span className='span-badge active-tag'>Yes</span> : <span className='span-badge inactive-tag'> Not completed
+                  <td onClick={() => navigate(`/view-survey-participant/${survey._id}`)}>{survey.mgr_survey_status === 'yes' ? <span className='span-badge active-tag'>Yes</span> : <span className='span-badge inactive-tag'> Not completed
                   </span>}</td>
-                  <td>{survey.survey_status === 'completed' ? <span className='span-badge active-tag'>Completed</span> : <span className='span-badge inactive-tag'>Pending</span>}</td>
+                  <td onClick={() => navigate(`/view-survey-participant/${survey._id}`)}>{survey.survey_status === 'completed' ? <span className='span-badge active-tag'>Completed</span> : <span className='span-badge inactive-tag'>Pending</span>}</td>
 
-                  <td>
+                  <td onClick={() => navigate(`/view-survey-participant/${survey._id}`)}>
                     {survey.report_gen_date
                       ? formatDateGB(survey.report_gen_date)
                       : 'Not available yet'}
                   </td>
                   <td>
-                    <button className='action-btn' onClick={() => navigate(`/view-survey-participant/${survey._id}`)}><View /></button>
+                    {/* <button className='action-btn' onClick={() => navigate(`/view-survey-participant/${survey._id}`)}><View /></button> */}
                     <button className='action-btn' onClick={() => navigate(`/survey-summary/${survey._id}`)} disabled={survey.report_gen_date == null ? true : false}>
                       View Report
                     </button>

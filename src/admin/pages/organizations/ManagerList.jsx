@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from "react-router-dom";
-import { StatusIcon, MoreIcon,View ,Edit } from "../../../components/svg-icons/icons";
+import { StatusIcon, MoreIcon, View, Edit } from "../../../components/svg-icons/icons";
 import { Container, Dropdown, Row, Col } from 'react-bootstrap'
 import { Link } from "react-router-dom";
 import { fetchLoopLeads } from '../../../apis/UserApi';
@@ -28,13 +28,13 @@ export default function ManagerList({ organization }) {
                 }
             })();
         }
-    }, [organization.orgniation_id,searchTerm]);
+    }, [organization.orgniation_id, searchTerm]);
 
 
     const handleSearch = (e) => {
         setSearchTerm(e.target.value);
     };
-   
+
     return (<>
         <div className='table-inner'>
             <div className='content-outer'>
@@ -55,45 +55,44 @@ export default function ManagerList({ organization }) {
                 </div>
             </div>
             <div className='table-scroll table-pd'>
-            <table className='table'>
-                <thead>
-                    <tr>
-                        <th>First Name</th>
-                        <th>Last Name</th>
-                        <th>Email address</th>
-                        {/* <th>Role</th> */}
-                        <th>Status <StatusIcon /> </th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {users.length === 0 ? (
+                <table className='table'>
+                    <thead>
                         <tr>
-                            <td colSpan="12" style={{ textAlign: 'center' }}>
-                                <h4>No Supervisors Found</h4>
-                            </td>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Email address</th>
+                            {/* <th>Role</th> */}
+                            <th>Status <StatusIcon /> </th>
+                            <th>Action</th>
                         </tr>
-                    ) : (
+                    </thead>
+                    <tbody>
+                        {users.length === 0 ? (
+                            <tr>
+                                <td colSpan="5" style={{ textAlign: 'center' }}>
+                                    <h4>No Supervisors Found</h4>
+                                </td>
+                            </tr>
+                        ) : (
                             users.map(user => (
-                            <tr key={user._id}>
-                                <td>
-                                    <div className="user-profile d-flex align-items-center">
-                                        <div className='user-name'>{user?.first_name}</div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div className="user-profile d-flex align-items-center">
-                                        <div className='user-name'>{user?.last_name}</div>
-                                    </div>
-                                </td>
-                                    <td>{user.email}</td>
-
-                                {/* <td>{user.role.type}</td> */}
-                                <td><span className='span-badge active-tag'>Active</span></td>
+                                <tr key={user._id} className='table-list-hover'>
+                                    <td onClick={() => navigate(`/view-loop_lead/${user._id}/${organization.orgniation_id}`)}>
+                                        <div className="user-profile d-flex align-items-center">
+                                            <div className='user-name'>{user?.first_name}</div>
+                                        </div>
+                                    </td>
+                                    <td onClick={() => navigate(`/view-loop_lead/${user._id}/${organization.orgniation_id}`)}>
+                                        <div className="user-profile d-flex align-items-center">
+                                            <div className='user-name'>{user?.last_name}</div>
+                                        </div>
+                                    </td>
+                                    <td onClick={() => navigate(`/view-loop_lead/${user._id}/${organization.orgniation_id}`)}>{user.email}</td>
+                                    {/* <td>{user.role.type}</td> */}
+                                    <td onClick={() => navigate(`/view-loop_lead/${user._id}/${organization.orgniation_id}`)}><span className='span-badge active-tag'>Active</span></td>
                                     <td>
-                                    <button className='action-btn' onClick={() => navigate(`/view-loop_lead/${user._id}/${organization.orgniation_id}`)}><View /></button>
-                                    <button className='action-btn' onClick={() => navigate(`/add-user/${user._id}`)}><Edit /></button>
-                                    {/* <Dropdown className='custom-dropdown'>
+                                        {/* <button className='action-btn' onClick={() => navigate(`/view-loop_lead/${user._id}/${organization.orgniation_id}`)}><View /></button> */}
+                                        <button className='action-btn' onClick={() => navigate(`/add-user/${user._id}`)}><Edit /></button>
+                                        {/* <Dropdown className='custom-dropdown'>
                                         <Dropdown.Toggle variant="success" id="dropdown-basic">
                                             <MoreIcon />
                                         </Dropdown.Toggle>
@@ -103,12 +102,12 @@ export default function ManagerList({ organization }) {
                                             <Dropdown.Item onClick={() => navigate(`/add-user/${user._id}`)}>Edit</Dropdown.Item>
                                         </Dropdown.Menu>
                                     </Dropdown> */}
-                                </td>
-                            </tr>
-                        ))
-                    )}
-                </tbody>
-            </table>
+                                    </td>
+                                </tr>
+                            ))
+                        )}
+                    </tbody>
+                </table>
             </div>
         </div>
     </>

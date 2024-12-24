@@ -148,7 +148,7 @@ export default function LoopLeadSurveyParticipantDetails() {
                                 </tr>
                             ) : (
                                 surveyParticipant.map((participant, index) => (
-                                    <tr key={participant._id}>
+                                    <tr key={participant._id} className='table-list-design' >
                                         <td>{index + 1}</td>
                                         <td>{participant?.p_first_name}</td>
                                         <td>{participant?.p_last_name}</td>
