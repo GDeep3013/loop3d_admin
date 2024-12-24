@@ -330,7 +330,6 @@ const UserController = {
                 };
             }));
 
-            // console.log(usersWithSurveyCounts,'usersWithSurveyCounts')
             res.status(200).json({
                 status: 'success',
                 users: usersWithSurveyCounts,
@@ -490,7 +489,7 @@ const UserController = {
     UpdateLoopLead: async (req, res) => {
         const { id } = req.params;
         const { first_name, last_name, email, title, new_created_by, created_by } = req.body;
-        console.log(id);
+  
         try {
             // Check if the provided email is unique (not already in use)
             const existingUser = await User.findOne({ email });

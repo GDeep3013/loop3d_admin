@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from "react-router-dom";
-import { StatusIcon, MoreIcon, View, Edit } from "../../../components/svg-icons/icons";
+import { StatusIcon, MoreIcon,View ,Edit } from "../../../components/svg-icons/icons";
 import { Container, Dropdown, Row, Col } from 'react-bootstrap'
 import { Link } from "react-router-dom";
 import { fetchLoopLeads } from '../../../apis/UserApi';
@@ -28,7 +28,7 @@ export default function ManagerList({ organization }) {
                 }
             })();
         }
-    }, [organization.orgniation_id, searchTerm]);
+    }, [organization.orgniation_id,searchTerm]);
 
 
     const handleSearch = (e) => {

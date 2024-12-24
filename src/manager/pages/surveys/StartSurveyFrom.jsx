@@ -57,7 +57,6 @@ export default function StartSurveyForm() {
     
     // const cloneQuestion = async (categoryId) => {
     //     try {
-    //         console.log('categoryId',categoryId)
     //         const response = await fetch('/api/questions/clone-question', {
     //             method: 'POST',
     //             headers: {
@@ -342,7 +341,6 @@ export default function StartSurveyForm() {
     // };
 
     // const handleEditQuestion = async (value,cat_id) => {
-    //     // console.log(value)
     //     setShowModal(true);     
     //     setEditId(value?.question_id)
     //     setIsEdit(true);
@@ -360,7 +358,6 @@ export default function StartSurveyForm() {
 
     // const handleQuestionSubmit = async (e) => {
     //     e.preventDefault();
-    //     console.log('questionFormData',questionFormData)
     //     const validationErrors = validateQuestionForm(questionFormData);
     //     if (Object.keys(validationErrors).length > 0) {
     //         setErrors(validationErrors);
@@ -421,7 +418,6 @@ export default function StartSurveyForm() {
             });
             const result = await response.json();
             if (response.ok && result) {
-                // console.log(result, 'result');
                 setSelectedCategory(result); // Assuming result is an array of category objects
             } else {
                 console.error("Error fetching categories:", result.message);

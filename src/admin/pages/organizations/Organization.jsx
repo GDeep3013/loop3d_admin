@@ -150,7 +150,7 @@ export default function Organization() {
 
                             {loading && (
                                 <tr>
-                                    <td colSpan="12" style={{ textAlign: 'center' }}>
+                                    <td colSpan="5" style={{ textAlign: 'center' }}>
                                         <Loading />
                                     </td>
                                 </tr>)
@@ -158,7 +158,7 @@ export default function Organization() {
 
                             {!loading && Organizations.length === 0 && (
                                 <tr>
-                                    <td colSpan="6" style={{ textAlign: 'center' }}>
+                                    <td colSpan="5" style={{ textAlign: 'center' }}>
                                         <h4>No Organizations Found</h4>
                                     </td>
                                 </tr>

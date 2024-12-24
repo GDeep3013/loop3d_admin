@@ -39,7 +39,6 @@ export default function Category() {
                 headers: { 'x-api-key': import.meta.env.VITE_X_API_KEY }
             });
             result = await result.json();
-            console.log(result.categories)
             setCategory(result.categories);
             setTotalPages(result.meta.totalPages);
 

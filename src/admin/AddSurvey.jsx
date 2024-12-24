@@ -59,9 +59,7 @@ export default function AddCategory() {
         })
         .catch(error => {
           if (error.response) {
-            console.log('Server responded with non-2xx status:', error.response.status);
-            console.log('Response data:', error.response.data);
-            console.log('Response headers:', error.response.headers);
+          
             setErrors(error.response.data.errors);
   
           } else if (error.request) {

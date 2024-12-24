@@ -114,7 +114,7 @@ export default function EmailList() {
           <tbody>
             {!loading && emails.length === 0 &&
               <tr>
-                <td colSpan="6" style={{ textAlign: 'center' }}>
+                <td colSpan="3" style={{ textAlign: 'center' }}>
                   <h4>No Emails Found</h4>
                 </td>
               </tr>

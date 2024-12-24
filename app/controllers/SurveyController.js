@@ -460,7 +460,6 @@ exports.getSurveyById = async (req, res) => {
         // });
 
     
-        // console.log( 'question' ,assignCompetencies,'question');
 
        
         // Optionally remove duplicates if needed (e.g., if multiple entries for the same question)
@@ -471,7 +470,6 @@ exports.getSurveyById = async (req, res) => {
 
 
     
-        // console.log(competencies,'competencies');
         // Step 3: Merge competencies and assignCompetencies data into the survey(s)
         const results = await Promise.all(surveys.map(async (survey) => {
 
@@ -852,7 +850,6 @@ exports.generateSurveyReport = async (req, res) => {
         // });
 
     
-        // console.log( 'question' ,assignCompetencies,'question');
 
        
         // Optionally remove duplicates if needed (e.g., if multiple entries for the same question)
@@ -1226,7 +1223,7 @@ const generateSummary = async (survey_id,report) => {
         try {
             
             const resultsJson = JSON.stringify(formattedResult);
-            console.log(resultsJson)
+         
 
             // Create the different prompts
             const questionSummary = 

@@ -173,7 +173,7 @@ export default function CompetencyQuestionsListing({ cat_id }) {
 
 
   const handleEditQuestion = async (value, cat_id) => {
-    // console.log(value)
+
     setShowModal(true);
     setEditId(value?._id)
     setIsEdit(true);
@@ -273,7 +273,7 @@ export default function CompetencyQuestionsListing({ cat_id }) {
 
               {loading && (
                 <tr>
-                  <td colSpan="12" style={{ textAlign: 'center' }}>
+                  <td colSpan="5" style={{ textAlign: 'center' }}>
                     <Loading />
                   </td>
                 </tr>)
@@ -281,7 +281,7 @@ export default function CompetencyQuestionsListing({ cat_id }) {
 
               {!loading && questions.length === 0 &&
                 <tr>
-                  <td colSpan="6" style={{ textAlign: 'center' }}>
+                  <td colSpan="5" style={{ textAlign: 'center' }}>
                     <h4>No Questions Found</h4>
                   </td>
                 </tr>

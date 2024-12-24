@@ -250,7 +250,6 @@ const ProjectController = {
                         // Delete file from public upload folder
                         const filePath = path.join(__dirname, '../../public/uploads', fileName);
                         fs.unlinkSync(filePath);
-                        console.log(`File ${fileName} deleted from the folder successfully.`);
                     } catch (err) {
                         console.error(`Error deleting file ${fileName}: ${err.message}`);
                     }

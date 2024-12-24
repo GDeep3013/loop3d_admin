@@ -136,13 +136,12 @@ export default function AddEmployee() {
       })
       .catch(error => {
         if (error.response) {
-          console.log('error.response', error.response);
           setErrors(error.response.data.errors?.[0]);
           setErrors(error.response.data.errors);
           setLoader(false)
 
         } else if (error.request) {
-          console.log('No response received from the server');
+          // console.log('No response received from the server');
         } else {
           console.error('Error:', error.message);
           // setErrors(error.message);
@@ -191,7 +190,6 @@ export default function AddEmployee() {
             throw new Error('Failed to fetch user details');
           }
           const userData = await response.json();
-          console.log(roles, userData);
 
           // const userTypeOption = roles.find(option => option.label === userData.role) || null;
 
@@ -225,7 +223,6 @@ export default function AddEmployee() {
   const handleSearchChange = (inputValue) => {
     setSearchTerm(inputValue);
   };
-  console.log(formData);
 
   return (
     <AuthLayout title={id ? 'Edit User' : "Add User"}>

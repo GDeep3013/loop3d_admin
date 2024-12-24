@@ -34,7 +34,6 @@ export default function LoopLeads({ organization }) {
         setSearchTerm(e.target.value);
     };
    
-    // console.log(users)
     return (<>
         <div className='table-inner'>
             <div className='content-outer'>
@@ -72,7 +71,7 @@ export default function LoopLeads({ organization }) {
                 <tbody>
                     {users.length === 0 ? (
                         <tr>
-                            <td colSpan="12" style={{ textAlign: 'center' }}>
+                            <td colSpan="6" style={{ textAlign: 'center' }}>
                                 <h4>No Loop3D Lead Found</h4>
                             </td>
                         </tr>

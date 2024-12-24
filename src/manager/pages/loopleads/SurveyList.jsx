@@ -34,7 +34,6 @@ export default function SurveyList({ loop_lead_id, org_id }) {
     setSearchTerm(e.target.value);
   };
 
-  console.log('surveys',surveys)
 
   return (
     <div className='table-inner'>
@@ -80,7 +79,7 @@ export default function SurveyList({ loop_lead_id, org_id }) {
           <tbody>
             {surveys.length === 0 ? (
               <tr>
-                <td colSpan="8" style={{ textAlign: 'center' }}>
+                <td colSpan="9" style={{ textAlign: 'center' }}>
                   <h4>No 360s found</h4>
                 </td>
               </tr>

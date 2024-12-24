@@ -92,13 +92,13 @@ export default function SurveyList() {
                         <tbody>
                             {loading ? (
                                 <tr>
-                                    <td colSpan="10" style={{ textAlign: 'center' }}>
+                                    <td colSpan="11" style={{ textAlign: 'center' }}>
                                         Loading...
                                     </td>
                                 </tr>
                             ) : surveys && surveys.length === 0 ? (
                                 <tr>
-                                    <td colSpan="10" style={{ textAlign: 'center' }}>
+                                    <td colSpan="11" style={{ textAlign: 'center' }}>
                                         <h4>No 360s found</h4>
                                     </td>
                                 </tr>
