@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Edit } from '../../../components/svg-icons/icons';
+import Loading from '../../../components/Loading';
 
 export default function ViewLoopLead({ user_id, org_id }) {
     const [leadUser, setLeadUser] = useState();
@@ -143,9 +144,13 @@ export default function ViewLoopLead({ user_id, org_id }) {
     useEffect(() => { getEmployee() }, [])
 
     if (loader) {
-        return <div className='loader ms-4 '>Loading...</div>;
+        return <div className="d-flex justify-content-center align-items-center mt-4 mb-4">
+            <div className="loader">
+                <Loading />
+            </div>
+        </div>;
     }
-    console.log(leadUser?.created_by?.email)
+
 
     return (
         <div className='looplead-box new-box d-flex align-items-start'>
@@ -293,7 +298,7 @@ export default function ViewLoopLead({ user_id, org_id }) {
                     </div>
                     {!editing && (<button className='action-btn absolute' onClick={handleEditClick}><Edit /></button>)}
                 </div>
-             
+
             </div>
             {editing && (
                 <div className='edit-buttons'>
@@ -301,7 +306,7 @@ export default function ViewLoopLead({ user_id, org_id }) {
                     <button className="default-btn cancel-btn btn btn-primary" onClick={handleCancel}>Cancel</button>
                 </div>
             )}
-           
+
         </div>
 
 
