@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Form, Button, Card } from 'react-bootstrap';
 
-const GoalCreator = ({loading, handleSubmit, selectedOption, setSelectedOption, categories, chatResponse, setChatResponse }) => {
+const GoalCreator = ({loading, handleSubmit, selectedOption, setSelectedOption, categories, chatResponse, setChatResponse ,intref}) => {
     const [errors, setErrors] = useState({
         chatResponse: '',
         selectedOption: ''
@@ -40,6 +40,7 @@ const GoalCreator = ({loading, handleSubmit, selectedOption, setSelectedOption, 
                             {/* Textarea for Prompt */}
                             <Form.Group controlId="exampleForm.ControlTextarea1">
                                 <Form.Control
+                                    ref={intref}
                                     as="textarea"
                                     rows={3}
                                     placeholder="Enter your message here..."

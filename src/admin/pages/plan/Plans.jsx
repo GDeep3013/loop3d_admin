@@ -26,12 +26,16 @@ const Plans = () => {
 
     const handleScrollToTop = () => {
         console.log('fffffeggr',containerRef.current)
-      if (containerRef.current) {
-        containerRef.current.scrollTo({
-          top: 0,
-          behavior: "smooth",
-        });
-      }
+        if (containerRef.current) {
+            setChatResponse('')
+            containerRef.current.focus();
+          }
+    //   if (containerRef.current) {
+    //     containerRef.current.scrollTo({
+    //       top: 0,
+    //       behavior: "smooth",
+    //     });
+    //   }
     };
     //Get get categories for the select box
     async function getCategory() {
@@ -150,10 +154,11 @@ const Plans = () => {
                     </div>
                 </div>
             </div>
-            <div className="content-outer content-text-edit"  ref={containerRef}>
+            <div className="content-outer content-text-edit"  >
                 <Container>
                     <Row>
                         <Col xs={12} md={6}><GoalCreator
+                            intref={containerRef}
                             loading={loading}
                             prompt={prompt}
                             setPrompt={setPromptResponse}

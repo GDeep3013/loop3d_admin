@@ -174,7 +174,7 @@ const GoalListing = ({ goals, getGoals,handleScrollToTop, categories, setCompete
 
     const formatGoalsWithStatus = (goals) => {
         return goals.map((goal, index) =>
-            `${goal.specific_goal}\n\ncompetency:${goal.competency.category_name}\nStatus: ${goal.status}`
+            `${goal.specific_goal}\n\ncompetency:${goal.competency?.category_name}\nStatus: ${goal.status}`
         ).join('\n\n');
 
     };
@@ -261,7 +261,7 @@ const GoalListing = ({ goals, getGoals,handleScrollToTop, categories, setCompete
                                             ))}
                                         </Form.Control>
                                     ) : ( */}
-                                    {goal.competency.category_name}
+                                    {goal.competency?.category_name}
                                     {/* )} */}
                                 </td>
                                 <td>
@@ -351,7 +351,11 @@ const GoalListing = ({ goals, getGoals,handleScrollToTop, categories, setCompete
                      I want to keep working on selected goals
                     </Button>
 
-                   <Button variant="secondary" className="w-50 ml-0 "><a href='#plan-main' style={{ color: 'white' }}> I want to work on other competencies. </a></Button>
+                    <Button variant="secondary" className="w-50 ml-0 " onClick={handleScrollToTop}>
+                        {/* <a href='#plan-main' style={{ color: 'white' }}> */}
+                            I want to work on other competencies.
+                        {/* </a> */}
+                    </Button>
                 </div>
             </div>
         </div>
