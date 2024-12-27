@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from "react-router-dom";
-import { StatusIcon, MoreIcon,View ,Edit } from "../../../components/svg-icons/icons";
+import { StatusIcon, MoreIcon,PLusIcon,View ,Edit } from "../../../components/svg-icons/icons";
 import { Container, Dropdown, Row, Col } from 'react-bootstrap'
 import { Link } from "react-router-dom";
 import { fetchLoopLeads } from '../../../apis/UserApi';
@@ -47,6 +47,8 @@ export default function ManagerList({ organization }) {
                                 <Col md={6} className='text-end'>
                                     <form className='d-flex justify-content-end'>
                                         <input type='search' placeholder='Search...' value={searchTerm} onChange={handleSearch} className='form-control' />
+                                        <Link to={`/add-user?org_id=${organization.orgniation_id}`} className='default-btn' >Add Supervisor<PLusIcon /> </Link>
+
                                     </form>
                                 </Col>
                             </Row>

@@ -1575,7 +1575,7 @@ exports.getSmartGoals = async (req, res) => {
 
         const deadline = new Date();
         deadline.setDate(deadline.getDate() + 30); // 30 days deadline for SMART goals
-
+        await Goals.findByIdAndDelete({ survey_id: survey_id })
         // Function to create or update SMART goals in the Goals collection
         const saveOrUpdateGoal = async (goalText, competencyId, type) => {
             const goal = await Goals.findOneAndUpdate(

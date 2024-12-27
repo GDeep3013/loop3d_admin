@@ -1,15 +1,26 @@
 import React, { useState, useEffect } from "react";
 import AuthLayout from "../../../layout/Auth";
 import { Col, Row, Container, Form, Button } from "react-bootstrap";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams,useLocation, useNavigate } from "react-router-dom";
 import Swal from 'sweetalert2'
 import axios from "axios"
 
 import { fetchOrgnizations } from "../../../apis/OrgnizationApi";
 import Select from "react-select";
 export default function AddEmployee() {
-  const { id } = useParams();
+  const { id} = useParams();
+  const location = useLocation(); 
+  // Function to parse query parameters
   const navigate = useNavigate();
+  const getQueryParams = (queryString) => {
+    const params = new URLSearchParams(queryString);
+    return Object.fromEntries(params.entries());
+  };
+
+  // Get the query params as an object
+  const queryParams = getQueryParams(location.search);
+  const orgId = queryParams.org_id; // Extract the org_id
+console.log('org_idfff',queryParams.org_id,location)
   const [roles, setRoles] = useState([]);
   const [loader, setLoader] = useState(false);
 
@@ -17,12 +28,14 @@ export default function AddEmployee() {
     first_name: '',
     last_name: '',
     email: '',
-    user_type: '',
+    user_type: orgId?'66c9ca6b2449fcbed71296f5':'',
     _method: '',
-    organization_id: '',
+    organization_id: orgId?orgId:'',
     phone: '',
     created_by: null
   });
+
+  console.log('formData',formData)
   const [errors, setErrors] = useState({});
 
   const [organizations, setOrganizations] = useState([]);
@@ -314,7 +327,13 @@ export default function AddEmployee() {
                       <Form.Group
                         className="mb-4">
                         <Form.Label>User Type</Form.Label><sup style={{ color: 'red' }}>*</sup>
-                        <Form.Select aria-label="Default select example" name="user_type" value={formData.user_type} onChange={handleChange}>
+                        <Form.Select
+                          aria-label="Default select example"
+                          name="user_type"
+                          value={formData.user_type}
+                          onChange={handleChange}
+                          isOptionSelected={orgId?'66c9ca6b2449fcbed71296f5':''}
+                        >
                           <option>Select User Type</option>
                           {roles.map(option => (
                             <option key={option.value} value={option.value} style={{ textTransform: "capitalize" }}>
@@ -334,8 +353,9 @@ export default function AddEmployee() {
                           name="organization_id"
                           options={organizations}
                           value={organizations.find(
-                            (org) => org.value === formData.organization_id
+                            (org) => org.value == formData.organization_id
                           )}
+                          isOptionSelected={orgId}
                           onInputChange={handleSearchChange}
                           onChange={(selectedOption) =>
                             handleSelectChange(selectedOption, { name: "organization_id" })
