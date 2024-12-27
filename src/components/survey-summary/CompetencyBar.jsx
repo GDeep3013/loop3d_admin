@@ -26,7 +26,7 @@ const CompetencyBar = ({ data, pdf = false ,survey_id,savedImages,getChartImages
     const [chartImage1, setChartImage1] = useState(null); // State for the first chart image
 
     // Extract competency names as labels
-    const labels = Object.keys(data); // Competencies like 'Communication', 'Leadership', 'Problem Solving'
+    const labels = Object.keys(data).filter(key => key !== 'Uncategorized');
 
     // Create datasets for each rater category using 'averageWeightage'
     const chartData = {
