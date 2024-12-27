@@ -153,12 +153,8 @@ export default function EmployeeTable({ }) {
                     {user?.email}
                   </Link>
                   </td>
-<<<<<<< HEAD
                     {/* <td>{user?.role?.type == "looped_lead" ? "loop lead" : user?.role?.type}</td> */}
                     <td>{user?.role?.type == "looped_lead" ? "loop3D lead" : (user?.role?.type=='manager'?"Supervisor":user?.role?.type)}</td>
-=======
-                  <td>{user?.role?.type == "looped_lead" ? "loop3D lead" : (user?.role?.type=='manager'?"Supervisor":user?.role?.type)}</td>
->>>>>>> b7a518af6bd37ecd44d29c7441bf4290566d0a09
                   <td>{user?.organization?.name}</td>
                   <td><span className='span-badge active-tag'>Active</span></td>
                   <td>
