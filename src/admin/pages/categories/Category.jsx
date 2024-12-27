@@ -39,7 +39,6 @@ export default function Category() {
                 headers: { 'x-api-key': import.meta.env.VITE_X_API_KEY }
             });
             result = await result.json();
-            console.log(result.categories)
             setCategory(result.categories);
             setTotalPages(result.meta.totalPages);
 
@@ -190,7 +189,7 @@ export default function Category() {
                                             </tr>
                                         )}
                                         {!loading && paginatedICData.map((cat, ind) => (
-                                            <tr key={cat._id}>
+                                            <tr key={cat._id} className='table-list-design'>
                                                 <td>{(currentPageIC - 1) * itemsPerPage + ind + 1}</td>
                                                 <td>{cat.category_name}</td>
                                                 <td>Individual Contributor</td>
@@ -270,7 +269,7 @@ export default function Category() {
                                             </tr>
                                         )}
                                         {!loading && paginatedPMData.map((cat, ind) => (
-                                            <tr key={cat._id}>
+                                            <tr key={cat._id} className='table-list-design'>
                                                 <td>{(currentPagePM - 1) * itemsPerPage + ind + 1}</td>
                                                 <td>{cat.category_name}</td>
                                                 <td>People Manager</td>

@@ -112,7 +112,7 @@ export default function EmployeeTable({ }) {
 
             {loading && (
               <tr>
-                <td colSpan="12" style={{ textAlign: 'center' }}>
+                <td colSpan="8" style={{ textAlign: 'center' }}>
                   <Loading />
                 </td>
               </tr>)
@@ -120,7 +120,7 @@ export default function EmployeeTable({ }) {
 
             {!loading && Employe.length === 0 && (
               <tr>
-                <td colSpan="12" style={{ textAlign: 'center' }}>
+                <td colSpan="8" style={{ textAlign: 'center' }}>
                   <h4>No User Found</h4>
                 </td>
               </tr>)
@@ -128,7 +128,8 @@ export default function EmployeeTable({ }) {
             {
               !loading && Employe.length > 0 && Employe.map((user, ind) => (
 
-                user?.role?.type != "admin" && <tr key={user?._id}>
+                user?.role?.type != "admin" &&
+                <tr key={user?._id} className='table-list-design'>
                   <td>{(currentPage - 1) * 10 + (ind + 1)}</td>
                   <td>
                     <div className="user-profile d-flex align-items-center">

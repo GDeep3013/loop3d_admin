@@ -119,7 +119,7 @@ export default function Question() {
 
             {loading && (
                 <tr>
-                  <td colSpan="12" style={{ textAlign: 'center' }}>
+                  <td colSpan="5" style={{ textAlign: 'center' }}>
                     <Loading />
                   </td>
                 </tr>)
@@ -127,7 +127,7 @@ export default function Question() {
 
             {!loading && questions.length === 0 &&
               <tr>
-                <td colSpan="6" style={{ textAlign: 'center' }}>
+                <td colSpan="5" style={{ textAlign: 'center' }}>
                   <h4>No Questions Found</h4>
                 </td>
               </tr>

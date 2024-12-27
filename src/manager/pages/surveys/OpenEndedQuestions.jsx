@@ -152,9 +152,7 @@ const OpenEndedQuestions = ({ activeTab, organization_id, createdBy, fetchQuesti
             currentCategoryId: null,
             organization_id: organization_id
          });
-        console.log(formData,'formData')
-    
-    };
+        };
 
     return (
         <div className="ended-questions p-4">

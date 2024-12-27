@@ -138,7 +138,6 @@ export default function AddQuestion({ id, savedData }) {
             setErrors({ form: 'Failed to save question' });
         }
     };
-    console.log(formData);
     return (
         <div>
         {!id && <div className="tabe-outer ml-2" style={{marginLeft: "23px"}}>

@@ -101,7 +101,6 @@ const OrganizationController = {
                         continue; // Skip if no match found
                     }
 
-                    console.log('matchedCategory',matchedCategory)
                     // Prepare the main category assignment
                     newAssignments.push({
                         user_id,

@@ -148,7 +148,7 @@ export default function AssignCompetencies({ data, type }) {
             });
             const result = await response.json();
             if (response.ok && result) {
-                // console.log(result, 'result');
+         
                 setSelectedCategory(result); // Assuming result is an array of category objects
             } else {
                 if (result.message == "No questions found for the given category and organization.") {
@@ -272,7 +272,6 @@ export default function AssignCompetencies({ data, type }) {
                 setShowModal(false)
                 // setCategories((prevCategories) => {
                 //     return prevCategories.map((category) => {
-                //         console.log(category.category_id,formData.currentCategoryId,data)
                 //         if (category.category_id === formData.currentCategoryId) {
                 //             return {
                 //                 ...category,
@@ -292,7 +291,7 @@ export default function AssignCompetencies({ data, type }) {
                     return prevCategories.map((category) => {
                         // Check if the category matches the selected category
                         if (category._id === formData.currentCategoryId) {
-                            console.log(category._id,'of');
+                         
                             return {
                                 ...category,
                                 questions: editId
@@ -304,7 +303,6 @@ export default function AssignCompetencies({ data, type }) {
                                     : [...category.questions, data]  // Add new question if no editId
                             };
                         } else {
-                            console.log(category, data.category_id);
                             if (category.category._id === data.category_id) {
                                 return {
                                     ...category,
@@ -340,7 +338,6 @@ export default function AssignCompetencies({ data, type }) {
     };
     // const handleQuestionDelete = async (e, id, categoryId) => {
     //     e.preventDefault();
-    //     console.log('hello')
     //     try {
     //         const confirmResult = await Swal.fire({
     //             title: "Are you sure?",
@@ -424,7 +421,6 @@ export default function AssignCompetencies({ data, type }) {
     };
 
     const handleEditQuestion = async (value, cat_id) => {
-        // console.log(value)
         setShowModal(true);
         setEditId(value?._id)
         setIsEdit(true);
@@ -441,17 +437,14 @@ export default function AssignCompetencies({ data, type }) {
     };
     const handleTabSelect = (key) => {
         setActiveTab(key);
-        console.log('activeTab', activeTab);
-
     };
-    // console.log('data?.ref_id', data?.ref_id)
-    // console.log(formData)
+
     return (
         loading ? <div className="loading-spinner">
             <Spinner animation="border" variant="primary" />
         </div> :
             <div className="content-outer pd-2 edit-org tab-design">
-                <Tabs onSelect={handleTabSelect} defaultActiveKey="individualContributor" className="mb-3">
+                <Tabs onSelect={handleTabSelect} defaultActiveKey="individualContributor" className="mb-0">
                     {/* Individual Contributor Tab */}
                     <Tab eventKey="individualContributor" title="Individual Contributor">
                         <div className="list-scroll">

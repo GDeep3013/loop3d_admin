@@ -49,7 +49,6 @@ const OpenEndedQuestions = ({ activeTab, organization_id, createdBy, fetchQuesti
             [name]: value
         }));
     };
-    // console.log(formData)
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -148,10 +147,7 @@ const OpenEndedQuestions = ({ activeTab, organization_id, createdBy, fetchQuesti
             currentCategoryId: null,
             organization_id: organization_id
         });
-        console.log(formData, 'formData')
-
     };
-    // console.log('openQuestions',openQuestions)
     return (
         <div className="ended-questions p-4">
             <h2 className="fs-5 mb-3 font-semibold">Open Ended Questions</h2>

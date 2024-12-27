@@ -1,5 +1,5 @@
-import React,{useState} from 'react'
-import { Link ,useNavigate } from "react-router-dom";
+import React, { useState ,useEffect} from 'react'
+import { Link, useNavigate } from "react-router-dom";
 import { Container, Row, Col, Form, Button, InputGroup, } from "react-bootstrap";
 import { useDispatch } from "react-redux";
 import { setTokenValidity, userType, createUser } from "../../store/slices/UserSlice";
@@ -20,6 +20,7 @@ export default function Login() {
   });
 
 
+
   const validateForm = () => {
     const { email, password } = formData;
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -33,9 +34,9 @@ export default function Login() {
 
     if (!password.trim()) {
       errors.password = 'Password is required';
-      } else if (password.length < 8) {
-        errors.password = 'Password must be at least 8 characters long';
-      }
+    } else if (password.length < 8) {
+      errors.password = 'Password must be at least 8 characters long';
+    }
 
     setErrors(errors);
     return Object.keys(errors).length === 0;
@@ -48,57 +49,80 @@ export default function Login() {
       [name]: type === 'checkbox' ? checked : value
     }));
   };
+  console.log(formData)
 
+  useEffect(() => {
+    const savedEmail = localStorage.getItem("email") || "";
+    const savedPassword = localStorage.getItem("password") || "";
+    console.log(localStorage.getItem("email"),localStorage.getItem("password"))
+    const savedRememberMe = !!savedEmail && !!savedPassword;
 
-  const handleSubmit =async (e) => {
+    setFormData({
+      email: savedEmail,
+      password: savedPassword,
+      rememberMe: savedRememberMe,
+    });
+    
+  }, []);
+console.log('final',formData)
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const isValid = validateForm();
     if (isValid) {
+      if (formData.rememberMe) { 
+        console.log(formData.rememberMe,'formData.rememberMe)');
+        localStorage.setItem("email", formData.email);
+        localStorage.setItem("password", formData.password);
+      } else {
+        localStorage.removeItem("email");
+        localStorage.removeItem("password");
+      }
       try {
         const response = await fetch(`/api/login`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                email: formData.email,
-                password: formData.password
-            })
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            email: formData.email,
+            password: formData.password
+          })
         });
         const data = await response.json();
         //
-          if (data.status === 'success') {
-    
-            const { token, user: { email, role ,image,name} } = data;
+        if (data.status === 'success') {
 
-            localStorage.setItem('_token', token);
+          const { token, user: { email, role, image, name } } = data;
 
-            dispatch(userType({ userType: role }));
+          localStorage.setItem('_token', token);
 
-            dispatch(createUser({ user: data.user }));
-          
-            // role === 'admin' ? navigate("/organizations") : navigate("/users");
-            
-            // if (role === "admin") {
-            //   navigate('/organizations');
-            // } else if (role === "manager") {
-            //   navigate('/manager/dashboard');
-      
-            // }
-            // else if (role === "looped_lead") {
-            //   navigate('/loop-lead/dashboard');
-      
-            // }
-            window.location.reload();
+          dispatch(userType({ userType: role }));
 
-          } else {
-            document.getElementById('passwordError').innerText = data.error;
+          dispatch(createUser({ user: data.user }));
+
+          // role === 'admin' ? navigate("/organizations") : navigate("/users");
+
+          // if (role === "admin") {
+          //   navigate('/organizations');
+          // } else if (role === "manager") {
+          //   navigate('/manager/dashboard');
+
+          // }
+          // else if (role === "looped_lead") {
+          //   navigate('/loop-lead/dashboard');
+
+          // }
+          window.location.reload();
+
+        } else {
+          document.getElementById('passwordError').innerText = data.error;
         }
-    } catch (error) {
-        console.error('Login error:', error); 
-    }
-  
-     
+      } catch (error) {
+        console.error('Login error:', error);
+      }
+
+
     }
   };
 
@@ -109,30 +133,30 @@ export default function Login() {
 
   return (
     <div className="loginOuter">
-    <Container fluid>
-      <Row className="gx-0">
-        <Col className='login-hide-mobile' md={6}>
-          <div className="loginContent">
-            <img
-              src={"/images/logoheader.svg"}
-              alt="Logo"
-              className="logoImg"
-            />
-            <div className="logincircle verticalCenter"></div>
-            <div className="verticalCenter">
-              <h2 className="h2-style">
+      <Container fluid>
+        <Row className="gx-0">
+          <Col className='login-hide-mobile' md={6}>
+            <div className="loginContent">
+              <img
+                src={"/images/logoheader.svg"}
+                alt="Logo"
+                className="logoImg"
+              />
+              <div className="logincircle verticalCenter"></div>
+              <div className="verticalCenter">
+                <h2 className="h2-style">
                   Revolutionize Your <br />
                   360 Feedback Process with AI.
-              </h2>
-              <p className="p-style">
-              See how we bring visions to digital life.
-              </p>
+                </h2>
+                <p className="p-style">
+                  See how we bring visions to digital life.
+                </p>
+              </div>
             </div>
-          </div>
-        </Col>
-        <Col md={6}>
-          <div className="loginForm">
-            <div className="verticalCenter">
+          </Col>
+          <Col md={6}>
+            <div className="loginForm">
+              <div className="verticalCenter">
                 <div className='mobile-logo-login'>
                   <img
                     src={"/images/logoheader.svg"}
@@ -140,86 +164,91 @@ export default function Login() {
                     className="logoImg"
                   />
                 </div>
-              <h2 className="h2-style">Sign In to your Account</h2>
-              <p className="p-style">
-                Welcome back! please enter your detail
-              </p>
-              <Form className="formOuter mt-4" >
-                <Form.Group className="mb-3">
-                  <div className="relativeBox">
-                    <img
-                      src={"/images/email.svg"}
-                      width={"18"}
-                      height={"14"}
-                      alt="email icon"
-                      className="iconImg"
-                    />
-                    <Form.Control
-                      type="email"
-                      name="email"
-                      placeholder="Email"
-                      onChange={handleInputChange}
-                      required
-                    />
-                  </div>
-                  {errors.email && <small className="text-danger">{errors.email}</small>}
-
-                </Form.Group>
-                <Form.Group className="mb-3">
-                  <div className="relativeBox">
-                    <img
-                      src={"/images/lock.svg"}
-                      width={"14"}
-                      height={"18"}
-                      alt="email icon"
-                      className="iconImg"
-                    />
-                    <Form.Control
-                      type={showPassword ? "text" : "password"}
-                      name="password"
-                      placeholder="Password"
-                      autoComplete="true"
-                      onChange={handleInputChange}
-                      required
+                <h2 className="h2-style">Sign In to your Account</h2>
+                <p className="p-style">
+                  Welcome back! please enter your detail
+                </p>
+                <Form className="formOuter mt-4" >
+                  <Form.Group className="mb-3">
+                    <div className="relativeBox">
+                      <img
+                        src={"/images/email.svg"}
+                        width={"18"}
+                        height={"14"}
+                        alt="email icon"
+                        className="iconImg"
                       />
-                     
-                    <img
-                      src={showPassword ?"/images/eye-open.svg":"/images/eye.svg"}
-                      width={"20"}
-                      height={"18"}
-                      alt="email icon"
-                      className="iconEye"
-                      onClick={togglePasswordVisibility}
-                     style={{ cursor: 'pointer' }}
-                    />
-                  </div>
+                      <Form.Control
+                        type="email"
+                        name="email"
+                        value={formData?.email}
+                        placeholder="Email"
+                        onChange={handleInputChange}
+                        required
+                      />
+                    </div>
+                    {errors.email && <small className="text-danger">{errors.email}</small>}
+
+                  </Form.Group>
+                  <Form.Group className="mb-3">
+                    <div className="relativeBox">
+                      <img
+                        src={"/images/lock.svg"}
+                        width={"14"}
+                        height={"18"}
+                        alt="email icon"
+                        className="iconImg"
+                      />
+                      <Form.Control
+                        type={showPassword ? "text" : "password"}
+                        name="password"
+                        value={formData?.password}
+
+                        placeholder="Password"
+                        autoComplete="true"
+                        onChange={handleInputChange}
+                        required
+                      />
+
+                      <img
+                        src={showPassword ? "/images/eye-open.svg" : "/images/eye.svg"}
+                        width={"20"}
+                        height={"18"}
+                        alt="email icon"
+                        className="iconEye"
+                        onClick={togglePasswordVisibility}
+                        style={{ cursor: 'pointer' }}
+                      />
+                    </div>
                     {errors.password && <small className="text-danger">{errors.password}</small>}
                     {!errors.password && <small id="passwordError" className="text-danger"></small>}
-                </Form.Group>
-                <Form.Group className="mb-4">
-                  <label className="checkbox">
-                    <InputGroup.Checkbox
+                  </Form.Group>
+                  <Form.Group className="mb-4">
+                    <label className="checkbox">
+                      <InputGroup.Checkbox
                         name="rememberMe"
+                        checked={formData?.rememberMe}
+
                         onChange={handleInputChange}
 
-                    />
-                    Remember me
-                  </label>
-                  <Link
-                    to="/forget-password"
-                    className="fw-bold text-decoration-none float-right fs-7 text-dark">
-                    Forgot Password?
-                  </Link>
-                </Form.Group>
-                <Form.Group className="mb-3">
+                      />
+                      Remember me
+                    </label>
+                    <Link
+                      to="/forget-password"
+                      className="fw-bold text-decoration-none float-right fs-7 text-dark">
+                      Forgot Password?
+                    </Link>
+                  </Form.Group>
+                  <Form.Group className="mb-3">
                     <Button
-                       type="submit"
-                       onClick={handleSubmit}
+                      type="submit"
+                      onClick={handleSubmit}
                       className="default-btn w-100">
-                    Sign In
-                  </Button>
-                </Form.Group>
-                {/* <Form.Group className="mt-4 createAccount">
+                      Sign In
+                    </Button>
+                  </Form.Group>
+                  {/* <Form.Group className="mt-4 createAccount">
                   <p className="text-center p-style">
                     Don’t have an account?{" "}
                     <Link
@@ -229,12 +258,12 @@ export default function Login() {
                     </Link>
                   </p>
                 </Form.Group> */}
-              </Form>
+                </Form>
+              </div>
             </div>
-          </div>
-        </Col>
-      </Row>
-    </Container>
+          </Col>
+        </Row>
+      </Container>
     </div>
   )
 }

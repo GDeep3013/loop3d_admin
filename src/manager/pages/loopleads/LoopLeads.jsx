@@ -66,38 +66,38 @@ export default function LoopLeads({  }) {
                         <th>Supervisor</th>
                         {/* <th>Role</th> */}
                         <th>Status <StatusIcon /> </th>
-                        <th>Action</th>
+                        {/* <th>Action</th> */}
                     </tr>
                 </thead>
                 <tbody>
                     {users.length === 0 ? (
                         <tr>
-                            <td colSpan="12" style={{ textAlign: 'center' }}>
+                            <td colSpan="5" style={{ textAlign: 'center' }}>
                                 <h4>No Loop3D Lead Found</h4>
                             </td>
                         </tr>
                     ) : (
                             users.map(user => (
-                            <tr key={user._id}>
-                                <td>
+                            <tr key={user._id} className='table-list-hover'>
+                                <td onClick={() => navigate(`/manager/view-loop_lead/${user._id}/${mgr_id}`)}>
                                     <div className="user-profile d-flex align-items-center">
                                         <div className='user-name'>{user.first_name}</div>
                                     </div>
                                 </td>
-                                <td>
+                                <td onClick={() => navigate(`/manager/view-loop_lead/${user._id}/${mgr_id}`)}>
                                     <div className="user-profile d-flex align-items-center">
                                         <div className='user-name'>{user.last_name}</div>
                                     </div>
                                 </td>
-                                    <td className='text-lowercase'>{user.email}</td>
-                                    <td>{user.created_by?.first_name} {user.created_by?.last_name}</td>
+                                    <td  onClick={() => navigate(`/manager/view-loop_lead/${user._id}/${mgr_id}`)}className='text-lowercase'>{user.email}</td>
+                                    <td onClick={() => navigate(`/manager/view-loop_lead/${user._id}/${mgr_id}`)}>{user.created_by?.first_name} {user.created_by?.last_name}</td>
 
                                     {/* <td>{user?.role?.type =="looped_lead"?"loop lead":user?.role?.type}</td> */}
-                                    <td><span className='span-badge active-tag'>Active</span></td>
-                                    <td>
+                                    <td onClick={() => navigate(`/manager/view-loop_lead/${user._id}/${mgr_id}`)}><span className='span-badge active-tag'>Active</span></td>
+                                    {/* <td>
                                     <button className='action-btn' onClick={() => navigate(`/manager/view-loop_lead/${user._id}/${mgr_id}`)}><View /></button>
               
-                                </td>
+                                </td> */}
                             </tr>
                         ))
                     )}

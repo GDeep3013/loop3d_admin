@@ -69,6 +69,12 @@ ul.pagination-outer { padding: 24px 0 0 0; }
 table.table tbody tr.table-list-hover:hover{ background-color: #edf9ff; }
 table.table tbody tr.table-list-hover:hover td{ background-color: #edf9ff; }
 
+.table-list-design{background-color: #7abcdb; }
+
+table.table tbody tr.table-list-design:hover{ background-color: #edf9ff; }
+table.table tbody tr.table-list-design:hover td{ background-color: #edf9ff; }
+.loginForm form.formOuter input.form-control {padding:0 43px;}
+
 @keyframes fadeIn { 100% { opacity: 1; transform: none; } }
 /* start project overview css */
 .box-border{ border: 1px solid #DFDFDF; border-radius: 10px; background-color: #fff; }
@@ -272,7 +278,7 @@ form select:focus{ outline: none; box-shadow: none; }
 .list-scroll .custom-tabs li { padding: 6px 16px; font-size: 18px; }
 .list-scroll .custom-tabs li input[type="checkbox"] { width: 20px; height: 20px; margin-right: 9px; accent-color: #174a6d; vertical-align: bottom;}
 .content-outer .content-outer.edit-org .custom-tabs.nav.nav-tabs { margin-bottom: 0 !important; }
-.content-outer .content-outer.edit-org .tab-content { box-shadow: none; }
+.content-outer .content-outer.edit-org .tab-content { box-shadow: none; padding: 15px; }
 .goal-listing button.btn { background-color: var(--theme-color); border-color: var(--theme-color); }
 .goal-listing button.btn:hover{ background-color: var(--secondary-color); border-color: var(--secondary-color); }
 select.form-control{ appearance: auto; box-shadow: none; outline: none;}
@@ -341,8 +347,10 @@ button.add_participant:hover{ background-color: var(--secondary-color); color: #
 .new-question .modal-dialog .modal-body { padding: 33px 10px; }
 .list-scroll h3 { font-family: var(--font-poppins); font-weight: 600; font-size: 19px; margin: 0 0 10px 0; }
 .content-outer .content-outer.edit-org .nav-item button.nav-link { color: #000; }
-.content-outer .content-outer.edit-org .nav-item button.nav-link.active{ color: var(--theme-color); }
+.content-outer .content-outer.edit-org .nav-item button.nav-link.active{ color: var(--theme-color); border-color: var(--theme-color); border-bottom-color: transparent; }
 .content-outer .content-outer.edit-org .nav-item button.nav-link:hover{ color: var(--theme-color); border-color: transparent; }
+.content-outer .content-outer.edit-org .nav-item button.nav-link.active:hover{ border-color: var(--theme-color); border-bottom-color: transparent; }
+.content-outer.edit-org.tab-design ul.nav-tabs { border-color: var(--theme-color); }
 
 .question-contant button.default-btn { min-width: 113px; min-height: 40px; line-height: 40px; }
 .question-from.delete-option .question-inner button.btn:hover { background-color: #dc3545; }

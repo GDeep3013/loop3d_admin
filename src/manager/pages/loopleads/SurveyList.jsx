@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
-import { MoreIcon, View } from "../../../components/svg-icons/icons";
+import { MoreIcon, View, ViewReport } from "../../../components/svg-icons/icons";
 import { Container, Dropdown, Row, Col } from 'react-bootstrap';
 import { getSurveyById } from '../../../apis/SurveyApi';
 import { formatDateGB, formatDateUS } from '../../../utils/dateUtils';
@@ -34,7 +34,6 @@ export default function SurveyList({ loop_lead_id, org_id }) {
     setSearchTerm(e.target.value);
   };
 
-  console.log('surveys',surveys)
 
   return (
     <div className='table-inner'>
@@ -80,32 +79,32 @@ export default function SurveyList({ loop_lead_id, org_id }) {
           <tbody>
             {surveys.length === 0 ? (
               <tr>
-                <td colSpan="8" style={{ textAlign: 'center' }}>
+                <td colSpan="9" style={{ textAlign: 'center' }}>
                   <h4>No 360s found</h4>
                 </td>
               </tr>
             ) : (
               surveys.map((survey, index) => (
-                <tr key={survey._id}>
-                  <td>{index + 1}</td>
-                  <td>{formatDateGB(survey.createdAt)}</td>
-                  <td>{survey.total_invites}</td>
-                  <td>{survey.completed_survey}</td>
-                  <td>{survey.ll_survey_status === 'yes' ? <span className='span-badge active-tag'>Yes</span> : <span className='span-badge inactive-tag'> Not completed
+                <tr key={survey._id} className='table-list-hover'>
+                  <td onClick={() => navigate(`/view-survey-participant/${survey._id}`)}>{index + 1}</td>
+                  <td onClick={() => navigate(`/view-survey-participant/${survey._id}`)}>{formatDateGB(survey.createdAt)}</td>
+                  <td onClick={() => navigate(`/view-survey-participant/${survey._id}`)}>{survey.total_invites}</td>
+                  <td onClick={() => navigate(`/view-survey-participant/${survey._id}`)}>{survey.completed_survey}</td>
+                  <td onClick={() => navigate(`/view-survey-participant/${survey._id}`)}>{survey.ll_survey_status === 'yes' ? <span className='span-badge active-tag'>Yes</span> : <span className='span-badge inactive-tag'> Not completed
                   </span>}</td>
-                  <td>{survey.mgr_survey_status === 'yes' ? <span className='span-badge active-tag'>Yes</span> : <span className='span-badge inactive-tag'> Not completed
+                  <td onClick={() => navigate(`/view-survey-participant/${survey._id}`)}>{survey.mgr_survey_status === 'yes' ? <span className='span-badge active-tag'>Yes</span> : <span className='span-badge inactive-tag'> Not completed
                   </span>}</td>
-                  <td>{survey.survey_status === 'completed' ? <span className='span-badge active-tag'>Completed</span> : <span className='span-badge inactive-tag'>Pending</span>}</td>
+                  <td onClick={() => navigate(`/view-survey-participant/${survey._id}`)}>{survey.survey_status === 'completed' ? <span className='span-badge active-tag'>Completed</span> : <span className='span-badge inactive-tag'>Pending</span>}</td>
 
-                  <td>
+                  <td onClick={() => navigate(`/view-survey-participant/${survey._id}`)}>
                     {survey.report_gen_date
                       ? formatDateGB(survey.report_gen_date)
                       : 'Not available yet'}
                   </td>
                   <td>
-                    <button className='action-btn' onClick={() => navigate(`/view-survey-participant/${survey._id}`)}><View /></button>
+                    {/* <button className='action-btn' onClick={() => navigate(`/view-survey-participant/${survey._id}`)}><View /></button> */}
                     <button className='action-btn' onClick={() => navigate(`/survey-summary/${survey._id}`)} disabled={survey.report_gen_date == null ? true : false}>
-                      View Report
+                    <ViewReport/>
                     </button>
                     {/* <Dropdown className='custom-dropdown'>
                     <Dropdown.Toggle variant="success" id="dropdown-basic">

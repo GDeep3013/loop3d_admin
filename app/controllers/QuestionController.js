@@ -83,7 +83,6 @@ exports.createQuestion = async (req, res) => {
             // If no existing assignment, save the new one
             if (!existingAssignment) {
                 const newAssignmentRecord = await AssignCompetency.create(newAssignment);
-                console.log('newAssignmentRecord', newAssignmentRecord);
             }
         }
         // Send a response back to the client with the created question
@@ -233,7 +232,6 @@ exports.getQuestionByCompetencyId = async (req, res) => {
 // Function to update a question
 exports.updateQuestion = async (req, res) => {
     try {
-        console.log(req.params.id, req.body);
         const updatedQuestion = await Question.findByIdAndUpdate(req.params.id?req.params.id: req.body?._id, req.body, { new: true, runValidators: true });
         if (!updatedQuestion) return res.status(404).json({ message: 'Question not found' });
         res.status(200).json(updatedQuestion);
