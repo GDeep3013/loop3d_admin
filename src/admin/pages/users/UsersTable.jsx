@@ -141,7 +141,7 @@ export default function EmployeeTable({ }) {
                       <div className='user-name'>{user.last_name !== null ? user.last_name : ''}</div>
                     </div>
                   </td>
-                  <td> <Link
+                  <td className='text-lowercase'> <Link
                     to={`mailto:${user.email}`}
                     onClick={(e) => {
                      // Prevent Link navigation
@@ -153,7 +153,8 @@ export default function EmployeeTable({ }) {
                     {user?.email}
                   </Link>
                   </td>
-                  <td>{user?.role?.type == "looped_lead" ? "loop lead" : user?.role?.type}</td>
+                    {/* <td>{user?.role?.type == "looped_lead" ? "loop lead" : user?.role?.type}</td> */}
+                    <td>{user?.role?.type == "looped_lead" ? "loop3D lead" : (user?.role?.type=='manager'?"Supervisor":user?.role?.type)}</td>
                   <td>{user?.organization?.name}</td>
                   <td><span className='span-badge active-tag'>Active</span></td>
                   <td>
