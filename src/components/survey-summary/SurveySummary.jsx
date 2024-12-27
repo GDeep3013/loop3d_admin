@@ -32,7 +32,6 @@ const SurveySummary = () => {
 
 
     const reportRef = useRef(null);
-
     const removeSpacesFromKeys = (obj) => {
         if (Array.isArray(obj)) {
             return obj.map(removeSpacesFromKeys);
@@ -82,7 +81,7 @@ const SurveySummary = () => {
             console.error('Error fetching survey:', error);
         }
     }
-    const GeneratePlans = async (competencyReport) => {
+    const GeneratePlans = async () => {
         try {
   
             const developmentalOpportunity = competencyReport?.developmentalOpportunity || 'nothing';
@@ -177,16 +176,18 @@ const SurveySummary = () => {
             generateCompetencyAverageReport(id)
             generateSurveyReport(id, "Generate")
             getChartImagesFromDB(id)
-            setTimeout(() => {
-                GeneratePlans(competencyReport)           
-            },2000)
+           
         }
     }, [id]);
     useEffect(() => {
         if (competencyReport) {
-             GeneratePlans(competencyReport)           
+            setTimeout(() => {
+                GeneratePlans()           
+            },2000)
         }
     }, [competencyReport]);
+
+    console.log(competencyReport,'competencyReport')
 
     const Participants = ['Self', 'Direct Report', 'Teammate', 'Supervisor', 'Other'];
 
