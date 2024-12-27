@@ -25,7 +25,6 @@ const Plans = () => {
     const containerRef = useRef(null);
 
     const handleScrollToTop = () => {
-        console.log('fffffeggr', containerRef.current)
         if (containerRef.current) {
             setChatResponse('')
             containerRef.current.scrollTo({
