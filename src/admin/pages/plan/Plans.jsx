@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useRef ,useEffect } from 'react'
 import AuthLayout from '../../../layout/Auth'
 import { Col, Row, Container, Button } from "react-bootstrap";
 import { useParams, useNavigate } from "react-router-dom";
@@ -22,7 +22,17 @@ const Plans = () => {
 
     const [reGenerate, setReGenerate] = useState(false);
 
+    const containerRef = useRef(null);
 
+    const handleScrollToTop = () => {
+        console.log('fffffeggr',containerRef.current)
+      if (containerRef.current) {
+        containerRef.current.scrollTo({
+          top: 0,
+          behavior: "smooth",
+        });
+      }
+    };
     //Get get categories for the select box
     async function getCategory() {
         try {
@@ -126,8 +136,8 @@ const Plans = () => {
     }
 
     return (
-        <AuthLayout title={'Welcome LOOP3D Development Plan '} subTitle={'Development Plan'}>
-            <div className="main-back-heading">
+        <AuthLayout title={'Welcome LOOP3D Development Plan '} subTitle={'Development Plan'} >
+            <div className="main-back-heading" id="plan-main" >
                 <div className="container">
                     <div className="row">
                         <div className="col-md-6 p-0">
@@ -140,7 +150,7 @@ const Plans = () => {
                     </div>
                 </div>
             </div>
-            <div className="content-outer content-text-edit">
+            <div className="content-outer content-text-edit"  ref={containerRef}>
                 <Container>
                     <Row>
                         <Col xs={12} md={6}><GoalCreator
@@ -175,6 +185,7 @@ const Plans = () => {
                                 setButtonClicked={setButtonClicked}
                                 buttonText={buttonText}
                                 setButtonText={setButtonText}
+                                handleScrollToTop={handleScrollToTop}
                             />
                         </Col>
                     </Row>

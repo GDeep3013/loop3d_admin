@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Container, Dropdown, Row, Col } from 'react-bootstrap';
 import { useNavigate } from "react-router-dom";
 import Swal from 'sweetalert2'
-export default function ParticipantForm({ survey_id }) {
+export default function ParticipantForm({ survey_id ,mgr_email,loop_lead_email}) {
     const navigate = useNavigate();
 
     const initialParticipants = Array.from({ length: 10 }, () => ({
@@ -44,7 +44,14 @@ export default function ParticipantForm({ survey_id }) {
                 participantErrors.p_email = 'Email format is invalid';
             } else if (emailsSet.has(participant.p_email)) {
                 participantErrors.p_email = 'Duplicate email found';
-            } else {
+            }
+            else if (participant.p_email === mgr_email) {
+                participantErrors.p_email = 'Already taken as Manager email';
+            }
+            else if (participant.p_email === loop_lead_email) {
+                participantErrors.p_email = 'Already taken as Loop Lead email';
+            }               
+            else {
                 emailsSet.add(participant.p_email);
             }
             if (!participant.p_type) participantErrors.p_type = 'Relationship type is required';
@@ -78,7 +85,7 @@ export default function ParticipantForm({ survey_id }) {
                 if (response.ok) {
                     await Swal.fire({
                         title: "Success!",
-                        text: "Participant Created Successfully.",
+                        text: "Participants invited successfully.",
                         icon: "success",
                         confirmButtonColor: "#000",
                       });

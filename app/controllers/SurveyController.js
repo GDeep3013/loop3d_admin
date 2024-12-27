@@ -1230,18 +1230,21 @@ const generateSummary = async (survey_id,report) => {
                 `Analyze the following survey results for each question:\n\n${resultsJson}\n\n` +
                 "For each question, generate a 2-3 sentence summary of the feedback. Then add 2-3 additional sentences identifying any gaps between the self-assessment and feedback from other participants/raters from each respondent type (Self, Direct Report, Teammate, Supervisor, Other) and identify any gaps between the self-assessment and feedback from others. The responses should be structured as follows without any additional headings or formatting:\n\n" +
                 "1. What are the strengths and skills that make this person most effective?\n" +
+                "Total Summary: Include any gaps between the perception of the self,direct reports,teammates,supervisor and other respondents\n" +
                 "Self: [Self-assessment summary]\n" +
                 "Direct Report: [Direct Report summary]. Include any gaps between the perception of the self and direct reports.\n" +
                 "Teammate: [Teammate summary]. Include any gaps between the perception of the self and teammates.\n" +
                 "Supervisor: [Supervisor summary]. Include any gaps between the perception of the self and supervisor.\n" +
                 "Other: [Other summary]. Include any gaps between the perception of the self and other respondents.\n\n" +
                 "2. What suggestions do you have to make this person a stronger performer and more effective?\n" +
+                "Total Summary: Include any gaps between the perception of the self,direct reports,teammates,supervisor and other respondents\n" +
                 "Self: [Self-assessment summary, if available]\n" +
                 "Direct Report: [Direct Report summary, if available]. Include any gaps between the perception of the self and direct reports.\n" +
                 "Teammate: [Teammate summary, if available]. Include any gaps between the perception of the self and teammates.\n" +
                 "Supervisor: [Supervisor summary, if available]. Include any gaps between the perception of the self and supervisor.\n" +
                 "Other: [Other summary, if available]. Include any gaps between the perception of the self and other respondents.\n\n" +
                 "3. Other comments?\n" +
+                "Total Summary: Include any gaps between the perception of the self,direct reports,teammates,supervisor and other respondents\n" +
                 "Self: [Self-assessment summary, if available]\n" +
                 "Direct Report: [Direct Report summary, if available]. Include any gaps between the perception of the self and direct reports.\n" +
                 "Teammate: [Teammate summary, if available]. Include any gaps between the perception of the self and teammates.\n" +
@@ -1272,7 +1275,7 @@ const generateSummary = async (survey_id,report) => {
             let smartPlan1 = await openaiAnalyzeResults(smartPlan);
             let strengthsPrompt1 = await openaiAnalyzeResults(strengthsPrompt);
             let smartPlanOpportunities1 = await openaiAnalyzeResults(smartPlanOpportunities);
-        
+          
             // Split each section by new line
             let analysis = {};
             analysis['question_summary'] = parseQuestionSummary(questionSummary1);
@@ -1408,9 +1411,9 @@ const parseQuestionSummary = (str) => {
                 return; // Exit the loop once the section is found
             }
         }
-
+        console.log(line);
         // Handle role-based lines
-        const roleMapping = ['Self', 'Direct Report', 'Teammate', 'Supervisor', 'Other'];
+        const roleMapping = ['Total Summary','Self', 'Direct Report', 'Teammate', 'Supervisor', 'Other'];
         if (roleMapping.some(role => line.startsWith(`${role}:`))) {
             const [role, summary] = line.split(': ');
             if (section) {
@@ -1575,7 +1578,9 @@ exports.getSmartGoals = async (req, res) => {
 
         const deadline = new Date();
         deadline.setDate(deadline.getDate() + 30); // 30 days deadline for SMART goals
-        await Goals.findByIdAndDelete({ survey_id: survey_id })
+
+        await Goals.deleteMany({ survey_id: survey_id });
+
         // Function to create or update SMART goals in the Goals collection
         const saveOrUpdateGoal = async (goalText, competencyId, type) => {
             const goal = await Goals.findOneAndUpdate(

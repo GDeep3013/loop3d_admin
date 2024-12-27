@@ -4,7 +4,7 @@ import Swal from 'sweetalert2';
 import { Edit, Remove } from '../../../components/svg-icons/icons';
 import CompletionManagement from '../plan/CompletionManagement';
 
-const GoalListing = ({ goals, getGoals, categories, setCompetencyFrom, setChatResponse, buttonClicked, setButtonClicked, buttonText, setButtonText }) => {
+const GoalListing = ({ goals, getGoals,handleScrollToTop, categories, setCompetencyFrom, setChatResponse, buttonClicked, setButtonClicked, buttonText, setButtonText }) => {
     const [editingGoalId, setEditingGoalId] = useState(null);
     const [showModal, setShowModal] = useState(false);
     const [selectedGoal, setSelectedGoal] = useState({});
@@ -52,6 +52,8 @@ const GoalListing = ({ goals, getGoals, categories, setCompetencyFrom, setChatRe
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0; // Returns true if no errors
     };
+
+
 
     const handleDelete = async (e, id) => {
         try {
@@ -183,6 +185,7 @@ const GoalListing = ({ goals, getGoals, categories, setCompetencyFrom, setChatRe
             setSelectedGoalIds(allGoalIds);
         }
     }, [goals]);
+
 
 
     return (
@@ -345,10 +348,10 @@ const GoalListing = ({ goals, getGoals, categories, setCompetencyFrom, setChatRe
                         }}
                         disabled={selectedGoalIds.length === 0}
                     >
-                        {buttonText}
+                     I want to keep working on selected goals
                     </Button>
 
-                    <Button variant="secondary" className="w-50 ml-0" disabled={!showModal}>  I want to work on other competencies. </Button>
+                    <Button variant="secondary" className="w-50 ml-0"><a href='#plan-main'> I want to work on other competencies. </a></Button>
                 </div>
             </div>
         </div>
