@@ -79,7 +79,7 @@ export default function SurveyList() {
                                 <th>Survey</th>
                                 <th>Initiation Date</th>
                                 <th>Loop3d Lead Name</th>
-                                <th>Supervisor Name</th>
+                                {/* <th>Supervisor Name</th> */}
                                 <th>Total Invitees</th>
                                 <th>Completed Surveys</th>
                                 <th>Loop3d Lead Completed Survey?</th>
@@ -108,7 +108,7 @@ export default function SurveyList() {
                                         <td onClick={() => navigate(`/view-survey-participant/${survey._id}`)}>{index + 1}</td>
                                         <td onClick={() => navigate(`/view-survey-participant/${survey._id}`)}>{formatDateGB(survey.createdAt)}</td>
                                         <td onClick={() => navigate(`/view-survey-participant/${survey._id}`)}>{survey?.loop_lead?.first_name} {survey?.loop_lead?.last_name}</td>
-                                        <td onClick={() => navigate(`/view-survey-participant/${survey._id}`)}>{survey?.mgr_id?.first_name}  {survey?.mgr_id?.last_name}</td>
+                                        {/* <td onClick={() => navigate(`/view-survey-participant/${survey._id}`)}>{survey?.mgr_id?.first_name}  {survey?.mgr_id?.last_name}</td> */}
                                         <td onClick={() => navigate(`/view-survey-participant/${survey._id}`)}>{survey.total_invites}</td>
                                         <td onClick={() => navigate(`/view-survey-participant/${survey._id}`)}>{survey.completed_survey}</td>
                                         <td onClick={() => navigate(`/view-survey-participant/${survey._id}`)}>{survey.ll_survey_status === 'yes' ? <span className='span-badge active-tag'>Yes</span> : <span className='span-badge inactive-tag'> Not completed
