@@ -9,6 +9,10 @@ const categorySchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    parentCategory: {
+        type: String,
+        default: null
+    },
     organization_id: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Organization', // Assuming you have a User model

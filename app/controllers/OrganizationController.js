@@ -19,7 +19,8 @@ const addQuestions = async (organization_id) => {
                 competency_type: category.competency_type,
                 created_by: category.created_by,
                 status: category.status,
-                organization_id: organization_id,  // Assign new org_id
+                organization_id: organization_id,
+                parentCategory:category._id
             });
 
             // Save cloned category
@@ -79,16 +80,20 @@ const OrganizationController = {
             return res.status(400).json({ errors: errors.array() });
         }
         try {
-            const { name ,selectedCompetency,user_id } = req.body;
+            const { name, selectedCompetency, user_id } = req.body;
+            
             const organization = new Organization({ name });
             const savedOrganization = await organization.save();
+
             if (savedOrganization?._id) {
-                const clonedCategories = await addQuestions(savedOrganization?._id); 
+
+                const clonedCategories = await addQuestions(savedOrganization?._id);
+
                 for (let competency of selectedCompetency) {
                     const newAssignments = [];
                     const category1 = await Category.findById(competency);
                     const matchedCategory = clonedCategories.find(
-                        (category) => category.category_name == category1.category_name 
+                        (category) => category.parentCategory == category1._id 
                     );
 
                     if (!matchedCategory) {
