@@ -1,4 +1,4 @@
-import React, { useState, useRef ,useEffect } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import AuthLayout from '../../../layout/Auth'
 import { Col, Row, Container, Button } from "react-bootstrap";
 import { useParams, useNavigate } from "react-router-dom";
@@ -18,24 +18,28 @@ const Plans = () => {
     const [loading, setLoading] = useState(false);
     const [goals, setGoals] = useState([]);
     const [buttonClicked, setButtonClicked] = useState(false);
-    const [buttonText,setButtonText]=useState("I want to keep working on selected goals")
+    const [buttonText, setButtonText] = useState("I want to keep working on selected goals")
 
     const [reGenerate, setReGenerate] = useState(false);
 
     const containerRef = useRef(null);
 
     const handleScrollToTop = () => {
-        console.log('fffffeggr',containerRef.current)
+        console.log('fffffeggr', containerRef.current)
         if (containerRef.current) {
             setChatResponse('')
+            containerRef.current.scrollTo({
+                top: 0,
+                behavior: "smooth",
+            });
             containerRef.current.focus();
-          }
-    //   if (containerRef.current) {
-    //     containerRef.current.scrollTo({
-    //       top: 0,
-    //       behavior: "smooth",
-    //     });
-    //   }
+        }
+        //   if (containerRef.current) {
+        //     containerRef.current.scrollTo({
+        //       top: 0,
+        //       behavior: "smooth",
+        //     });
+        //   }
     };
     //Get get categories for the select box
     async function getCategory() {
@@ -46,13 +50,13 @@ const Plans = () => {
             });
             result = await result.json();
             const activeCategories = (result.categories || [])
-            .filter(category => category?.status === 'active')
-            .reduce((unique, category) => {
-                if (!unique.some(item => item._id === category._id)) {
-                    unique.push(category);
-                }
-                return unique;
-            }, []);
+                .filter(category => category?.status === 'active')
+                .reduce((unique, category) => {
+                    if (!unique.some(item => item._id === category._id)) {
+                        unique.push(category);
+                    }
+                    return unique;
+                }, []);
             setCategories(activeCategories);
         } catch (error) {
             console.error(error);
@@ -132,7 +136,7 @@ const Plans = () => {
                 getGoals();
                 setButtonClicked(false)
                 setButtonText("I want to keep working on selected goals")
-                
+
             }
         } catch (error) {
             console.error('Error fetching categories:', error);
