@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Container, Dropdown, Row, Col ,Button} from 'react-bootstrap';
+import { Container, Dropdown, Row, Col, Button } from 'react-bootstrap';
 import ParticipantForm from './ParticipantForm'
 import { useParams, useNavigate } from "react-router-dom";
 import AuthLayout from "../../layout/Auth";
@@ -7,7 +7,7 @@ import { useSelector } from 'react-redux';
 
 const CreateParticipants = () => {
     const user = useSelector((state) => state.auth.user);
-const navigate=useNavigate()
+    const navigate = useNavigate()
     const { id } = useParams();
 
     const [survey, setSurvey] = useState();
@@ -43,12 +43,12 @@ const navigate=useNavigate()
         <AuthLayout title={"Create Participant"}>
             <div>
                 <div className="profile-btns pt-4">
-                                    <Button className="default-btn cancel-btn ml-0" onClick={() => navigate(-1)}>
-                                        Back
-                                    </Button>                               
+                    <Button className="default-btn cancel-btn ml-0" onClick={() => navigate(-1)}>
+                        Back
+                    </Button>
                 </div>
                 <div className="lunchpad pt-4 pt-md-5 pb-5">
-                    <Container>                
+                    <Container>
                         <div className="d-flex flex-column flex-lg-row gap-lg-5 gap-3">
                             <div className="w-100 w-lg-50">
                                 <h2 className="text-dark fs-1 fs-lg-3 fw-bold heading-font">Loop3d Launchpad</h2>
@@ -99,7 +99,7 @@ const navigate=useNavigate()
                         </div>
                     </Container>
                 </div>
-                <ParticipantForm survey_id={id} />
+                <ParticipantForm survey_id={id} mgr_email={survey?.manager?.email} loop_lead_email={survey?.loop_lead?.email} />
             </div>
         </AuthLayout>
     );

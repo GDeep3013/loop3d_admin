@@ -270,7 +270,7 @@ const SurveySummary = () => {
         }
     }, [pdf])
 
-
+    // console.log(summaryArray?.question_summary?.strengthsAndSkills);
     return (
         <AuthLayout title={"Survey Summary"}>
             <div className="main-back-heading">
@@ -431,7 +431,7 @@ const SurveySummary = () => {
 
                                             <div className="summary-item mt-4" style={{ backgroundColor: '#F2F8FB', padding: '30px 20px' }}>
                                                 <h2 className="font-frank text-black" style={{ fontSize: '21px', lineHeight: '27px' }}> Q1. What are the strengths and skills that make this person most effective?</h2>
-                                                <p className="font-poppins fw-normal" style={{ fontSize: '16px' }}><strong c lassName="font-frank fw-medium" style={{ fontSize: '16px' }}>Total Summary:</strong> Example summary.</p>
+                                                {/* <p className="font-poppins fw-normal" style={{ fontSize: '16px' }}><strong c lassName="font-frank fw-medium" style={{ fontSize: '16px' }}>Total Summary:</strong> Example summary.</p> */}
                                                 {summaryArray?.question_summary?.strengthsAndSkills?.map((item, index) => (
                                                     <p key={index}><strong className="font-frank fw-normal" style={{ fontSize: '18px' }}>{item.role}:</strong> {item.summary}</p>
                                                 ))}
@@ -443,7 +443,7 @@ const SurveySummary = () => {
                                             {/* Suggestions for Improvement */}
                                             <div className="summary-item" style={{backgroundColor: '#F2F8FB', padding: '30px 20px' }}>
                                                 <h2 className="font-frank text-black" style={{ fontSize: '21px', lineHeight: '27px' }}>Q2. What suggestions do you have to make this person a stronger performer and more effective?</h2>
-                                                <p className="font-poppins" style={{ fontSize: '16px' }}> <strong className=" font-frank fw-normal" style={{ fontSize: '16px' }}>Total Summary:</strong> Example summary.</p>
+                                                {/* <p className="font-poppins" style={{ fontSize: '16px' }}> <strong className=" font-frank fw-normal" style={{ fontSize: '16px' }}>Total Summary:</strong> Example summary.</p> */}
                                                 {summaryArray?.question_summary?.suggestionsForImprovement?.map((item, index) => (
                                                     <p key={index}><strong className="font-frank fw-normal" style={{ fontSize: '18px' }}>{item.role}:</strong> {item.summary}</p>
                                                 ))}
@@ -455,7 +455,7 @@ const SurveySummary = () => {
                                             {/* Other Comments */}
                                             <div className="summary-item  page-break" style={{backgroundColor: '#F2F8FB', padding: '30px 20px' }}>
                                                 <h2 className="font-frank text-black" style={{ fontSize: '21px', lineHeight: '27px' }}>Q3. Other comments?</h2>
-                                                <p className="font-poppins" style={{ fontSize: '20px' }}> <strong className=" font-frank fw-normal" style={{ fontSize: '25px' }}>Total Summary:</strong> Example summary.</p>
+                                                {/* <p className="font-poppins" style={{ fontSize: '20px' }}> <strong className=" font-frank fw-normal" style={{ fontSize: '25px' }}>Total Summary:</strong> Example summary.</p> */}
                                                 {summaryArray?.question_summary?.otherComments?.map((item, index) => (
                                                     <p key={index}><strong className="font-frank fw-normal" style={{ fontSize: '18px' }}>{item.role}:</strong> {item.summary}</p>
                                                 ))}

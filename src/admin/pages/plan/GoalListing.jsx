@@ -345,7 +345,7 @@ const GoalListing = ({ goals, getGoals, categories, setCompetencyFrom, setChatRe
                         }}
                         disabled={selectedGoalIds.length === 0}
                     >
-                        {buttonText}
+                     I want to keep working on selected goals
                     </Button>
 
                     <Button variant="secondary" className="w-50 ml-0" disabled={!showModal}>  I want to work on other competencies. </Button>
