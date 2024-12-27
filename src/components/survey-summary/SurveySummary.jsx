@@ -204,9 +204,31 @@ const SurveySummary = () => {
     const renderCharts = () => {
         if (!reportData) return null;
 
-        return Object.entries(reportData).map(([competency, data], index) => (
-            chart2Data[competency] && <ChartBar key={competency} getChartImagesFromDB={getChartImagesFromDB} savedImages={savedImages?.summaries_by_competency?.[0]} images={images} survey_id={id} index={index} competency={competency} data={data} chart2Data={chart2Data[competency]} reportData={reportData} pdf={pdf} />
-        ));
+        return Object.entries(reportData).map(([competency, data], index) => {
+            // Skip rendering for "Uncategorized"
+            if (competency === "Uncategorized") {
+                return null;
+            }
+    
+            // Render the ChartBar component for other competencies
+            return (
+                chart2Data[competency] && (
+                    <ChartBar
+                        key={competency}
+                        getChartImagesFromDB={getChartImagesFromDB}
+                        savedImages={savedImages?.summaries_by_competency?.[0]}
+                        images={images}
+                        survey_id={id}
+                        index={index}
+                        competency={competency}
+                        data={data}
+                        chart2Data={chart2Data[competency]}
+                        reportData={reportData}
+                        pdf={pdf}
+                    />
+                )
+            );
+        });
     };
 
 
