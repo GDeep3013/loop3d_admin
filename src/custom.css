@@ -367,6 +367,12 @@ button.add_participant:hover{ background-color: var(--secondary-color); color: #
 
 .loading-spinner { display: flex; align-items: center; justify-content: center; min-height: 200px; }
 
-.table-inner .table td{ text-transform: lowercase; }
+/* .table-inner .table td{ text-transform: lowercase; }
 .table td:first-letter { text-transform:uppercase }
-.user-name:first-letter { text-transform:uppercase }
+.user-name:first-letter { text-transform:uppercase } */
+
+.text-lowercase{ text-transform: lowercase; }
+
+.form-group .text-danger{
+    font-size : '14px' !important;
+}

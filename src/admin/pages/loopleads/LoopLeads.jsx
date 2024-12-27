@@ -89,9 +89,9 @@ export default function LoopLeads({ organization }) {
                                     </div>
                                 </td>
                              
-                                    <td  onClick={() => navigate(`/view-loop_lead/${user._id}/${organization.orgniation_id}`)} className='text-lowercase'>{user.email}</td>
+                                    <td className='text-lowercase'  onClick={() => navigate(`/view-loop_lead/${user._id}/${organization.orgniation_id}`)}>{user.email}</td>
                                     <td  onClick={() => navigate(`/view-loop_lead/${user._id}/${organization.orgniation_id}`)}>{user.created_by?.first_name} {user.created_by?.last_name}</td>
-                                    <td  onClick={() => navigate(`/view-loop_lead/${user._id}/${organization.orgniation_id}`)}>{user.created_by?.email} </td>
+                                    <td className='text-lowercase'  onClick={() => navigate(`/view-loop_lead/${user._id}/${organization.orgniation_id}`)}>{user.created_by?.email} </td>
                                     <td  onClick={() => navigate(`/view-loop_lead/${user._id}/${organization.orgniation_id}`)}>{user?.surveyCount} </td>
 
                                     {/* <td>{user?.role?.type =="looped_lead"?"loop lead":user?.role?.type}</td> */}

@@ -23,12 +23,14 @@ export default function AddEmployee() {
 console.log('org_idfff',queryParams.org_id,location)
   const [roles, setRoles] = useState([]);
   const [loader, setLoader] = useState(false);
+  const [loleId, setLoleId] = useState();
+
 
   const [formData, setFormData] = useState({
     first_name: '',
     last_name: '',
     email: '',
-    user_type: orgId?'66c9ca6b2449fcbed71296f5':'',
+    user_type:'',
     _method: '',
     organization_id: orgId?orgId:'',
     phone: '',
@@ -128,7 +130,6 @@ console.log('org_idfff',queryParams.org_id,location)
     if (id) {
       url = `/api/update-user/${id}`;
     }
-
     await axios.post(url, formData, {
       headers: {
         'x-api-key': import.meta.env.VITE_X_API_KEY,
@@ -176,6 +177,8 @@ console.log('org_idfff',queryParams.org_id,location)
           value: role._id,
           label: role.type
         }));
+      setFormData({ ...formData, ["user_type"]: fetchedOptions[0].value })
+
       setRoles(fetchedOptions);
     } catch (error) {
       console.error('Error fetching roles:', error);
@@ -332,9 +335,7 @@ console.log('org_idfff',queryParams.org_id,location)
                           name="user_type"
                           value={formData.user_type}
                           onChange={handleChange}
-                          isOptionSelected={orgId?'66c9ca6b2449fcbed71296f5':''}
                         >
-                          <option>Select User Type</option>
                           {roles.map(option => (
                             <option key={option.value} value={option.value} style={{ textTransform: "capitalize" }}>
                               {option.label.replace(/_/g, " ")}

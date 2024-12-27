@@ -88,7 +88,7 @@ export default function ManagerList({ organization }) {
                                             <div className='user-name'>{user?.last_name}</div>
                                         </div>
                                     </td>
-                                    <td onClick={() => navigate(`/view-loop_lead/${user._id}/${organization.orgniation_id}`)}>{user.email}</td>
+                                    <td className='text-lowercase' onClick={() => navigate(`/view-loop_lead/${user._id}/${organization.orgniation_id}`)}>{user.email}</td>
                                     {/* <td>{user.role.type}</td> */}
                                     <td onClick={() => navigate(`/view-loop_lead/${user._id}/${organization.orgniation_id}`)}><span className='span-badge active-tag'>Active</span></td>
                                     <td>
