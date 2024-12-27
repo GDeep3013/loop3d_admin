@@ -72,8 +72,8 @@ export default function SurveyList() {
               <th>Initiation Date</th>
               <th>Total Invitees</th>
               <th>Completed Surveys</th>
-              <th>Loop Lead Completed Survey?</th>
-              <th>Manager Completed Survey?</th>
+              <th>Loop3d Lead Completed Survey?</th>
+              <th>Supervisor Completed Survey?</th>
               <th>Survey Status</th>
               <th>Report Generation Date</th>
               <th>Action</th>

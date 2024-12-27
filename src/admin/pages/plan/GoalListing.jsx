@@ -351,7 +351,7 @@ const GoalListing = ({ goals, getGoals,handleScrollToTop, categories, setCompete
                      I want to keep working on selected goals
                     </Button>
 
-                    <Button variant="secondary" className="w-50 ml-0"><a href='#plan-main'> I want to work on other competencies. </a></Button>
+                   <Button variant="secondary" className="w-50 ml-0 "><a href='#plan-main' style={{ color: 'white' }}> I want to work on other competencies. </a></Button>
                 </div>
             </div>
         </div>
