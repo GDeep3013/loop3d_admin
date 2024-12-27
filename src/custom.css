@@ -374,5 +374,5 @@ button.add_participant:hover{ background-color: var(--secondary-color); color: #
 .text-lowercase{ text-transform: lowercase; }
 
 .form-group .text-danger{
-    font-size : '14px' !important;
+    font-size : 14px !important;
 }
