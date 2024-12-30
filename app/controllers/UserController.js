@@ -140,9 +140,10 @@ const UserController = {
         try {
             // Extract search parameters and pagination parameters from request
             const { searchTerm, page = 1, pageSize = 10 } = req.query;
+            const role1 = await Role.findOne({ type: {$ne:"admin"} });
 
             // Construct the query object for User.find() based on search term
-            const query = {};
+            const query = {role:role1?._id};
             if (searchTerm) {
                 query.$or = [
                     { first_name: { $regex: searchTerm, $options: 'i' } }, // Case-insensitive search by username
