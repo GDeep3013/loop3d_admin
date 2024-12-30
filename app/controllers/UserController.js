@@ -208,7 +208,10 @@ const UserController = {
                 // id = await encryption.decrypt(obj);
             }
 
-            const user = await User.findById(id);
+            const user = await User.findById(id).populate({
+                path: 'organization',
+                select: 'name', // Exclude the __v field from the populated organization documents
+            });
             if (!user) {
                 return res.status(404).json({ error: 'User not found' });
             }

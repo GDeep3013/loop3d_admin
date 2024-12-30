@@ -99,7 +99,7 @@ const CreateParticipants = () => {
                         </div>
                     </Container>
                 </div>
-                <ParticipantForm survey_id={id} mgr_email={survey?.manager?.email} loop_lead_email={survey?.loop_lead?.email} />
+                <ParticipantForm survey_id={id} total_invites={survey?.total_invites} mgr_email={survey?.manager?.email} loop_lead_email={survey?.loop_lead?.email} />
             </div>
         </AuthLayout>
     );

@@ -20,7 +20,7 @@ const sendLoopLeadLink = (recipientDetails) => {
                              <p>You will need a minimum of 10 nominees, but keep in mind that your feedback data becomes more robust as you increase the number of nominees.</p>
 
                             <p>Get started by clicking on the following link:</p>
-                            <a style="display: inline-block; text-decoration:none;padding: 12px 25px;color: #fff; background-color: #7abcdb; border-radius: 5px;" href="${recipientDetails.url}">Add Participant</a>
+                            <a style="display: inline-block; text-decoration:none;padding: 12px 25px;color: #fff; background-color: #7abcdb; border-radius: 5px;" href="${recipientDetails.url}">Add Participants</a>
 
                             <p> Simply respond to this email if you have any questions at all about the process.</p>
 

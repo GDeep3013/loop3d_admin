@@ -121,7 +121,7 @@ export default function EmployeeTable({ }) {
             {!loading && Employe.length == 0 && (
               <tr>
                 <td colSpan="8" style={{ textAlign: 'center' }}>
-                  <h4>No User Found</h4>
+                  <h4>No Users Found</h4>
                 </td>
               </tr>)
             }

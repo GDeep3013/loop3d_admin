@@ -1,19 +1,29 @@
 'use client';
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Container, Dropdown, Row, Col } from 'react-bootstrap';
 import { useNavigate } from "react-router-dom";
 import Swal from 'sweetalert2'
-export default function ParticipantForm({ survey_id ,mgr_email,loop_lead_email}) {
+export default function ParticipantForm({ survey_id,total_invites ,mgr_email,loop_lead_email}) {
     const navigate = useNavigate();
+console.log('total_invites',total_invites)
+const initialParticipants = React.useMemo(() => 
+    Array.from({ length: total_invites >= 10 ? 1 : 10 }, () => ({
+      p_first_name: "",
+      p_last_name: "",
+      p_email: "",
+      p_type: "",
+    })),
+  [total_invites])
+    console.log('initialParticipants',initialParticipants)
 
-    const initialParticipants = Array.from({ length: 10 }, () => ({
-        p_first_name: '',
-        p_last_name: '',
-        p_email: '',
-        p_type: ''
-    }));
 
-    const [participants, setParticipants] = useState(initialParticipants);
+    const [participants, setParticipants] = useState([]);
+
+    useEffect(() => {
+        setParticipants(initialParticipants)
+    }, [initialParticipants])
+    console.log('participants',participants)
+
     const [errors, setErrors] = useState([]);
     const [loader, setLoader] = useState(false);
     const handleInputChange = (index, field, value) => {
@@ -178,7 +188,7 @@ export default function ParticipantForm({ survey_id ,mgr_email,loop_lead_email})
                             </select>
                             {errors[index]?.p_type && <p className="text-danger">{errors[index].p_type}</p>}
                         </div>
-                        {index >= 10 && (
+                        {index >= (total_invites >= 10 ? 1 : 10)&& (
                             <button type="button" className="text-danger dlt_btn" onClick={() => removeParticipant(index)}>
                                 <img src="/images/remove.png" alt="delete icon" className="" style={{ width: '20px', height: '20px' }}/>
                             </button>

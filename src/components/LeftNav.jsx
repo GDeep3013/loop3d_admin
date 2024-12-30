@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { Category, Logout,EmailIcon, EmployeeIcon, DocomentIcon, ProjectIcon,QuestionIcon, FixedPrice } from "./svg-icons/icons";
@@ -14,7 +14,14 @@ export default function LeftNav({isMenuOpen,setIsMenuOpen}) {
   };
 
 
+  useEffect(() => {
+    if (user?.organization?.name && user?.role != "admin") {
+      document.title = "Loop3D - " + user?.organization?.name;  
 
+    } else {
+      document.title = "Loop3D - Admin";  
+    }
+  }, [user]);
   return (
     <nav className={`sideNavOuter ${isMenuOpen ? "open" : ""}`}>
 

@@ -117,14 +117,14 @@ exports.createSurvey = async (req, res) => {
             let summary_url = `${process.env.ADMIN_PANEL}/survey-summary/` + savedSurvey?._id
             
 
-            sendEmail('createPasswordMail', {email,first_name,last_name,admin_panel_url})
-
+            
             
             await sendEmail('sendLoopLeadLink', {
                 name,
                 email,
                 url
             });
+            sendEmail('createPasswordMail', {email,first_name,last_name,admin_panel_url})
           
 
             savedSurveys.push(savedSurvey);
