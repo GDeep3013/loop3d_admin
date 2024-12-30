@@ -9,6 +9,8 @@ export default function LoopLeads({ organization }) {
     const navigate = useNavigate();
 
     const [users, setUsers] = useState([]);
+    const [usersCount, setUsersCount] = useState(0);
+
     const [searchTerm, setSearchTerm] = useState('');
     useEffect(() => {
 
@@ -18,8 +20,11 @@ export default function LoopLeads({ organization }) {
                     let data = await fetchLoopLeads(organization.orgniation_id, searchTerm, "looped_lead");
                     if (Array.isArray(data.users) && data.users.length > 0) {
                         setUsers(data.users);
+                        setUsersCount(data.usersCount)
                     } else {
                         setUsers([]);
+                        setUsersCount(data.usersCount)
+
 
                     }
                 } catch (error) {
@@ -42,6 +47,7 @@ export default function LoopLeads({ organization }) {
                         <Container>
                             <Row>
                                 <Col md={6}>
+                                    <p><span>Total Loop3D Leads : </span>{usersCount}</p>
                                 </Col>
                                 <Col md={6} className='text-end'>
                                     <form className='d-flex justify-content-end'>

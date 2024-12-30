@@ -293,21 +293,25 @@ const UserController = {
             const role = await Role.findOne({ type: type });
 
             const query = {
-                $or: [
-                    { organization: req.params.org_id },
-                    { created_by: req.params.org_id }
+                $and: [
+                    {
+                        $or: [
+                            { organization: req.params.org_id },
+                            { created_by: req.params.org_id },
+                        ],
+                    },
+                    searchTerm
+                        ? {
+                              $or: [
+                                  { first_name: { $regex: searchTerm, $options: 'i' } }, // Case-insensitive search by first_name
+                                  { last_name: { $regex: searchTerm, $options: 'i' } },  // Case-insensitive search by last_name
+                                  { email: { $regex: searchTerm, $options: 'i' } },      // Case-insensitive search by email
+                              ],
+                          }
+                        : {}, // If no searchTerm, add an empty condition
                 ],
-                role: role?._id
+                role: role?._id,
             };
-
-
-            if (searchTerm) {
-                query.$or = [
-                    { first_name: { $regex: searchTerm, $options: 'i' } }, // Case-insensitive search by first_name
-                    { last_name: { $regex: searchTerm, $options: 'i' } },  // Case-insensitive search by last_name
-                    { email: { $regex: searchTerm, $options: 'i' } },      // Case-insensitive search by email
-                ];
-            }
 
 
             // Fetch users based on the constructed query and pagination parameters
@@ -330,10 +334,12 @@ const UserController = {
                     surveyCount: surveyCount,
                 };
             }));
+            const usersCount = await User.countDocuments(query);
 
             res.status(200).json({
                 status: 'success',
                 users: usersWithSurveyCounts,
+                usersCount:usersCount
             });
 
         } catch (error) {
