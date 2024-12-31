@@ -35,8 +35,7 @@ const ChartBar = ({ competency, index, data, getChartImagesFromDB, chart2Data, s
             {
                 label: 'Average Weightage',
                 data: Object.values(data)?.map((item) => item?.averageWeightage),
-                backgroundColor: 'rgb(23,74,109)',
-            }
+                backgroundColor: Object.keys(data).map((_, index) => index === 0 ?'rgb(122,188,219)':'rgb(23,74,109)'),            }
         ],
     };
 
