@@ -573,11 +573,17 @@ exports.getSurveyParticipantsById = async (req, res) => {
             let participants = await SurveyParticipant.find(participantQuery).sort({ createdAt: -1 })
                 .populate({
                     path: 'survey_id',
-                    select: 'name survey_status total_invites report_gen_date',
-                    populate: {
-                        path: 'loop_lead',
-                        select: 'first_name last_name'
-                    }
+                    select: 'name survey_status total_invites ll_survey_status mgr_survey_status report_gen_date',
+                    populate: [
+                        {
+                            path: 'loop_lead',
+                            select: 'first_name last_name email',
+                        },
+                        {
+                            path: 'manager',
+                            select: 'first_name last_name email',
+                        },
+                    ],
                 })
 
             return res.status(200).json({

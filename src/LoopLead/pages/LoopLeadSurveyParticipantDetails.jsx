@@ -147,28 +147,56 @@ export default function LoopLeadSurveyParticipantDetails() {
                                     </td>
                                 </tr>
                             ) : (
-                                surveyParticipant.map((participant, index) => (
-                                    <tr key={participant._id} className='table-list-design' >
-                                        <td>{index + 1}</td>
-                                        <td>{participant?.p_first_name}</td>
-                                        <td>{participant?.p_last_name}</td>
-                                        <td className='text-lowercase'>{participant?.p_email}</td>
-                                        <td>{participant?.p_type}</td>
-                                        <td>{participant?._id}</td>
-                                        <td>{participant.survey_status === 'completed' ? <span className='span-badge active-tag'>Completed</span> : <span className='span-badge inactive-tag'>Pending</span>}</td>
+                                <><tr key={survey?.loop_lead?._id} className='table-list-design'>
+                                    <td>1</td>
+                                    <td>{survey?.loop_lead?.first_name}</td>
+                                    <td>{survey?.loop_lead?.last_name}</td>
+                                    <td className='text-lowercase'>{survey?.loop_lead?.email}</td>
+                                    <td>Self</td>
+                                    <td >{survey?.loop_lead?._id}</td>
+                                    <td>{survey?.ll_survey_status === 'yes' ? <span className='span-badge active-tag'>Completed</span> : <span className='span-badge inactive-tag'>Pending</span>}</td>
+                                    <td>
+                                        <button className='action-btn' disabled={true} onClick={() => handleDelete(survey?.loop_lead?._id._id)}><Remove /></button>
+
+                                    </td>
+                                </tr>
+                                    <tr key={survey?.manager?._id} className='table-list-design'>
+                                        <td>2</td>
+                                        <td>{survey?.manager?.first_name}</td>
+                                        <td>{survey?.manager?.last_name}</td>
+                                        <td className='text-lowercase'>{survey?.manager?.email}</td>
+                                        <td>Supervisor </td>
+                                        <td >{survey?.manager?._id}</td>
+                                        <td>{survey?.mgr_survey_status === 'yes' ? <span className='span-badge active-tag'>Completed</span> : <span className='span-badge inactive-tag'>Pending</span>}</td>
                                         <td>
-                                            <button className='action-btn'  disabled={participant.survey_status === 'completed'} onClick={() => handleDelete(participant._id)}><Remove /></button>
-                                            {/* <Dropdown className='custom-dropdown'>
-                                            <Dropdown.Toggle variant="success" id="dropdown-basic">
-                                                <MoreIcon />
-                                            </Dropdown.Toggle>
-                                            <Dropdown.Menu>
-                                                <Dropdown.Item onClick={() => handleDelete(participant._id)}>Delete</Dropdown.Item>
-                                            </Dropdown.Menu>
-                                        </Dropdown> */}
+                                            <button className='action-btn' disabled={true} onClick={() => handleDelete(survey?.manager?._id._id)}><Remove /></button>
+
                                         </td>
                                     </tr>
-                                ))
+
+                                    {surveyParticipant.map((participant, index) => (
+                                        <tr key={participant._id} className='table-list-design'>
+                                            <td>{index + 3}</td>
+                                            <td>{participant?.p_first_name}</td>
+                                            <td>{participant?.p_last_name}</td>
+                                            <td className='text-lowercase'>{participant?.p_email}</td>
+                                            <td>{participant?.p_type}</td>
+                                            <td >{participant?._id}</td>
+                                            <td>{participant.survey_status === 'completed' ? <span className='span-badge active-tag'>Completed</span> : <span className='span-badge inactive-tag'>Pending</span>}</td>
+                                            <td>
+                                                <button className='action-btn' disabled={participant.survey_status === 'completed'} onClick={() => handleDelete(participant._id)}><Remove /></button>
+                                                {/* <Dropdown className='custom-dropdown'>
+                                                                           <Dropdown.Toggle variant="success" id="dropdown-basic">
+                                                                               <MoreIcon />
+                                                                           </Dropdown.Toggle>
+                                                                           <Dropdown.Menu>
+                                                                               <Dropdown.Item onClick={() => handleDelete(participant._id)}>Delete</Dropdown.Item>
+                                                                           </Dropdown.Menu>
+                                                                       </Dropdown> */}
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </>
                             )}
                         </tbody>
                     </table>

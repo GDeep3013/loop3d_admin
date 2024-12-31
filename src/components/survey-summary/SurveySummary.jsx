@@ -6,6 +6,9 @@ import CompetencyBar from "./CompetencyBar"
 import { useParams, useNavigate } from "react-router-dom";
 import AuthLayout from "../../layout/Auth";
 import Loading from "../Loading";
+import { Link } from "react-router-dom";
+import { useSelector } from 'react-redux';
+
 import html2pdf from 'html2pdf.js';
 // import { color } from "chart.js/helpers";
 // import SummaryPdf from './SummaryPdf'
@@ -29,7 +32,7 @@ const SurveySummary = () => {
     const [pdf, setPdf] = useState(false);
     const [chart2Data, setChart2Data] = useState();
     const [savedImages, setSavedImages] = useState();
-
+  const user = useSelector((state) => state.auth.user);
 
     const reportRef = useRef(null);
     const removeSpacesFromKeys = (obj) => {
@@ -295,7 +298,7 @@ const SurveySummary = () => {
         }
     }, [pdf])
 
-    // console.log(summaryArray?.question_summary?.strengthsAndSkills);
+    console.log('user',user);
     return (
         <AuthLayout title={"Survey Summary"}>
             <div className="main-back-heading">
@@ -316,6 +319,9 @@ const SurveySummary = () => {
                     <Container>
 
                         <div className="d-flex justify-content-end pt-4 pb-3">
+                            {/* {user.role =="looped_lead" && <Link  className='default-btn'  to={`/plans/${id}`}>Add a smart goals</Link>} */}
+                            {user.role == "looped_lead" && <Button className="survey-inner-btn" onClick={() => { navigate(`/plans/${id}`) }}>Add a smart goals</Button>}
+
                             <Button className="survey-inner-btn absolute" onClick={() => { ReGenerateReport() }}>Re-Generate</Button> 
                                 {!pdf ? <Button className="generate-btn" disabled={document.readyState === 'complete'?false:true} onClick={() => { generatePdf() }}>Download as PDF</Button>:
                                 <Button className="survey-inner-btn absolute"><Spinner/></Button>}
