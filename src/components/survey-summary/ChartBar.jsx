@@ -84,9 +84,13 @@ const ChartBar = ({ competency, index, data, getChartImagesFromDB, chart2Data, s
         },
         scales: {
             x: {
-                min: 1.0, // Ensure the x-axis starts from 1.0
+                // min: 1.0, // Ensure the x-axis starts from 1.0
                 max: 3.0, 
                 ticks: {
+                    callback: (value) => {
+                        const customTicks = [0, 0.5, 1, 1.5, 2, 2.5,3];
+                        return customTicks.includes(value) ? value : null; // Show only specified ticks
+                    },
                     color: '#555',
                     font: {
                         size: 14,
@@ -164,9 +168,13 @@ const ChartBar = ({ competency, index, data, getChartImagesFromDB, chart2Data, s
         },
         scales: {
             x: {
-                min: 1.0, // Ensure the x-axis starts from 1.0
+                // min: 1.0, // Ensure the x-axis starts from 1.0
                 max: 3.0, 
                 ticks: {
+                    callback: (value) => {
+                        const customTicks = [0, 0.5, 1, 1.5, 2, 2.5,3];
+                        return customTicks.includes(value) ? value : null; // Show only specified ticks
+                    },
                     color: '#555',
                     font: {
                         size: 14,

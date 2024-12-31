@@ -67,9 +67,13 @@ const CompetencyBar = ({ data, pdf = false ,survey_id,savedImages,getChartImages
         maintainAspectRatio: false, // Disable aspect ratio to manage height manually
         scales: {
             x: {
-                min: 1.0, // Ensure the x-axis starts from 1.0
+                // min: 1.0, // Ensure the x-axis starts from 1.0
                 max: 3.0,
-                beginAtZero: true, // Ensure the chart starts at 0
+                beginAtZero: true,
+                callback: (value) => {
+                    const customTicks = [0, 0.5, 1, 1.5, 2, 2.5,3];
+                    return customTicks.includes(value) ? value : null; // Show only specified ticks
+                },// Ensure the chart starts at 0
             },
             y: {
                 beginAtZero: true, // Ensure the y-axis starts at 0
