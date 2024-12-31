@@ -116,7 +116,9 @@ const SurveySummary = () => {
                 // let summaryValue = removeSpacesFromKeys(data.summary.response_Data)
                 let newData = (data.summary.response_Data) ? data.summary.response_Data : data.summary
                 setSummaryArray(newData);
-               
+                setTimeout(() => {
+                    GeneratePlans()           
+                },2000)
             } else {
                 console.error('Failed to fetch survey');
             }
