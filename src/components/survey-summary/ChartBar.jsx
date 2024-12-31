@@ -68,14 +68,13 @@ const ChartBar = ({ competency, index, data, getChartImagesFromDB, chart2Data, s
     };
 
     const options = {
-        indexAxis: isMobile ? 'x' : 'y',
+        indexAxis: isMobile ? 'x' : 'y', // Mobile: horizontal bars, Desktop: vertical bars
         responsive: true,
-        maintainAspectRatio: false, // Allow the chart to take the full height
-
+        maintainAspectRatio: false, // Allow the chart to resize appropriately
+    
         plugins: {
             legend: {
                 position: 'top',
-                
             },
             title: {
                 display: true,
@@ -83,29 +82,78 @@ const ChartBar = ({ competency, index, data, getChartImagesFromDB, chart2Data, s
             },
         },
         scales: {
-            x: {
-                // min: 1.0, // Ensure the x-axis starts from 1.0
-                max: 3.0, 
-                ticks: {
-                    callback: (value) => {
-                        const customTicks = [0, 0.5, 1, 1.5, 2, 2.5,3];
-                        return customTicks.includes(value) ? value : null; // Show only specified ticks
-                    },
-                    color: '#555',
-                    font: {
-                        size: 14,
-                    },
-                },
-            },
-            y: {
-                ticks: {
-                    color: '#555',
-                    font: {
-                        size: 14,
-                    }
-                },
-               
-            },
+            x: isMobile
+                ? {
+                      ticks: {
+                          color: '#555',
+                          font: {
+                              size: 14,
+                          },
+                      },
+                      title: {
+                          display: true,
+                          color: '#333',
+                          font: {
+                              size: 14,
+                          },
+                      },
+                  }
+                : {
+                      ticks: {
+                          callback: (value) => {
+                              const customTicks = [0, 0.5, 1, 1.5, 2, 2.5, 3];
+                              return customTicks.includes(value) ? value : null; // Show only specified ticks
+                          },
+                          color: '#555',
+                          font: {
+                              size: 14,
+                          },
+                      },
+                      max: 3.0, // Max value for the x-axis
+                      title: {
+                          display: true,
+                          color: '#333',
+                          font: {
+                              size: 14,
+                          },
+                      },
+                  },
+            y: isMobile
+                ? {
+                      ticks: {
+                          callback: (value) => {
+                              const customTicks = [0, 0.5, 1, 1.5, 2, 2.5, 3];
+                              return customTicks.includes(value) ? value : null; // Show only specified ticks
+                          },
+                          color: '#555',
+                          font: {
+                              size: 14,
+                          },
+                      },
+                      max: 3.0, // Max value for the y-axis
+                      title: {
+                          display: true,
+                          color: '#333',
+                          font: {
+                              size: 14,
+                          },
+                      },
+                  }
+                : {
+                      ticks: {
+                          color: '#555',
+                          font: {
+                              size: 14,
+                          },
+                      },
+                      title: {
+                          display: true,
+                          color: '#333',
+                          font: {
+                              size: 14,
+                          },
+                      },
+                  },
         },
     };
     function wrapLabel(label, maxLineLength) {
@@ -167,32 +215,87 @@ const ChartBar = ({ competency, index, data, getChartImagesFromDB, chart2Data, s
             },
         },
         scales: {
-            x: {
-                // min: 1.0, // Ensure the x-axis starts from 1.0
-                max: 3.0, 
-                ticks: {
-                    callback: (value) => {
-                        const customTicks = [0, 0.5, 1, 1.5, 2, 2.5,3];
-                        return customTicks.includes(value) ? value : null; // Show only specified ticks
+            x: isMobile
+                ? {
+                      ticks: {
+                          color: '#555',
+                          font: {
+                              size: 14,
+                          },
+                      },
+                      title: {
+                          display: true,
+                          color: '#333',
+                          font: {
+                              size: 14,
+                          },
                     },
-                    color: '#555',
-                    font: {
-                        size: 14,
+                    callback: function (value, index) {
+                        const question = chart2Data[index]?.question; // Get the full question
+                        return wrapLabel(question, 30); // Wrap the label (adjust the maxLineLength as needed)
                     },
-                },
-            },
-            y: {
-                ticks: {
-                    color: '#555',
-                    font: {
-                        size: 14,
-                    }
-                },
-                callback: function (value, index) {
-                    const question = chart2Data[index]?.question; // Get the full question
-                    return wrapLabel(question, 30); // Wrap the label (adjust the maxLineLength as needed)
-                },
-            },
+                  }
+                : {
+                      ticks: {
+                          callback: (value) => {
+                              const customTicks = [0, 0.5, 1, 1.5, 2, 2.5, 3];
+                              return customTicks.includes(value) ? value : null; // Show only specified ticks
+                          },
+                          color: '#555',
+                          font: {
+                              size: 14,
+                          },
+                      },
+                      max: 3.0, // Max value for the x-axis
+                      title: {
+                          display: true,
+                          color: '#333',
+                          font: {
+                              size: 14,
+                          },
+                    },
+                  
+                  },
+            y: isMobile
+                ? {
+                      ticks: {
+                          callback: (value) => {
+                              const customTicks = [0, 0.5, 1, 1.5, 2, 2.5, 3];
+                              return customTicks.includes(value) ? value : null; // Show only specified ticks
+                          },
+                          color: '#555',
+                          font: {
+                              size: 14,
+                          },
+                      },
+                      max: 3.0, // Max value for the y-axis
+                      title: {
+                          display: true,
+                          color: '#333',
+                          font: {
+                              size: 14,
+                          },
+                      },
+                  }
+                : {
+                      ticks: {
+                          color: '#555',
+                          font: {
+                              size: 14,
+                          },
+                      },
+                      title: {
+                          display: true,
+                          color: '#333',
+                          font: {
+                              size: 14,
+                          },
+                    },
+                    callback: function (value, index) {
+                        const question = chart2Data[index]?.question; // Get the full question
+                        return wrapLabel(question, 30); // Wrap the label (adjust the maxLineLength as needed)
+                    },
+                  },
         },
     };
 
