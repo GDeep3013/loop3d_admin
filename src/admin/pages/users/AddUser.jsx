@@ -179,8 +179,10 @@ console.log('org_idfff',queryParams.org_id,location)
         }));
         console.log('test1')
 
-      setFormData({ ...formData, ["user_type"]: fetchedOptions[0].value })
-
+        setFormData((prevFormData) => ({
+          ...prevFormData,
+          user_type: fetchedOptions[0]?.value || '' // Set default user type
+        }));
       setRoles(fetchedOptions);
     } catch (error) {
       console.error('Error fetching roles:', error);
