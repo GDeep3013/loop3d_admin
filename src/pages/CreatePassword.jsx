@@ -1,7 +1,7 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
-import { useLocation,useNavigate } from 'react-router-dom';
-import Swal from 'sweetalert2'
+import { useLocation, useNavigate } from 'react-router-dom';
+
 const useQuery = () => {
     return new URLSearchParams(useLocation().search);
 };
@@ -14,30 +14,63 @@ export default function CreatePassword() {
     const [showPassword, setShowPassword] = useState(false);
     const [formData, setFormData] = useState({
         password: '',
-        confirmPassword:''
+        confirmPassword: ''
     });
 
     const [errors, setErrors] = useState({
         password: '',
-      confirmPassword:''
+        confirmPassword: ''
     });
 
+    const [loading, setLoading] = useState(false);
+    const [tokenValid, setTokenValid] = useState(true);
+    const [errorMessage, setErrorMessage] = useState(''); // State for error message
+
+    // Check token validity on page load
+    useEffect(() => {
+        const verifyToken = async () => {
+            if (token) {
+                try {
+                    const response = await fetch(`/api/create-password`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            token: token,
+                        }),
+                    });
+                    const data = await response.json();
+                console.log('data',data)
+                    if (data.error) {
+                        setTokenValid(false);
+                    } else {
+                        setTokenValid(true);
+                    }
+                } catch (error) {
+                    setTokenValid(false);
+                }
+            }
+        };
+    
+        if (token) {
+            verifyToken();
+        }
+    }, [token]);
 
     const validateForm = () => {
-    
         const errors = {};
-
         if (!formData.password.trim()) {
             errors.password = 'Password is required';
-          } else if (formData.password.length < 8) {
+        } else if (formData.password.length < 8) {
             errors.password = 'Password must be at least 8 characters long';
-          }
-    
-          if (!formData.confirmPassword.trim()) {
+        }
+
+        if (!formData.confirmPassword.trim()) {
             errors.confirmPassword = 'Confirm password is required';
-          } else if (formData.password !== formData.confirmPassword) {
+        } else if (formData.password !== formData.confirmPassword) {
             errors.confirmPassword = 'Passwords do not match';
-          }
+        }
 
         setErrors(errors);
         return Object.keys(errors).length === 0;
@@ -51,11 +84,12 @@ export default function CreatePassword() {
         }));
     };
 
-
     const handleSubmit = async (e) => {
         e.preventDefault();
         const isValid = validateForm();
-        if (isValid) {
+        if (isValid && tokenValid) {
+            setLoading(true);
+
             try {
                 const response = await fetch(`/api/create-password`, {
                     method: 'POST',
@@ -63,33 +97,40 @@ export default function CreatePassword() {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        token:token,
+                        token: token,
                         newPassword: formData.password,
                     })
                 });
                 const data = await response.json();
-                //
                 if (data.status) {
-                    Swal.fire({
-                        position: "center",
-                        icon: "success",
-                        title: data.message,
-                        showConfirmButton: false,
-                        timer: 1500
-                    });
-                    setTimeout(() => navigate('/login'), 4000);
+                    setTimeout(() => navigate('/login'), 2000);
+                } else {
+                    setErrorMessage(data.message || "Error occurred");
                 }
             } catch (error) {
-                console.error('Login error:', error);
+                setErrorMessage('Error during password reset');
+            } finally {
+                setLoading(false);
             }
-
-
         }
     };
 
     const togglePasswordVisibility = () => {
         setShowPassword(prevState => !prevState);
-      };
+    };
+
+    if (!tokenValid) {
+        return (
+            <div className="loginOuter error-outer">
+                <Container fluid className="text-center error-inner">
+                    <h2 className="errorHeading">Like is invalid or expired</h2>
+                    <p className="errorMessage">
+                        It seems like the link you used to set your password has expired or is no longer valid.
+                    </p>
+                </Container>
+            </div>
+        );
+    }
 
     return (
         <div className="loginOuter">
@@ -124,7 +165,15 @@ export default function CreatePassword() {
                                     />
                                 </div>
                                 <h2 className="h2-style">Set Password</h2>
-                                <Form className="formOuter mt-4" >
+
+                                {/* Error message container */}
+                                {errorMessage && (
+                                    <div className="errorContainer" style={{ textAlign: 'center', color: 'red', marginBottom: '20px' }}>
+                                        <p>{errorMessage}</p>
+                                    </div>
+                                )}
+
+                                <Form className="formOuter mt-4">
                                     <Form.Group className="mb-3">
                                         <div className="relativeBox">
                                             <img
@@ -143,18 +192,7 @@ export default function CreatePassword() {
                                                 required
                                             />
                                             {errors.password && <small className="text-danger">{errors.password}</small>}
-                                            {!errors.password && <small id="passwordError" className="text-danger"></small>}
-                                            <img
-                                                src={showPassword ? "/images/eye-open.svg" : "/images/eye.svg"}
-                                                width={"20"}
-                                                height={"18"}
-                                                alt="email icon"
-                                                className="iconEye"
-                                                onClick={togglePasswordVisibility}
-                                                style={{ cursor: 'pointer' }}
-                                            />
                                         </div>
-
                                     </Form.Group>
 
                                     <Form.Group className="mb-3">
@@ -167,7 +205,7 @@ export default function CreatePassword() {
                                                 className="iconImg"
                                             />
                                             <Form.Control
-                                                type={ "password"}
+                                                type={"password"}
                                                 name="confirmPassword"
                                                 placeholder="Confirm Password"
                                                 autoComplete="true"
@@ -175,21 +213,24 @@ export default function CreatePassword() {
                                                 required
                                             />
                                             {errors.confirmPassword && <small className="text-danger">{errors.confirmPassword}</small>}
-                                            {!errors.confirmPassword && <small id="passwordError" className="text-danger"></small>}
-                                         
                                         </div>
-
                                     </Form.Group>
 
                                     <Form.Group className="mb-3">
                                         <Button
                                             type="submit"
                                             onClick={handleSubmit}
-                                            className="default-btn w-100">
-                                            Confirm Password
+                                            className="default-btn w-100"
+                                            disabled={loading}>
+                                            {loading ? (
+                                                <span>
+                                                    <i className="fa fa-spinner fa-spin"></i> Please wait...
+                                                </span>
+                                            ) : (
+                                                "Confirm Password"
+                                            )}
                                         </Button>
                                     </Form.Group>
-
                                 </Form>
                             </div>
                         </div>
@@ -197,5 +238,5 @@ export default function CreatePassword() {
                 </Row>
             </Container>
         </div>
-    )
+    );
 }

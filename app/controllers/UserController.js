@@ -444,13 +444,15 @@ const UserController = {
             if (!user) {
                 return res.status(400).json({ error: 'Invalid or expired token' });
             }
-            user.password = await bcrypt.hash(newPassword, 10);
-            user.resetPasswordToken = undefined; // Clear the token
-            user.resetPasswordExpires = undefined; // Clear the expiry time
+            if (newPassword) {
+                user.password = await bcrypt.hash(newPassword, 10);
+                user.resetPasswordToken = undefined; // Clear the token
+                user.resetPasswordExpires = undefined; // Clear the expiry time
 
-            await user.save();
+                await user.save();
 
-            res.status(200).json({ status: true, message: 'Password has been created successfully.' });
+                res.status(200).json({ status: true, message: 'Password has been created successfully.' });
+            }
         } catch (error) {
             console.error('Error resetting password:', error);
             res.status(500).json({ message: 'Internal Server Error' });
