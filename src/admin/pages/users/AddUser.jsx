@@ -223,7 +223,7 @@ console.log('test2')
             phone: userData.phone ? userData.phone : '',
             designation: userData.designation ? userData.designation : '',
             user_type: userData?.role_id,
-            organization_id: userData.organization ? userData.organization : '',
+            organization_id: userData.organization ? userData?.organization?._id : '',
             _method: 'PUT',
           });
         } catch (error) {
