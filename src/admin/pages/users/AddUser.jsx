@@ -198,7 +198,9 @@ console.log('test2')
   };
 
 
-
+  useEffect(() => {
+    fetchRoles();
+  }, [])
   useEffect(() => {
     if (id) {
       const fetchUserDetails = async (id) => {
