@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import { useLocation, useNavigate } from 'react-router-dom';
+import Loading from '../components/Loading';
 
 const useQuery = () => {
     return new URLSearchParams(useLocation().search);
@@ -23,6 +24,7 @@ export default function CreatePassword() {
     });
 
     const [loading, setLoading] = useState(false);
+    const [loading2, setLoading2] = useState(true);
     const [tokenValid, setTokenValid] = useState(true);
     const [errorMessage, setErrorMessage] = useState(''); // State for error message
 
@@ -31,6 +33,7 @@ export default function CreatePassword() {
         const verifyToken = async () => {
             if (token) {
                 try {
+
                     const response = await fetch(`/api/create-password`, {
                         method: 'POST',
                         headers: {
@@ -41,12 +44,13 @@ export default function CreatePassword() {
                         }),
                     });
                     const data = await response.json();
-                console.log('data',data)
+                    console.log('data', data)
                     if (data.error) {
                         setTokenValid(false);
                     } else {
                         setTokenValid(true);
                     }
+                    setLoading2(false)
                 } catch (error) {
                     setTokenValid(false);
                 }
@@ -119,7 +123,7 @@ export default function CreatePassword() {
         setShowPassword(prevState => !prevState);
     };
 
-    if (!tokenValid) {
+    if (!tokenValid && !loading2) {
         return (
             <div className="loginOuter error-outer">
                 <Container fluid className="text-center error-inner">
@@ -133,110 +137,122 @@ export default function CreatePassword() {
     }
 
     return (
-        <div className="loginOuter">
-            <Container fluid>
-                <Row className="gx-0">
-                    <Col className='login-hide-mobile' md={6}>
-                        <div className="loginContent">
-                            <img
-                                src={"/images/logoheader.svg"}
-                                alt="Logo"
-                                className="logoImg"
-                            />
-                            <div className="logincircle verticalCenter"></div>
-                            <div className="verticalCenter">
-                                <h2 className="h2-style">
-                                    Discover our portfolio – a showcase of creativity, functionality, and successful collaborations.
-                                </h2>
-                                <p className="p-style">
-                                    See how we bring visions to digital life.
-                                </p>
-                            </div>
-                        </div>
-                    </Col>
-                    <Col md={6}>
-                        <div className="loginForm">
-                            <div className="verticalCenter">
-                                <div className='mobile-logo-login'>
+        <>
+            {!loading2 ? (
+                <div className="loginOuter">
+                    <Container fluid>
+                        <Row className="gx-0">
+                            <Col className='login-hide-mobile' md={6}>
+                                <div className="loginContent">
                                     <img
                                         src={"/images/logoheader.svg"}
                                         alt="Logo"
                                         className="logoImg"
                                     />
-                                </div>
-                                <h2 className="h2-style">Set Password</h2>
-
-                                {/* Error message container */}
-                                {errorMessage && (
-                                    <div className="errorContainer" style={{ textAlign: 'center', color: 'red', marginBottom: '20px' }}>
-                                        <p>{errorMessage}</p>
+                                    <div className="logincircle verticalCenter"></div>
+                                    <div className="verticalCenter">
+                                        <h2 className="h2-style">
+                                            Discover our portfolio – a showcase of creativity, functionality, and successful collaborations.
+                                        </h2>
+                                        <p className="p-style">
+                                            See how we bring visions to digital life.
+                                        </p>
                                     </div>
-                                )}
-
-                                <Form className="formOuter mt-4">
-                                    <Form.Group className="mb-3">
-                                        <div className="relativeBox">
+                                </div>
+                            </Col>
+                            <Col md={6}>
+                                <div className="loginForm">
+                                    <div className="verticalCenter">
+                                        <div className='mobile-logo-login'>
                                             <img
-                                                src={"/images/lock.svg"}
-                                                width={"14"}
-                                                height={"18"}
-                                                alt="email icon"
-                                                className="iconImg"
+                                                src={"/images/logoheader.svg"}
+                                                alt="Logo"
+                                                className="logoImg"
                                             />
-                                            <Form.Control
-                                                type={showPassword ? "text" : "password"}
-                                                name="password"
-                                                placeholder="Password"
-                                                autoComplete="true"
-                                                onChange={handleInputChange}
-                                                required
-                                            />
-                                            {errors.password && <small className="text-danger">{errors.password}</small>}
                                         </div>
-                                    </Form.Group>
-
-                                    <Form.Group className="mb-3">
-                                        <div className="relativeBox">
-                                            <img
-                                                src={"/images/lock.svg"}
-                                                width={"14"}
-                                                height={"18"}
-                                                alt="email icon"
-                                                className="iconImg"
-                                            />
-                                            <Form.Control
-                                                type={"password"}
-                                                name="confirmPassword"
-                                                placeholder="Confirm Password"
-                                                autoComplete="true"
-                                                onChange={handleInputChange}
-                                                required
-                                            />
-                                            {errors.confirmPassword && <small className="text-danger">{errors.confirmPassword}</small>}
-                                        </div>
-                                    </Form.Group>
-
-                                    <Form.Group className="mb-3">
-                                        <Button
-                                            type="submit"
-                                            onClick={handleSubmit}
-                                            className="default-btn w-100"
-                                            disabled={loading}>
-                                            {loading ? (
-                                                <span>
-                                                    <i className="fa fa-spinner fa-spin"></i> Please wait...
-                                                </span>
-                                            ) : (
-                                                "Confirm Password"
-                                            )}
-                                        </Button>
-                                    </Form.Group>
-                                </Form>
-                            </div>
+                                        <h2 className="h2-style">Set Password</h2>
+    
+                                        {/* Error message container */}
+                                        {errorMessage && (
+                                            <div className="errorContainer" style={{ textAlign: 'center', color: 'red', marginBottom: '20px' }}>
+                                                <p>{errorMessage}</p>
+                                            </div>
+                                        )}
+    
+                                        <Form className="formOuter mt-4">
+                                            <Form.Group className="mb-3">
+                                                <div className="relativeBox">
+                                                    <img
+                                                        src={"/images/lock.svg"}
+                                                        width={"14"}
+                                                        height={"18"}
+                                                        alt="email icon"
+                                                        className="iconImg"
+                                                    />
+                                                    <Form.Control
+                                                        type={showPassword ? "text" : "password"}
+                                                        name="password"
+                                                        placeholder="Password"
+                                                        autoComplete="true"
+                                                        onChange={handleInputChange}
+                                                        required
+                                                    />
+                                                    {errors.password && <small className="text-danger">{errors.password}</small>}
+                                                </div>
+                                            </Form.Group>
+    
+                                            <Form.Group className="mb-3">
+                                                <div className="relativeBox">
+                                                    <img
+                                                        src={"/images/lock.svg"}
+                                                        width={"14"}
+                                                        height={"18"}
+                                                        alt="email icon"
+                                                        className="iconImg"
+                                                    />
+                                                    <Form.Control
+                                                        type={"password"}
+                                                        name="confirmPassword"
+                                                        placeholder="Confirm Password"
+                                                        autoComplete="true"
+                                                        onChange={handleInputChange}
+                                                        required
+                                                    />
+                                                    {errors.confirmPassword && <small className="text-danger">{errors.confirmPassword}</small>}
+                                                </div>
+                                            </Form.Group>
+    
+                                            <Form.Group className="mb-3">
+                                                <Button
+                                                    type="submit"
+                                                    onClick={handleSubmit}
+                                                    className="default-btn w-100"
+                                                    disabled={loading}>
+                                                    {loading ? (
+                                                        <span>
+                                                            <i className="fa fa-spinner fa-spin"></i> Please wait...
+                                                        </span>
+                                                    ) : (
+                                                        "Confirm Password"
+                                                    )}
+                                                </Button>
+                                            </Form.Group>
+                                        </Form>
+                                    </div>
+                                </div>
+                            </Col>
+                        </Row>
+                    </Container>
+                </div>
+            ) : (
+                    <div className="loadingContainer">
+                        <div className='loader-outer'>
+                        <Loading/>
                         </div>
-                    </Col>
-                </Row>
-            </Container>
-        </div>
+                    
+                </div>
+            )}
+        </>
     );
+    
 }

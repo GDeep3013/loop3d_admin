@@ -377,7 +377,8 @@ button.add_participant:hover{ background-color: var(--secondary-color); color: #
     font-size : 14px !important;
 }
 
-.error-outer{ min-height: 100vh; position: relative;}
+.error-outer, .loadingContainer{ min-height: 100vh; position: relative;}
 .error-outer .error-inner { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 100%; max-width: 580px; border: 1px solid #ddd; box-shadow: 0 0 10px rgba(0 0 0 / 20%); padding: 31px; border-radius: 14px; }
 .error-outer .error-inner h2.errorHeading { font-size: 29px; font-weight: 800; }
 .error-outer .error-inner p.errorMessage { margin: 7px auto 0; font-size: 16px; max-width: 81%; }
+.loadingContainer .loader-outer{ position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); }
