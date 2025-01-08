@@ -51,14 +51,14 @@ const ChartBar = ({ competency, index, data, getChartImagesFromDB, chart2Data, s
             {
                 label: 'Self',
                 data: Object.values(chart2Data)?.map((item) => item?.self_average),
-                backgroundColor: 'rgb(23,74,109)',
+                backgroundColor: 'rgb(122,188,219)',
                 lineWidth: 0,
                 tickWidth:0
             },
             {
                 label: 'Total others',
                 data: Object.values(chart2Data)?.map((item) => item?.other_average),
-                backgroundColor: 'rgb(122,188,219)',
+                backgroundColor: 'rgb(23,74,109)',
                 lineWidth:0,
                 tickWidth:0
 

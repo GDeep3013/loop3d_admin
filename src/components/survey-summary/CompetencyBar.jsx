@@ -35,12 +35,13 @@ const CompetencyBar = ({ data, pdf = false ,survey_id,savedImages,getChartImages
             {
                 label: 'Self',
                 data: labels.map((competency) => data[competency]?.Self?.averageWeightage || 0),
-                backgroundColor: 'rgb(23,74,109)',
+                backgroundColor: 'rgb(122,188,219)', 
+
             },
             {
                 label: 'Direct Report',
                 data: labels.map((competency) => data[competency]?.['Direct Report']?.averageWeightage || 0),
-                backgroundColor: 'rgb(122,188,219)', 
+                backgroundColor: 'rgb(23,74,109)',
             },
             {
                 label: 'Teammate',
