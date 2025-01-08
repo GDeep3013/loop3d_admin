@@ -119,12 +119,31 @@ exports.createSurvey = async (req, res) => {
 
             
             
+            // sendEmail('createPasswordMail', {email,first_name,last_name,admin_panel_url})
+            // await sendEmail('sendLoopLeadLink', {
+            //     name,
+            //     email,
+            //     url
+            // });
+            
             sendEmail('createPasswordMail', {email,first_name,last_name,admin_panel_url})
-            await sendEmail('sendLoopLeadLink', {
-                name,
-                email,
-                url
-            });
+                            .then(() => {
+                                console.log('First email sent successfully.');
+
+                                // Schedule the second email to be sent after 1 minute
+                                setTimeout(() => {
+                                    sendEmail('sendLoopLeadLink', {name,email, url})
+                                        .then(() => {
+                                            console.log('Second email sent successfully after 1 minute.');
+                                        })
+                                        .catch((error) => {
+                                            console.error('Error sending the second email:', error);
+                                        });
+                                }, 3000); // 60000 milliseconds = 1 minute
+                            })
+                            .catch((error) => {
+                                console.error('Error sending the first email:', error);
+                            });
           
 
             savedSurveys.push(savedSurvey);

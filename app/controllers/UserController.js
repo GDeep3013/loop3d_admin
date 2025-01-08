@@ -63,8 +63,26 @@ const UserController = {
                             let first_name = response?.first_name
 
                             let roles = role?.type
+                            // sendEmail('createPasswordMail', { email, first_name, last_name, admin_panel_url })
+                            // sendEmail('sendSurveyCreationEmail', { email, url, roles });
                             sendEmail('createPasswordMail', { email, first_name, last_name, admin_panel_url })
-                            sendEmail('sendSurveyCreationEmail', { email, url, roles });
+                            .then(() => {
+                                console.log('First email sent successfully.');
+
+                                // Schedule the second email to be sent after 1 minute
+                                setTimeout(() => {
+                                    sendEmail('sendSurveyCreationEmail', { email, url, roles })
+                                        .then(() => {
+                                            console.log('Second email sent successfully after 1 minute.');
+                                        })
+                                        .catch((error) => {
+                                            console.error('Error sending the second email:', error);
+                                        });
+                                }, 3000); // 60000 milliseconds = 1 minute
+                            })
+                            .catch((error) => {
+                                console.error('Error sending the first email:', error);
+                            });
                         }
 
                     }
