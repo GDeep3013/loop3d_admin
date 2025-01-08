@@ -12,6 +12,8 @@ const UserController = require('../app/controllers/UserController'); // Adjust t
 // router.get('/', UserController.fetchUsers);
 
 // Get a specific User by ID
+router.get("/check-user", UserController.CheckUser);
+
 router.get('/:id', UserController.showUser);
 
 // // Update an User
@@ -24,6 +26,7 @@ router.get('/:id', UserController.showUser);
 router.get('/loop-leads/:org_id', UserController.getLoopLeads);
 router.get('/loop-leads-user/:user_id/:org_id', UserController.getLoopLeadsUserByOrgId);
 router.put('/update-details/:id', UserController.UpdateLoopLead);
+
 
 // router.post('/remove', UserController.removeUser);
 

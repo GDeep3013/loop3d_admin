@@ -452,6 +452,9 @@ const UserController = {
                 await user.save();
 
                 res.status(200).json({ status: true, message: 'Password has been created successfully.' });
+            } else {
+                return res.status(200).json({  message: 'User found' });
+
             }
         } catch (error) {
             console.error('Error resetting password:', error);
@@ -532,6 +535,47 @@ const UserController = {
         } catch (error) {
             console.error('Error updating user:', error);
             res.status(500).json({ message: 'Server error' });
+        }
+    },
+    CheckUser: async (req, res) => {
+        let { email, org_id } = req.query;
+    
+        if (!email) {
+            return res.status(400).json({ success: false, message: "Email is required." });
+        }
+    
+        if (!org_id) {
+            return res.status(400).json({ success: false, message: "Organization ID is required." });
+        }
+    
+        // Replace spaces in email with '+'
+        email = email.replace(/ /g, '+');
+    
+        try {
+            const user = await User.findOne({
+                email: email,
+                organization: { $ne: org_id },
+            });
+    
+            if (!user) {
+                return res.status(200).json({ success: true, exists: false });
+            }
+    
+            const userDetails = {
+                firstName: user.first_name,
+                lastName: user.last_name,
+                email: user.email,
+                createdAt: user.createdAt,
+            };
+    
+            return res.status(200).json({
+                success: true,
+                exists: true,
+                userDetails,
+            });
+        } catch (error) {
+            console.error("Error checking user existence:", error);
+            return res.status(500).json({ success: false, message: "Server error. Please try again later." });
         }
     }
 };
