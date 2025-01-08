@@ -3,12 +3,10 @@ import { BrowserRouter as Router, Route, Routes, useNavigate } from "react-route
 import { useSelector, useDispatch } from "react-redux";
 import { createUser } from "../../../store/slices/UserSlice";
 import Home from "../../pages/Home";
-import ProjectOverview from "../../pages/ProjectOverview";
 import Login from "../../pages/Login";
 import AdminDashboard from "../../admin/AdminDashboard";
 import Employees from "../../admin/pages/users/Users";
 import AddEmployee from "../../admin/pages/users/AddUser";
-import Projects from "../../admin/Projects";
 import AddProject from "../../admin/AddSurvey";
 import Category from "../../admin/pages/categories/Category";
 import AddCategory from "../../admin/pages/categories/AddCategory";
@@ -130,13 +128,11 @@ const AppRouter = () => {
           <Route path="/organizations/create" exact element={<CreateFrom />} />
           <Route path="/organizations/edit/:id" exact element={<OrganizationTabs />} />
           <Route path="/organizations/view/:id" exact element={<ViewOrganization />} />
-          <Route path="/project-overview/:id" exact element={<ProjectOverview />} />
           <Route path="/home" exact element={<Home />} />
           <Route path="/admin-dashboard" exact element={<AdminDashboard />} />
           <Route path="/users" exact element={<Employees />} />
           <Route path="/add-user" exact element={<AddEmployee />} />
           <Route path="/add-user/:id" exact element={<AddEmployee />} />
-          <Route path="/projects" exact element={<Projects />} />
           <Route path="/add-surveys" exact element={<AddProject />} />
           <Route path="/add-surveys/:id" exact element={<AddProject />} />
           <Route path="/competencies" exact element={<Category />} />
