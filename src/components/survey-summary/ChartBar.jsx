@@ -50,18 +50,21 @@ const ChartBar = ({ competency, index, data, getChartImagesFromDB, chart2Data, s
         datasets: [
             {
                 label: 'Self',
-                data: Object.values(chart2Data)?.map((item) => item?.self_average),
+                data: Object.values(chart2Data)?.map((item) => 
+                    Math.min(item?.self_average, 3) // Cap values at 3
+                ),
                 backgroundColor: 'rgb(122,188,219)',
                 lineWidth: 0,
-                tickWidth:0
+                tickWidth: 0
             },
             {
                 label: 'Total others',
-                data: Object.values(chart2Data)?.map((item) => item?.other_average),
+                data: Object.values(chart2Data)?.map((item) => 
+                    Math.min(item?.other_average, 3) // Cap values at 3
+                ),
                 backgroundColor: 'rgb(23,74,109)',
-                lineWidth:0,
-                tickWidth:0
-
+                lineWidth: 0,
+                tickWidth: 0
             }
         ],
     };
@@ -203,21 +206,21 @@ const ChartBar = ({ competency, index, data, getChartImagesFromDB, chart2Data, s
                     bottom: 20,
                 },
             },
-            tooltip: {
-                callbacks: {
-                    label: function (tooltipItem) {
-                        const questionIndex = tooltipItem.dataIndex;
-                        const datasetIndex = tooltipItem.datasetIndex;
-                        const fullQuestion = chart2Data[questionIndex]?.question;
-                        let score = tooltipItem.raw; // Get the score from the dataset
+            // tooltip: {
+            //     callbacks: {
+            //         label: function (tooltipItem) {
+            //             const questionIndex = tooltipItem.dataIndex;
+            //             const datasetIndex = tooltipItem.datasetIndex;
+            //             const fullQuestion = chart2Data[questionIndex]?.question;
+            //             let score = tooltipItem.raw; // Get the score from the dataset
             
-                        // Ensure score does not exceed 3 and round to 2 decimal places
-                        score = Math.min(score, 3).toFixed(2);
-                        return [`${fullQuestion}`, `Score: ${score}`]
-                        // Return the full question prefixed with the score
-                        return `${fullQuestion}\nScore: ${score}`;                    },
-                },
-            },
+            //             // Ensure score does not exceed 3 and round to 2 decimal places
+            //             score = Math.min(score, 3).toFixed(2);
+            //             return [`${fullQuestion}`, `Score: ${score}`]
+            //             // Return the full question prefixed with the score
+            //             return `${fullQuestion}\nScore: ${score}`;                    },
+            //     },
+            // },
         },
         scales: {
             x: isMobile

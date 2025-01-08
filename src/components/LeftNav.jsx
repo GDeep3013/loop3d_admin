@@ -1,7 +1,7 @@
 import React, { useState,useEffect } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { Category, Logout,EmailIcon, EmployeeIcon, DocomentIcon, ProjectIcon,QuestionIcon, FixedPrice } from "./svg-icons/icons";
+import { Category, Logout,EmailIcon, EmployeeIcon, DocomentIcon,Dashboard, ProjectIcon,QuestionIcon, FixedPrice } from "./svg-icons/icons";
 import "../Nav.css";
 import { Menuicon } from '../components/svg-icons/icons';
 
@@ -94,7 +94,7 @@ export default function LeftNav({isMenuOpen,setIsMenuOpen}) {
             to="/manager/dashboard"
             className={({ isActive }) => (isActive ? 'active' : '')}
             >
-            <DocomentIcon />
+            <Dashboard />
            Dashboard
               </NavLink>
             </li>
@@ -103,8 +103,8 @@ export default function LeftNav({isMenuOpen,setIsMenuOpen}) {
             to="/manager/loop-leads"
             className={({ isActive }) => (isActive ? 'active' : '')}
             >
-            <DocomentIcon />
-           Loop Lead
+            <EmployeeIcon />
+            LOOP3D Leads
           </NavLink>
             </li>
             {/* <li className={`sideNavItem`}>
@@ -132,7 +132,7 @@ export default function LeftNav({isMenuOpen,setIsMenuOpen}) {
             to="/loop-lead/dashboard"
             className={({ isActive }) => (isActive ? 'active' : '')}
             >
-            <DocomentIcon />
+            <Dashboard />
            Dashboard
               </NavLink>
             </li>
