@@ -49,12 +49,10 @@ export default function Login() {
       [name]: type === 'checkbox' ? checked : value
     }));
   };
-  console.log(formData)
 
   useEffect(() => {
     const savedEmail = localStorage.getItem("email") || "";
     const savedPassword = localStorage.getItem("password") || "";
-    console.log(localStorage.getItem("email"),localStorage.getItem("password"))
     const savedRememberMe = !!savedEmail && !!savedPassword;
 
     setFormData({
@@ -64,14 +62,12 @@ export default function Login() {
     });
     
   }, []);
-console.log('final',formData)
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const isValid = validateForm();
     if (isValid) {
       if (formData.rememberMe) { 
-        console.log(formData.rememberMe,'formData.rememberMe)');
         localStorage.setItem("email", formData.email);
         localStorage.setItem("password", formData.password);
       } else {

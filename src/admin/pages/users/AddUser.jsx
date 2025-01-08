@@ -20,7 +20,6 @@ export default function AddEmployee() {
   // Get the query params as an object
   const queryParams = getQueryParams(location.search);
   const orgId = queryParams.org_id; // Extract the org_id
-console.log('org_idfff',queryParams.org_id,location)
   const [roles, setRoles] = useState([]);
   const [loader, setLoader] = useState(false);
   const [loleId, setLoleId] = useState();
@@ -37,7 +36,6 @@ console.log('org_idfff',queryParams.org_id,location)
     created_by: null
   });
 
-  console.log('formData',formData)
   const [errors, setErrors] = useState({});
 
   const [organizations, setOrganizations] = useState([]);
@@ -177,7 +175,6 @@ console.log('org_idfff',queryParams.org_id,location)
           value: role._id,
           label: role.type
         }));
-        console.log('test1')
 
         setFormData((prevFormData) => ({
           ...prevFormData,
@@ -194,7 +191,6 @@ console.log('org_idfff',queryParams.org_id,location)
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-console.log('test2')
     setFormData({ ...formData, [name]: value });
     setErrors({ ...errors, [name]: '' });
   };
@@ -214,7 +210,6 @@ console.log('test2')
           const userData = await response.json();
 
           // const userTypeOption = roles.find(option => option.label === userData.role) || null;
-          console.log('test3')
 
           setFormData({
             first_name: userData.first_name ? userData.first_name : '',
@@ -240,7 +235,6 @@ console.log('test2')
   }, []);
 
   const handleSelectChange = (selectedOption, action) => {
-    console.log('test4')
     setFormData({ ...formData, [action.name]: selectedOption?.value || "" });
     setErrors({ ...errors, [action.name]: "" });
   };

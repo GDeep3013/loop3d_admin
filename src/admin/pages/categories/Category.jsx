@@ -73,7 +73,7 @@ export default function Category() {
                 if (response.ok) {
                     await Swal.fire({
                         title: "Deleted!",
-                        text: "Your file has been deleted.",
+                        text: "Your competency has been deleted.",
                         icon: "success",
                         confirmButtonColor: "#000",
                     });

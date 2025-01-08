@@ -5,7 +5,6 @@ import { useNavigate } from "react-router-dom";
 import Swal from 'sweetalert2'
 export default function ParticipantForm({ survey_id,total_invites ,mgr_email,loop_lead_email}) {
     const navigate = useNavigate();
-console.log('total_invites',total_invites)
 const initialParticipants = React.useMemo(() => 
     Array.from({ length: total_invites >= 10 ? 1 : 10 }, () => ({
       p_first_name: "",
@@ -14,7 +13,6 @@ const initialParticipants = React.useMemo(() =>
       p_type: "",
     })),
   [total_invites])
-    console.log('initialParticipants',initialParticipants)
 
 
     const [participants, setParticipants] = useState([]);
@@ -22,7 +20,6 @@ const initialParticipants = React.useMemo(() =>
     useEffect(() => {
         setParticipants(initialParticipants)
     }, [initialParticipants])
-    console.log('participants',participants)
 
     const [errors, setErrors] = useState([]);
     const [loader, setLoader] = useState(false);

@@ -192,7 +192,6 @@ const SurveySummary = () => {
         }
     }, [competencyReport]);
 
-    console.log(competencyReport,'competencyReport')
 
     const Participants = ['Self', 'Direct Report', 'Teammate', 'Supervisor', 'Other'];
 
@@ -298,7 +297,6 @@ const SurveySummary = () => {
         }
     }, [pdf])
 
-    console.log('user',user);
     return (
         <AuthLayout title={"Survey Summary"}>
             <div className="main-back-heading">
