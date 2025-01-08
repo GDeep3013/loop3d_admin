@@ -51,7 +51,7 @@ const CreateParticipants = () => {
                     <Container>
                         <div className="d-flex flex-column flex-lg-row gap-lg-5 gap-3">
                             <div className="w-100 w-lg-50">
-                                <h2 className="text-dark fs-1 fs-lg-3 fw-bold heading-font">Loop3d Launchpad</h2>
+                                <h2 className="text-dark fs-1 fs-lg-3 fw-bold heading-font">LOOP3D Launchpad</h2>
                                 <p className="fs-6 lh-lg text-dark mw-100 mw-lg-75 mt-3 mt-lg-0">
                                     Welcome! Use this page to enter the email addresses for everyone who you would like to take the survey. Please note that your email and your manager's email are required along with a minimum of 10 other raters.
                                 </p>

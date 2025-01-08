@@ -3,7 +3,7 @@ const emailHeaderFooter = require('./emailHeaderFooter');
 const sendSumaryReport = (recipientDetails) => {
     const bodyContent= `<tr>
     <td>
-        <p>Thank you for participating in the Loop3D 360 Feedback Process. As part of our leadership development program, we have gathered the feedback from your selected raters to provide valuable insights. You can now view the summary report for <strong>${recipientDetails.name}</strong>.</p>
+        <p>Thank you for participating in the LOOP3D 360 Feedback Process. As part of our leadership development program, we have gathered the feedback from your selected raters to provide valuable insights. You can now view the summary report for <strong>${recipientDetails.name}</strong>.</p>
 
         <p>Please click the link below to view your summary report:</p>
       
@@ -12,14 +12,14 @@ const sendSumaryReport = (recipientDetails) => {
         <br />
         <p>Thanks!</p>
 
-        <p>The Loop3D Team</p>
+        <p>The LOOP3D Team</p>
     </td>
 </tr>
 `
 return {
-    from: 'Loop3D <aaron.loop360@gmail.com>', 
+    from: 'LOOP3D <aaron.loop360@gmail.com>', 
     to: recipientDetails.email,
-    subject: 'Loop3D 360 Feedback Process - Launch ',
+    subject: 'LOOP3D 360 Feedback Process - Launch ',
     html:emailHeaderFooter(bodyContent)
   };
 };

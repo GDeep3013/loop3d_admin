@@ -16,11 +16,11 @@ const reminderEmailToParticapated = (recipientDetails) => {
                             <br />
                             <p>Thanks!</p>
 
-                            <p>The Loop3D Team</p>
+                            <p>The LOOP3D Team</p>
                         </td>
                     </tr>`
     return {
-        from: 'Loop3D <aaron.loop360@gmail.com>', 
+        from: 'LOOP3D <aaron.loop360@gmail.com>', 
         to: recipientDetails.email,
         subject: recipientDetails.subject,       
         html: emailHeaderFooter(bodyContent)

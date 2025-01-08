@@ -57,7 +57,7 @@ const processPendingParticipants = async () => {
   for (const participant of pendingParticipants) {
     const email = participant.p_email;
     // console.log(participant?._id,participant?.survey_id,'email');
-    const LoopLeadName = (participant?.survey_id?.loop_lead?.first_name) ? participant?.survey_id?.loop_lead?.first_name : 'Loop3D Lead';
+    const LoopLeadName = (participant?.survey_id?.loop_lead?.first_name) ? participant?.survey_id?.loop_lead?.first_name : 'LOOP3D Lead';
     const surveyID = participant?.survey_id?._id;
     // console.log( participant,surveyID,'surveyID');
     const url = `${process.env.FRONT_END_URL}/feedback-survey?survey_id=${surveyID}&participant_id=${participant._id}`
@@ -65,41 +65,41 @@ const processPendingParticipants = async () => {
 
     if (daysSinceCreated === 2) {
       // Send second reminder
-      let subject = 'Friendly Reminder: Loop3D Lead Feedback Required'
+      let subject = 'Friendly Reminder: LOOP3D Lead Feedback Required'
       let remaningDay = '4'
       await sendEmail('reminderEmailToParticapated', { email, url, subject, remaningDay, LoopLeadName });
 
     } else if (daysSinceCreated === 3) {
       // Send third reminder
-      let subject = 'Action Required: Loop3D Lead Feedback Due'
+      let subject = 'Action Required: LOOP3D Lead Feedback Due'
       let remaningDay = '3'
       await sendEmail('reminderEmailToParticapated', { email, url, subject, remaningDay, LoopLeadName });
 
     }
     else if (daysSinceCreated === 4) {
       // Send fouth reminder
-      let subject = 'Please Hurry: Loop3D Lead Feedback Due'
+      let subject = 'Please Hurry: LOOP3D Lead Feedback Due'
       let remaningDay = '2'
       await sendEmail('reminderEmailToParticapated', { email, url, subject, remaningDay, LoopLeadName });
 
     }
     else if (daysSinceCreated === 5) {
       // Send firth reminder
-      let subject = 'Action Required: Loop3D Lead Feedback Due'
+      let subject = 'Action Required: LOOP3D Lead Feedback Due'
       let remaningDay = '2'
       await sendEmail('reminderEmailToParticapated', { email, url, subject, remaningDay, LoopLeadName });
 
     }
     else if (daysSinceCreated === 6) {
       // Send six reminder
-      let subject = 'Action Required: Loop3D Lead Feedback Due'
+      let subject = 'Action Required: LOOP3D Lead Feedback Due'
       let remaningDay = '2'
       await sendEmail('reminderEmailToParticapated', { email, url, subject, remaningDay, LoopLeadName });
 
     }
     else if (daysSinceCreated === 7) {
       // Send seventh  reminder
-      let subject = 'URGENT: Loop3D Lead Feedback Due'
+      let subject = 'URGENT: LOOP3D Lead Feedback Due'
       let remaningDay = '2'
       await sendEmail('reminderEmailToParticapated', { email, url, subject, remaningDay, LoopLeadName });
 
@@ -129,7 +129,7 @@ const processPendingSurveys = async () => {
 
   for (const survey of pendingSurveys) {
 
-    const LeadName = (survey?.loop_lead?.first_name) ? survey?.loop_lead?.first_name : 'Loop3D Lead'
+    const LeadName = (survey?.loop_lead?.first_name) ? survey?.loop_lead?.first_name : 'LOOP3D Lead'
     const email = survey?.loop_lead?.email
     const daysSinceCreated = calculateDaysSinceCreated(survey.createdAt);
     const url = `${process.env.ADMIN_PANEL}`

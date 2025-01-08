@@ -16,10 +16,10 @@ export default function LeftNav({isMenuOpen,setIsMenuOpen}) {
 
   useEffect(() => {
     if (user?.organization?.name && user?.role != "admin") {
-      document.title = "Loop3D - " + user?.organization?.name;  
+      document.title = "LOOP3D - " + user?.organization?.name;  
 
     } else {
-      document.title = "Loop3D - Admin";  
+      document.title = "LOOP3D - Admin";  
     }
   }, [user]);
   return (

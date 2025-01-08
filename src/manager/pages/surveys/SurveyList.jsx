@@ -78,11 +78,11 @@ export default function SurveyList() {
                             <tr>
                                 <th>Survey</th>
                                 <th>Initiation Date</th>
-                                <th>Loop3d Lead Name</th>
+                                <th>LOOP3D Lead Name</th>
                                 {/* <th>Supervisor Name</th> */}
                                 <th>Total Invitees</th>
                                 <th>Completed Surveys</th>
-                                <th>Loop3d Lead Completed Survey?</th>
+                                <th>LOOP3D Lead Completed Survey?</th>
                                 <th>Supervisor Completed Survey?</th>
                                 <th>Survey Status</th>
                                 <th>Report Generation Date</th>

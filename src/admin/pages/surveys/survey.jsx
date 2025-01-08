@@ -88,11 +88,11 @@ export default function Survey() {
                             <tr>
                                 <th>Survey</th>
                                 <th onClick={() => handleSort('createdAt')}>Initiation Date {renderSortIcon('createdAt')}</th>
-                                <th>Loop3d Lead Name</th>
+                                <th>LOOP3D Lead Name</th>
                                 <th>Supervisor Name</th>
                                 <th>Total Invitees</th>
                                 <th>Completed Surveys</th>
-                                <th>Loop3d Lead Completed Survey?</th>
+                                <th>LOOP3D Lead Completed Survey?</th>
                                 <th>Supervisor Completed Survey?</th>
                                 <th>Survey Status</th>
                                 <th onClick={() => handleSort('report_gen_date')} >Report Generation Date {renderSortIcon('report_gen_date')}</th>

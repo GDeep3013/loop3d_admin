@@ -16,7 +16,7 @@ const emailHeaderFooter = (bodyContent) => {
               <table width="100%" border="0" cellspacing="0" cellpadding="0" bgcolor="#ffffff" style="padding: 20px 50px;">
                   <tr>
                       <td style="text-align: center; text-decoration: underline;">
-                          <img src="https://610weblab.in/design-link/loop3d-logo.png" alt="Loop3D Logo" height="30px" border="0" />
+                          <img src="https://610weblab.in/design-link/loop3d-logo.png" alt="LOOP3D Logo" height="30px" border="0" />
                       </td>
                   </tr>
                   ${bodyContent} 

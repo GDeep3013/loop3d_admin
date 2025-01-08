@@ -73,7 +73,7 @@ export default function LoopLeads({  }) {
                     {users.length === 0 ? (
                         <tr>
                             <td colSpan="5" style={{ textAlign: 'center' }}>
-                                <h4>No Loop3D Leads Found</h4>
+                                <h4>No LOOP3D Leads Found</h4>
                             </td>
                         </tr>
                     ) : (

@@ -154,7 +154,7 @@ export default function EmployeeTable({ }) {
                   </Link>
                   </td>
                     {/* <td>{user?.role?.type == "looped_lead" ? "loop lead" : user?.role?.type}</td> */}
-                    <td>{user?.role?.type == "looped_lead" ? "loop3D lead" : (user?.role?.type=='manager'?"Supervisor":user?.role?.type)}</td>
+                    <td>{user?.role?.type == "looped_lead" ? "LOOP3D lead" : (user?.role?.type=='manager'?"Supervisor":user?.role?.type)}</td>
                   <td>{user?.organization?.name}</td>
                   <td><span className='span-badge active-tag'>Active</span></td>
                   <td>

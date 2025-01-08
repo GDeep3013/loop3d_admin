@@ -16,13 +16,13 @@ const sendResetEmail = (user, token) => {
   const bodyContent = `<tr>
     <td>
         <p>Hi ${user.first_name} ${last_name},</p>
-        <p>You recently requested to reset your password for your Loop3D account. Please click the button below to reset your password. If you did not request this change, please ignore this email or contact our support team if you have concerns.</p>
+        <p>You recently requested to reset your password for your LOOP3D account. Please click the button below to reset your password. If you did not request this change, please ignore this email or contact our support team if you have concerns.</p>
         <br />
         <a style="display: inline-block; text-decoration: none; padding: 12px 25px; color: #fff; background-color: #7abcdb; border-radius: 5px;" href="${resetUrl}">RESET PASSWORD</a>
         <br />
         <p><strong>Note:</strong> For your security, this password reset link will expire in 24 hours. If you are unable to reset your password within this timeframe, please request a new one.</p>
         <p>Thanks!</p>
-        <p>The Loop3D Team</p>
+        <p>The LOOP3D Team</p>
     </td>
 </tr>
 `

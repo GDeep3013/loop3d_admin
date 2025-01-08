@@ -47,7 +47,7 @@ export default function LoopLeads({ organization }) {
                         <Container>
                             <Row>
                                 <Col md={6}>
-                                    <p><span>Total Loop3D Leads : </span>{usersCount}</p>
+                                    <p><span>Total LOOP3D Leads : </span>{usersCount}</p>
                                 </Col>
                                 <Col md={6} className='text-end'>
                                     <form className='d-flex justify-content-end'>
@@ -78,7 +78,7 @@ export default function LoopLeads({ organization }) {
                     {users.length === 0 ? (
                         <tr>
                             <td colSpan="6" style={{ textAlign: 'center' }}>
-                                <h4>No Loop3D Leads Found</h4>
+                                <h4>No LOOP3D Leads Found</h4>
                             </td>
                         </tr>
                     ) : (

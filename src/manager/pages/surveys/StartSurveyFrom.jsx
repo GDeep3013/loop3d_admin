@@ -129,26 +129,26 @@ export default function StartSurveyForm() {
 
         // Validate Loop Lead Name
         if (!formData.loop_lead_first_name.trim()) {
-            newErrors.loop_lead_first_name = "Loop3d first name is required.";
+            newErrors.loop_lead_first_name = "LOOP3D first name is required.";
             formIsValid = false;
         }
         else if (!/^[a-zA-Z\s-]+$/.test(formData.loop_lead_first_name)) {
-            newErrors.loop_lead_first_name = "Loop3d lead name can only contain letters, spaces, and dashes.";
+            newErrors.loop_lead_first_name = "LOOP3D lead name can only contain letters, spaces, and dashes.";
             formIsValid = false;
         }
 
         if (!formData.loop_lead_last_name.trim()) {
-            newErrors.loop_lead_last_name = "Loop3d Last name is required.";
+            newErrors.loop_lead_last_name = "LOOP3D Last name is required.";
             formIsValid = false;
         }
         else if (!/^[a-zA-Z\s-]+$/.test(formData.loop_lead_last_name)) {
-            newErrors.loop_lead_last_name = "Loop3d lead name can only contain letters, spaces, and dashes.";
+            newErrors.loop_lead_last_name = "LOOP3D lead name can only contain letters, spaces, and dashes.";
             formIsValid = false;
           }
 
         // Validate Loop Lead Email
         if (!formData.loop_lead_email.trim()) {
-            newErrors.loop_lead_email = "Loop3d lead email is required.";
+            newErrors.loop_lead_email = "LOOP3D lead email is required.";
             formIsValid = false;
         } else if (!/\S+@\S+\.\S+/.test(formData.loop_lead_email)) {
             newErrors.loop_lead_email = "Please enter a valid email address.";
@@ -273,7 +273,7 @@ export default function StartSurveyForm() {
                                 name="loop_lead_first_name"
                                 value={formData.loop_lead_first_name}
                                 onChange={handleInputChange}
-                                placeholder="Loop3d Lead First Name"
+                                placeholder="LOOP3D Lead First Name"
                                 isInvalid={!!errors.loop_lead_first_name} // Shows error state for input
                             />
                             <Form.Control.Feedback type="invalid">
@@ -286,7 +286,7 @@ export default function StartSurveyForm() {
                                 name="loop_lead_last_name"
                                 value={formData.loop_lead_last_name}
                                 onChange={handleInputChange}
-                                placeholder="Loop3d Lead Last Name"
+                                placeholder="LOOP3D Lead Last Name"
                                 isInvalid={!!errors.loop_lead_last_name} // Shows error state for input
                             />
                             <Form.Control.Feedback type="invalid">
@@ -299,7 +299,7 @@ export default function StartSurveyForm() {
                                 name="loop_lead_email"
                                 value={formData.loop_lead_email}
                                 onChange={handleInputChange}
-                                placeholder="Loop3d Lead Email"
+                                placeholder="LOOP3D Lead Email"
                                 isInvalid={!!errors.loop_lead_email} // Shows error state for input
                             />
                             {existsEmailError && <div className="text-danger" style={{ marginTop: "5px;" }}>{existsEmailError}</div>}

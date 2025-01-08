@@ -69,7 +69,7 @@ export default function OrganizationTabs() {
                     <AssignCompetencies data={{ ref_id: id, name: formData.name }} type="organization" />
 
                 </Tab>
-                <Tab eventKey="contact" title="Loop3D  Leads">
+                <Tab eventKey="contact" title="LOOP3D  Leads">
                     <LoopLeads organization={{ orgniation_id: id, name: formData.name }} />
                 </Tab>
                 <Tab eventKey="managerList" title="Supervisors">

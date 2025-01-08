@@ -207,10 +207,16 @@ const ChartBar = ({ competency, index, data, getChartImagesFromDB, chart2Data, s
                 callbacks: {
                     label: function (tooltipItem) {
                         const questionIndex = tooltipItem.dataIndex;
+                        const datasetIndex = tooltipItem.datasetIndex;
                         const fullQuestion = chart2Data[questionIndex]?.question;
-                        return fullQuestion; // Show the full question in the tooltip
-                    }
-                }
+                        let score = tooltipItem.raw; // Get the score from the dataset
+            
+                        // Ensure score does not exceed 3 and round to 2 decimal places
+                        score = Math.min(score, 3).toFixed(2);
+                        return [`${fullQuestion}`, `Score: ${score}`]
+                        // Return the full question prefixed with the score
+                        return `${fullQuestion}\nScore: ${score}`;                    },
+                },
             },
         },
         scales: {

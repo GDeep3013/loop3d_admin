@@ -7,7 +7,7 @@ const sendLoopLeadLink = (recipientDetails) => {
                         <td>
                             <p>Hi <strong>${recipientDetails.name}</strong>,</p>
 
-                            <p> You've been nominated by your organization to participate in the Loop3D 360 Feedback Program. Congratulations! This means your organization is supportive of your development. This is an opportunity for you to gain a deeper understanding of your leadership style and impact by gathering feedback directly from the people (raters) you work with every day.</p>
+                            <p> You've been nominated by your organization to participate in the LOOP3D 360 Feedback Program. Congratulations! This means your organization is supportive of your development. This is an opportunity for you to gain a deeper understanding of your leadership style and impact by gathering feedback directly from the people (raters) you work with every day.</p>
                 
                             <p>The feedback report will provide insight into:</p>
                             <ul>
@@ -25,14 +25,14 @@ const sendLoopLeadLink = (recipientDetails) => {
                             <p> Simply respond to this email if you have any questions at all about the process.</p>
 
                             <p>Thanks!</p>
-                            <p>The Loop3D Team</p>
+                            <p>The LOOP3D Team</p>
                         </td>
                     </tr>
                 `
   return {
-    from: 'Loop3D <aaron.loop360@gmail.com>', 
+    from: 'LOOP3D <aaron.loop360@gmail.com>', 
     to: recipientDetails.email,
-    subject: 'Loop3D 360 Feedback Process - Launch',
+    subject: 'LOOP3D 360 Feedback Process - Launch',
     html: emailHeaderFooter(bodyContent)
   };
 };
