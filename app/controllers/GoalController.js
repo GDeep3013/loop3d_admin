@@ -180,7 +180,7 @@ exports.generatePlans = async (req, res) => {
         } 
     
         const response = await openai.chat.completions.create({
-            model: 'gpt-4', // Correct model name
+            model: process.env.OPEN_AI_MODEL, // Correct model name
             messages: [
                 { role: 'system', content: 'You are an AI assistant that helps analyze plans results.' },
                 { role: 'user', content: fullPrompt } // Use the combined prompt

@@ -24,7 +24,6 @@ const bcrypt = require('bcrypt');
 const { OpenAI } = require('openai');
 const openai = new OpenAI({ apiKey: process.env.OPEN_AI_KEY });
 
-
 const {
     check,
     validationResult
@@ -1480,12 +1479,12 @@ const analyzeData = async (data) => {
 };
 async function openaiAnalyzeResults(prompt) {
  const response = await openai.chat.completions.create({
-              model: 'gpt-4o',
+              model: process.env.OPEN_AI_MODEL,
                 messages: [
                 {role: 'system', content:'You are an AI assistant that helps analyze survey results.'},
                 { role: 'user', content: prompt }
               ]
-            });
+ });
 
     return response?.choices?.[0]?.message?.content
 }
