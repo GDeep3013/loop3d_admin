@@ -7,7 +7,7 @@ const sendMailToParticipant = (recipientDetails) => {
 
         <p> In responding, please think about your experience in working with this individual and provide objective feedback. This is an opportunity to share candid and constructive feedback for each participant by giving them a “360° lens” from their coworkers on their leadership strengths and developmental areas. Please click on the following link to provide your responses:</p>
       
-        <a style="display: inline-block; text-decoration:none;padding: 12px 25px;color: #fff; background-color: #7abcdb; border-radius: 5px;" href="${recipientDetails.url}">Create Feedback</a>
+        <a style="display: inline-block; text-decoration:none;padding: 12px 25px;color: #fff; background-color: #7abcdb; border-radius: 5px;" href="${recipientDetails.url}">Take the survey</a>
 
         <br />
         <p>Thanks!</p>

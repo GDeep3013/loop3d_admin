@@ -76,7 +76,7 @@ export default function SurveyList() {
               <th>Supervisor Completed Survey?</th>
               <th>Survey Status</th>
               <th>Report Generation Date</th>
-              <th>Action</th>
+              <th>Summary</th>
             </tr>
           </thead>
           <tbody>
