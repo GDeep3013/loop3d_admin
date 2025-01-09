@@ -254,27 +254,31 @@ exports.createSurveyParticipants = async (req, res) => {
 
             savedParticipants.push(savedParticipant);
         }
+        const existingParticipantCount = await SurveyParticipant.countDocuments({ survey_id });
+        const totalParticipants = existingParticipantCount + participants.length;
+
 
         // send feedback form to loopLead
+        if (totalParticipants.length <= 10) {
+            p_email = loop_lead_email;
+            let name = loop_lead_name
+            url = `${process.env.FRONT_END_URL}/feedback-survey?survey_id=${survey_id}&participant_id=${loop_lead_id}`
+            await sendEmail('sendMailToParticipant', {
+                name,
+                p_email,
+                url
+            });
 
-        p_email = loop_lead_email;
-        let name = loop_lead_name
-        url = `${process.env.FRONT_END_URL}/feedback-survey?survey_id=${survey_id}&participant_id=${loop_lead_id}`
-        await sendEmail('sendMailToParticipant', {
-            name,
-            p_email,
-            url
-        });
-
-        // send feedback form to Manger
-        p_email = mrg_email;
-        name = mrg_name
-        url = `${process.env.FRONT_END_URL}/feedback-survey?survey_id=${survey_id}&participant_id=${mrg_id}`
-        await sendEmail('sendMailToParticipant', {
-            name,
-            p_email,
-            url
-        });
+            // send feedback form to Manger
+            p_email = mrg_email;
+            name = mrg_name
+            url = `${process.env.FRONT_END_URL}/feedback-survey?survey_id=${survey_id}&participant_id=${mrg_id}`
+            await sendEmail('sendMailToParticipant', {
+                name,
+                p_email,
+                url
+            });
+        }
 
         res.status(201).json({
             status: 'success',

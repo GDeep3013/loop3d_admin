@@ -30,7 +30,7 @@ const ChartBar = ({ competency, index, data, getChartImagesFromDB, chart2Data, s
     const chartRef1 = useRef([]); // Ref for the first chart
     const chartRef2 = useRef([]);
     const chartData = {
-        labels: Object.keys(data),
+        labels: Object.keys(data).map(label => label === "Self" ? label : label + "s"), // Pluralize except "Self"
         datasets: [
             {
                 label: 'Average Weightage',

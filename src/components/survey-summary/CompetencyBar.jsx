@@ -39,22 +39,22 @@ const CompetencyBar = ({ data, pdf = false ,survey_id,savedImages,getChartImages
 
             },
             {
-                label: 'Direct Report',
+                label: 'Direct Reports',
                 data: labels.map((competency) => data[competency]?.['Direct Report']?.averageWeightage || 0),
                 backgroundColor: 'rgb(23,74,109)',
             },
             {
-                label: 'Teammate',
+                label: 'Teammates',
                 data: labels.map((competency) => data[competency]?.Teammate?.averageWeightage || 0),
                 backgroundColor: 'rgb(204,204,204)', 
             },
             {
-                label: 'Supervisor',
+                label: 'Supervisors',
                 data: labels.map((competency) => data[competency]?.Supervisor?.averageWeightage || 0),
                 backgroundColor: 'rgb(0,0,0)', 
             },
             {
-                label: 'Other',
+                label: 'Others',
                 data: labels.map((competency) => data[competency]?.Other?.averageWeightage || 0),
                 backgroundColor: 'rgb(153,153,153)', 
             },
