@@ -56,6 +56,7 @@ const SurveySummary = () => {
             });
             if (response.ok) {
                 const data = await response.json();
+                console.log('data',data)
                 setSurvey(data?.data?.[0]);
             } else {
                 console.error('Failed to fetch survey');
@@ -254,6 +255,7 @@ const SurveySummary = () => {
 
     const generatePdf = () => {
         setPdf(true);
+        console.log('survey',survey)
         const loop_lead_name = `${survey?.loop_lead?.first_name}_${survey?.loop_lead?.last_name}`;
         const company_name = survey?.organization?.name || "Unknown Company"; // Fallback in case `company_name` is not available
         const survey_id = survey?._id || "UnknownID";
@@ -548,8 +550,23 @@ const SurveySummary = () => {
                                     </div>
                                 </div>
                             )}
+                    
                         </div>
-
+                        {summaryArray?.summary_video_id && <div id="video-container" style={{ width: '100%', marginTop: "-42px", backgroundColor: '#F2F8FB', padding: '30px 20px', textAlign: 'center', height: 'auto', borderRadius: '0 0 30px 30px' }}>
+                            <iframe
+                                src={`https://share.synthesia.io/embeds/videos/${summaryArray?.summary_video_id}`}
+                                loading="lazy"
+                                title="Synthesia Video"
+                                allowFullScreen
+                                allow="encrypted-media; fullscreen;"
+                                style={{ width: '100%', maxWidth: '500px', height: '400px', border: 'none' }}  // Ensure this is an object, not a string
+                            ></iframe>
+                            <div style={{ margin: '15px 0' }}>
+                                {!pdf ? <Button className="generate-btn" disabled={document.readyState === 'complete' ? false : true} onClick={() => { generatePdf() }}>Download</Button> :
+                                    <Button className="survey-inner-btn absolute"><Spinner /></Button>}
+                            </div>
+                        </div>}
+                        
                     </Container>
                 ) : <div style={{ textAlign: "center", marginTop: "15%" }}><Loading /></div>
                 }

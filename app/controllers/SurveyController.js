@@ -41,6 +41,33 @@ const generateRandomPassword = (length = 10) => {
 
     return password;
 };
+const createVideo = async (survey_id, video_summary) => {
+    try {
+        const response = await axios.post(process.env.SYNTHESIA_BASE_URL, {
+            title: `${survey_id} Survey!`,
+            visibility: 'public',
+            input: [{
+                scriptText: video_summary,
+                avatar: 'anna_costume1_cameraA',
+                background: 'corporate_office',
+            }]
+        }, {
+            headers: {
+                'Authorization': `${process.env.SYNTHESIA_API_KEY}`,
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        });
+
+        const video_id = response.data.id;
+
+        return video_id;
+
+    } catch (error) {
+        console.error('Error creating video:', error);
+        throw new Error("Error creating video");
+    }
+};
 
 // Create Survey and Add Survey Members
 exports.createSurvey = async (req, res) => {
@@ -433,11 +460,11 @@ exports.getSurveyById = async (req, res) => {
             });
         }
 
-        const org_id1 = surveys.flatMap(survey => survey.organization._id)
-        const manager_id =surveys.flatMap(survey => survey.manager._id)
+        const org_id1 = surveys.flatMap(survey => survey?.organization?._id)
+        const manager_id =surveys.flatMap(survey => survey?.manager?._id)
 
         // Step 2: Fetch related AssignCompetency data for the survey(s)
-        const categoryIds = surveys.flatMap(survey => survey.competencies.map(comp => comp._id));
+        const categoryIds = surveys.flatMap(survey => survey?.competencies.map(comp => comp?._id));
         // const assignCompetencies = await AssignCompetency.find({ organization_id: org_id1, question_id: { $ne: null } 
         //      // Ensure question_id is not null for both cases
         // }).populate({
@@ -1070,7 +1097,7 @@ exports.generateCompetencyAverageReport = async (req, res) => {
             });
         }
 
-        const categoryIds = survey.competencies.map(comp => comp._id);
+        const categoryIds = survey?.competencies.map(comp => comp?._id);
         // const competencies = await Category.find({
         //     _id: {
         //         $in: categoryIds
@@ -1136,16 +1163,16 @@ exports.generateCompetencyAverageReport = async (req, res) => {
         const participantAnswers = [];
         // Process Manager (Supervisor)
         const managerAnswers = await SurveyAnswers.findOne({
-            participant_id: survey.manager._id
+            participant_id: survey?.manager?._id
         });
         if (managerAnswers && managerAnswers.answers) {
             participantAnswers.push({
-                answers: managerAnswers.answers
+                answers: managerAnswers?.answers
             });
         }
         for (const participant of participants) {
             const participantAnswer = await SurveyAnswers.findOne({
-                participant_id: participant._id
+                participant_id: participant?._id
             });
             if (participantAnswer && participantAnswer.answers) {
                 participantAnswers.push({
@@ -1298,15 +1325,20 @@ const generateSummary = async (survey_id,report) => {
                 "The responses should be structured as follows:\n" +
                 "1. [First development opportunity with specific, measurable, achievable, relevant, and time-bound goals.]" +
                 "2. [Second development opportunity with different specific, measurable, achievable, relevant, and time-bound goals.]";
-        
+                const video_summary = `Generate a 10 sentence summary based on the feedback summary results. Start by thanking the person for taking the time to go through the LOOP3D 360 feedback process. Then highlight the person's strengths, opportunities for development, and then finish by providing 2-3 action items that they can easily accomplish over the next 2-4 weeks which will help them improve their development areas.\n\n" .
+                "Survey Results:\n${resultsJson}\n\n`;
             // Call OpenAI API for each of the prompts
             let questionSummary1 = await openaiAnalyzeResults(questionSummary);
             let smartPlan1 = await openaiAnalyzeResults(smartPlan);
             let strengthsPrompt1 = await openaiAnalyzeResults(strengthsPrompt);
             let smartPlanOpportunities1 = await openaiAnalyzeResults(smartPlanOpportunities);
-          
+            let videoSummary = await openaiAnalyzeResults(video_summary);
+            let summary_video_id= await createVideo(survey_id, videoSummary)
+
+          console.log('summary_video_id',summary_video_id)
             // Split each section by new line
             let analysis = {};
+            analysis['summary_video_id'] = summary_video_id;
             analysis['question_summary'] = parseQuestionSummary(questionSummary1);
             analysis['smart_plan'] = splitByNewLine(smartPlan1);
             analysis['strengths_prompt'] = splitByNewLine(strengthsPrompt1);
@@ -1501,13 +1533,14 @@ const analyzeData = async (data) => {
     return parsedData;
 };
 async function openaiAnalyzeResults(prompt) {
- const response = await openai.chat.completions.create({
-              model: process.env.OPEN_AI_MODEL,
-                messages: [
+        const response = await openai.chat.completions.create({
+            model: process.env.OPEN_AI_MODEL,
+
+            messages: [
                 {role: 'system', content:'You are an AI assistant that helps analyze survey results.'},
                 { role: 'user', content: prompt }
-              ]
- });
+            ]
+        });
 
     return response?.choices?.[0]?.message?.content
 }
