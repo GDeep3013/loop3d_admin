@@ -43,31 +43,36 @@ const generateRandomPassword = (length = 10) => {
 };
 const createVideo = async (survey_id, video_summary) => {
     try {
-        const response = await axios.post(process.env.SYNTHESIA_BASE_URL, {
-            title: `${survey_id} Survey!`,
-            visibility: 'public',
-            input: [{
-                scriptText: video_summary,
-                avatar: 'anna_costume1_cameraA',
-                background: 'corporate_office',
-            }]
-        }, {
-            headers: {
-                'Authorization': `${process.env.SYNTHESIA_API_KEY}`,
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
+        const response = await axios.post(
+            process.env.SYNTHESIA_BASE_URL,
+            {
+                title: `${survey_id} Survey!`,
+                visibility: 'public',
+                input: [
+                    {
+                        scriptText: video_summary,
+                        avatar: 'anna_costume1_cameraA',
+                        background: 'corporate_office',
+                    },
+                ],
+            },
+            {
+                headers: {
+                    Authorization: `${process.env.SYNTHESIA_API_KEY}`,
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                },
             }
-        });
+        );
 
         const video_id = response.data.id;
-
-        return video_id;
-
+        return video_id || null; // Return the video ID or null if undefined
     } catch (error) {
-        console.error('Error creating video:', error);
-        throw new Error("Error creating video");
+        console.error('Error creating video:', error?.response?.data || error.message);
+        return null; // Return null in case of an error
     }
 };
+
 
 // Create Survey and Add Survey Members
 exports.createSurvey = async (req, res) => {
@@ -282,11 +287,10 @@ exports.createSurveyParticipants = async (req, res) => {
             savedParticipants.push(savedParticipant);
         }
         const existingParticipantCount = await SurveyParticipant.countDocuments({ survey_id });
-        const totalParticipants = existingParticipantCount + participants.length;
-
-
+        const totalParticipants = existingParticipantCount;
+console.log(totalParticipants,'totalParticipants')
         // send feedback form to loopLead
-        if (totalParticipants.length <= 10) {
+        if (totalParticipants <= 10) {
             p_email = loop_lead_email;
             let name = loop_lead_name
             url = `${process.env.FRONT_END_URL}/feedback-survey?survey_id=${survey_id}&participant_id=${loop_lead_id}`
@@ -1333,18 +1337,21 @@ const generateSummary = async (survey_id,report) => {
             let strengthsPrompt1 = await openaiAnalyzeResults(strengthsPrompt);
             let smartPlanOpportunities1 = await openaiAnalyzeResults(smartPlanOpportunities);
             let videoSummary = await openaiAnalyzeResults(video_summary);
-            let summary_video_id= await createVideo(survey_id, videoSummary)
-
-          console.log('summary_video_id',summary_video_id)
-            // Split each section by new line
             let analysis = {};
-            analysis['summary_video_id'] = summary_video_id;
             analysis['question_summary'] = parseQuestionSummary(questionSummary1);
             analysis['smart_plan'] = splitByNewLine(smartPlan1);
             analysis['strengths_prompt'] = splitByNewLine(strengthsPrompt1);
             analysis['smart_plan_opportunities'] = splitByNewLine(smartPlanOpportunities1);
-   
             let parsedGoals1 = await saveOrUpdateSurveyReport(survey_id, analysis, "summaries")
+            
+            const summary_video_id = await createVideo(survey_id, videoSummary);
+
+            if (summary_video_id) {
+                analysis['summary_video_id'] = summary_video_id;
+                const parsedGoals2 = await saveOrUpdateSurveyReport(survey_id, analysis, "summaries");
+                return parsedGoals2;
+            }
+
 
             return  parsedGoals1;
         } catch (error) {
@@ -1535,6 +1542,8 @@ const analyzeData = async (data) => {
 async function openaiAnalyzeResults(prompt) {
         const response = await openai.chat.completions.create({
             model: process.env.OPEN_AI_MODEL,
+            'max_tokens':500,
+            'temperature':0.7,
 
             messages: [
                 {role: 'system', content:'You are an AI assistant that helps analyze survey results.'},
