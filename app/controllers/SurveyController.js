@@ -290,7 +290,7 @@ exports.createSurveyParticipants = async (req, res) => {
         const totalParticipants = existingParticipantCount;
 console.log(totalParticipants,'totalParticipants')
         // send feedback form to loopLead
-        if (totalParticipants <= 10) {
+        if (totalParticipants < 10) {
             p_email = loop_lead_email;
             let name = loop_lead_name
             url = `${process.env.FRONT_END_URL}/feedback-survey?survey_id=${survey_id}&participant_id=${loop_lead_id}`
