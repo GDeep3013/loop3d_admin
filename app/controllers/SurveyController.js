@@ -230,7 +230,8 @@ exports.createSurveyParticipants = async (req, res) => {
         let loop_lead_id = ''
         let mrg_id = ''
         let p_email = ''
-      
+        const existingParticipantCount = await SurveyParticipant.countDocuments({ survey_id });
+
         for (let participant of participants) {
             const {
                 p_first_name,
@@ -286,7 +287,6 @@ exports.createSurveyParticipants = async (req, res) => {
 
             savedParticipants.push(savedParticipant);
         }
-        const existingParticipantCount = await SurveyParticipant.countDocuments({ survey_id });
         const totalParticipants = existingParticipantCount;
 console.log(totalParticipants,'totalParticipants')
         // send feedback form to loopLead
