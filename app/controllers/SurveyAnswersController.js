@@ -95,12 +95,6 @@ exports.saveSurveyAnswers = async (req, res) => {
                 }
                 if (completedParticipants.length == (allParticipants.length)  && isSurveyComplete) {
                     await Survey.findByIdAndUpdate(survey_id, { survey_status: 'completed' });
-                    await SurveyReport.findOneAndDelete({survey_id})
-                    await sendEmail('sendSumaryReport', {
-                        name,
-                        email,
-                        summary_url
-                    });
                 }
         
                 return res.status(existingAnswers ? 200 : 201).json({
