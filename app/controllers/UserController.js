@@ -150,7 +150,7 @@ const UserController = {
         } catch (error) {
             return res.status(500).json({
                 status: 'error',
-                message: "Invalid credentials"
+                error: "Invalid credentials"
             });
         }
     },
