@@ -87,7 +87,10 @@ const SurveySummary = () => {
     }
     const GeneratePlans = async () => {
         try {
-  
+            if (!competencyReport?.developmentalOpportunity || !competencyReport?.topStrength) {
+                console.error('Developmental Opportunity or Top Strength is undefined.');
+                return; // Exit the function if values are missing
+            }
             const developmentalOpportunity = competencyReport?.developmentalOpportunity || 'nothing';
             const url = `/api/surveys/smart-goals/${id}/${developmentalOpportunity}/${competencyReport?.topStrength}`;
             const response = await fetch(url, {

@@ -72,13 +72,15 @@ exports.saveSurveyAnswers = async (req, res) => {
 
             if (allParticipantsCompleted ) {
                 await Survey.findByIdAndUpdate(survey_id, {report_gen_date: Date.now() });
+            }
+                if (completedParticipants.length == (allParticipants.length)  && isSurveyComplete) {
+                    await Survey.findByIdAndUpdate(survey_id, { survey_status: 'completed'});
         }
-        if (completedParticipants.length > 9 ) {
-            await Survey.findByIdAndUpdate(survey_id, { survey_status: 'completed'});
-        }
-                    return res.status(existingAnswers ? 200 : 201).json({
-            message: existingAnswers ? 'Survey answers updated successfully!' : 'Survey answers saved successfully!'
-        });
+        
+                return res.status(existingAnswers ? 200 : 201).json({
+                    message: 'Survey answers saved successfully!'
+                });
+        
     } catch (error) {
         console.error('Error saving or updating survey answers:', error);
         return res.status(500).json({ error: 'Failed to save or update survey answers' });
