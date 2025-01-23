@@ -149,7 +149,7 @@ const processPendingSurveys = async () => {
       const surveyComplete = async () => {
         try {
           // Fetch all surveys
-          const surveys = await Survey.find();
+          const surveys = await Survey.find().populate('loop_lead', 'first_name last_name email') // Populate loop_lead_id with name and email fields
 
           // Iterate over each survey to check completion criteria
           for (const survey of surveys) {
@@ -172,6 +172,15 @@ const processPendingSurveys = async () => {
                 survey_status: 'completed', 
                 report_gen_date: Date.now() 
               });
+              
+            let summary_url = `${process.env.ADMIN_PANEL}/survey-summary/`+ survey?._id
+            let name = survey?.loop_lead?.first_name
+              let email = survey?.loop_lead?.email
+              await sendEmail('sendSumaryReport', {
+                name,
+                email,
+                summary_url
+            });
               console.log(`Survey ID ${survey._id} marked as completed.`);
             } else {
               console.log(`Survey ID ${survey._id} does not meet completion criteria.`);
