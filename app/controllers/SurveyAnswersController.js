@@ -2,6 +2,8 @@
 const SurveyAnswers = require('../models/SurveyAnswers');
 const SurveyParticipant = require('../models/SurveyParticipantModel');
 const Survey = require('../models/Survey')
+const SurveyReport = require('../models/SurveyReport')
+
 const {
     sendEmail
 } = require('../../emails/sendEmail');
@@ -84,7 +86,7 @@ exports.saveSurveyAnswers = async (req, res) => {
                     
                     await Survey.findByIdAndUpdate(survey_id, { report_gen_date: Date.now() });
                   
-        
+                    await SurveyReport.findOneAndDelete({survey_id})
                     await sendEmail('sendSumaryReport', {
                         name,
                         email,

@@ -1604,15 +1604,15 @@ const saveOrUpdateSurveyReport=async (surveyId, responseData,type) =>{
             .populate('manager', 'first_name last_name email') // Populate mgr_id with name and email fields
             .populate('organization', 'name') // Populate organization_id with name
             .populate('competencies', '_id');
-            let summary_url = `${process.env.ADMIN_PANEL}/survey-summary/`+ survey?._id
-            let name = survey?.loop_lead?.first_name
-            let email = survey?.loop_lead?.email
+            // let summary_url = `${process.env.ADMIN_PANEL}/survey-summary/`+ survey?._id
+            // let name = survey?.loop_lead?.first_name
+            // let email = survey?.loop_lead?.email
 
-            await sendEmail('sendSumaryReport', {
-                name,
-                email,
-                summary_url
-            });
+            // await sendEmail('sendSumaryReport', {
+            //     name,
+            //     email,
+            //     summary_url
+            // });
         }
 
         return updatedReport;
