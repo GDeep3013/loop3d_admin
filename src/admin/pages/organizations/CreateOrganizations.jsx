@@ -57,10 +57,20 @@ export default function CreateOrganization({ id, savedData }) {
         } else if (formData.name.trim().length < 3) {
             errors.name = 'Organization name must be at least 3 characters long';
         }
+        console.log('selectedCompetencies',selectedCompetencies)
 
         if (!id && selectedCompetencies.length < 3) {
             errors.competency = 'At least 3 competencies must be selected';
+            return errors;
         }
+        const individualContributors = categories.filter(cat => cat.competency_type === 'individual_contributor' && selectedCompetencies.includes(cat._id));
+        const peopleManagers = categories.filter(cat => cat.competency_type === 'people_manager' && selectedCompetencies.includes(cat._id));
+    
+        if (peopleManagers.length < 3 || individualContributors.length < 3) {
+            errors.competency = 'At least 3 competencies must be selected for each.';
+            return errors;
+        }
+
         return errors;
     };
 
