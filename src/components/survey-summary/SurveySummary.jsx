@@ -87,6 +87,8 @@ const SurveySummary = () => {
     }
     const GeneratePlans = async () => {
         try {
+            console.log('competencyReport3',competencyReport)
+
             if (!competencyReport?.developmentalOpportunity || !competencyReport?.topStrength) {
                 console.error('Developmental Opportunity or Top Strength is undefined.');
                 return; // Exit the function if values are missing
@@ -123,9 +125,6 @@ const SurveySummary = () => {
                 // let summaryValue = removeSpacesFromKeys(data.summary.response_Data)
                 let newData = (data.summary.response_Data) ? data.summary.response_Data : data.summary
                 setSummaryArray(newData);
-                setTimeout(() => {
-                    GeneratePlans()           
-                },2000)
             } else {
                 console.error('Failed to fetch survey');
             }
@@ -183,18 +182,19 @@ const SurveySummary = () => {
             getTotalParticipantsInvited(id);
             getSurvey(id)
             generateCompetencyAverageReport(id)
-            generateSurveyReport(id, "Generate")
+             generateSurveyReport(id, "Generate")
             getChartImagesFromDB(id)
            
         }
-    }, [id]);
+    }, []);
     useEffect(() => {
         if (competencyReport) {
             setTimeout(() => {
                 GeneratePlans()           
             },2000)
         }
-    }, [competencyReport]);
+    }, [competencyReport,summaryArray]);
+    console.log('competencyReport1',competencyReport)
 
 
     const Participants = ['Self', 'Direct Report', 'Teammate', 'Supervisor', 'Other'];
