@@ -2,6 +2,9 @@
 const SurveyAnswers = require('../models/SurveyAnswers');
 const SurveyParticipant = require('../models/SurveyParticipantModel');
 const Survey = require('../models/Survey')
+const {
+    sendEmail
+} = require('../../emails/sendEmail');
 // Save or Update Survey Answers
 exports.saveSurveyAnswers = async (req, res) => {
     const { survey_id, participant_id, answers } = req.body;
@@ -32,15 +35,19 @@ exports.saveSurveyAnswers = async (req, res) => {
         });
 
         // Fetch the survey details
-        const survey = await Survey.findById(survey_id);
+        const survey = await Survey.findById(survey_id)
+            .populate('loop_lead', 'first_name last_name email') // Populate loop_lead_id with name and email fields
+            .populate('manager', 'first_name last_name email') // Populate mgr_id with name and email fields
+            .populate('organization', 'name') // Populate organization_id with name
+            .populate('competencies', '_id');
         if (!survey) {
             return res.status(404).json({ error: "Survey not found" });
         }
 
         // Update survey status based on the participant_id
-        if (survey?.loop_lead?.toString() === participant_id) {
+        if (survey?.loop_lead?._id?.toString() === participant_id) {
             await Survey.findByIdAndUpdate(survey_id, { ll_survey_status: 'yes' });
-        } else if (survey.manager?.toString() === participant_id) {
+        } else if (survey.manager?._id?.toString() === participant_id) {
             await Survey.findByIdAndUpdate(survey_id, { mgr_survey_status: 'yes' });
         }
 
@@ -70,12 +77,29 @@ exports.saveSurveyAnswers = async (req, res) => {
             const surveyUpdated = await Survey.findById(survey_id);
             const isSurveyComplete = surveyUpdated.ll_survey_status === 'yes' && surveyUpdated.mgr_survey_status === 'yes';
 
-            if (allParticipantsCompleted ) {
-                await Survey.findByIdAndUpdate(survey_id, {report_gen_date: Date.now() });
-            }
+            let summary_url = `${process.env.ADMIN_PANEL}/survey-summary/`+ survey?._id
+            let name = survey?.loop_lead?.first_name
+            let email = survey?.loop_lead?.email
+                if (allParticipantsCompleted) {
+                    
+                    await Survey.findByIdAndUpdate(survey_id, { report_gen_date: Date.now() });
+                  
+        
+                    await sendEmail('sendSumaryReport', {
+                        name,
+                        email,
+                        summary_url
+                    });
+                }
                 if (completedParticipants.length == (allParticipants.length)  && isSurveyComplete) {
-                    await Survey.findByIdAndUpdate(survey_id, { survey_status: 'completed'});
-        }
+                    await Survey.findByIdAndUpdate(survey_id, { survey_status: 'completed' });
+                    
+                    await sendEmail('sendSumaryReport', {
+                        name,
+                        email,
+                        summary_url
+                    });
+                }
         
                 return res.status(existingAnswers ? 200 : 201).json({
                     message: 'Survey answers saved successfully!'
