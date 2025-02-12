@@ -484,17 +484,18 @@ const SurveySummary = () => {
                                             </div>
                                         </div>
 
-                                        <div className="pdfContent">
+                                        {summaryArray?.question_summary?.otherComments &&
+                                            <div className="pdfContent">
 
-                                            {/* Other Comments */}
-                                            <div className="summary-item  page-break" style={{backgroundColor: '#F2F8FB', padding: '30px 20px' }}>
-                                                <h2 className="font-frank text-black" style={{ fontSize: '21px', lineHeight: '27px' }}>Q3. Other comments?</h2>
-                                                {/* <p className="font-poppins" style={{ fontSize: '20px' }}> <strong className=" font-frank fw-normal" style={{ fontSize: '25px' }}>Total Summary:</strong> Example summary.</p> */}
-                                                {summaryArray?.question_summary?.otherComments?.map((item, index) => (
-                                                    <p key={index}><strong className="font-frank fw-normal" style={{ fontSize: '18px' }}>{item.role}:</strong> {item.summary}</p>
-                                                ))}
-                                            </div>
-                                        </div>
+                                                {/* Other Comments */}
+                                                <div className="summary-item  page-break" style={{ backgroundColor: '#F2F8FB', padding: '30px 20px' }}>
+                                                    <h2 className="font-frank text-black" style={{ fontSize: '21px', lineHeight: '27px' }}>Q3. Other comments?</h2>
+                                                    {/* <p className="font-poppins" style={{ fontSize: '20px' }}> <strong className=" font-frank fw-normal" style={{ fontSize: '25px' }}>Total Summary:</strong> Example summary.</p> */}
+                                                    {summaryArray?.question_summary?.otherComments?.map((item, index) => (
+                                                        <p key={index}><strong className="font-frank fw-normal" style={{ fontSize: '18px' }}>{item.role}:</strong> {item.summary}</p>
+                                                    ))}
+                                                </div>
+                                            </div>}
 
                                     </>
                                 )}
