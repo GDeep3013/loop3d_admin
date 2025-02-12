@@ -484,7 +484,7 @@ const SurveySummary = () => {
                                             </div>
                                         </div>
 
-                                        {(summaryArray?.question_summary?.otherComments && summaryArray?.question_summary?.otherComments.length)&&
+                                        {(summaryArray?.question_summary?.otherComments && summaryArray?.question_summary?.otherComments.length > 0)&&
                                             <div className="pdfContent">
 
                                                 {/* Other Comments */}
