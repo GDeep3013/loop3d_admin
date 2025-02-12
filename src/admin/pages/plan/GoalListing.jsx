@@ -174,7 +174,7 @@ const GoalListing = ({ goals, getGoals,handleScrollToTop, categories, setCompete
 
     const formatGoalsWithStatus = (goals) => {
         return goals.map((goal, index) =>
-            `${goal.specific_goal}\n\ncompetency:${goal.competency?.category_name}\nStatus: ${goal.status}`
+            `${goal.specific_goal}\n\nCompetency: ${goal.competency?.category_name}\nStatus: ${goal.status}`
         ).join('\n\n');
 
     };

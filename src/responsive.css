@@ -9,11 +9,15 @@
     .table-scroll table.table { min-width: max-content; }
     .content-outer { padding: 8px !important; }
 }
-/* @media screen and (min-width:1025px) and (max-width:1280px) {
-    .graph-box .graph_inner { width: 100% !important; }
-    .graph-box .graph_inner.bottom_graph canvas{ width: 100% !important; height: 332px !important;}
-    
-} */
+@media screen and (min-width:1025px) and (max-width:1280px) {
+    .form-group .text-danger{ font-size: 10px !important; }
+    .participant .inner .form-group { padding-left: 10px !important; padding-right: 10px !important; }
+    .participant label { font-size: 15px !important; }
+    .participant input.form-control { height: 31px; padding: 0 10px !important; font-size: 14px !important; }
+    .participant select.form-select{ height: 31px; padding: 0 10px !important; }
+    .participant .inner.border-custom-color2 { padding-right: 20px; }
+    button.dlt_btn{ right: 0; }
+}
 @media screen and (min-width:768px) and (max-width:1024px) {
     .survey_box{ padding: 20px; }
     .survey_box h1 { font-size: 35px; line-height: 45px; }
