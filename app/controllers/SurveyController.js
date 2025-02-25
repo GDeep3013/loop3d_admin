@@ -1282,14 +1282,14 @@ const generateSummary = async (survey_id,report) => {
                 "Teammate: [Teammate summary, if available]. Include any gaps between the perception of the self and teammates.\n" +
                 "Supervisor: [Supervisor summary, if available]. Include any gaps between the perception of the self and supervisor.\n" +
                 "Other: [Other summary, if available]. Include any gaps between the perception of the self and other respondents.\n\n" +
-                "3. Other comments?\n" +
-                "Total Summary: most important Include any gaps between the perception of the self,direct reports,teammates,supervisor and other respondents\n" +
-                "Self: [Self-assessment summary , if available] most important\n" +
-                "Direct Report: [Direct Report summary , if available]. most important Include any gaps between the perception of the self and direct reports.\n" +
-                "Teammate: [Teammate summary , if available].  most important Include any gaps between the perception of the self and teammates.\n" +
-                "Supervisor: [Supervisor summary , if available]. most important Include any gaps between the perception of the self and supervisor.\n" +
-                "Other: [Other summary , if available]. most important Include any gaps between the perception of the self and other respondents.\n\n" +
-                "Ensure that the response is in plain text without extra headings, bullet points, or other formatting.";
+                "3. Other comments?(most important)\n" +
+                "Total Summary:  Include any gaps between the perception of the self,direct reports,teammates,supervisor and other respondents.(most important)\n" +
+                "Self: [Self-assessment summary , if available]. most important\n" +
+                "Direct Report: [Direct Report summary , if available]. Include any gaps between the perception of the self and direct reports.(most important)\n" +
+                "Teammate: [Teammate summary , if available].Include any gaps between the perception of the self and teammates.(most important)\n" +
+                "Supervisor: [Supervisor summary , if available]. Include any gaps between the perception of the self and supervisor.(most important)\n" +
+                "Other: [Other summary , if available]. Include any gaps between the perception of the self and other respondents.(most important)\n\n" +
+                "Ensure that the response is in plain text without extra headings, bullet points, or other formatting.(most important)";
         
             const smartPlan = 
                 `Based on the following survey results and developmental suggestions, generate two SMART plans. Each plan should be concise and actionable, formatted as a numbered list. Ensure that each plan includes specific goals, measurable outcomes, achievable steps, relevance to the role, and a timeline. The response should be in plain text without extra headings, bullet points, or other formatting and 2 lines only.\n\n` +
