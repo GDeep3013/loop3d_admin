@@ -469,16 +469,7 @@ exports.getSurveyById = async (req, res) => {
 
         // Step 2: Fetch related AssignCompetency data for the survey(s)
         const categoryIds = surveys.flatMap(survey => survey?.competencies.map(comp => comp?._id));
-        // const assignCompetencies = await AssignCompetency.find({ organization_id: org_id1, question_id: { $ne: null } 
-        //      // Ensure question_id is not null for both cases
-        // }).populate({
-        //     path: 'question_id',
-        //     select: 'questionText questionType options', // Select necessary fields
-        //     populate: {
-        //         path: 'options',
-        //         select: 'text weightage' // Select specific fields for options
-        //     }
-        // });
+
         const competencies = await Category.find({
             _id: {
                 $in: categoryIds
@@ -504,19 +495,6 @@ exports.getSurveyById = async (req, res) => {
         if (questions2.length > 0) {
             questionsByCategory.push(...questions2);
         }
-   
-        // const assignCompetencies = await AssignCompetency.find({
-        //     organization_id: org_id1,
-        //     category_id: { $ne: null }  // Match related categories
-        // }).populate({
-        //     path: 'category_id',
-        //     select: 'category_name competency_type'
-        // });
-
-    
-
-       
-        // Optionally remove duplicates if needed (e.g., if multiple entries for the same question)
         const questions = Array.from(new Set(questionsByCategory.map(q => q?._id )))
             .map(id => {
                 return questionsByCategory.find(q => q?._id.equals(id) );
@@ -1212,7 +1190,8 @@ const deleteImageFromFileSystem = (filename) => {
     }
 };
 const generateSummary = async (survey_id,report) => {
-        try {
+    try {
+            
             let existingSurveyImage = await SurveyImage.findOne({ survey_id });
             if (existingSurveyImage) {
                 if (existingSurveyImage.chart_image) {
@@ -1284,7 +1263,7 @@ const generateSummary = async (survey_id,report) => {
             
             const resultsJson = JSON.stringify(formattedResult);
          
-
+            console.log('resultsJson',resultsJson)
             // Create the different prompts
             const questionSummary = 
                 `Analyze the following survey results for each question:\n\n${resultsJson}\n\n` +
@@ -1304,12 +1283,12 @@ const generateSummary = async (survey_id,report) => {
                 "Supervisor: [Supervisor summary, if available]. Include any gaps between the perception of the self and supervisor.\n" +
                 "Other: [Other summary, if available]. Include any gaps between the perception of the self and other respondents.\n\n" +
                 "3. Other comments?\n" +
-                "Total Summary: Include any gaps between the perception of the self,direct reports,teammates,supervisor and other respondents\n" +
-                "Self: [Self-assessment summary, if available]\n" +
-                "Direct Report: [Direct Report summary, if available]. Include any gaps between the perception of the self and direct reports.\n" +
-                "Teammate: [Teammate summary, if available]. Include any gaps between the perception of the self and teammates.\n" +
-                "Supervisor: [Supervisor summary, if available]. Include any gaps between the perception of the self and supervisor.\n" +
-                "Other: [Other summary, if available]. Include any gaps between the perception of the self and other respondents.\n\n" +
+                "Total Summary: most important Include any gaps between the perception of the self,direct reports,teammates,supervisor and other respondents\n" +
+                "Self: [Self-assessment summary , if available] most important\n" +
+                "Direct Report: [Direct Report summary , if available]. most important Include any gaps between the perception of the self and direct reports.\n" +
+                "Teammate: [Teammate summary , if available].  most important Include any gaps between the perception of the self and teammates.\n" +
+                "Supervisor: [Supervisor summary , if available]. most important Include any gaps between the perception of the self and supervisor.\n" +
+                "Other: [Other summary , if available]. most important Include any gaps between the perception of the self and other respondents.\n\n" +
                 "Ensure that the response is in plain text without extra headings, bullet points, or other formatting.";
         
             const smartPlan = 
